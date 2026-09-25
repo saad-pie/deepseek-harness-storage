@@ -11,12 +11,12 @@
     "rows": {
       "title": {
         "ver": 1,
-        "seq": 16,
+        "seq": 36,
         "val": "Act as an expert frontend"
       },
       "titleInput": {
         "ver": 3,
-        "seq": 16,
+        "seq": 36,
         "val": {
           "first": {
             "seq": 8,
@@ -28,22 +28,17 @@
       },
       "llmRetry": {
         "ver": 1,
-        "seq": 16,
-        "val": {
-          "[\"atria\",\"[\\\"normal\\\",5,[\\\"EMPTY_RESPONSE\\\",\\\"RATE_LIMIT\\\",\\\"SERVER\\\",\\\"TIMEOUT\\\",\\\"TRANSPORT\\\"],500,10000,0.1]\"]": {
-            "retry": 1,
-            "retryId": "c6bf50ae-cc53-43b0-83ca-ce035e8c5fe8"
-          }
-        }
+        "seq": 36,
+        "val": {}
       },
       "sandboxMode": {
         "ver": 1,
-        "seq": 16,
+        "seq": 36,
         "val": "workspace-write"
       },
       "goal": {
         "ver": 6,
-        "seq": 16,
+        "seq": 36,
         "val": {
           "current": null,
           "seenGoalIds": [],
@@ -52,30 +47,39 @@
       },
       "tokenUsage": {
         "ver": 2,
-        "seq": 16,
+        "seq": 36,
         "val": {
           "totals": {
-            "uncachedInputTokens": 0,
-            "outputTokens": 0,
-            "cacheReadTokens": 0,
+            "uncachedInputTokens": 27391,
+            "outputTokens": 10499,
+            "cacheReadTokens": 16192,
             "cacheWriteTokens": 0
           },
-          "last": null
+          "last": {
+            "turn": 1,
+            "step": 3,
+            "buckets": {
+              "uncachedInputTokens": 10539,
+              "outputTokens": 149,
+              "cacheReadTokens": 8128,
+              "cacheWriteTokens": 0
+            }
+          }
         }
       },
       "contextPressure": {
         "ver": 4,
-        "seq": 16,
+        "seq": 36,
         "val": {
-          "surfaceTokens": 2357,
+          "surfaceTokens": 12799,
           "contextWindow": 262144,
-          "pressureTokens": 0,
-          "sampledSurfaceTokens": 2357
+          "pressureTokens": 18667,
+          "sampledSurfaceTokens": 12566
         }
       },
       "contextBreakdown": {
         "ver": 4,
-        "seq": 16,
+        "seq": 36,
         "val": {
           "nodes": [
             {
@@ -92,53 +96,88 @@
               "seq": 9,
               "heuristicTokens": 121,
               "system": false
+            },
+            {
+              "seq": 20,
+              "heuristicTokens": 7861,
+              "system": false
+            },
+            {
+              "seq": 22,
+              "heuristicTokens": 34,
+              "system": false
+            },
+            {
+              "seq": 24,
+              "heuristicTokens": 33,
+              "system": false
+            },
+            {
+              "seq": 27,
+              "heuristicTokens": 2248,
+              "system": false
+            },
+            {
+              "seq": 29,
+              "heuristicTokens": 33,
+              "system": false
+            },
+            {
+              "seq": 32,
+              "heuristicTokens": 169,
+              "system": false
+            },
+            {
+              "seq": 34,
+              "heuristicTokens": 64,
+              "system": false
             }
           ],
           "breakdown": {
             "systemTokens": 1713,
             "toolsTokens": 6833,
-            "messageTokens": 644
+            "messageTokens": 11086
           }
         }
       },
       "turnBoundary": {
         "ver": 2,
-        "seq": 16,
+        "seq": 36,
         "val": {
           "openTurnStartSeq": 4,
-          "lastStepStartSeq": 6,
+          "lastStepStartSeq": 36,
           "lastStepBoundary": {
             "kind": "start",
-            "seq": 6
+            "seq": 36
           },
           "lastTurn": 1
         }
       },
       "sessionStats": {
         "ver": 1,
-        "seq": 16,
+        "seq": 36,
         "val": {
-          "turns": 0,
-          "steps": 0,
-          "llmMs": 0,
-          "toolMs": 0,
-          "ttftMs": 0,
-          "ttftSteps": 0,
-          "decodeMs": 0,
-          "decodeTokens": 0,
-          "lastTurn": null,
+          "turns": 1,
+          "steps": 3,
+          "llmMs": 874254,
+          "toolMs": 207,
+          "ttftMs": 10399,
+          "ttftSteps": 3,
+          "decodeMs": 863855,
+          "decodeTokens": 10499,
+          "lastTurn": 1,
           "openStep": {
             "turn": 1,
-            "step": 1,
-            "startTime": 1790367186653,
-            "firstTokenTime": 1790367190212
+            "step": 4,
+            "startTime": 1790368061157,
+            "firstTokenTime": null
           },
           "pendingCalls": {}
         }
       },
       "turnOutline": {
         "ver": 2,
-        "seq": 16,
+        "seq": 36,
         "val": {
           "turns": [
             {
@@ -148,24 +187,24 @@
               "response": ""
             }
           ],
-          "draft": ""
+          "draft": "Let me verify everything is in place and the JS has no syntax errors."
         }
       },
       "agentPreset": {
         "ver": 1,
-        "seq": 16,
+        "seq": 36,
         "val": "standard"
       },
       "subagentCatalog": {
         "ver": 2,
-        "seq": 16,
+        "seq": 36,
         "val": {
           "inheritedEventCount": 0
         }
       },
       "subagentTiming": {
         "ver": 2,
-        "seq": 16,
+        "seq": 36,
         "val": {
           "descriptorSeen": false,
           "settledMs": 0,
@@ -174,12 +213,12 @@
       },
       "subagent": {
         "ver": 2,
-        "seq": 16,
+        "seq": 36,
         "val": {}
       },
       "permissions": {
         "ver": 2,
-        "seq": 16,
+        "seq": 36,
         "val": {
           "preset": "workspace-write",
           "sandbox": "workspace-write",
@@ -189,7 +228,7 @@
       },
       "modelSelection": {
         "ver": 2,
-        "seq": 16,
+        "seq": 36,
         "val": {
           "lastUsed": {
             "provider": "atria",
@@ -200,7 +239,7 @@
       },
       "sessionListMetadata": {
         "ver": 1,
-        "seq": 16,
+        "seq": 36,
         "val": {
           "blank": false,
           "lastPromptAt": 1790367186654
@@ -208,12 +247,12 @@
       },
       "imageLimits": {
         "ver": 1,
-        "seq": 16,
+        "seq": 36,
         "val": null
       },
       "inbox": {
         "ver": 1,
-        "seq": 16,
+        "seq": 36,
         "val": {
           "next-turn": [],
           "next-step": []
@@ -221,12 +260,12 @@
       },
       "todos": {
         "ver": 2,
-        "seq": 16,
+        "seq": 36,
         "val": null
       },
       "plan": {
         "ver": 3,
-        "seq": 16,
+        "seq": 36,
         "val": {
           "active": false,
           "wanted": null,
@@ -236,7 +275,7 @@
       },
       "subagentModelSelectionPolicy": {
         "ver": 1,
-        "seq": 16,
+        "seq": 36,
         "val": null
       }
     }
