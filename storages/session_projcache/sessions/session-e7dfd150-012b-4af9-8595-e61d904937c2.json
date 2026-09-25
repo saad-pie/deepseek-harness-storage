@@ -11,12 +11,12 @@
     "rows": {
       "title": {
         "ver": 1,
-        "seq": 13,
+        "seq": 16,
         "val": "Act as an expert frontend"
       },
       "titleInput": {
         "ver": 3,
-        "seq": 13,
+        "seq": 16,
         "val": {
           "first": {
             "seq": 8,
@@ -28,17 +28,22 @@
       },
       "llmRetry": {
         "ver": 1,
-        "seq": 13,
-        "val": {}
+        "seq": 16,
+        "val": {
+          "[\"atria\",\"[\\\"normal\\\",5,[\\\"EMPTY_RESPONSE\\\",\\\"RATE_LIMIT\\\",\\\"SERVER\\\",\\\"TIMEOUT\\\",\\\"TRANSPORT\\\"],500,10000,0.1]\"]": {
+            "retry": 1,
+            "retryId": "c6bf50ae-cc53-43b0-83ca-ce035e8c5fe8"
+          }
+        }
       },
       "sandboxMode": {
         "ver": 1,
-        "seq": 13,
+        "seq": 16,
         "val": "workspace-write"
       },
       "goal": {
         "ver": 6,
-        "seq": 13,
+        "seq": 16,
         "val": {
           "current": null,
           "seenGoalIds": [],
@@ -47,7 +52,7 @@
       },
       "tokenUsage": {
         "ver": 2,
-        "seq": 13,
+        "seq": 16,
         "val": {
           "totals": {
             "uncachedInputTokens": 0,
@@ -60,15 +65,17 @@
       },
       "contextPressure": {
         "ver": 4,
-        "seq": 13,
+        "seq": 16,
         "val": {
           "surfaceTokens": 2357,
-          "contextWindow": 262144
+          "contextWindow": 262144,
+          "pressureTokens": 0,
+          "sampledSurfaceTokens": 2357
         }
       },
       "contextBreakdown": {
         "ver": 4,
-        "seq": 13,
+        "seq": 16,
         "val": {
           "nodes": [
             {
@@ -96,7 +103,7 @@
       },
       "turnBoundary": {
         "ver": 2,
-        "seq": 13,
+        "seq": 16,
         "val": {
           "openTurnStartSeq": 4,
           "lastStepStartSeq": 6,
@@ -109,7 +116,7 @@
       },
       "sessionStats": {
         "ver": 1,
-        "seq": 13,
+        "seq": 16,
         "val": {
           "turns": 0,
           "steps": 0,
@@ -124,14 +131,14 @@
             "turn": 1,
             "step": 1,
             "startTime": 1790367186653,
-            "firstTokenTime": null
+            "firstTokenTime": 1790367190212
           },
           "pendingCalls": {}
         }
       },
       "turnOutline": {
         "ver": 2,
-        "seq": 13,
+        "seq": 16,
         "val": {
           "turns": [
             {
@@ -146,19 +153,19 @@
       },
       "agentPreset": {
         "ver": 1,
-        "seq": 13,
+        "seq": 16,
         "val": "standard"
       },
       "subagentCatalog": {
         "ver": 2,
-        "seq": 13,
+        "seq": 16,
         "val": {
           "inheritedEventCount": 0
         }
       },
       "subagentTiming": {
         "ver": 2,
-        "seq": 13,
+        "seq": 16,
         "val": {
           "descriptorSeen": false,
           "settledMs": 0,
@@ -167,12 +174,12 @@
       },
       "subagent": {
         "ver": 2,
-        "seq": 13,
+        "seq": 16,
         "val": {}
       },
       "permissions": {
         "ver": 2,
-        "seq": 13,
+        "seq": 16,
         "val": {
           "preset": "workspace-write",
           "sandbox": "workspace-write",
@@ -182,7 +189,7 @@
       },
       "modelSelection": {
         "ver": 2,
-        "seq": 13,
+        "seq": 16,
         "val": {
           "lastUsed": {
             "provider": "atria",
@@ -193,7 +200,7 @@
       },
       "sessionListMetadata": {
         "ver": 1,
-        "seq": 13,
+        "seq": 16,
         "val": {
           "blank": false,
           "lastPromptAt": 1790367186654
@@ -201,12 +208,12 @@
       },
       "imageLimits": {
         "ver": 1,
-        "seq": 13,
+        "seq": 16,
         "val": null
       },
       "inbox": {
         "ver": 1,
-        "seq": 13,
+        "seq": 16,
         "val": {
           "next-turn": [],
           "next-step": []
@@ -214,12 +221,12 @@
       },
       "todos": {
         "ver": 2,
-        "seq": 13,
+        "seq": 16,
         "val": null
       },
       "plan": {
         "ver": 3,
-        "seq": 13,
+        "seq": 16,
         "val": {
           "active": false,
           "wanted": null,
@@ -229,7 +236,7 @@
       },
       "subagentModelSelectionPolicy": {
         "ver": 1,
-        "seq": 13,
+        "seq": 16,
         "val": null
       }
     }
