@@ -3,7 +3,7 @@
   "record": {
     "identity": {
       "formatVersion": 3,
-      "createdAt": 1790442782132,
+      "createdAt": 1790442839562,
       "cwd": "/tmp/home",
       "isSeeded": false,
       "inheritedEventCount": 0
@@ -12,18 +12,15 @@
       "title": {
         "ver": 1,
         "seq": 22,
-        "val": "This is a serialization-only test"
+        "val": null
       },
       "titleInput": {
         "ver": 3,
         "seq": 22,
         "val": {
-          "first": {
-            "seq": 8,
-            "text": "This is a serialization-only test call. No task is assigned. Return exactly the string READY.\nYour parent agent id is \"47f2c3e7-01d8-4ce4-b5fd-26170614a0dd\". Before you finish, send your result to that agent with send_message({ agent_id: \"47f2c3e7-01d8-4ce4-b5fd-26170614a0dd\", message: \"<self-contained result>\" }). The parent shares your workspace but does not automatically receive your transcript, tool output, or reasoning. Send earlier messages as well when a finding changes what the parent should do next; sending a message does not end your turn."
-          },
-          "count": 1,
-          "lastSeq": 8
+          "first": null,
+          "count": 0,
+          "lastSeq": null
         }
       },
       "llmRetry": {
@@ -71,10 +68,10 @@
         "ver": 4,
         "seq": 22,
         "val": {
-          "surfaceTokens": 2179,
+          "surfaceTokens": 2210,
           "contextWindow": 262144,
           "pressureTokens": 0,
-          "sampledSurfaceTokens": 2169
+          "sampledSurfaceTokens": 2046
         }
       },
       "contextBreakdown": {
@@ -89,7 +86,7 @@
             },
             {
               "seq": 8,
-              "heuristicTokens": 152,
+              "heuristicTokens": 8,
               "system": false
             },
             {
@@ -98,30 +95,30 @@
               "system": false
             },
             {
-              "seq": 13,
-              "heuristicTokens": 42,
+              "seq": 12,
+              "heuristicTokens": 53,
               "system": false
             },
             {
               "seq": 15,
-              "heuristicTokens": 23,
+              "heuristicTokens": 26,
               "system": false
             },
             {
               "seq": 17,
-              "heuristicTokens": 23,
+              "heuristicTokens": 30,
               "system": false
             },
             {
               "seq": 20,
-              "heuristicTokens": 10,
+              "heuristicTokens": 164,
               "system": false
             }
           ],
           "breakdown": {
             "systemTokens": 1715,
             "toolsTokens": 6833,
-            "messageTokens": 464
+            "messageTokens": 495
           }
         }
       },
@@ -144,11 +141,11 @@
         "val": {
           "turns": 1,
           "steps": 2,
-          "llmMs": 17773,
-          "toolMs": 11,
-          "ttftMs": 17463,
+          "llmMs": 18315,
+          "toolMs": 37,
+          "ttftMs": 16828,
           "ttftSteps": 2,
-          "decodeMs": 310,
+          "decodeMs": 1487,
           "decodeTokens": 0,
           "lastTurn": 1,
           "openStep": null,
@@ -162,9 +159,9 @@
           "turns": [
             {
               "turn": 1,
-              "seq": 4,
-              "prompt": "This is a serialization-only test call. No task i…",
-              "response": "READY"
+              "seq": 3,
+              "prompt": "",
+              "response": "Here's what came back from the caller-executed actions: - **Subagent started** with ID `2a9641f1-87ad-4a17-a672-1ab1bcc…"
             }
           ],
           "draft": ""
@@ -179,7 +176,18 @@
         "ver": 2,
         "seq": 22,
         "val": {
-          "inheritedEventCount": 0
+          "inheritedEventCount": 0,
+          "head": {
+            "values": [
+              {
+                "version": 0,
+                "childId": "2a9641f1-87ad-4a17-a672-1ab1bcce8481",
+                "childCreatedAt": 1790442848191,
+                "mode": "continuable",
+                "label": "placeholder"
+              }
+            ]
+          }
         }
       },
       "subagentTiming": {
@@ -187,7 +195,7 @@
         "seq": 22,
         "val": {
           "descriptorSeen": true,
-          "settledMs": 17824
+          "settledMs": 18396
         }
       },
       "subagent": {
@@ -195,9 +203,9 @@
         "seq": 22,
         "val": {
           "identity": {
-            "mode": "continuable",
-            "label": "no-op serialization check",
-            "seq": 0
+            "mode": "one-shot",
+            "label": "",
+            "seq": 5
           }
         }
       },
@@ -227,7 +235,7 @@
         "seq": 22,
         "val": {
           "blank": false,
-          "lastPromptAt": 1790442782185
+          "lastPromptAt": 1790442839607
         }
       },
       "imageLimits": {
