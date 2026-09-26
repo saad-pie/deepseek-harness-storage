@@ -1,0 +1,262 @@
+{
+  "version": 7,
+  "record": {
+    "identity": {
+      "formatVersion": 3,
+      "createdAt": 1790442362376,
+      "cwd": "/tmp/home",
+      "isSeeded": false,
+      "inheritedEventCount": 0
+    },
+    "rows": {
+      "title": {
+        "ver": 1,
+        "seq": 23,
+        "val": "Add notebooklm skill: Skip to"
+      },
+      "titleInput": {
+        "ver": 3,
+        "seq": 23,
+        "val": {
+          "first": {
+            "seq": 10,
+            "text": "Add notebooklm skill: Skip to content\nnotebooklm-skill\nRepository navigation\nCode\nIssues\nPull requests\n4\n (4)\nNotebookLM does the research, Claude writes the content. Research → Synthesis → Content Creation → Publishing. Claude Code Skill + MCP Server.\n\nMIT License\nyoutu.be/6M3K4sxahdE\nSecurity policy\n464 stars\n60 forks\n2 watching\n5 branches\n6 tags\nActivity\nCustom properties\nPublic repository\ngn00295120\ngn00295120\n2 months ago\nName\t\n.devcontainer\n6 months ago\n.github\n2 months ago\ndocs\n2 months ago\nexamples\n2 months ago\nmcp_server\n2 months ago\nreferences\n2 months ago\nscripts\n2 months ago\ntests\n2 months ago\n.env.example\n2 months ago\n.gitignore\n6 months ago\nRepository files navigation\nREADME\nnotebooklm-skill\nSource-grounded NotebookLM automation for terminals and AI agents.\n\nCI PyPI Python License: MIT\n\n繁體中文\n\nnotebooklm-skill gives humans and MCP clients one consistent interface for Google NotebookLM. It creates notebooks from URLs, raw text, and local files; asks grounded questions with citation metadata; completes fast or deep web research; and generates or downloads NotebookLM artifacts.\n\nThe project is built around notebooklm-py 0.7.x and includes:\n\na JSON-first core CLI;\nfive end-to-end research pipelines;\na 13-tool FastMCP server;\nprofile-aware authentication and Skill installers;\none shared compatibility layer, so CLI, pipelines, and MCP use the same behavior.\nThis is an unofficial integration with NotebookLM's web API. Google can change the service, availability, quotas, or artifact behavior without notice.\n\nQuick start\nIsolated source install\nThe installer creates a dedicated virtual environment, installs Chromium, links five commands into ~/.local/bin, and installs the Claude Code Skill using the standard directory layout.\n\ngit clone https://github.com/claude-world/notebooklm-skill.git\ncd notebooklm-skill\n./install.sh\n\nnotebooklm-auth setup\nnotebooklm-skill list\nEnsure ~/.local/bin is on PATH.\n\nPyPI or uvx\n# Persistent virtual environment\npython3 -m venv .venv\nsource .venv/bin/activate\npython -m pip install notebooklm-skill\npython -m playwright install chromium\nnotebooklm-auth setup\n\n# Or run without a persistent install\nuvx --from notebooklm-skill notebooklm-auth setup\nuvx --from notebooklm-skill notebooklm-skill list\nDirect upstream login is also available:\n\nuvx --from notebooklm-py notebooklm login\nSessions are profile-aware. Select one with --profile NAME before a CLI subcommand, or set NOTEBOOKLM_PROFILE.\n\nTo use the locally installed Google Chrome instead of bundled Chromium:\n\nnotebooklm-auth setup --browser chrome --fresh\nCore CLI\nAll successful commands print structured JSON to stdout. Diagnostics go to stderr; authentication errors return exit code 4 and argument errors return exit code 2.\n\n# Mixed-source ingestion with truthful per-source outcomes\nnotebooklm-skill create \\\n  --title \"Research\" \\\n  --sources https://example.com/article \\\n  --files ./paper.pdf \\\n  --text-sources \"Interview notes\" \\\n  --strict\n\nnotebooklm-skill ask \\\n  --notebook \"Research\" \\\n  --query \"Which conclusions have the strongest evidence?\"\n\nnotebooklm-skill research \\\n  --notebook \"Research\" \\\n  --query \"Recent independent evaluations\" \\\n  --mode deep --max-sources 10\n\nnotebooklm-skill generate \\\n  --notebook \"Research\" \\\n  --type slides --lang zh-TW \\\n  --output ./output/deck.pptx --output-format pptx\n\nnotebooklm-skill list-artifacts --notebook \"Research\" --type slides\nCommands resolve an exact ID, unique title, or unique title substring. Use IDs for repeatable automation. Deletes require --yes; downloads refuse existing files or symlinks unless an explicit safe overwrite is requested with --force.\n\nArtifact types\nType\tDefault download\tNotes\naudio\tM4A\tdeep-dive, brief, critique, or debate\nvideo\tMP4\texplainer/brief and multiple visual styles\ncinematic\tMP4\tcinematic video workflow\nslides\tPDF\tPDF or PPTX\nreport\tMarkdown\tbriefing, study guide, blog, or custom\nstudy-guide\tMarkdown\treport shortcut\nquiz\tJSON\tJSON, Markdown, or HTML\nflashcards\tJSON\tJSON, Markdown, or HTML\nmind-map\tJSON\timmediate generation result\ninfographic\tPNG\torientation, detail, and style options\ndata-table\tCSV\tstructured extraction\nUse notebooklm-skill generate --help for the live option matrix. Long-running generations support --no-wait, and later downloads can select --artifact-id.\n\nPipelines\nnotebooklm-pipeline research-to-article \\\n  --sources https://example.com/a https://example.com/b \\\n  --title \"Evidence review\" --audience \"engineers\"\n\nnotebooklm-pipeline research-to-social \\\n  --files ./brief.pdf --platform linkedin --variants 3\n\nnotebooklm-pipeline batch-digest \\\n  --rss https://example.com/feed.xml --max-entries 20 --qa-count 5\n\nnotebooklm-pipeline generate-all \\\n  --files ./paper.pdf --types audio slides report mind-map \\\n  --output-dir ./output --artifact-concurrency 2\ntrend-to-content requires the optional trend-pulse command. Pipelines return drafts and local artifacts; they do not publish to social platforms or remote CMSs.\n\nMCP server\nThe default stdio transport is suitable for Claude Code, Cursor, and other MCP clients:\n\n{\n  \"mcpServers\": {\n    \"notebooklm\": {\n      \"command\": \"uvx\",\n      \"args\": [\"--from\", \"notebooklm-skill\", \"notebooklm-mcp\"]\n    }\n  }\n}\nThe 13 tools cover notebook CRUD, mixed sources, grounded chat, summaries, artifact generation/list/download, full research lifecycles, research pipelines, and trend research. Notebook deletion requires confirm=true.\n\nOptional HTTP mode is deliberately loopback-only:\n\nnotebooklm-mcp --http --host 127.0.0.1 --port 8765\nDo not expose it directly to a network. See SECURITY.md.\n\nAdditional commands\nCommand\tPurpose\nnotebooklm-auth\tSetup, verify, or clear a selected auth profile\nnotebooklm-install-skill\tInstall SKILL.md for a user or project, with safe backups\nnotebooklm-install-skill --scope project\nnotebooklm-auth --profile work verify\nDevelopment\npython3 -m venv .venv\nsource .venv/bin/activate\npython -m pip install -e '.[dev]'\nruff check .\nruff format --check .\nmypy scripts mcp_server\npytest --cov --cov-report=term-missing\npython -m build\ntwine check dist/*\nMore detail: setup guide, Skill instructions, API compatibility notes, and changelog.\n\nLicense\nMIT\n\nReleases\n6\n (6)\nv1.3.0\nLatest\n2 months ago\n+ 5 releases\nDeployments\n5\n (5)\npypi\n2 months ago\nPackages\nNo packages published\nContributors\n2\n (2)\n@gn00295120\ngn00295120Lucas Wang\n@claude\nclaudeClaude\nLanguages\nPython\n95.8%\nShell\n4.2%\nFooter\n© 2026 GitHub, Inc.\nFooter navigation\nTerms\nPrivacy\nSecurity\nStatus\nCommunity\nDocs\nContact\nManage cookies\nDo not share my personal information"
+          },
+          "count": 1,
+          "lastSeq": 10
+        }
+      },
+      "llmRetry": {
+        "ver": 1,
+        "seq": 23,
+        "val": {}
+      },
+      "sandboxMode": {
+        "ver": 1,
+        "seq": 23,
+        "val": "danger-full-access"
+      },
+      "goal": {
+        "ver": 6,
+        "seq": 23,
+        "val": {
+          "current": null,
+          "seenGoalIds": [],
+          "failure": null
+        }
+      },
+      "tokenUsage": {
+        "ver": 2,
+        "seq": 23,
+        "val": {
+          "totals": {
+            "uncachedInputTokens": 3528,
+            "outputTokens": 160,
+            "cacheReadTokens": 0,
+            "cacheWriteTokens": 0
+          },
+          "last": {
+            "turn": 1,
+            "step": 1,
+            "buckets": {
+              "uncachedInputTokens": 3528,
+              "outputTokens": 160,
+              "cacheReadTokens": 0,
+              "cacheWriteTokens": 0
+            }
+          }
+        }
+      },
+      "contextPressure": {
+        "ver": 4,
+        "seq": 23,
+        "val": {
+          "surfaceTokens": 3653,
+          "contextWindow": 262144,
+          "pressureTokens": 3528,
+          "sampledSurfaceTokens": 3485
+        }
+      },
+      "contextBreakdown": {
+        "ver": 4,
+        "seq": 23,
+        "val": {
+          "nodes": [
+            {
+              "seq": 9,
+              "heuristicTokens": 1711,
+              "system": true
+            },
+            {
+              "seq": 10,
+              "heuristicTokens": 1653,
+              "system": false
+            },
+            {
+              "seq": 11,
+              "heuristicTokens": 121,
+              "system": false
+            },
+            {
+              "seq": 15,
+              "heuristicTokens": 168,
+              "system": false
+            }
+          ],
+          "breakdown": {
+            "systemTokens": 1711,
+            "toolsTokens": 6833,
+            "messageTokens": 1942
+          }
+        }
+      },
+      "turnBoundary": {
+        "ver": 2,
+        "seq": 23,
+        "val": {
+          "openTurnStartSeq": null,
+          "lastStepStartSeq": 8,
+          "lastStepBoundary": {
+            "kind": "end",
+            "seq": 16
+          },
+          "lastTurn": 1
+        }
+      },
+      "sessionStats": {
+        "ver": 1,
+        "seq": 23,
+        "val": {
+          "turns": 1,
+          "steps": 1,
+          "llmMs": 3666,
+          "toolMs": 0,
+          "ttftMs": 3450,
+          "ttftSteps": 1,
+          "decodeMs": 216,
+          "decodeTokens": 160,
+          "lastTurn": 1,
+          "openStep": null,
+          "pendingCalls": {}
+        }
+      },
+      "turnOutline": {
+        "ver": 2,
+        "seq": 23,
+        "val": {
+          "turns": [
+            {
+              "turn": 1,
+              "seq": 6,
+              "prompt": "Add notebooklm skill: Skip to content notebooklm-…",
+              "response": "The current runtime context indicates that the workspace file policy allows modifications within the specified session…"
+            }
+          ],
+          "draft": ""
+        }
+      },
+      "agentPreset": {
+        "ver": 1,
+        "seq": 23,
+        "val": "standard"
+      },
+      "subagentCatalog": {
+        "ver": 2,
+        "seq": 23,
+        "val": {
+          "inheritedEventCount": 0
+        }
+      },
+      "subagentTiming": {
+        "ver": 2,
+        "seq": 23,
+        "val": {
+          "descriptorSeen": false,
+          "settledMs": 0
+        }
+      },
+      "subagent": {
+        "ver": 2,
+        "seq": 23,
+        "val": {}
+      },
+      "permissions": {
+        "ver": 2,
+        "seq": 23,
+        "val": {
+          "preset": "danger-full-access",
+          "sandbox": "danger-full-access",
+          "approval": "never",
+          "seeded": false
+        }
+      },
+      "modelSelection": {
+        "ver": 2,
+        "seq": 23,
+        "val": {
+          "lastUsed": {
+            "provider": "atria",
+            "model": "gpt-4o:free"
+          },
+          "pending": null
+        }
+      },
+      "sessionListMetadata": {
+        "ver": 1,
+        "seq": 23,
+        "val": {
+          "blank": false,
+          "lastPromptAt": 1790442455673
+        }
+      },
+      "imageLimits": {
+        "ver": 1,
+        "seq": 23,
+        "val": null
+      },
+      "inbox": {
+        "ver": 1,
+        "seq": 23,
+        "val": {
+          "next-turn": [],
+          "next-step": [
+            {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "The approval policy changed from \"ask\" to \"never\" (changed by the user)."
+                }
+              ],
+              "source": {
+                "kind": "plugin",
+                "plugin": "user-approval"
+              },
+              "role": "user",
+              "id": "2749f7be-be9d-4eb6-aaf5-e049c67ca86b"
+            }
+          ]
+        }
+      },
+      "todos": {
+        "ver": 2,
+        "seq": 23,
+        "val": null
+      },
+      "plan": {
+        "ver": 3,
+        "seq": 23,
+        "val": {
+          "active": false,
+          "wanted": null,
+          "running": null,
+          "activeAtLastHeader": false
+        }
+      },
+      "subagentModelSelectionPolicy": {
+        "ver": 1,
+        "seq": 23,
+        "val": null
+      }
+    }
+  }
+}
