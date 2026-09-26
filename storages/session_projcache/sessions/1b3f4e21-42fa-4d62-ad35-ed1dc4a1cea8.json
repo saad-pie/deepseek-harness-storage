@@ -1,0 +1,731 @@
+{
+  "version": 7,
+  "record": {
+    "identity": {
+      "formatVersion": 3,
+      "createdAt": 1790443131684,
+      "cwd": "/tmp/home",
+      "isSeeded": false,
+      "inheritedEventCount": 0
+    },
+    "rows": {
+      "title": {
+        "ver": 1,
+        "seq": 210,
+        "val": "You are a delegated subagent."
+      },
+      "titleInput": {
+        "ver": 3,
+        "seq": 210,
+        "val": {
+          "first": {
+            "seq": 8,
+            "text": "You are a delegated subagent. Confirm you received this prompt by replying with exactly 'READY'. Do not perform any other work.\nYour parent agent id is \"58f8973c-a387-4a09-b76f-8b4c533516d4\". Before you finish, send your result to that agent with send_message({ agent_id: \"58f8973c-a387-4a09-b76f-8b4c533516d4\", message: \"<self-contained result>\" }). The parent shares your workspace but does not automatically receive your transcript, tool output, or reasoning. Send earlier messages as well when a finding changes what the parent should do next; sending a message does not end your turn."
+          },
+          "count": 1,
+          "lastSeq": 8
+        }
+      },
+      "llmRetry": {
+        "ver": 1,
+        "seq": 210,
+        "val": {}
+      },
+      "sandboxMode": {
+        "ver": 1,
+        "seq": 210,
+        "val": "workspace-write"
+      },
+      "goal": {
+        "ver": 6,
+        "seq": 210,
+        "val": {
+          "current": null,
+          "seenGoalIds": [],
+          "failure": null
+        }
+      },
+      "tokenUsage": {
+        "ver": 2,
+        "seq": 210,
+        "val": {
+          "totals": {
+            "uncachedInputTokens": 0,
+            "outputTokens": 0,
+            "cacheReadTokens": 0,
+            "cacheWriteTokens": 0
+          },
+          "last": {
+            "turn": 5,
+            "step": 3,
+            "buckets": {
+              "uncachedInputTokens": 0,
+              "outputTokens": 0,
+              "cacheReadTokens": 0,
+              "cacheWriteTokens": 0
+            }
+          }
+        }
+      },
+      "contextPressure": {
+        "ver": 4,
+        "seq": 210,
+        "val": {
+          "surfaceTokens": 8292,
+          "contextWindow": 262144,
+          "pressureTokens": 0,
+          "sampledSurfaceTokens": 7793
+        }
+      },
+      "contextBreakdown": {
+        "ver": 4,
+        "seq": 210,
+        "val": {
+          "nodes": [
+            {
+              "seq": 7,
+              "heuristicTokens": 1715,
+              "system": true
+            },
+            {
+              "seq": 8,
+              "heuristicTokens": 160,
+              "system": false
+            },
+            {
+              "seq": 9,
+              "heuristicTokens": 214,
+              "system": false
+            },
+            {
+              "seq": 13,
+              "heuristicTokens": 63,
+              "system": false
+            },
+            {
+              "seq": 16,
+              "heuristicTokens": 26,
+              "system": false
+            },
+            {
+              "seq": 18,
+              "heuristicTokens": 30,
+              "system": false
+            },
+            {
+              "seq": 21,
+              "heuristicTokens": 10,
+              "system": false
+            },
+            {
+              "seq": 28,
+              "heuristicTokens": 254,
+              "system": false
+            },
+            {
+              "seq": 29,
+              "heuristicTokens": 180,
+              "system": false
+            },
+            {
+              "seq": 31,
+              "heuristicTokens": 28,
+              "system": false
+            },
+            {
+              "seq": 34,
+              "heuristicTokens": 26,
+              "system": false
+            },
+            {
+              "seq": 36,
+              "heuristicTokens": 35,
+              "system": false
+            },
+            {
+              "seq": 39,
+              "heuristicTokens": 74,
+              "system": false
+            },
+            {
+              "seq": 46,
+              "heuristicTokens": 78,
+              "system": false
+            },
+            {
+              "seq": 48,
+              "heuristicTokens": 56,
+              "system": false
+            },
+            {
+              "seq": 51,
+              "heuristicTokens": 26,
+              "system": false
+            },
+            {
+              "seq": 53,
+              "heuristicTokens": 35,
+              "system": false
+            },
+            {
+              "seq": 57,
+              "heuristicTokens": 238,
+              "system": false
+            },
+            {
+              "seq": 58,
+              "heuristicTokens": 79,
+              "system": false
+            },
+            {
+              "seq": 61,
+              "heuristicTokens": 31,
+              "system": false
+            },
+            {
+              "seq": 63,
+              "heuristicTokens": 26,
+              "system": false
+            },
+            {
+              "seq": 65,
+              "heuristicTokens": 35,
+              "system": false
+            },
+            {
+              "seq": 69,
+              "heuristicTokens": 10,
+              "system": false
+            },
+            {
+              "seq": 73,
+              "heuristicTokens": 217,
+              "system": false
+            },
+            {
+              "seq": 74,
+              "heuristicTokens": 84,
+              "system": false
+            },
+            {
+              "seq": 77,
+              "heuristicTokens": 30,
+              "system": false
+            },
+            {
+              "seq": 79,
+              "heuristicTokens": 26,
+              "system": false
+            },
+            {
+              "seq": 81,
+              "heuristicTokens": 30,
+              "system": false
+            },
+            {
+              "seq": 85,
+              "heuristicTokens": 10,
+              "system": false
+            },
+            {
+              "seq": 89,
+              "heuristicTokens": 395,
+              "system": false
+            },
+            {
+              "seq": 90,
+              "heuristicTokens": 85,
+              "system": false
+            },
+            {
+              "seq": 93,
+              "heuristicTokens": 27,
+              "system": false
+            },
+            {
+              "seq": 95,
+              "heuristicTokens": 26,
+              "system": false
+            },
+            {
+              "seq": 97,
+              "heuristicTokens": 30,
+              "system": false
+            },
+            {
+              "seq": 101,
+              "heuristicTokens": 10,
+              "system": false
+            },
+            {
+              "seq": 105,
+              "heuristicTokens": 325,
+              "system": false
+            },
+            {
+              "seq": 107,
+              "heuristicTokens": 122,
+              "system": false
+            },
+            {
+              "seq": 109,
+              "heuristicTokens": 26,
+              "system": false
+            },
+            {
+              "seq": 111,
+              "heuristicTokens": 23,
+              "system": false
+            },
+            {
+              "seq": 114,
+              "heuristicTokens": 26,
+              "system": false
+            },
+            {
+              "seq": 116,
+              "heuristicTokens": 34,
+              "system": false
+            },
+            {
+              "seq": 120,
+              "heuristicTokens": 81,
+              "system": false
+            },
+            {
+              "seq": 121,
+              "heuristicTokens": 25,
+              "system": false
+            },
+            {
+              "seq": 124,
+              "heuristicTokens": 26,
+              "system": false
+            },
+            {
+              "seq": 127,
+              "heuristicTokens": 10,
+              "system": false
+            },
+            {
+              "seq": 134,
+              "heuristicTokens": 336,
+              "system": false
+            },
+            {
+              "seq": 135,
+              "heuristicTokens": 85,
+              "system": false
+            },
+            {
+              "seq": 138,
+              "heuristicTokens": 33,
+              "system": false
+            },
+            {
+              "seq": 140,
+              "heuristicTokens": 26,
+              "system": false
+            },
+            {
+              "seq": 142,
+              "heuristicTokens": 41,
+              "system": false
+            },
+            {
+              "seq": 146,
+              "heuristicTokens": 10,
+              "system": false
+            },
+            {
+              "seq": 150,
+              "heuristicTokens": 536,
+              "system": false
+            },
+            {
+              "seq": 152,
+              "heuristicTokens": 115,
+              "system": false
+            },
+            {
+              "seq": 154,
+              "heuristicTokens": 30,
+              "system": false
+            },
+            {
+              "seq": 156,
+              "heuristicTokens": 23,
+              "system": false
+            },
+            {
+              "seq": 159,
+              "heuristicTokens": 26,
+              "system": false
+            },
+            {
+              "seq": 161,
+              "heuristicTokens": 30,
+              "system": false
+            },
+            {
+              "seq": 165,
+              "heuristicTokens": 363,
+              "system": false
+            },
+            {
+              "seq": 166,
+              "heuristicTokens": 70,
+              "system": false
+            },
+            {
+              "seq": 169,
+              "heuristicTokens": 30,
+              "system": false
+            },
+            {
+              "seq": 171,
+              "heuristicTokens": 26,
+              "system": false
+            },
+            {
+              "seq": 173,
+              "heuristicTokens": 30,
+              "system": false
+            },
+            {
+              "seq": 176,
+              "heuristicTokens": 10,
+              "system": false
+            },
+            {
+              "seq": 183,
+              "heuristicTokens": 327,
+              "system": false
+            },
+            {
+              "seq": 184,
+              "heuristicTokens": 32,
+              "system": false
+            },
+            {
+              "seq": 187,
+              "heuristicTokens": 26,
+              "system": false
+            },
+            {
+              "seq": 189,
+              "heuristicTokens": 23,
+              "system": false
+            },
+            {
+              "seq": 193,
+              "heuristicTokens": 10,
+              "system": false
+            },
+            {
+              "seq": 197,
+              "heuristicTokens": 458,
+              "system": false
+            },
+            {
+              "seq": 199,
+              "heuristicTokens": 70,
+              "system": false
+            },
+            {
+              "seq": 202,
+              "heuristicTokens": 78,
+              "system": false
+            },
+            {
+              "seq": 204,
+              "heuristicTokens": 26,
+              "system": false
+            },
+            {
+              "seq": 206,
+              "heuristicTokens": 34,
+              "system": false
+            },
+            {
+              "seq": 210,
+              "heuristicTokens": 291,
+              "system": false
+            }
+          ],
+          "breakdown": {
+            "systemTokens": 1715,
+            "toolsTokens": 6833,
+            "messageTokens": 6577
+          }
+        }
+      },
+      "turnBoundary": {
+        "ver": 2,
+        "seq": 210,
+        "val": {
+          "openTurnStartSeq": 180,
+          "lastStepStartSeq": 209,
+          "lastStepBoundary": {
+            "kind": "start",
+            "seq": 209
+          },
+          "lastTurn": 5
+        }
+      },
+      "sessionStats": {
+        "ver": 1,
+        "seq": 210,
+        "val": {
+          "turns": 5,
+          "steps": 22,
+          "llmMs": 228646,
+          "toolMs": 638,
+          "ttftMs": 224633,
+          "ttftSteps": 22,
+          "decodeMs": 4013,
+          "decodeTokens": 0,
+          "lastTurn": 5,
+          "openStep": {
+            "turn": 5,
+            "step": 4,
+            "startTime": 1790443376136,
+            "firstTokenTime": null
+          },
+          "pendingCalls": {}
+        }
+      },
+      "turnOutline": {
+        "ver": 2,
+        "seq": 210,
+        "val": {
+          "turns": [
+            {
+              "turn": 1,
+              "seq": 4,
+              "prompt": "You are a delegated subagent. Confirm you receive…",
+              "response": "READY"
+            },
+            {
+              "turn": 2,
+              "seq": 25,
+              "prompt": "",
+              "response": "Message delivered to the parent agent (58f8973c-a387-4a09-b76f-8b4c533516d4) as requested. The delegated subagent 3ea70…"
+            },
+            {
+              "turn": 3,
+              "seq": 43,
+              "prompt": "",
+              "response": "READY"
+            },
+            {
+              "turn": 4,
+              "seq": 131,
+              "prompt": "",
+              "response": "READY"
+            },
+            {
+              "turn": 5,
+              "seq": 180,
+              "prompt": "",
+              "response": ""
+            }
+          ],
+          "draft": "READY"
+        }
+      },
+      "agentPreset": {
+        "ver": 1,
+        "seq": 210,
+        "val": "standard"
+      },
+      "subagentCatalog": {
+        "ver": 2,
+        "seq": 210,
+        "val": {
+          "inheritedEventCount": 0,
+          "head": {
+            "values": [
+              {
+                "version": 0,
+                "childId": "d1894f61-a204-4997-ab09-71bfe011b78c",
+                "childCreatedAt": 1790443143009,
+                "mode": "continuable",
+                "label": "delegate task"
+              },
+              {
+                "version": 0,
+                "childId": "3ea70526-b14b-44ee-b984-c18c252cc704",
+                "childCreatedAt": 1790443174579,
+                "mode": "continuable",
+                "label": "delegate task"
+              },
+              {
+                "version": 0,
+                "childId": "20ce5efb-fca2-45cc-a8e2-0bfe62980a6e",
+                "childCreatedAt": 1790443197688,
+                "mode": "continuable",
+                "label": "placeholder delegated task"
+              },
+              {
+                "version": 0,
+                "childId": "7a389835-20f4-48e3-84ae-cddacde2a007",
+                "childCreatedAt": 1790443210456,
+                "mode": "continuable",
+                "label": "placeholder delegated task"
+              },
+              {
+                "version": 0,
+                "childId": "ba3b2ea3-fafe-4c38-8840-55a2932c434d",
+                "childCreatedAt": 1790443225866,
+                "mode": "continuable",
+                "label": "within those bounds"
+              },
+              {
+                "version": 0,
+                "childId": "d756095e-34a4-4beb-ae80-d2b35ffb70e7",
+                "childCreatedAt": 1790443241493,
+                "mode": "continuable",
+                "label": "it at the current level rather than delegating further"
+              },
+              {
+                "version": 0,
+                "childId": "92fd12f8-78e6-4879-bbd2-fd4ae29b8078",
+                "childCreatedAt": 1790443266002,
+                "mode": "continuable",
+                "label": "placeholder"
+              },
+              {
+                "version": 0,
+                "childId": "68340d92-6094-4a37-8ca1-29c4d0b2e633",
+                "childCreatedAt": 1790443276294,
+                "mode": "continuable",
+                "label": "placeholder task"
+              },
+              {
+                "version": 0,
+                "childId": "1370fe5f-2186-4b10-957e-18b40c81654f",
+                "childCreatedAt": 1790443293289,
+                "mode": "continuable",
+                "label": "execute, and no result worth sending back"
+              },
+              {
+                "version": 0,
+                "childId": "0a03c616-886f-4f0a-8a49-7d540e42d27c",
+                "childCreatedAt": 1790443319239,
+                "mode": "continuable",
+                "label": "placeholder"
+              },
+              {
+                "version": 0,
+                "childId": "709e9ae3-c200-4004-baff-2ad4f2160e1c",
+                "childCreatedAt": 1790443329884,
+                "mode": "continuable",
+                "label": "placeholder"
+              },
+              {
+                "version": 0,
+                "childId": "0523caf1-b23d-4c55-bf1c-63214dcfd94c",
+                "childCreatedAt": 1790443350084,
+                "mode": "continuable",
+                "label": ""
+              },
+              {
+                "version": 0,
+                "childId": "da40a3f5-ee28-4d02-9650-3c09e9fb4d95",
+                "childCreatedAt": 1790443376083,
+                "mode": "continuable",
+                "label": "placeholder"
+              }
+            ]
+          }
+        }
+      },
+      "subagentTiming": {
+        "ver": 2,
+        "seq": 210,
+        "val": {
+          "descriptorSeen": true,
+          "settledMs": 194298,
+          "active": {
+            "since": 1790443340854,
+            "through": 1790443376137
+          }
+        }
+      },
+      "subagent": {
+        "ver": 2,
+        "seq": 210,
+        "val": {
+          "identity": {
+            "mode": "continuable",
+            "label": "Delegated test task",
+            "seq": 0
+          }
+        }
+      },
+      "permissions": {
+        "ver": 2,
+        "seq": 210,
+        "val": {
+          "preset": null,
+          "sandbox": "workspace-write",
+          "approval": "never",
+          "seeded": false
+        }
+      },
+      "modelSelection": {
+        "ver": 2,
+        "seq": 210,
+        "val": {
+          "lastUsed": {
+            "provider": "atria",
+            "model": "deepseek-z/deepseek-v4-pro"
+          },
+          "pending": null
+        }
+      },
+      "sessionListMetadata": {
+        "ver": 1,
+        "seq": 210,
+        "val": {
+          "blank": false,
+          "lastPromptAt": 1790443131737
+        }
+      },
+      "imageLimits": {
+        "ver": 1,
+        "seq": 210,
+        "val": null
+      },
+      "inbox": {
+        "ver": 1,
+        "seq": 210,
+        "val": {
+          "next-turn": [],
+          "next-step": []
+        }
+      },
+      "todos": {
+        "ver": 2,
+        "seq": 210,
+        "val": null
+      },
+      "plan": {
+        "ver": 3,
+        "seq": 210,
+        "val": {
+          "active": false,
+          "wanted": null,
+          "running": null,
+          "activeAtLastHeader": false
+        }
+      },
+      "subagentModelSelectionPolicy": {
+        "ver": 1,
+        "seq": 210,
+        "val": null
+      }
+    }
+  }
+}

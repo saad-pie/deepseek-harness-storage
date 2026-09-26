@@ -11,31 +11,34 @@
     "rows": {
       "title": {
         "ver": 1,
-        "seq": 1,
-        "val": null
+        "seq": 22,
+        "val": "This is a serialization-only test"
       },
       "titleInput": {
         "ver": 3,
-        "seq": 1,
+        "seq": 22,
         "val": {
-          "first": null,
-          "count": 0,
-          "lastSeq": null
+          "first": {
+            "seq": 8,
+            "text": "This is a serialization-only test call. No task is assigned. Return exactly the string READY."
+          },
+          "count": 1,
+          "lastSeq": 8
         }
       },
       "llmRetry": {
         "ver": 1,
-        "seq": 1,
+        "seq": 22,
         "val": {}
       },
       "sandboxMode": {
         "ver": 1,
-        "seq": 1,
+        "seq": 22,
         "val": "workspace-write"
       },
       "goal": {
         "ver": 6,
-        "seq": 1,
+        "seq": 22,
         "val": {
           "current": null,
           "seenGoalIds": [],
@@ -44,7 +47,7 @@
       },
       "tokenUsage": {
         "ver": 2,
-        "seq": 1,
+        "seq": 22,
         "val": {
           "totals": {
             "uncachedInputTokens": 0,
@@ -52,91 +55,155 @@
             "cacheReadTokens": 0,
             "cacheWriteTokens": 0
           },
-          "last": null
+          "last": {
+            "turn": 1,
+            "step": 2,
+            "buckets": {
+              "uncachedInputTokens": 0,
+              "outputTokens": 0,
+              "cacheReadTokens": 0,
+              "cacheWriteTokens": 0
+            }
+          }
         }
       },
       "contextPressure": {
         "ver": 4,
-        "seq": 1,
+        "seq": 22,
         "val": {
-          "surfaceTokens": 0
+          "surfaceTokens": 2059,
+          "contextWindow": 262144,
+          "pressureTokens": 0,
+          "sampledSurfaceTokens": 2049
         }
       },
       "contextBreakdown": {
         "ver": 4,
-        "seq": 1,
+        "seq": 22,
         "val": {
-          "nodes": [],
+          "nodes": [
+            {
+              "seq": 7,
+              "heuristicTokens": 1715,
+              "system": true
+            },
+            {
+              "seq": 8,
+              "heuristicTokens": 32,
+              "system": false
+            },
+            {
+              "seq": 9,
+              "heuristicTokens": 214,
+              "system": false
+            },
+            {
+              "seq": 13,
+              "heuristicTokens": 42,
+              "system": false
+            },
+            {
+              "seq": 15,
+              "heuristicTokens": 23,
+              "system": false
+            },
+            {
+              "seq": 17,
+              "heuristicTokens": 23,
+              "system": false
+            },
+            {
+              "seq": 20,
+              "heuristicTokens": 10,
+              "system": false
+            }
+          ],
           "breakdown": {
-            "systemTokens": 0,
-            "toolsTokens": 0,
-            "messageTokens": 0
+            "systemTokens": 1715,
+            "toolsTokens": 6833,
+            "messageTokens": 344
           }
         }
       },
       "turnBoundary": {
         "ver": 2,
-        "seq": 1,
+        "seq": 22,
         "val": {
           "openTurnStartSeq": null,
-          "lastStepStartSeq": null,
-          "lastStepBoundary": null,
-          "lastTurn": 0
+          "lastStepStartSeq": 19,
+          "lastStepBoundary": {
+            "kind": "end",
+            "seq": 21
+          },
+          "lastTurn": 1
         }
       },
       "sessionStats": {
         "ver": 1,
-        "seq": 1,
+        "seq": 22,
         "val": {
-          "turns": 0,
-          "steps": 0,
-          "llmMs": 0,
-          "toolMs": 0,
-          "ttftMs": 0,
-          "ttftSteps": 0,
-          "decodeMs": 0,
+          "turns": 1,
+          "steps": 2,
+          "llmMs": 19880,
+          "toolMs": 10,
+          "ttftMs": 19591,
+          "ttftSteps": 2,
+          "decodeMs": 289,
           "decodeTokens": 0,
-          "lastTurn": null,
+          "lastTurn": 1,
           "openStep": null,
           "pendingCalls": {}
         }
       },
       "turnOutline": {
         "ver": 2,
-        "seq": 1,
+        "seq": 22,
         "val": {
-          "turns": [],
+          "turns": [
+            {
+              "turn": 1,
+              "seq": 3,
+              "prompt": "This is a serialization-only test call. No task i…",
+              "response": "READY"
+            }
+          ],
           "draft": ""
         }
       },
       "agentPreset": {
         "ver": 1,
-        "seq": 1,
+        "seq": 22,
         "val": "standard"
       },
       "subagentCatalog": {
         "ver": 2,
-        "seq": 1,
+        "seq": 22,
         "val": {
           "inheritedEventCount": 0
         }
       },
       "subagentTiming": {
         "ver": 2,
-        "seq": 1,
+        "seq": 22,
         "val": {
-          "descriptorSeen": false,
-          "settledMs": 0
+          "descriptorSeen": true,
+          "settledMs": 19912
         }
       },
       "subagent": {
         "ver": 2,
-        "seq": 1,
-        "val": {}
+        "seq": 22,
+        "val": {
+          "identity": {
+            "mode": "one-shot",
+            "label": "no-op serialization check",
+            "seq": 5
+          }
+        }
       },
       "permissions": {
         "ver": 2,
-        "seq": 1,
+        "seq": 22,
         "val": {
           "preset": null,
           "sandbox": "workspace-write",
@@ -146,28 +213,31 @@
       },
       "modelSelection": {
         "ver": 2,
-        "seq": 1,
+        "seq": 22,
         "val": {
-          "lastUsed": null,
+          "lastUsed": {
+            "provider": "atria",
+            "model": "deepseek-z/deepseek-v4-pro"
+          },
           "pending": null
         }
       },
       "sessionListMetadata": {
         "ver": 1,
-        "seq": 1,
+        "seq": 22,
         "val": {
-          "blank": true,
-          "lastPromptAt": null
+          "blank": false,
+          "lastPromptAt": 1790443081108
         }
       },
       "imageLimits": {
         "ver": 1,
-        "seq": 1,
+        "seq": 22,
         "val": null
       },
       "inbox": {
         "ver": 1,
-        "seq": 1,
+        "seq": 22,
         "val": {
           "next-turn": [],
           "next-step": []
@@ -175,22 +245,22 @@
       },
       "todos": {
         "ver": 2,
-        "seq": 1,
+        "seq": 22,
         "val": null
       },
       "plan": {
         "ver": 3,
-        "seq": 1,
+        "seq": 22,
         "val": {
           "active": false,
           "wanted": null,
           "running": null,
-          "activeAtLastHeader": null
+          "activeAtLastHeader": false
         }
       },
       "subagentModelSelectionPolicy": {
         "ver": 1,
-        "seq": 1,
+        "seq": 22,
         "val": null
       }
     }

@@ -1,0 +1,414 @@
+{
+  "version": 7,
+  "record": {
+    "identity": {
+      "formatVersion": 3,
+      "createdAt": 1790443118158,
+      "cwd": "/tmp/home",
+      "isSeeded": false,
+      "inheritedEventCount": 0
+    },
+    "rows": {
+      "title": {
+        "ver": 1,
+        "seq": 81,
+        "val": "Your parent agent id is"
+      },
+      "titleInput": {
+        "ver": 3,
+        "seq": 81,
+        "val": {
+          "first": {
+            "seq": 8,
+            "text": "\nYour parent agent id is \"58f8973c-a387-4a09-b76f-8b4c533516d4\". Before you finish, send your result to that agent with send_message({ agent_id: \"58f8973c-a387-4a09-b76f-8b4c533516d4\", message: \"<self-contained result>\" }). The parent shares your workspace but does not automatically receive your transcript, tool output, or reasoning. Send earlier messages as well when a finding changes what the parent should do next; sending a message does not end your turn."
+          },
+          "count": 1,
+          "lastSeq": 8
+        }
+      },
+      "llmRetry": {
+        "ver": 1,
+        "seq": 81,
+        "val": {}
+      },
+      "sandboxMode": {
+        "ver": 1,
+        "seq": 81,
+        "val": "workspace-write"
+      },
+      "goal": {
+        "ver": 6,
+        "seq": 81,
+        "val": {
+          "current": null,
+          "seenGoalIds": [],
+          "failure": null
+        }
+      },
+      "tokenUsage": {
+        "ver": 2,
+        "seq": 81,
+        "val": {
+          "totals": {
+            "uncachedInputTokens": 0,
+            "outputTokens": 0,
+            "cacheReadTokens": 0,
+            "cacheWriteTokens": 0
+          },
+          "last": {
+            "turn": 5,
+            "step": 1,
+            "buckets": {
+              "uncachedInputTokens": 0,
+              "outputTokens": 0,
+              "cacheReadTokens": 0,
+              "cacheWriteTokens": 0
+            }
+          }
+        }
+      },
+      "contextPressure": {
+        "ver": 4,
+        "seq": 81,
+        "val": {
+          "surfaceTokens": 5423,
+          "contextWindow": 262144,
+          "pressureTokens": 0,
+          "sampledSurfaceTokens": 5372
+        }
+      },
+      "contextBreakdown": {
+        "ver": 4,
+        "seq": 81,
+        "val": {
+          "nodes": [
+            {
+              "seq": 7,
+              "heuristicTokens": 1715,
+              "system": true
+            },
+            {
+              "seq": 8,
+              "heuristicTokens": 128,
+              "system": false
+            },
+            {
+              "seq": 9,
+              "heuristicTokens": 214,
+              "system": false
+            },
+            {
+              "seq": 13,
+              "heuristicTokens": 61,
+              "system": false
+            },
+            {
+              "seq": 16,
+              "heuristicTokens": 26,
+              "system": false
+            },
+            {
+              "seq": 18,
+              "heuristicTokens": 30,
+              "system": false
+            },
+            {
+              "seq": 21,
+              "heuristicTokens": 299,
+              "system": false
+            },
+            {
+              "seq": 28,
+              "heuristicTokens": 344,
+              "system": false
+            },
+            {
+              "seq": 29,
+              "heuristicTokens": 94,
+              "system": false
+            },
+            {
+              "seq": 32,
+              "heuristicTokens": 41,
+              "system": false
+            },
+            {
+              "seq": 34,
+              "heuristicTokens": 26,
+              "system": false
+            },
+            {
+              "seq": 36,
+              "heuristicTokens": 30,
+              "system": false
+            },
+            {
+              "seq": 39,
+              "heuristicTokens": 432,
+              "system": false
+            },
+            {
+              "seq": 46,
+              "heuristicTokens": 315,
+              "system": false
+            },
+            {
+              "seq": 47,
+              "heuristicTokens": 187,
+              "system": false
+            },
+            {
+              "seq": 50,
+              "heuristicTokens": 29,
+              "system": false
+            },
+            {
+              "seq": 52,
+              "heuristicTokens": 26,
+              "system": false
+            },
+            {
+              "seq": 54,
+              "heuristicTokens": 36,
+              "system": false
+            },
+            {
+              "seq": 57,
+              "heuristicTokens": 382,
+              "system": false
+            },
+            {
+              "seq": 64,
+              "heuristicTokens": 125,
+              "system": false
+            },
+            {
+              "seq": 65,
+              "heuristicTokens": 153,
+              "system": false
+            },
+            {
+              "seq": 68,
+              "heuristicTokens": 26,
+              "system": false
+            },
+            {
+              "seq": 71,
+              "heuristicTokens": 362,
+              "system": false
+            },
+            {
+              "seq": 78,
+              "heuristicTokens": 291,
+              "system": false
+            },
+            {
+              "seq": 79,
+              "heuristicTokens": 51,
+              "system": false
+            }
+          ],
+          "breakdown": {
+            "systemTokens": 1715,
+            "toolsTokens": 6833,
+            "messageTokens": 3708
+          }
+        }
+      },
+      "turnBoundary": {
+        "ver": 2,
+        "seq": 81,
+        "val": {
+          "openTurnStartSeq": null,
+          "lastStepStartSeq": 77,
+          "lastStepBoundary": {
+            "kind": "end",
+            "seq": 80
+          },
+          "lastTurn": 5
+        }
+      },
+      "sessionStats": {
+        "ver": 1,
+        "seq": 81,
+        "val": {
+          "turns": 5,
+          "steps": 9,
+          "llmMs": 103381,
+          "toolMs": 165,
+          "ttftMs": 91314,
+          "ttftSteps": 9,
+          "decodeMs": 12067,
+          "decodeTokens": 0,
+          "lastTurn": 5,
+          "openStep": null,
+          "pendingCalls": {}
+        }
+      },
+      "turnOutline": {
+        "ver": 2,
+        "seq": 81,
+        "val": {
+          "turns": [
+            {
+              "turn": 1,
+              "seq": 4,
+              "prompt": "Your parent agent id is \"58f8973c-a387-4a09-b76f-…",
+              "response": "I'll report back to the parent agent with a self-contained result. The task was a \"Placeholder task\" with no actual con…"
+            },
+            {
+              "turn": 2,
+              "seq": 25,
+              "prompt": "",
+              "response": "I'll send my result to the parent agent and stop here, since the pattern is now clear. **Subagent result — summary for…"
+            },
+            {
+              "turn": 3,
+              "seq": 43,
+              "prompt": "",
+              "response": "I'll relay the result to the parent agent now. **Self-contained result for parent agent `58f8973c-a387-4a09-b76f-8b4c53…"
+            },
+            {
+              "turn": 4,
+              "seq": 61,
+              "prompt": "",
+              "response": "I'll send the result to the parent agent one final time and hold here. **Self-contained result for parent agent `58f897…"
+            },
+            {
+              "turn": 5,
+              "seq": 75,
+              "prompt": "",
+              "response": "OSAII API caller requested read with {\"file_path\":\"/tmp/home/nothing.txt\",\"offset\":0,\"limit\":1}. OSAII API caller reque…"
+            }
+          ],
+          "draft": ""
+        }
+      },
+      "agentPreset": {
+        "ver": 1,
+        "seq": 81,
+        "val": "standard"
+      },
+      "subagentCatalog": {
+        "ver": 2,
+        "seq": 81,
+        "val": {
+          "inheritedEventCount": 0,
+          "head": {
+            "values": [
+              {
+                "version": 0,
+                "childId": "7cedcc7e-1c75-4f7d-ae3c-59495321a6bd",
+                "childCreatedAt": 1790443127587,
+                "mode": "continuable",
+                "label": "Delegate subagent task"
+              },
+              {
+                "version": 0,
+                "childId": "31d8778b-c501-4235-9987-7c38899a99b3",
+                "childCreatedAt": 1790443155014,
+                "mode": "continuable",
+                "label": ""
+              },
+              {
+                "version": 0,
+                "childId": "bee6496b-620c-49e2-97ac-ded6543794f9",
+                "childCreatedAt": 1790443191659,
+                "mode": "continuable",
+                "label": "Relay result to parent"
+              },
+              {
+                "version": 0,
+                "childId": "77a9e987-857e-4260-9ed9-f14733483210",
+                "childCreatedAt": 1790443223033,
+                "mode": "continuable",
+                "label": "No task available"
+              }
+            ]
+          }
+        }
+      },
+      "subagentTiming": {
+        "ver": 2,
+        "seq": 81,
+        "val": {
+          "descriptorSeen": true,
+          "settledMs": 103643
+        }
+      },
+      "subagent": {
+        "ver": 2,
+        "seq": 81,
+        "val": {
+          "identity": {
+            "mode": "continuable",
+            "label": "",
+            "seq": 0
+          }
+        }
+      },
+      "permissions": {
+        "ver": 2,
+        "seq": 81,
+        "val": {
+          "preset": null,
+          "sandbox": "workspace-write",
+          "approval": "never",
+          "seeded": false
+        }
+      },
+      "modelSelection": {
+        "ver": 2,
+        "seq": 81,
+        "val": {
+          "lastUsed": {
+            "provider": "atria",
+            "model": "deepseek-z/deepseek-v4-pro"
+          },
+          "pending": null
+        }
+      },
+      "sessionListMetadata": {
+        "ver": 1,
+        "seq": 81,
+        "val": {
+          "blank": false,
+          "lastPromptAt": 1790443118200
+        }
+      },
+      "imageLimits": {
+        "ver": 1,
+        "seq": 81,
+        "val": null
+      },
+      "inbox": {
+        "ver": 1,
+        "seq": 81,
+        "val": {
+          "next-turn": [],
+          "next-step": []
+        }
+      },
+      "todos": {
+        "ver": 2,
+        "seq": 81,
+        "val": null
+      },
+      "plan": {
+        "ver": 3,
+        "seq": 81,
+        "val": {
+          "active": false,
+          "wanted": null,
+          "running": null,
+          "activeAtLastHeader": false
+        }
+      },
+      "subagentModelSelectionPolicy": {
+        "ver": 1,
+        "seq": 81,
+        "val": null
+      }
+    }
+  }
+}

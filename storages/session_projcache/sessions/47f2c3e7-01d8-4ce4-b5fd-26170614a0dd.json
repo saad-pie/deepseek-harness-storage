@@ -11,12 +11,12 @@
     "rows": {
       "title": {
         "ver": 1,
-        "seq": 222,
+        "seq": 233,
         "val": "Your parent agent id is"
       },
       "titleInput": {
         "ver": 3,
-        "seq": 222,
+        "seq": 233,
         "val": {
           "first": {
             "seq": 8,
@@ -28,17 +28,17 @@
       },
       "llmRetry": {
         "ver": 1,
-        "seq": 222,
+        "seq": 233,
         "val": {}
       },
       "sandboxMode": {
         "ver": 1,
-        "seq": 222,
+        "seq": 233,
         "val": "workspace-write"
       },
       "goal": {
         "ver": 6,
-        "seq": 222,
+        "seq": 233,
         "val": {
           "current": null,
           "seenGoalIds": [],
@@ -47,7 +47,7 @@
       },
       "tokenUsage": {
         "ver": 2,
-        "seq": 222,
+        "seq": 233,
         "val": {
           "totals": {
             "uncachedInputTokens": 0,
@@ -56,7 +56,7 @@
             "cacheWriteTokens": 0
           },
           "last": {
-            "turn": 13,
+            "turn": 14,
             "step": 2,
             "buckets": {
               "uncachedInputTokens": 0,
@@ -69,17 +69,17 @@
       },
       "contextPressure": {
         "ver": 4,
-        "seq": 222,
+        "seq": 233,
         "val": {
-          "surfaceTokens": 7058,
+          "surfaceTokens": 7374,
           "contextWindow": 262144,
           "pressureTokens": 0,
-          "sampledSurfaceTokens": 6862
+          "sampledSurfaceTokens": 7171
         }
       },
       "contextBreakdown": {
         "ver": 4,
-        "seq": 222,
+        "seq": 233,
         "val": {
           "nodes": [
             {
@@ -426,53 +426,68 @@
               "seq": 222,
               "heuristicTokens": 53,
               "system": false
+            },
+            {
+              "seq": 223,
+              "heuristicTokens": 71,
+              "system": false
+            },
+            {
+              "seq": 226,
+              "heuristicTokens": 28,
+              "system": false
+            },
+            {
+              "seq": 228,
+              "heuristicTokens": 14,
+              "system": false
+            },
+            {
+              "seq": 231,
+              "heuristicTokens": 203,
+              "system": false
             }
           ],
           "breakdown": {
             "systemTokens": 1715,
             "toolsTokens": 6833,
-            "messageTokens": 5343
+            "messageTokens": 5659
           }
         }
       },
       "turnBoundary": {
         "ver": 2,
-        "seq": 222,
+        "seq": 233,
         "val": {
-          "openTurnStartSeq": 219,
-          "lastStepStartSeq": 221,
+          "openTurnStartSeq": null,
+          "lastStepStartSeq": 230,
           "lastStepBoundary": {
-            "kind": "start",
-            "seq": 221
+            "kind": "end",
+            "seq": 232
           },
           "lastTurn": 14
         }
       },
       "sessionStats": {
         "ver": 1,
-        "seq": 222,
+        "seq": 233,
         "val": {
-          "turns": 13,
-          "steps": 26,
-          "llmMs": 274906,
-          "toolMs": 596,
-          "ttftMs": 252961,
-          "ttftSteps": 26,
-          "decodeMs": 21945,
+          "turns": 14,
+          "steps": 28,
+          "llmMs": 296755,
+          "toolMs": 20563,
+          "ttftMs": 273074,
+          "ttftSteps": 28,
+          "decodeMs": 23681,
           "decodeTokens": 0,
-          "lastTurn": 13,
-          "openStep": {
-            "turn": 14,
-            "step": 1,
-            "startTime": 1790443070215,
-            "firstTokenTime": null
-          },
+          "lastTurn": 14,
+          "openStep": null,
           "pendingCalls": {}
         }
       },
       "turnOutline": {
         "ver": 2,
-        "seq": 222,
+        "seq": 233,
         "val": {
           "turns": [
             {
@@ -557,7 +572,7 @@
               "turn": 14,
               "seq": 219,
               "prompt": "",
-              "response": ""
+              "response": "READY --- **Result for parent agent `58f8973c-a387-4a09-b76f-8b4c533516d4`:** Round complete — with one small change in…"
             }
           ],
           "draft": ""
@@ -565,12 +580,12 @@
       },
       "agentPreset": {
         "ver": 1,
-        "seq": 222,
+        "seq": 233,
         "val": "standard"
       },
       "subagentCatalog": {
         "ver": 2,
-        "seq": 222,
+        "seq": 233,
         "val": {
           "inheritedEventCount": 0,
           "head": {
@@ -665,6 +680,13 @@
                 "childCreatedAt": 1790443050569,
                 "mode": "continuable",
                 "label": "no-op serialization check"
+              },
+              {
+                "version": 0,
+                "childId": "4d94ce0a-e140-41e4-933f-71e98898d9e9",
+                "childCreatedAt": 1790443081071,
+                "mode": "one-shot",
+                "label": "no-op serialization check"
               }
             ]
           }
@@ -672,19 +694,15 @@
       },
       "subagentTiming": {
         "ver": 2,
-        "seq": 222,
+        "seq": 233,
         "val": {
           "descriptorSeen": true,
-          "settledMs": 275761,
-          "active": {
-            "since": 1790443070207,
-            "through": 1790443070216
-          }
+          "settledMs": 317590
         }
       },
       "subagent": {
         "ver": 2,
-        "seq": 222,
+        "seq": 233,
         "val": {
           "identity": {
             "mode": "continuable",
@@ -695,7 +713,7 @@
       },
       "permissions": {
         "ver": 2,
-        "seq": 222,
+        "seq": 233,
         "val": {
           "preset": null,
           "sandbox": "workspace-write",
@@ -705,7 +723,7 @@
       },
       "modelSelection": {
         "ver": 2,
-        "seq": 222,
+        "seq": 233,
         "val": {
           "lastUsed": {
             "provider": "atria",
@@ -716,7 +734,7 @@
       },
       "sessionListMetadata": {
         "ver": 1,
-        "seq": 222,
+        "seq": 233,
         "val": {
           "blank": false,
           "lastPromptAt": 1790442686314
@@ -724,12 +742,12 @@
       },
       "imageLimits": {
         "ver": 1,
-        "seq": 222,
+        "seq": 233,
         "val": null
       },
       "inbox": {
         "ver": 1,
-        "seq": 222,
+        "seq": 233,
         "val": {
           "next-turn": [],
           "next-step": []
@@ -737,12 +755,12 @@
       },
       "todos": {
         "ver": 2,
-        "seq": 222,
+        "seq": 233,
         "val": null
       },
       "plan": {
         "ver": 3,
-        "seq": 222,
+        "seq": 233,
         "val": {
           "active": false,
           "wanted": null,
@@ -752,7 +770,7 @@
       },
       "subagentModelSelectionPolicy": {
         "ver": 1,
-        "seq": 222,
+        "seq": 233,
         "val": null
       }
     }

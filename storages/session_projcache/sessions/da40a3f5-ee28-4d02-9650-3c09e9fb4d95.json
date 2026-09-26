@@ -1,0 +1,246 @@
+{
+  "version": 7,
+  "record": {
+    "identity": {
+      "formatVersion": 3,
+      "createdAt": 1790443376083,
+      "cwd": "/tmp/home",
+      "isSeeded": false,
+      "inheritedEventCount": 0
+    },
+    "rows": {
+      "title": {
+        "ver": 1,
+        "seq": 12,
+        "val": "placeholder Your parent agent id"
+      },
+      "titleInput": {
+        "ver": 3,
+        "seq": 12,
+        "val": {
+          "first": {
+            "seq": 8,
+            "text": "placeholder\nYour parent agent id is \"1b3f4e21-42fa-4d62-ad35-ed1dc4a1cea8\". Before you finish, send your result to that agent with send_message({ agent_id: \"1b3f4e21-42fa-4d62-ad35-ed1dc4a1cea8\", message: \"<self-contained result>\" }). The parent shares your workspace but does not automatically receive your transcript, tool output, or reasoning. Send earlier messages as well when a finding changes what the parent should do next; sending a message does not end your turn."
+          },
+          "count": 1,
+          "lastSeq": 8
+        }
+      },
+      "llmRetry": {
+        "ver": 1,
+        "seq": 12,
+        "val": {}
+      },
+      "sandboxMode": {
+        "ver": 1,
+        "seq": 12,
+        "val": "workspace-write"
+      },
+      "goal": {
+        "ver": 6,
+        "seq": 12,
+        "val": {
+          "current": null,
+          "seenGoalIds": [],
+          "failure": null
+        }
+      },
+      "tokenUsage": {
+        "ver": 2,
+        "seq": 12,
+        "val": {
+          "totals": {
+            "uncachedInputTokens": 0,
+            "outputTokens": 0,
+            "cacheReadTokens": 0,
+            "cacheWriteTokens": 0
+          },
+          "last": null
+        }
+      },
+      "contextPressure": {
+        "ver": 4,
+        "seq": 12,
+        "val": {
+          "surfaceTokens": 2060,
+          "contextWindow": 262144
+        }
+      },
+      "contextBreakdown": {
+        "ver": 4,
+        "seq": 12,
+        "val": {
+          "nodes": [
+            {
+              "seq": 7,
+              "heuristicTokens": 1715,
+              "system": true
+            },
+            {
+              "seq": 8,
+              "heuristicTokens": 131,
+              "system": false
+            },
+            {
+              "seq": 9,
+              "heuristicTokens": 214,
+              "system": false
+            }
+          ],
+          "breakdown": {
+            "systemTokens": 1715,
+            "toolsTokens": 6833,
+            "messageTokens": 345
+          }
+        }
+      },
+      "turnBoundary": {
+        "ver": 2,
+        "seq": 12,
+        "val": {
+          "openTurnStartSeq": 4,
+          "lastStepStartSeq": 6,
+          "lastStepBoundary": {
+            "kind": "start",
+            "seq": 6
+          },
+          "lastTurn": 1
+        }
+      },
+      "sessionStats": {
+        "ver": 1,
+        "seq": 12,
+        "val": {
+          "turns": 0,
+          "steps": 0,
+          "llmMs": 0,
+          "toolMs": 0,
+          "ttftMs": 0,
+          "ttftSteps": 0,
+          "decodeMs": 0,
+          "decodeTokens": 0,
+          "lastTurn": null,
+          "openStep": {
+            "turn": 1,
+            "step": 1,
+            "startTime": 1790443376119,
+            "firstTokenTime": null
+          },
+          "pendingCalls": {}
+        }
+      },
+      "turnOutline": {
+        "ver": 2,
+        "seq": 12,
+        "val": {
+          "turns": [
+            {
+              "turn": 1,
+              "seq": 4,
+              "prompt": "placeholder Your parent agent id is \"1b3f4e21-42f…",
+              "response": ""
+            }
+          ],
+          "draft": ""
+        }
+      },
+      "agentPreset": {
+        "ver": 1,
+        "seq": 12,
+        "val": "standard"
+      },
+      "subagentCatalog": {
+        "ver": 2,
+        "seq": 12,
+        "val": {
+          "inheritedEventCount": 0
+        }
+      },
+      "subagentTiming": {
+        "ver": 2,
+        "seq": 12,
+        "val": {
+          "descriptorSeen": true,
+          "settledMs": 0,
+          "active": {
+            "since": 1790443376105,
+            "through": 1790443376123
+          }
+        }
+      },
+      "subagent": {
+        "ver": 2,
+        "seq": 12,
+        "val": {
+          "identity": {
+            "mode": "continuable",
+            "label": "placeholder",
+            "seq": 0
+          }
+        }
+      },
+      "permissions": {
+        "ver": 2,
+        "seq": 12,
+        "val": {
+          "preset": null,
+          "sandbox": "workspace-write",
+          "approval": "never",
+          "seeded": false
+        }
+      },
+      "modelSelection": {
+        "ver": 2,
+        "seq": 12,
+        "val": {
+          "lastUsed": {
+            "provider": "atria",
+            "model": "deepseek-z/deepseek-v4-pro"
+          },
+          "pending": null
+        }
+      },
+      "sessionListMetadata": {
+        "ver": 1,
+        "seq": 12,
+        "val": {
+          "blank": false,
+          "lastPromptAt": 1790443376120
+        }
+      },
+      "imageLimits": {
+        "ver": 1,
+        "seq": 12,
+        "val": null
+      },
+      "inbox": {
+        "ver": 1,
+        "seq": 12,
+        "val": {
+          "next-turn": [],
+          "next-step": []
+        }
+      },
+      "todos": {
+        "ver": 2,
+        "seq": 12,
+        "val": null
+      },
+      "plan": {
+        "ver": 3,
+        "seq": 12,
+        "val": {
+          "active": false,
+          "wanted": null,
+          "running": null,
+          "activeAtLastHeader": false
+        }
+      },
+      "subagentModelSelectionPolicy": {
+        "ver": 1,
+        "seq": 12,
+        "val": null
+      }
+    }
+  }
+}
