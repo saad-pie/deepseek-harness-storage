@@ -11,31 +11,34 @@
     "rows": {
       "title": {
         "ver": 1,
-        "seq": 2,
-        "val": null
+        "seq": 21,
+        "val": "Sorry, to prevent abuse of free resources, accounts that have not been recharged"
       },
       "titleInput": {
         "ver": 3,
-        "seq": 2,
+        "seq": 21,
         "val": {
-          "first": null,
-          "count": 0,
-          "lastSeq": null
+          "first": {
+            "seq": 11,
+            "text": "Open https://example.com and take a screenshot of it and show it here. Use agentry."
+          },
+          "count": 1,
+          "lastSeq": 11
         }
       },
       "llmRetry": {
         "ver": 1,
-        "seq": 2,
+        "seq": 21,
         "val": {}
       },
       "sandboxMode": {
         "ver": 1,
-        "seq": 2,
+        "seq": 21,
         "val": "workspace-write"
       },
       "goal": {
         "ver": 6,
-        "seq": 2,
+        "seq": 21,
         "val": {
           "current": null,
           "seenGoalIds": [],
@@ -44,7 +47,7 @@
       },
       "tokenUsage": {
         "ver": 2,
-        "seq": 2,
+        "seq": 21,
         "val": {
           "totals": {
             "uncachedInputTokens": 0,
@@ -52,41 +55,82 @@
             "cacheReadTokens": 0,
             "cacheWriteTokens": 0
           },
-          "last": null
+          "last": {
+            "turn": 1,
+            "step": 1,
+            "buckets": {
+              "uncachedInputTokens": 0,
+              "outputTokens": 0,
+              "cacheReadTokens": 0,
+              "cacheWriteTokens": 0
+            }
+          }
         }
       },
       "contextPressure": {
         "ver": 5,
-        "seq": 2,
+        "seq": 21,
         "val": {
-          "surfaceTokens": 0
+          "surfaceTokens": 2980,
+          "contextWindow": 262144,
+          "pressureTokens": 0,
+          "sampledSurfaceTokens": 2925
         }
       },
       "contextBreakdown": {
         "ver": 5,
-        "seq": 2,
+        "seq": 21,
         "val": {
-          "nodes": [],
+          "nodes": [
+            {
+              "seq": 10,
+              "heuristicTokens": 1446,
+              "system": true
+            },
+            {
+              "seq": 11,
+              "heuristicTokens": 29,
+              "system": false
+            },
+            {
+              "seq": 12,
+              "heuristicTokens": 1329,
+              "system": false
+            },
+            {
+              "seq": 13,
+              "heuristicTokens": 121,
+              "system": false
+            },
+            {
+              "seq": 18,
+              "heuristicTokens": 55,
+              "system": false
+            }
+          ],
           "breakdown": {
-            "systemTokens": 0,
-            "toolsTokens": 0,
-            "messageTokens": 0
+            "systemTokens": 1446,
+            "toolsTokens": 5157,
+            "messageTokens": 1534
           }
         }
       },
       "turnBoundary": {
         "ver": 2,
-        "seq": 2,
+        "seq": 21,
         "val": {
           "openTurnStartSeq": null,
-          "lastStepStartSeq": null,
-          "lastStepBoundary": null,
-          "lastTurn": 0
+          "lastStepStartSeq": 9,
+          "lastStepBoundary": {
+            "kind": "end",
+            "seq": 19
+          },
+          "lastTurn": 1
         }
       },
       "inbox": {
         "ver": 1,
-        "seq": 2,
+        "seq": 21,
         "val": {
           "next-turn": [],
           "next-step": []
@@ -94,37 +138,44 @@
       },
       "sessionStats": {
         "ver": 1,
-        "seq": 2,
+        "seq": 21,
         "val": {
-          "turns": 0,
-          "steps": 0,
-          "llmMs": 0,
+          "turns": 1,
+          "steps": 1,
+          "llmMs": 1180,
           "toolMs": 0,
-          "ttftMs": 0,
-          "ttftSteps": 0,
-          "decodeMs": 0,
+          "ttftMs": 1177,
+          "ttftSteps": 1,
+          "decodeMs": 3,
           "decodeTokens": 0,
-          "lastTurn": null,
+          "lastTurn": 1,
           "openStep": null,
           "pendingCalls": {}
         }
       },
       "turnOutline": {
         "ver": 2,
-        "seq": 2,
+        "seq": 21,
         "val": {
-          "turns": [],
+          "turns": [
+            {
+              "turn": 1,
+              "seq": 7,
+              "prompt": "Open https://example.com and take a screenshot of…",
+              "response": "Sorry, to prevent abuse of free resources, accounts that have not been recharged can only try 10 times. You can increas…"
+            }
+          ],
           "draft": ""
         }
       },
       "agentPreset": {
         "ver": 1,
-        "seq": 2,
+        "seq": 21,
         "val": "standard"
       },
       "userQuestions": {
         "ver": 2,
-        "seq": 2,
+        "seq": 21,
         "val": {
           "inheritedEventCount": 0,
           "timed": false,
@@ -136,14 +187,14 @@
       },
       "subagentCatalog": {
         "ver": 3,
-        "seq": 2,
+        "seq": 21,
         "val": {
           "inheritedEventCount": 0
         }
       },
       "subagentTiming": {
         "ver": 3,
-        "seq": 2,
+        "seq": 21,
         "val": {
           "descriptorSeen": false,
           "settledMs": 0
@@ -151,12 +202,12 @@
       },
       "subagent": {
         "ver": 2,
-        "seq": 2,
+        "seq": 21,
         "val": {}
       },
       "permissions": {
         "ver": 2,
-        "seq": 2,
+        "seq": 21,
         "val": {
           "preset": "workspace-write",
           "sandbox": "workspace-write",
@@ -166,43 +217,46 @@
       },
       "todos": {
         "ver": 2,
-        "seq": 2,
+        "seq": 21,
         "val": null
       },
       "plan": {
         "ver": 3,
-        "seq": 2,
+        "seq": 21,
         "val": {
           "active": false,
           "wanted": null,
           "running": null,
-          "activeAtLastHeader": null
+          "activeAtLastHeader": false
         }
       },
       "subagentModelSelectionPolicy": {
         "ver": 1,
-        "seq": 2,
+        "seq": 21,
         "val": null
       },
       "modelSelection": {
         "ver": 2,
-        "seq": 2,
+        "seq": 21,
         "val": {
-          "lastUsed": null,
+          "lastUsed": {
+            "provider": "atria",
+            "model": "nemotron-3-nano-omni-30b-a3b-reasoning-free"
+          },
           "pending": null
         }
       },
       "sessionListMetadata": {
         "ver": 1,
-        "seq": 2,
+        "seq": 21,
         "val": {
-          "blank": true,
-          "lastPromptAt": null
+          "blank": false,
+          "lastPromptAt": 1791043193703
         }
       },
       "imageLimits": {
         "ver": 1,
-        "seq": 2,
+        "seq": 21,
         "val": null
       }
     }
