@@ -1,0 +1,264 @@
+{
+  "version": 7,
+  "record": {
+    "identity": {
+      "formatVersion": 4,
+      "createdAt": 1791043427160,
+      "cwd": "/tmp/home",
+      "isSeeded": false,
+      "inheritedEventCount": 0
+    },
+    "rows": {
+      "title": {
+        "ver": 1,
+        "seq": 19,
+        "val": "Sorry, to prevent abuse of free resources, accounts that have not been recharged"
+      },
+      "titleInput": {
+        "ver": 3,
+        "seq": 19,
+        "val": {
+          "first": {
+            "seq": 9,
+            "text": "Open https://example.com and take a screenshot of it and show it here. Use agentry."
+          },
+          "count": 1,
+          "lastSeq": 9
+        }
+      },
+      "llmRetry": {
+        "ver": 1,
+        "seq": 19,
+        "val": {}
+      },
+      "sandboxMode": {
+        "ver": 1,
+        "seq": 19,
+        "val": "workspace-write"
+      },
+      "goal": {
+        "ver": 6,
+        "seq": 19,
+        "val": {
+          "current": null,
+          "seenGoalIds": [],
+          "failure": null
+        }
+      },
+      "tokenUsage": {
+        "ver": 2,
+        "seq": 19,
+        "val": {
+          "totals": {
+            "uncachedInputTokens": 0,
+            "outputTokens": 0,
+            "cacheReadTokens": 0,
+            "cacheWriteTokens": 0
+          },
+          "last": {
+            "turn": 1,
+            "step": 1,
+            "buckets": {
+              "uncachedInputTokens": 0,
+              "outputTokens": 0,
+              "cacheReadTokens": 0,
+              "cacheWriteTokens": 0
+            }
+          }
+        }
+      },
+      "contextPressure": {
+        "ver": 5,
+        "seq": 19,
+        "val": {
+          "surfaceTokens": 2977,
+          "contextWindow": 262144,
+          "pressureTokens": 0,
+          "sampledSurfaceTokens": 2922
+        }
+      },
+      "contextBreakdown": {
+        "ver": 5,
+        "seq": 19,
+        "val": {
+          "nodes": [
+            {
+              "seq": 8,
+              "heuristicTokens": 1443,
+              "system": true
+            },
+            {
+              "seq": 9,
+              "heuristicTokens": 29,
+              "system": false
+            },
+            {
+              "seq": 10,
+              "heuristicTokens": 1329,
+              "system": false
+            },
+            {
+              "seq": 11,
+              "heuristicTokens": 121,
+              "system": false
+            },
+            {
+              "seq": 17,
+              "heuristicTokens": 55,
+              "system": false
+            }
+          ],
+          "breakdown": {
+            "systemTokens": 1443,
+            "toolsTokens": 5157,
+            "messageTokens": 1534
+          }
+        }
+      },
+      "turnBoundary": {
+        "ver": 2,
+        "seq": 19,
+        "val": {
+          "openTurnStartSeq": null,
+          "lastStepStartSeq": 7,
+          "lastStepBoundary": {
+            "kind": "end",
+            "seq": 18
+          },
+          "lastTurn": 1
+        }
+      },
+      "inbox": {
+        "ver": 1,
+        "seq": 19,
+        "val": {
+          "next-turn": [],
+          "next-step": []
+        }
+      },
+      "sessionStats": {
+        "ver": 1,
+        "seq": 19,
+        "val": {
+          "turns": 1,
+          "steps": 1,
+          "llmMs": 1255,
+          "toolMs": 0,
+          "ttftMs": 1253,
+          "ttftSteps": 1,
+          "decodeMs": 2,
+          "decodeTokens": 0,
+          "lastTurn": 1,
+          "openStep": null,
+          "pendingCalls": {}
+        }
+      },
+      "turnOutline": {
+        "ver": 2,
+        "seq": 19,
+        "val": {
+          "turns": [
+            {
+              "turn": 1,
+              "seq": 5,
+              "prompt": "Open https://example.com and take a screenshot of…",
+              "response": "Sorry, to prevent abuse of free resources, accounts that have not been recharged can only try 10 times. You can increas…"
+            }
+          ],
+          "draft": ""
+        }
+      },
+      "agentPreset": {
+        "ver": 1,
+        "seq": 19,
+        "val": "standard"
+      },
+      "userQuestions": {
+        "ver": 2,
+        "seq": 19,
+        "val": {
+          "inheritedEventCount": 0,
+          "timed": false,
+          "questions": {
+            "active": [],
+            "settled": []
+          }
+        }
+      },
+      "subagentCatalog": {
+        "ver": 3,
+        "seq": 19,
+        "val": {
+          "inheritedEventCount": 0
+        }
+      },
+      "subagentTiming": {
+        "ver": 3,
+        "seq": 19,
+        "val": {
+          "descriptorSeen": false,
+          "settledMs": 0
+        }
+      },
+      "subagent": {
+        "ver": 2,
+        "seq": 19,
+        "val": {}
+      },
+      "permissions": {
+        "ver": 2,
+        "seq": 19,
+        "val": {
+          "preset": "workspace-write",
+          "sandbox": "workspace-write",
+          "approval": "ask",
+          "seeded": false
+        }
+      },
+      "todos": {
+        "ver": 2,
+        "seq": 19,
+        "val": null
+      },
+      "plan": {
+        "ver": 3,
+        "seq": 19,
+        "val": {
+          "active": false,
+          "wanted": null,
+          "running": null,
+          "activeAtLastHeader": false
+        }
+      },
+      "subagentModelSelectionPolicy": {
+        "ver": 1,
+        "seq": 19,
+        "val": null
+      },
+      "modelSelection": {
+        "ver": 2,
+        "seq": 19,
+        "val": {
+          "lastUsed": {
+            "provider": "atria",
+            "model": "nemotron-3-super-120b-a12b-free"
+          },
+          "pending": null
+        }
+      },
+      "sessionListMetadata": {
+        "ver": 1,
+        "seq": 19,
+        "val": {
+          "blank": false,
+          "lastPromptAt": 1791043444252
+        }
+      },
+      "imageLimits": {
+        "ver": 1,
+        "seq": 19,
+        "val": null
+      }
+    }
+  }
+}
