@@ -1,0 +1,1781 @@
+{
+  "fetched_at": "2026-10-03T15:50:37.881Z",
+  "base_url": "https://antigravity-seven-delta.vercel.app/v1",
+  "total_active_keys": 94,
+  "verified_free_models_count": 193,
+  "diagnostic_report": {
+    "timestamp": "2026-10-03T15:50:37.813Z",
+    "environment": "production",
+    "total_active_keys": 94,
+    "verified_free_models_count": 193,
+    "live_providers": [
+      "google",
+      "unorouter",
+      "aihubmix",
+      "jankrouter",
+      "osaii",
+      "atria"
+    ],
+    "providers": {
+      "openrouter": {
+        "configured_keys": 0,
+        "live": false,
+        "models_count": 0,
+        "status": "no_keys_configured"
+      },
+      "google": {
+        "configured_keys": 100,
+        "live": true,
+        "models_count": 17,
+        "status": "live"
+      },
+      "unorouter": {
+        "configured_keys": 5,
+        "live": true,
+        "models_count": 70,
+        "status": "live"
+      },
+      "aihubmix": {
+        "configured_keys": 6,
+        "live": true,
+        "models_count": 43,
+        "status": "live"
+      },
+      "jankrouter": {
+        "configured_keys": 0,
+        "live": true,
+        "models_count": 18,
+        "status": "live"
+      },
+      "freeaixyz": {
+        "configured_keys": 0,
+        "live": false,
+        "models_count": 0,
+        "status": "unreachable"
+      },
+      "osaii": {
+        "configured_keys": 1,
+        "live": true,
+        "models_count": 44,
+        "status": "live"
+      },
+      "atria": {
+        "configured_keys": 1,
+        "live": true,
+        "models_count": 1,
+        "status": "live"
+      }
+    }
+  },
+  "by_provider": {
+    "google": 17,
+    "unorouter": 70,
+    "aihubmix": 43,
+    "jankrouter": 14,
+    "osaii": 44,
+    "atria": 1
+  },
+  "models": [
+    {
+      "id": "gemini-2.5-flash",
+      "provider": "google",
+      "rpm": 15,
+      "tpm": 1048576,
+      "rpd": 1500,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-2.5-pro",
+      "provider": "google",
+      "rpm": 15,
+      "tpm": 1048576,
+      "rpd": 1500,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemma-4-26b-a4b-it",
+      "provider": "google",
+      "rpm": 15,
+      "tpm": 262144,
+      "rpd": 1500,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemma-4-31b-it",
+      "provider": "google",
+      "rpm": 15,
+      "tpm": 262144,
+      "rpd": 1500,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-flash-latest",
+      "provider": "google",
+      "rpm": 15,
+      "tpm": 1048576,
+      "rpd": 1500,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-flash-lite-latest",
+      "provider": "google",
+      "rpm": 15,
+      "tpm": 1048576,
+      "rpd": 1500,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-pro-latest",
+      "provider": "google",
+      "rpm": 15,
+      "tpm": 1048576,
+      "rpd": 1500,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-2.5-flash-lite",
+      "provider": "google",
+      "rpm": 15,
+      "tpm": 1048576,
+      "rpd": 1500,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-3-flash-preview",
+      "provider": "google",
+      "rpm": 15,
+      "tpm": 1048576,
+      "rpd": 1500,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "rpm": 15,
+      "tpm": 1048576,
+      "rpd": 1500,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-3.1-flash-lite-preview",
+      "provider": "google",
+      "rpm": 15,
+      "tpm": 1048576,
+      "rpd": 1500,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-3.1-flash-lite",
+      "provider": "google",
+      "rpm": 15,
+      "tpm": 1048576,
+      "rpd": 1500,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-3.5-flash",
+      "provider": "google",
+      "rpm": 15,
+      "tpm": 1048576,
+      "rpd": 1500,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-3.5-flash-lite",
+      "provider": "google",
+      "rpm": 15,
+      "tpm": 1048576,
+      "rpd": 1500,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-3.6-flash",
+      "provider": "google",
+      "rpm": 15,
+      "tpm": 1048576,
+      "rpd": 1500,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-3.7-flash",
+      "provider": "google",
+      "rpm": 15,
+      "tpm": 1048576,
+      "rpd": 1500,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-3.8-flash",
+      "provider": "google",
+      "rpm": 15,
+      "tpm": 1048576,
+      "rpd": 1500,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "space-bunny-alpha:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "mimo-v2.6-flash:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "axon-1.8-pro:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "axon-1.8-flash:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "axon-1.8-lightning:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "intern-s2:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "k2-horizon:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen3.8-flash-next:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "glm-5.3-flash:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen3.8-27b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "dots-3-note-preview:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "nemotron-3.5-lightning:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "lfm-2.5-2.6b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "sensenova-6.8-flash-lite:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "muse-glimmer-30b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "nemotron-3.5-lightning-30b-a3b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "ling-3.0-flash-sante:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "laguna-s-2.1:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-3.6-flash:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-3.5-flash-lite:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "ising-calibration-1.5-31b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "laguna-xs-2.1:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "north-mini-code:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "nemotron-3-ultra-550b-a55b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "agnes-2.0-flash:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "step-3.7-flash:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "intern-s2-preview-35b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "intern-s2-preview-397b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "intern-s2-preview:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "leanstral-1-5:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "nemotron-3-nano-omni-30b-a3b-reasoning:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen3.6-35b-a3b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "riva-translate-4b-instruct-v2:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "swe-1-6-slow:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "gemma-4-26b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen3.6-plus:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "nemotron-3-super-120b-a12b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen3.5-122b-a10b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "intern-s1-pro:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen-sea-lion-v4.5-27b-it:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "typhoon-v2.5-30b-a3b-instruct:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "mistral-large-3-675b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "glm-4.7-flash:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "villanova-2b-2512-preview-apnea-ft:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "gpt-oss-safeguard-20b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "nemotron-nano-12b-v2-vl:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "granite-4.0-micro:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen-sea-lion-v4-32b-it:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen3:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen3-next-80b-a3b-instruct:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "intern-s1-mini:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "seed-oss-36b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "nemotron-nano-9b-v2:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "gpt-oss-20b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "codestral-latest:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "glm-4.5-flash:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "intern-s1:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "mistral-nemotron:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "llama-4-maverick-17b-128e-instruct:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "qwq-32b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "mistral-small:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen2.5-vl-7b-instruct-awq:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "deepseek-r1-distill-qwen-32b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen2.5-coder-32b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "grok-beta:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "llama-3.2-11b-vision:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "allam-2-7b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "gpt-4o:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "bge-multilingual-gemma2:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "mistral-7b-instruct:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "xiaomi-mimo-v2.6-pro-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "coding-glm-5.3-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "xiaomi-mimo-v2.6-flash-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "agents-a1-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "intern-s2-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "union-alpha-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "dots-3-note-preview-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "hy3-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "minimax-m2.7-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "lfm-2.5-2.6b-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "ling-3.0-tiny-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "nemotron-3.5-lightning-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "ling-3.0-flash-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "coding-glm-5.2-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "coding-kimi-k3-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "nemotron-nano-9b-v2-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "nemotron-nano-12b-v2-vl-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "nemotron-3-super-120b-a12b-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "nemotron-3-nano-omni-30b-a3b-reasoning-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "nemotron-3-ultra-550b-a55b-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "north-mini-code-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "laguna-xs-2.1-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "laguna-s-2.1-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "nemotron-3-nano-30b-a3b-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "coding-minimax-m3-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "xiaomi-mimo-v2-omni-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "xiaomi-mimo-v2-pro-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "xiaomi-mimo-v2.5-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "xiaomi-mimo-v2.5-pro-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "coding-glm-5.1-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "coding-minimax-m2.7-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "coding-glm-5-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "coding-glm-5-turbo-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "coding-minimax-m2.5-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "glm-4.7-flash-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "coding-glm-4.7-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "k2.6-code-preview-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen3.6-plus-preview-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "coding-minimax-m2.1-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "kimi-for-coding-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "coding-glm-4.6-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "coding-minimax-m2-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "mimo-v2-flash-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen3.8-27b",
+      "provider": "jankrouter",
+      "rpm": 30,
+      "tpm": 64000,
+      "rpd": 1000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen3.8-flash",
+      "provider": "jankrouter",
+      "rpm": 30,
+      "tpm": 64000,
+      "rpd": 1000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "nemotron-3.5-lightning-30b",
+      "provider": "jankrouter",
+      "rpm": 30,
+      "tpm": 64000,
+      "rpd": 1000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "north-mini-code",
+      "provider": "jankrouter",
+      "rpm": 30,
+      "tpm": 64000,
+      "rpd": 1000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "glm-4.6v-flash",
+      "provider": "jankrouter",
+      "rpm": 30,
+      "tpm": 64000,
+      "rpd": 1000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "glm-5.3-flash",
+      "provider": "jankrouter",
+      "rpm": 30,
+      "tpm": 64000,
+      "rpd": 1000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "glm-5.3",
+      "provider": "jankrouter",
+      "rpm": 30,
+      "tpm": 64000,
+      "rpd": 1000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gpt-5.6-luna",
+      "provider": "jankrouter",
+      "rpm": 30,
+      "tpm": 64000,
+      "rpd": 1000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gpt-6-astra",
+      "provider": "jankrouter",
+      "rpm": 30,
+      "tpm": 64000,
+      "rpd": 1000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "deepseek-v3.2",
+      "provider": "jankrouter",
+      "rpm": 30,
+      "tpm": 64000,
+      "rpd": 1000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "deepseek-v4-flash-0731",
+      "provider": "jankrouter",
+      "rpm": 30,
+      "tpm": 64000,
+      "rpd": 1000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemma-4-26b-a4b",
+      "provider": "jankrouter",
+      "rpm": 30,
+      "tpm": 64000,
+      "rpd": 1000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemma-4-31b",
+      "provider": "jankrouter",
+      "rpm": 30,
+      "tpm": 64000,
+      "rpd": 1000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "minimax-m3",
+      "provider": "jankrouter",
+      "rpm": 30,
+      "tpm": 64000,
+      "rpd": 1000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "poolside/laguna-xs-2.1",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "poolside/laguna-s-2.1",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "microsoft/bitnet-b1.58-2B-4T",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "osaii/demo-ollama-random",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "stealth/pulsar-alpha",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "venice-z/mistral-31-24b",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen-z/qwen-flash-character",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "fireworks-z/nemotron-lightning-3.5",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "groq-z/gpt-oss-20b",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "openai-z/gpt-4.1-nano",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-z/gemini-2.5-flash-lite",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-z/gemini-3.1-flash-lite-preview",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "meta-z/muse-spark-1.2-contributor",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "venice-z/gemma-4-31b-it",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "zai-z/zai-org-glm-4.7-flash",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "zai-z/olafangensan-glm-4.7-flash-heretic",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "zai-z/zai-org-glm-4.6",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "mimo-z/mimo-v2.5",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "mimo-z/mimo-v2.6-flash",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "mimo-z/mimo-v2.6-pro",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "openai-z/gpt-4o-mini",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "mistral-z/mistral-small-2603",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen-z/qwen3.8-flash",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "zai-z/zai-org-glm-5-3-flash",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "groq-z/gpt-oss-120b",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "venice-z/gemma-4-uncensored",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "deepseek-z/deepseek-v4-flash",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen-z/qwen3.6-flash",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "stealth/lion-alpha",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "openai-z/gpt-5.4-nano",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "xai-z/grok-4-1-fast-non-reasoning",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "xai-z/grok-4-fast-non-reasoning",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "venice-z/venice-uncensored-1-2",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "inception-z/mercury-2",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "minimax-z/minimax-m3",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "gemini-z/gemini-3.5-flash-lite",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen-z/qwen3-coder-flash",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "fireworks-z/muse-glimmer-30b",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen-z/qwen3.7-plus",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "openai-z/gpt-4.1-mini",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "openrouter-z/qwen3.8-27b",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "deepseek-z/deepseek-v4-pro",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "mimo-z/mimo-v2.5-pro",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "venice-z/venice-uncensored-role-play",
+      "provider": "osaii",
+      "rpm": 120,
+      "tpm": 256000,
+      "rpd": 5000,
+      "limit_type": "per_minute",
+      "weekly_label": null
+    },
+    {
+      "id": "Atria-Dawn-Preview",
+      "provider": "atria",
+      "rpm": 60,
+      "tpm": 100000000,
+      "rpd": 5000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    }
+  ]
+}
