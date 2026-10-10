@@ -1,0 +1,295 @@
+- id: llm-pi-ai
+  config:
+    providers:
+      atria:
+        apiKeyEnv: ATRIA_API_KEY
+        api: openai-completions
+        baseURL: https://antigravity-seven-delta.vercel.app/v1
+        supportsDeveloperRole: false
+        models:
+          - id: gemini-2.5-flash
+            displayName: gemini-2.5-flash
+          - id: gemini-2.5-pro
+            displayName: gemini-2.5-pro
+          - id: gemma-4-26b-a4b-it
+            displayName: gemma-4-26b-a4b-it
+          - id: gemma-4-31b-it
+            displayName: gemma-4-31b-it
+          - id: gemini-flash-latest
+            displayName: gemini-flash-latest
+          - id: gemini-flash-lite-latest
+            displayName: gemini-flash-lite-latest
+          - id: gemini-pro-latest
+            displayName: gemini-pro-latest
+          - id: gemini-2.5-flash-lite
+            displayName: gemini-2.5-flash-lite
+          - id: gemini-3-flash-preview
+            displayName: gemini-3-flash-preview
+          - id: gemini-3.1-pro-preview
+            displayName: gemini-3.1-pro-preview
+          - id: gemini-3.1-flash-lite-preview
+            displayName: gemini-3.1-flash-lite-preview
+          - id: gemini-3.1-flash-lite
+            displayName: gemini-3.1-flash-lite
+          - id: gemini-3.5-flash
+            displayName: gemini-3.5-flash
+          - id: gemini-3.5-flash-lite
+            displayName: gemini-3.5-flash-lite
+          - id: gemini-3.6-flash
+            displayName: gemini-3.6-flash
+          - id: gemini-3.7-flash
+            displayName: gemini-3.7-flash
+          - id: gemini-3.8-flash
+            displayName: gemini-3.8-flash
+          - id: step-5-preview:free
+            displayName: step-5-preview:free
+          - id: mercury-decide:free
+            displayName: mercury-decide:free
+          - id: agnes-3.0-flash:free
+            displayName: agnes-3.0-flash:free
+          - id: minicpm5-2b:free
+            displayName: minicpm5-2b:free
+          - id: ling-3.0-flash-sante:free
+            displayName: ling-3.0-flash-sante:free
+          - id: k2-horizon:free
+            displayName: k2-horizon:free
+          - id: qwen3.8-flash-next:free
+            displayName: qwen3.8-flash-next:free
+          - id: glm-5.3-flash-thinking:free
+            displayName: glm-5.3-flash-thinking:free
+          - id: glm-5.3:free
+            displayName: glm-5.3:free
+          - id: qwen3.8-27b:free
+            displayName: qwen3.8-27b:free
+          - id: dots-3-note-preview:free
+            displayName: dots-3-note-preview:free
+          - id: nemotron-3.5-lightning:free
+            displayName: nemotron-3.5-lightning:free
+          - id: lfm-2.5-2.6b:free
+            displayName: lfm-2.5-2.6b:free
+          - id: sensenova-6.8-flash-lite:free
+            displayName: sensenova-6.8-flash-lite:free
+          - id: muse-glimmer-30b:free
+            displayName: muse-glimmer-30b:free
+          - id: nemotron-3.5-lightning-30b-a3b:free
+            displayName: nemotron-3.5-lightning-30b-a3b:free
+          - id: apertus-v1.5-70b:free
+            displayName: apertus-v1.5-70b:free
+          - id: laguna-s-2.1:free
+            displayName: laguna-s-2.1:free
+          - id: gemini-3.6-flash:free
+            displayName: gemini-3.6-flash:free
+          - id: gemini-3.5-flash-lite:free
+            displayName: gemini-3.5-flash-lite:free
+          - id: ising-calibration-1.5-31b:free
+            displayName: ising-calibration-1.5-31b:free
+          - id: laguna-xs-2.1:free
+            displayName: laguna-xs-2.1:free
+          - id: agnes-2.5-flash:free
+            displayName: agnes-2.5-flash:free
+          - id: north-mini-code:free
+            displayName: north-mini-code:free
+          - id: nemotron-3-ultra-550b-a55b:free
+            displayName: nemotron-3-ultra-550b-a55b:free
+          - id: nemotron-3-nano-omni-30b-a3b-reasoning:free
+            displayName: nemotron-3-nano-omni-30b-a3b-reasoning:free
+          - id: qwen3.6-35b-a3b:free
+            displayName: qwen3.6-35b-a3b:free
+          - id: deepseek-v4-flash:free
+            displayName: deepseek-v4-flash:free
+          - id: riva-translate-4b-instruct-v2:free
+            displayName: riva-translate-4b-instruct-v2:free
+          - id: gemma-4-26b:free
+            displayName: gemma-4-26b:free
+          - id: gemma-4-31b-it:free
+            displayName: gemma-4-31b-it:free
+          - id: qwen3.6-plus:free
+            displayName: qwen3.6-plus:free
+          - id: minimax-m2.7:free
+            displayName: minimax-m2.7:free
+          - id: nemotron-3-super-120b-a12b:free
+            displayName: nemotron-3-super-120b-a12b:free
+          - id: qwen3.5-4b:free
+            displayName: qwen3.5-4b:free
+          - id: qwen-sea-lion-v4.5-27b-it:free
+            displayName: qwen-sea-lion-v4.5-27b-it:free
+          - id: typhoon-v2.5-30b-a3b-instruct:free
+            displayName: typhoon-v2.5-30b-a3b-instruct:free
+          - id: glm-4.7-flash:free
+            displayName: glm-4.7-flash:free
+          - id: villanova-2b-2512-preview-apnea-ft:free
+            displayName: villanova-2b-2512-preview-apnea-ft:free
+          - id: gpt-oss-safeguard-20b:free
+            displayName: gpt-oss-safeguard-20b:free
+          - id: granite-4.0-micro:free
+            displayName: granite-4.0-micro:free
+          - id: qwen-sea-lion-v4-32b-it:free
+            displayName: qwen-sea-lion-v4-32b-it:free
+          - id: gpt-oss-20b:free
+            displayName: gpt-oss-20b:free
+          - id: gpt-oss-120b:free
+            displayName: gpt-oss-120b:free
+          - id: codestral-latest:free
+            displayName: codestral-latest:free
+          - id: glm-4.5-flash:free
+            displayName: glm-4.5-flash:free
+          - id: qwen3:free
+            displayName: qwen3:free
+          - id: qwq-32b:free
+            displayName: qwq-32b:free
+          - id: mistral-small:free
+            displayName: mistral-small:free
+          - id: deepseek-r1-distill-qwen-32b:free
+            displayName: deepseek-r1-distill-qwen-32b:free
+          - id: gpt-4o:free
+            displayName: gpt-4o:free
+          - id: qwen2.5-coder-32b:free
+            displayName: qwen2.5-coder-32b:free
+          - id: grok-beta:free
+            displayName: grok-beta:free
+          - id: llama-3.2-11b-vision:free
+            displayName: llama-3.2-11b-vision:free
+          - id: allam-2-7b:free
+            displayName: allam-2-7b:free
+          - id: bge-multilingual-gemma2:free
+            displayName: bge-multilingual-gemma2:free
+          - id: mistral-7b-instruct:free
+            displayName: mistral-7b-instruct:free
+          - id: bge-base-en-v1.5:free
+            displayName: bge-base-en-v1.5:free
+          - id: bge-large-en-v1.5:free
+            displayName: bge-large-en-v1.5:free
+          - id: bge-small-en-v1.5:free
+            displayName: bge-small-en-v1.5:free
+          - id: xiaomi-mimo-v2.6-pro-free
+            displayName: xiaomi-mimo-v2.6-pro-free
+          - id: coding-glm-5.3-free
+            displayName: coding-glm-5.3-free
+          - id: xiaomi-mimo-v2.6-flash-free
+            displayName: xiaomi-mimo-v2.6-flash-free
+          - id: agents-a1-free
+            displayName: agents-a1-free
+          - id: intern-s2-free
+            displayName: intern-s2-free
+          - id: union-alpha-free
+            displayName: union-alpha-free
+          - id: dots-3-note-preview-free
+            displayName: dots-3-note-preview-free
+          - id: hy3-free
+            displayName: hy3-free
+          - id: minimax-m2.7-free
+            displayName: minimax-m2.7-free
+          - id: lfm-2.5-2.6b-free
+            displayName: lfm-2.5-2.6b-free
+          - id: ling-3.0-tiny-free
+            displayName: ling-3.0-tiny-free
+          - id: nemotron-3.5-lightning-free
+            displayName: nemotron-3.5-lightning-free
+          - id: ling-3.0-flash-free
+            displayName: ling-3.0-flash-free
+          - id: coding-glm-5.2-free
+            displayName: coding-glm-5.2-free
+          - id: coding-kimi-k3-free
+            displayName: coding-kimi-k3-free
+          - id: nemotron-nano-9b-v2-free
+            displayName: nemotron-nano-9b-v2-free
+          - id: nemotron-nano-12b-v2-vl-free
+            displayName: nemotron-nano-12b-v2-vl-free
+          - id: nemotron-3-super-120b-a12b-free
+            displayName: nemotron-3-super-120b-a12b-free
+          - id: nemotron-3-nano-omni-30b-a3b-reasoning-free
+            displayName: nemotron-3-nano-omni-30b-a3b-reasoning-free
+          - id: nemotron-3-ultra-550b-a55b-free
+            displayName: nemotron-3-ultra-550b-a55b-free
+          - id: north-mini-code-free
+            displayName: north-mini-code-free
+          - id: laguna-xs-2.1-free
+            displayName: laguna-xs-2.1-free
+          - id: laguna-s-2.1-free
+            displayName: laguna-s-2.1-free
+          - id: nemotron-3-nano-30b-a3b-free
+            displayName: nemotron-3-nano-30b-a3b-free
+          - id: coding-minimax-m3-free
+            displayName: coding-minimax-m3-free
+          - id: xiaomi-mimo-v2-omni-free
+            displayName: xiaomi-mimo-v2-omni-free
+          - id: xiaomi-mimo-v2-pro-free
+            displayName: xiaomi-mimo-v2-pro-free
+          - id: xiaomi-mimo-v2.5-free
+            displayName: xiaomi-mimo-v2.5-free
+          - id: xiaomi-mimo-v2.5-pro-free
+            displayName: xiaomi-mimo-v2.5-pro-free
+          - id: coding-glm-5.1-free
+            displayName: coding-glm-5.1-free
+          - id: coding-minimax-m2.7-free
+            displayName: coding-minimax-m2.7-free
+          - id: coding-glm-5-free
+            displayName: coding-glm-5-free
+          - id: coding-glm-5-turbo-free
+            displayName: coding-glm-5-turbo-free
+          - id: coding-minimax-m2.5-free
+            displayName: coding-minimax-m2.5-free
+          - id: glm-4.7-flash-free
+            displayName: glm-4.7-flash-free
+          - id: coding-glm-4.7-free
+            displayName: coding-glm-4.7-free
+          - id: k2.6-code-preview-free
+            displayName: k2.6-code-preview-free
+          - id: qwen3.6-plus-preview-free
+            displayName: qwen3.6-plus-preview-free
+          - id: coding-minimax-m2.1-free
+            displayName: coding-minimax-m2.1-free
+          - id: kimi-for-coding-free
+            displayName: kimi-for-coding-free
+          - id: coding-glm-4.6-free
+            displayName: coding-glm-4.6-free
+          - id: coding-minimax-m2-free
+            displayName: coding-minimax-m2-free
+          - id: mimo-v2-flash-free
+            displayName: mimo-v2-flash-free
+          - id: qwen3.8-27b
+            displayName: qwen3.8-27b
+          - id: qwen3.8-flash
+            displayName: qwen3.8-flash
+          - id: nemotron-3.5-lightning-30b
+            displayName: nemotron-3.5-lightning-30b
+          - id: north-mini-code
+            displayName: north-mini-code
+          - id: glm-4.6v-flash
+            displayName: glm-4.6v-flash
+          - id: glm-5.3-flash
+            displayName: glm-5.3-flash
+          - id: glm-5.3
+            displayName: glm-5.3
+          - id: gpt-5.6-luna
+            displayName: gpt-5.6-luna
+          - id: gpt-6-astra
+            displayName: gpt-6-astra
+          - id: deepseek-v3.2
+            displayName: deepseek-v3.2
+          - id: deepseek-v4-flash-0731
+            displayName: deepseek-v4-flash-0731
+          - id: deepseek-v4.1-flash
+            displayName: deepseek-v4.1-flash
+          - id: gemma-4-26b-a4b
+            displayName: gemma-4-26b-a4b
+          - id: gemma-4-31b
+            displayName: gemma-4-31b
+          - id: minimax-m3
+            displayName: minimax-m3
+          - id: microsoft/bitnet-b1.58-2B-4T
+            displayName: microsoft/bitnet-b1.58-2B-4T
+          - id: poe/Gemma-4-31B
+            displayName: poe/Gemma-4-31B
+          - id: poe/DeepSeek-V4.1-Flash-T
+            displayName: poe/DeepSeek-V4.1-Flash-T
+          - id: poe/DS-V4-Flash-0731
+            displayName: poe/DS-V4-Flash-0731
+          - id: poe/Muse-Glimmer-30B
+            displayName: poe/Muse-Glimmer-30B
+          - id: poe/Minimax-H3-N
+            displayName: poe/Minimax-H3-N
+          - id: poe/GLM-5.3-Flash-T
+            displayName: poe/GLM-5.3-Flash-T
+          - id: Atria-Dawn-Preview
+            displayName: Atria-Dawn-Preview
