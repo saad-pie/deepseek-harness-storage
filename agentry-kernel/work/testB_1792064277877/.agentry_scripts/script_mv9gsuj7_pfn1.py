@@ -1,0 +1,1 @@
+import sys; print("python", sys.version.split()[0])

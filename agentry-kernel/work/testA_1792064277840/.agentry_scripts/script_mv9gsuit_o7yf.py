@@ -1,0 +1,1 @@
+print("hello from A", 2+2)

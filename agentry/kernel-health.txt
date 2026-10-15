@@ -1,0 +1,16 @@
+════════════════════════════════════════════════════
+  AGENTRY-KERNEL HEALTH CHECK — Thu Oct 15 11:37:52 UTC 2026
+════════════════════════════════════════════════════
+--- process state ---
+PID 218 is ALIVE
+--- port 7864 ---
+LISTEN 0      511        127.0.0.1:7864      0.0.0.0:*    users:(("node",pid=218,fd=18))
+--- health endpoint ---
+{"ok":true,"kernel":"agentry-kernel","version":"0.13.2","root":"/tmp/home/.dsh/agentry-kernel","uptime_s":3,"sessions":1,"shell_processes":0,"long_running_procs":0}
+--- python check ---
+{"version":"Python 3.11.2","exit_code":0}
+--- kernel output ---
+[agentry-kernel] listening on http://127.0.0.1:7864
+[agentry-kernel] root: /tmp/home/.dsh/agentry-kernel
+[agentry-kernel] routes: 31
+════════════════════════════════════════════════════
