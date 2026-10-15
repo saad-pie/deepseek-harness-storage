@@ -118,3 +118,46 @@
 {"kind":"runtime.tick","at":1792081715560,"n":39}
 {"kind":"discovery.tick_summary","at":1792081745587,"gaps":1,"uncovered":0,"watched":3,"created":0,"proposals":0,"adopted":0}
 {"kind":"runtime.tick","at":1792081745588,"n":40}
+{"kind":"discovery.tick_summary","at":1792081775616,"gaps":1,"uncovered":0,"watched":3,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792081775616,"n":41}
+{"kind":"discovery.tick_summary","at":1792081805648,"gaps":1,"uncovered":0,"watched":3,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792081805649,"n":42}
+{"kind":"discovery.tick_summary","at":1792081835677,"gaps":1,"uncovered":0,"watched":3,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792081835677,"n":43}
+{"kind":"discovery.tick_summary","at":1792081865708,"gaps":1,"uncovered":0,"watched":3,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792081865708,"n":44}
+{"kind":"discovery.tick_summary","at":1792081895735,"gaps":1,"uncovered":0,"watched":3,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792081895735,"n":45}
+{"kind":"runtime.boot.started","at":1792081908278,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792081908286,"loaded":0,"skipped":21,"files":21}
+{"kind":"runtime.boot.watches_loaded","at":1792081908286,"count":3}
+{"kind":"runtime.boot.completed","at":1792081908286,"capabilities":43,"watches":3}
+{"kind":"invoke.started","at":1792081908287,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792081908603,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":316}
+{"kind":"invoke.started","at":1792081908609,"capability_id":"agentry.reason.deep","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["failure","intent","attempted"]}
+{"kind":"invoke.started","at":1792081908609,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792081909059,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":450}
+{"kind":"invoke.started","at":1792081909065,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792081910098,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1039}
+{"kind":"agentry.reason.deep.tool_called","at":1792081910098,"tool":"web_search","url":null,"query":"headless browser screenshot library node puppeteer playwright","error":null,"result_size":3472}
+{"kind":"invoke.started","at":1792081910103,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792081910744,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":646}
+{"kind":"agentry.reason.deep.tool_called","at":1792081910744,"tool":"web_search","url":null,"query":"screenshot URL return PNG byte count tool","error":null,"result_size":2437}
+{"kind":"invoke.started","at":1792081910753,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792081911697,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":953}
+{"kind":"capability_gap.recurred","at":1792081911702,"key":"gap:bua.browser.screenshot","wanted_kind":"bua","wanted_id":"bua.browser.screenshot","reason":"deep reasoning: The model was asked to produce a PNG of a live URL and report its byte count, but a plain LLM prompt has no browser or network-rendering capability — it cannot fetch, render, or measure image bytes. T","hits":2,"example_task_id":null}
+{"kind":"agentry.reason.deep.gap_recorded","at":1792081911702,"gap_id":"gap:bua.browser.screenshot","wanted_kind":"bua","hits":2}
+{"kind":"agentry.reason.deep.completed","at":1792081911703,"model_used":"qwen/qwen3.8-27b","turns":1,"tools_used":["web_search","web_search"],"gap_id":"gap:bua.browser.screenshot","ms":3094}
+{"kind":"invoke.succeeded","at":1792081911708,"capability_id":"agentry.reason.deep","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3100}
+{"kind":"invoke.failed","at":1792081911713,"capability_id":"bua.browser.screenshot","code":"invalid_capability"}
+{"kind":"capability_gap.recurred","at":1792081911714,"key":"gap:bua.browser.screenshot","wanted_kind":"bua","wanted_id":"bua.browser.screenshot","reason":"capability does not exist in graph","hits":3,"example_task_id":null}
+{"kind":"discovery.tick_summary","at":1792081925765,"gaps":1,"uncovered":0,"watched":3,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792081925766,"n":46}
+{"kind":"discovery.tick_summary","at":1792081955796,"gaps":1,"uncovered":0,"watched":3,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792081955796,"n":47}
+{"kind":"discovery.tick_summary","at":1792081985826,"gaps":1,"uncovered":0,"watched":3,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792081985826,"n":48}
+{"kind":"discovery.tick_summary","at":1792082015859,"gaps":1,"uncovered":0,"watched":3,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792082015859,"n":49}
+{"kind":"discovery.tick_summary","at":1792082045886,"gaps":1,"uncovered":0,"watched":3,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792082045886,"n":50}
