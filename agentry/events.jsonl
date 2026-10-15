@@ -1236,3 +1236,35 @@
 {"kind":"runtime.boot.seeded","at":1792086989738,"loaded":0,"skipped":21,"files":21}
 {"kind":"runtime.boot.watches_loaded","at":1792086989738,"count":0}
 {"kind":"runtime.boot.completed","at":1792086989738,"capabilities":56,"watches":0}
+{"kind":"runtime.boot.started","at":1792087243678,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792087243733,"loaded":0,"skipped":21,"files":21}
+{"kind":"runtime.boot.watches_loaded","at":1792087243733,"count":0}
+{"kind":"runtime.boot.completed","at":1792087243733,"capabilities":56,"watches":0}
+{"kind":"runtime.boot.started","at":1792087253483,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792087253560,"loaded":0,"skipped":21,"files":21}
+{"kind":"runtime.boot.watches_loaded","at":1792087253560,"count":0}
+{"kind":"runtime.boot.completed","at":1792087253560,"capabilities":56,"watches":0}
+{"kind":"invoke.started","at":1792087253630,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["gap","candidates"]}
+{"kind":"invoke.started","at":1792087253632,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","accept_from"]}
+{"kind":"invoke.succeeded","at":1792087254828,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1196}
+{"kind":"proposal.created","at":1792087254974,"proposal_id":"proposal_mv9uhbn0_g4191b","gap_id":"gap:edge_test.thing","candidates":1,"model_used":"openai/gpt-oss-120b","provider_used":"groq","recommended_id":null,"auto_approved":false}
+{"kind":"invoke.started","at":1792087255037,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","primary","fallback"]}
+{"kind":"invoke.started","at":1792087255038,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792087255246,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] proposal: 1 candidates for tool","message_id":"01a140b9-687d-7ac8-81e2-c6bceb5090c7","ms":208}
+{"kind":"invoke.succeeded","at":1792087255246,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":209}
+{"kind":"notify.fallback.primary_ok","at":1792087255246,"primary":"notify.email.gmail","subject":"[agentry] proposal: 1 candidates for tool"}
+{"kind":"invoke.succeeded","at":1792087255295,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":272}
+{"kind":"proposal.notified","at":1792087255296,"proposal_id":"proposal_mv9uhbn0_g4191b","channel":"notify.email.gmail","primary_ok":true,"fallback_used":false,"message_id":"01a140b9-687d-7ac8-81e2-c6bceb5090c7"}
+{"kind":"invoke.succeeded","at":1792087255354,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1666}
+{"kind":"runtime.boot.started","at":1792087261819,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792087261885,"loaded":0,"skipped":21,"files":21}
+{"kind":"runtime.boot.watches_loaded","at":1792087261885,"count":0}
+{"kind":"runtime.boot.completed","at":1792087261885,"capabilities":59,"watches":0}
+{"kind":"runtime.boot.started","at":1792087423871,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792087423935,"loaded":0,"skipped":21,"files":21}
+{"kind":"runtime.boot.watches_loaded","at":1792087423935,"count":0}
+{"kind":"runtime.boot.completed","at":1792087423935,"capabilities":58,"watches":0}
+{"kind":"runtime.boot.started","at":1792087458598,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792087458668,"loaded":0,"skipped":21,"files":21}
+{"kind":"runtime.boot.watches_loaded","at":1792087458668,"count":0}
+{"kind":"runtime.boot.completed","at":1792087458668,"capabilities":58,"watches":0}
