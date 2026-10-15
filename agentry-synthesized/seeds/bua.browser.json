@@ -1,0 +1,47 @@
+{
+  "id": "bua.browser",
+  "kind": "bua",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "bua.browser",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/bua.browser.mjs",
+  "accepts": {
+    "url": "string",
+    "width": {
+      "type": "number",
+      "optional": true
+    },
+    "height": {
+      "type": "number",
+      "optional": true
+    },
+    "full_page": {
+      "type": "boolean",
+      "optional": true
+    },
+    "session": {
+      "type": "string",
+      "optional": true
+    },
+    "timeout_ms": {
+      "type": "number",
+      "optional": true
+    }
+  },
+  "produces": {
+    "png_base64": "string",
+    "bytes": "number",
+    "url": "string",
+    "captured_at": "number",
+    "width": "number",
+    "height": "number"
+  },
+  "requires": {
+    "npm": [
+      "playwright"
+    ],
+    "pip": [],
+    "post_install": "npx playwright install chromium"
+  },
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit."
+}
