@@ -316,3 +316,248 @@
 {"kind":"capability_gap.recorded","at":1792069898310,"key":"gap:cua.file_write","wanted_kind":"cua","wanted_id":"cua.file_write","reason":"harness reasoning: The harness attempted to create output.txt but lacks any file-write capability, so the operation failed.","hits":1,"example_task_id":null}
 {"kind":"agentry.reason.gap_recorded","at":1792069898310,"gap_id":"gap:cua.file_write","wanted_kind":"cua","hits":1,"workspace_id":null,"session_id":null}
 {"kind":"invoke.started","at":1792069898312,"capability_id":"agentry.checkpoint","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["reason"]}
+{"kind":"checkpoint.pushed","at":1792069899494,"reason":"reason:gap_recorded:gap:cua.file_write","sha":"26edfcd","ms":1181}
+{"kind":"invoke.succeeded","at":1792069899494,"capability_id":"agentry.checkpoint","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1183}
+{"kind":"agentry.reason.completed","at":1792069899494,"workspace_id":null,"session_id":null,"missing":"cua.file_write","gap_id":"gap:cua.file_write","model_used":"openai/gpt-oss-120b","chain_source":"primary","attempts_count":1,"ms":2241}
+{"kind":"invoke.succeeded","at":1792069899496,"capability_id":"agentry.reason","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2242}
+{"kind":"invoke.started","at":1792069920367,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["gap","candidates","notify"]}
+{"kind":"invoke.started","at":1792069920368,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","accept_from"]}
+{"kind":"runtime.tick","at":1792069922626,"n":38}
+{"kind":"invoke.succeeded","at":1792069922999,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2631}
+{"kind":"proposal.created","at":1792069923003,"proposal_id":"proposal_mv9k5ubb_mp8og1","gap_id":"gap:tool.test","candidates":10,"model_used":"openai/gpt-oss-120b","provider_used":"groq","recommended_id":null}
+{"kind":"invoke.started","at":1792069923006,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","primary","fallback"]}
+{"kind":"invoke.started","at":1792069923006,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069923109,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] proposal: 10 candidates for tool","message_id":"01a13fb0-f0e9-74f6-bf29-e8f040b693ec","ms":102}
+{"kind":"invoke.succeeded","at":1792069923109,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":103}
+{"kind":"notify.fallback.primary_ok","at":1792069923109,"primary":"notify.email.gmail","subject":"[agentry] proposal: 10 candidates for tool"}
+{"kind":"invoke.succeeded","at":1792069923111,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":105}
+{"kind":"proposal.notified","at":1792069923111,"proposal_id":"proposal_mv9k5ubb_mp8og1","channel":"notify.email.gmail","primary_ok":true,"fallback_used":false,"message_id":"01a13fb0-f0e9-74f6-bf29-e8f040b693ec"}
+{"kind":"invoke.succeeded","at":1792069923113,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2744}
+{"kind":"discovery.proposal_created","at":1792069923113,"watch_result_id":"watch_result:watch_mv9k554u_22xjgx:1792069891191","gap_id":"gap:tool.test","source":"discovery.web_search","proposal_id":"proposal_mv9k5ubb_mp8og1"}
+{"kind":"discovery.watch_result_skipped","at":1792069923115,"watch_result_id":"watch_result:watch_mv9k554t_vqelzi:1792069891278","gap_id":"gap:tool.test","reason":"gap_already_has_open_proposal"}
+{"kind":"invoke.started","at":1792069923118,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792069923118,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:cua.file_write::discovery.github_search","task_id":null}
+{"kind":"invoke.succeeded","at":1792069923120,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792069923120,"gap_id":"gap:cua.file_write","wanted_kind":"cua","watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search"}
+{"kind":"discovery.tick_summary","at":1792069923120,"gaps":2,"uncovered":1,"watched":2,"created":1,"proposals":1,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792069950378,"gaps":2,"uncovered":0,"watched":3,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792069952629,"n":39}
+{"kind":"invoke.started","at":1792069952629,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792069952631,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792069952631,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792069953250,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":618}
+{"kind":"watch.polled","at":1792069953253,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","candidates":10,"fresh":3,"error":null,"ms":622}
+{"kind":"watch.result_recorded","at":1792069953257,"watch_result_id":"watch_result:watch_mv9k554u_22xjgx:1792069953254","watch_id":"watch_mv9k554u_22xjgx","gap_id":"gap:tool.test","source":"discovery.web_search","candidates":3}
+{"kind":"invoke.started","at":1792069953260,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069953351,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb1-670e-784f-a21e-1076811eea8e","ms":91}
+{"kind":"invoke.succeeded","at":1792069953351,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":94}
+{"kind":"watch.notified","at":1792069953351,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","key":"https://testomat.io/blog/best-open-source-testing-tools-list/"}
+{"kind":"invoke.started","at":1792069953355,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069953468,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb1-6765-7e43-acfc-79c895316012","ms":112}
+{"kind":"invoke.succeeded","at":1792069953468,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":117}
+{"kind":"watch.notified","at":1792069953468,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","key":"https://sourceforge.net/directory/software-testing/"}
+{"kind":"invoke.started","at":1792069953472,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.succeeded","at":1792069953528,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":897}
+{"kind":"watch.polled","at":1792069953530,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","candidates":30,"fresh":30,"error":null,"ms":899}
+{"kind":"watch.result_recorded","at":1792069953532,"watch_result_id":"watch_result:watch_mv9k5uem_h6hj86:1792069953530","watch_id":"watch_mv9k5uem_h6hj86","gap_id":"gap:cua.file_write","source":"discovery.github_search","candidates":30}
+{"kind":"invoke.started","at":1792069953534,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069953537,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb1-67d0-7714-ab37-7e9dd99e85c9","ms":65}
+{"kind":"invoke.succeeded","at":1792069953537,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":69}
+{"kind":"watch.notified","at":1792069953537,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","key":"https://sourceforge.net/directory/automated-testing/"}
+{"kind":"invoke.succeeded","at":1792069953544,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":913}
+{"kind":"watch.polled","at":1792069953547,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","candidates":30,"fresh":0,"error":null,"ms":918}
+{"kind":"notify.email.gmail.sent","at":1792069953600,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb1-680b-7da1-9ca6-82a577f5b8d4","ms":66}
+{"kind":"invoke.succeeded","at":1792069953602,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":68}
+{"kind":"watch.notified","at":1792069953602,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"trycua/cua"}
+{"kind":"invoke.started","at":1792069953604,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069953671,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb1-6850-7df0-8714-c1f6a0f62fac","ms":67}
+{"kind":"invoke.succeeded","at":1792069953671,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":69}
+{"kind":"watch.notified","at":1792069953671,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"alibaba/page-agent"}
+{"kind":"invoke.started","at":1792069953673,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069953739,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb1-6898-772d-8411-f43ffee2dc0e","ms":66}
+{"kind":"invoke.succeeded","at":1792069953739,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":68}
+{"kind":"watch.notified","at":1792069953739,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"microsoft/OmniParser"}
+{"kind":"invoke.started","at":1792069953746,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069953811,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb1-68e0-7bcb-aa64-172a570c6c54","ms":65}
+{"kind":"invoke.succeeded","at":1792069953811,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":72}
+{"kind":"watch.notified","at":1792069953811,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"Hammerspoon/hammerspoon"}
+{"kind":"invoke.started","at":1792069953813,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069953881,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb1-6923-7132-b740-d2965b9aea0e","ms":68}
+{"kind":"invoke.succeeded","at":1792069953881,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":70}
+{"kind":"watch.notified","at":1792069953881,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"NanmiCoder/cc-haha"}
+{"kind":"invoke.started","at":1792069953883,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069953946,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb1-6968-73c1-9dfa-8c2e669cb045","ms":63}
+{"kind":"invoke.succeeded","at":1792069953946,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":65}
+{"kind":"watch.notified","at":1792069953946,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"octalmage/robotjs"}
+{"kind":"invoke.started","at":1792069953949,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069954011,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb1-69a9-740c-b995-aa39e1fc8d85","ms":62}
+{"kind":"invoke.succeeded","at":1792069954012,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":66}
+{"kind":"watch.notified","at":1792069954012,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"go-vgo/robotgo"}
+{"kind":"invoke.started","at":1792069954015,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069954032,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":19}
+{"kind":"watch.notified","at":1792069954032,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"X-PLUG/MobileAgent"}
+{"kind":"invoke.started","at":1792069954033,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069954049,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":17}
+{"kind":"watch.notified","at":1792069954049,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"CursorTouch/Windows-MCP"}
+{"kind":"invoke.started","at":1792069954056,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069954078,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":28}
+{"kind":"watch.notified","at":1792069954078,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"microsoft/fara"}
+{"kind":"invoke.started","at":1792069954081,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069954099,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":21}
+{"kind":"watch.notified","at":1792069954099,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"Anil-matcha/open-dots"}
+{"kind":"invoke.started","at":1792069954102,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069954122,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":22}
+{"kind":"watch.notified","at":1792069954122,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"the-open-agent/openagent"}
+{"kind":"invoke.started","at":1792069954125,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069954142,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":20}
+{"kind":"watch.notified","at":1792069954143,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"yuruotong1/autoMate"}
+{"kind":"invoke.started","at":1792069954146,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069954164,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":21}
+{"kind":"watch.notified","at":1792069954164,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"autokey/autokey"}
+{"kind":"invoke.started","at":1792069954167,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069954184,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":20}
+{"kind":"watch.notified","at":1792069954184,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"google-gemini/computer-use-preview"}
+{"kind":"invoke.started","at":1792069954186,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069954203,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":19}
+{"kind":"watch.notified","at":1792069954203,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"TurixAI/TuriX-CUA"}
+{"kind":"invoke.started","at":1792069954205,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069954222,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":19}
+{"kind":"watch.notified","at":1792069954222,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"GAM-team/got-your-back"}
+{"kind":"invoke.started","at":1792069954224,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069954243,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":20}
+{"kind":"watch.notified","at":1792069954243,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"feder-cr/invisible_playwright_mcp"}
+{"kind":"invoke.started","at":1792069954245,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069954263,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":20}
+{"kind":"watch.notified","at":1792069954263,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"AmberSahdev/Open-Interface"}
+{"kind":"invoke.started","at":1792069954265,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069954286,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":23}
+{"kind":"watch.notified","at":1792069954286,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"iFurySt/open-codex-computer-use"}
+{"kind":"invoke.started","at":1792069954288,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069954344,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb1-6afc-7a34-8091-763892ee376d","ms":56}
+{"kind":"invoke.succeeded","at":1792069954345,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":59}
+{"kind":"watch.notified","at":1792069954345,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"Tongyi-MAI/MAI-UI"}
+{"kind":"invoke.started","at":1792069954347,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069954417,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb1-6b38-7af2-81e5-60f76be3a934","ms":70}
+{"kind":"invoke.succeeded","at":1792069954417,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":72}
+{"kind":"watch.notified","at":1792069954417,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"e2b-dev/open-computer-use"}
+{"kind":"invoke.started","at":1792069954419,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069954486,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb1-6b81-7688-af57-2a5594466942","ms":66}
+{"kind":"invoke.succeeded","at":1792069954487,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":69}
+{"kind":"watch.notified","at":1792069954487,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"stepfun-ai/gelab-zero"}
+{"kind":"invoke.started","at":1792069954489,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069954554,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb1-6bc6-7439-b9e4-92412cd23993","ms":65}
+{"kind":"invoke.succeeded","at":1792069954555,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":67}
+{"kind":"watch.notified","at":1792069954555,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"skalesapp/skales"}
+{"kind":"invoke.started","at":1792069954558,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069954627,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb1-6c0d-7659-a115-37b4a046db01","ms":69}
+{"kind":"invoke.succeeded","at":1792069954627,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":72}
+{"kind":"watch.notified","at":1792069954627,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"A9T9/RPA"}
+{"kind":"invoke.started","at":1792069954629,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069954728,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb1-6c51-7a5e-a4ac-42da1185dba5","ms":99}
+{"kind":"invoke.succeeded","at":1792069954728,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":101}
+{"kind":"watch.notified","at":1792069954728,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"injaneity/pi-computer-use"}
+{"kind":"invoke.started","at":1792069954730,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069954800,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb1-6cb8-7c3a-9281-ce2c99238c1e","ms":70}
+{"kind":"invoke.succeeded","at":1792069954800,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":72}
+{"kind":"watch.notified","at":1792069954800,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"szczyglis-dev/py-gpt"}
+{"kind":"invoke.started","at":1792069954802,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069954882,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb1-6d05-7508-a5bb-50d532b34c78","ms":80}
+{"kind":"invoke.succeeded","at":1792069954882,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":82}
+{"kind":"watch.notified","at":1792069954883,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"showlab/computer_use_ootb"}
+{"kind":"invoke.started","at":1792069954884,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069954956,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb1-6d52-771e-a61b-d0a1b732e63b","ms":71}
+{"kind":"invoke.succeeded","at":1792069954956,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":73}
+{"kind":"watch.notified","at":1792069954956,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"showlab/ShowUI"}
+{"kind":"invoke.started","at":1792069954959,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069955026,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb1-6d9f-7004-aff2-ad9ae50fe16b","ms":66}
+{"kind":"invoke.succeeded","at":1792069955026,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":70}
+{"kind":"watch.notified","at":1792069955026,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","key":"IPADS-SAI/MobiAgent"}
+{"kind":"runtime.tick.watches_polled","at":1792069955027,"count":3,"summary":[{"watch_id":"watch_mv9k554t_vqelzi","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k554u_22xjgx","ok":true,"polled":true,"candidates":10,"fresh":3,"notified":3,"error":null},{"watch_id":"watch_mv9k5uem_h6hj86","ok":true,"polled":true,"candidates":30,"fresh":30,"notified":30,"error":null}]}
+{"kind":"invoke.started","at":1792069980381,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["gap","candidates","notify"]}
+{"kind":"invoke.started","at":1792069980381,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","accept_from"]}
+{"kind":"invoke.succeeded","at":1792069981607,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1226}
+{"kind":"proposal.created","at":1792069981609,"proposal_id":"proposal_mv9k73jb_0xi9r2","gap_id":"gap:tool.test","candidates":3,"model_used":"openai/gpt-oss-120b","provider_used":"groq","recommended_id":null}
+{"kind":"invoke.started","at":1792069981611,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","primary","fallback"]}
+{"kind":"invoke.started","at":1792069981611,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069981702,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] proposal: 3 candidates for tool","message_id":"01a13fb1-d5c4-7d85-8e5b-473c36a2ce34","ms":90}
+{"kind":"invoke.succeeded","at":1792069981702,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":91}
+{"kind":"notify.fallback.primary_ok","at":1792069981702,"primary":"notify.email.gmail","subject":"[agentry] proposal: 3 candidates for tool"}
+{"kind":"invoke.succeeded","at":1792069981704,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":92}
+{"kind":"proposal.notified","at":1792069981704,"proposal_id":"proposal_mv9k73jb_0xi9r2","channel":"notify.email.gmail","primary_ok":true,"fallback_used":false,"message_id":"01a13fb1-d5c4-7d85-8e5b-473c36a2ce34"}
+{"kind":"invoke.succeeded","at":1792069981708,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1323}
+{"kind":"discovery.proposal_created","at":1792069981708,"watch_result_id":"watch_result:watch_mv9k554u_22xjgx:1792069953254","gap_id":"gap:tool.test","source":"discovery.web_search","proposal_id":"proposal_mv9k73jb_0xi9r2"}
+{"kind":"invoke.started","at":1792069981712,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["gap","candidates","notify"]}
+{"kind":"invoke.started","at":1792069981713,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","accept_from"]}
+{"kind":"runtime.tick","at":1792069985027,"n":40}
+{"kind":"invoke.succeeded","at":1792069989605,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":7892}
+{"kind":"proposal.created","at":1792069989609,"proposal_id":"proposal_mv9k79ph_2mo8o7","gap_id":"gap:cua.file_write","candidates":30,"model_used":"openai/gpt-oss-120b","provider_used":"groq","recommended_id":"trycua/cua"}
+{"kind":"invoke.started","at":1792069989611,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","primary","fallback"]}
+{"kind":"invoke.started","at":1792069989611,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069989721,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] proposal: trycua/cua for cua","message_id":"01a13fb1-f50b-74c3-8dd2-35c99d2fe056","ms":110}
+{"kind":"invoke.succeeded","at":1792069989721,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":110}
+{"kind":"notify.fallback.primary_ok","at":1792069989721,"primary":"notify.email.gmail","subject":"[agentry] proposal: trycua/cua for cua"}
+{"kind":"invoke.succeeded","at":1792069989725,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":112}
+{"kind":"proposal.notified","at":1792069989725,"proposal_id":"proposal_mv9k79ph_2mo8o7","channel":"notify.email.gmail","primary_ok":true,"fallback_used":false,"message_id":"01a13fb1-f50b-74c3-8dd2-35c99d2fe056"}
+{"kind":"invoke.succeeded","at":1792069989730,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":8013}
+{"kind":"discovery.proposal_created","at":1792069989731,"watch_result_id":"watch_result:watch_mv9k5uem_h6hj86:1792069953530","gap_id":"gap:cua.file_write","source":"discovery.github_search","proposal_id":"proposal_mv9k79ph_2mo8o7"}
+{"kind":"invoke.started","at":1792069989736,"capability_id":"agentry.adopt","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id"]}
+{"kind":"invoke.started","at":1792069989736,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id","candidate_id"]}
+{"kind":"synthesize.started","at":1792069989737,"proposal_id":"proposal_mv9k5ubb_mp8og1","candidate_id":"https://testdino.com/blog/best-open-source-tools","gap_id":"gap:tool.test","candidate_kind":"web_result"}
+{"kind":"invoke.started","at":1792069989737,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens"]}
+{"kind":"invoke.failed","at":1792069989815,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":78}
+{"kind":"invoke.started","at":1792069989817,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792069991957,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2142}
+{"kind":"tool","at":1792069991962,"proposal_id":"proposal_mv9k5ubb_mp8og1","candidate_id":"https://testdino.com/blog/best-open-source-tools","gap_id":"gap:tool.test","capability_id":"tool.test","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/tool.test.mjs","seed_path":"/tmp/home/.dsh/agentry-synthesized/seeds/tool.test.json","model_used":"groq/openai/gpt-oss-20b","ms":2225}
+{"kind":"invoke.succeeded","at":1792069991972,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2226}
+{"kind":"adoption.synthesize_completed","at":1792069991972,"proposal_id":"proposal_mv9k5ubb_mp8og1","candidate_id":"https://testdino.com/blog/best-open-source-tools","capability_id":"tool.test","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/tool.test.mjs"}
+{"kind":"invoke.started","at":1792069991979,"capability_id":"agentry.trial","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["capability_id","handler_path","seed_path"]}
+{"kind":"trial.started","at":1792069991980,"capability_id":"tool.test","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/tool.test.mjs","session":"trial_tool.test_mv9k7bjg"}
+{"kind":"trial.node_written","at":1792069991981,"capability_id":"tool.test","handler_file":"/tmp/home/.dsh/agentry-synthesized/handlers/tool.test.mjs"}
+{"kind":"invoke.started","at":1792069991989,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792069991994,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5}
+{"kind":"invoke.started","at":1792069991996,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792069991999,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5}
+{"kind":"invoke.started","at":1792069992002,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792069992004,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5}
+{"kind":"installer.prepared","at":1792069992004,"capId":"tool.test","session":"trial_tool.test_mv9k7bjg","steps":[]}
+{"kind":"trial.prepared","at":1792069992004,"capability_id":"tool.test","session":"trial_tool.test_mv9k7bjg","prep":{"already_prepared":false,"steps":[]}}
+{"kind":"invoke.started","at":1792069992008,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792069992010,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"invoke.started","at":1792069992013,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792069992015,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5}
+{"kind":"installer.already_prepared","at":1792069992015,"capId":"tool.test","session":"trial_tool.test_mv9k7bjg"}
+{"kind":"invoke.started","at":1792069992018,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792069992020,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"invoke.started","at":1792069992023,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792069992024,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4}
+{"kind":"installer.already_prepared","at":1792069992025,"capId":"tool.test","session":"trial_tool.test_mv9k7bjg"}
+{"kind":"invoke.started","at":1792069992027,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792069992030,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5}
+{"kind":"invoke.started","at":1792069992032,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","code","env","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792069992105,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":74}
+{"kind":"trial.accept_threw","at":1792069992105,"capability_id":"tool.test","session":"trial_tool.test_mv9k7bjg","error":"tool.test: kernel exited 1 — file:///tmp/home/.dsh/agentry-kernel/work/trial_tool.test_mv9k7bjg/.agentry_scripts/script_mv9k7bky_5jg7.mjs:1\nconst { execSync } = require('child_process');\n                     ^\n\nReferenceError: require is not defined in ES module scope, you can use import instead\n    at file:///tmp/home/.dsh/age"}
+{"kind":"trial.node_retired","at":1792069992108,"capability_id":"tool.test","reason":"trial accept: tool.test: kernel exited 1 — file:///tmp/home/.dsh/agentry-kernel/work/trial_tool.test_mv9k7bjg/.agentry_scripts/script_mv9k7bky_5jg7.mjs:1\nconst { execSync } = require('child_process');\n                     ^\n\nReferenceError: require is not defined in ES module scope, you can use import instead\n    at file:///tmp/home/.dsh/age"}
+{"kind":"invoke.succeeded","at":1792069992112,"capability_id":"agentry.trial","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":136}
+{"kind":"adoption.trial_failed","at":1792069992112,"proposal_id":"proposal_mv9k5ubb_mp8og1","candidate_id":"https://testdino.com/blog/best-open-source-tools","capability_id":"tool.test","phase":"accept","error":"tool.test: kernel exited 1 — file:///tmp/home/.dsh/agentry-kernel/work/trial_tool.test_mv9k7bjg/.agentry_scripts/script_mv9k7bky_5jg7.mjs:1\nconst { execSync } = require('child_process');\n                     ^\n\nReferenceError: require is not defined in ES module scope, you can use import instead\n    at file:///tmp/home/.dsh/age"}
+{"kind":"adoption.synthesis_attempt_recorded","at":1792069992116,"proposal_id":"proposal_mv9k5ubb_mp8og1","candidate_id":"https://testdino.com/blog/best-open-source-tools","phase":"trial_accept","error_preview":"tool.test: kernel exited 1 — file:///tmp/home/.dsh/agentry-kernel/work/trial_tool.test_mv9k7bjg/.agentry_scripts/script_","attempt_id":"synthesis_attempt:proposal_mv9k5ubb_mp8og1:https://testdino.com/blog/best-open-source-tools:1792069992112"}
+{"kind":"adoption.watch_retired","at":1792069992119,"proposal_id":"proposal_mv9k5ubb_mp8og1","watch_id":"watch_mv9k554t_vqelzi","gap_id":"gap:tool.test"}
+{"kind":"adoption.watch_retired","at":1792069992122,"proposal_id":"proposal_mv9k5ubb_mp8og1","watch_id":"watch_mv9k554u_22xjgx","gap_id":"gap:tool.test"}
+{"kind":"proposal.adopted","at":1792069992125,"proposal_id":"proposal_mv9k5ubb_mp8og1","adopted":[],"failed":[{"candidate_id":"https://testdino.com/blog/best-open-source-tools","capability_id":"tool.test","phase":"trial_accept","error":"tool.test: kernel exited 1 — file:///tmp/home/.dsh/agentry-kernel/work/trial_tool.test_mv9k7bjg/.agentry_scripts/script_mv9k7bky_5jg7.mjs:1\nconst { execSync } = require('child_process');\n                     ^\n\nReferenceError: require is not defined in ES module scope, you can use import instead\n    at file:///tmp/home/.dsh/age","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/tool.test.mjs"}],"retired_gap":null,"retired_watches":["watch_mv9k554t_vqelzi","watch_mv9k554u_22xjgx"],"decision":"rejected"}
+{"kind":"invoke.started","at":1792069992127,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","primary","fallback"]}
+{"kind":"invoke.started","at":1792069992127,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069992225,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] synthesis failed: tool","message_id":"01a13fb1-fed2-7dca-af9d-da52d9b073be","ms":98}
+{"kind":"invoke.succeeded","at":1792069992225,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":98}
+{"kind":"notify.fallback.primary_ok","at":1792069992225,"primary":"notify.email.gmail","subject":"[agentry] synthesis failed: tool"}
+{"kind":"invoke.succeeded","at":1792069992228,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":100}
+{"kind":"adoption.notified","at":1792069992228,"proposal_id":"proposal_mv9k5ubb_mp8og1","channel":"notify.email.gmail","primary_ok":true,"fallback_used":false,"message_id":"01a13fb1-fed2-7dca-af9d-da52d9b073be"}
+{"kind":"invoke.succeeded","at":1792069992232,"capability_id":"agentry.adopt","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2492}
+{"kind":"discovery.adoption_completed","at":1792069992232,"proposal_id":"proposal_mv9k5ubb_mp8og1","adopted":[]}
+{"kind":"invoke.started","at":1792069992235,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792069992235,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:tool.test::discovery.github_search","task_id":null}
+{"kind":"invoke.succeeded","at":1792069992242,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792069992242,"gap_id":"gap:tool.test","wanted_kind":"tool","watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search"}
+{"kind":"invoke.started","at":1792069992262,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792069992263,"watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:tool.test::discovery.web_search","task_id":null}
+{"kind":"invoke.succeeded","at":1792069992269,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"discovery.watch_created","at":1792069992269,"gap_id":"gap:tool.test","wanted_kind":"tool","watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search"}
+{"kind":"discovery.tick_summary","at":1792069992269,"gaps":2,"uncovered":1,"watched":1,"created":2,"proposals":2,"adopted":0}
