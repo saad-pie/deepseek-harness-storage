@@ -49,3 +49,48 @@
 {"kind":"runtime.tick","at":1792069049552,"n":9}
 {"kind":"discovery.no_gaps","at":1792069079581}
 {"kind":"runtime.tick","at":1792069079581,"n":10}
+{"kind":"discovery.no_gaps","at":1792069109611}
+{"kind":"runtime.tick","at":1792069109611,"n":11}
+{"kind":"discovery.no_gaps","at":1792069139641}
+{"kind":"runtime.tick","at":1792069139641,"n":12}
+{"kind":"discovery.no_gaps","at":1792069169671}
+{"kind":"runtime.tick","at":1792069169671,"n":13}
+{"kind":"discovery.no_gaps","at":1792069199701}
+{"kind":"runtime.tick","at":1792069199701,"n":14}
+{"kind":"discovery.no_gaps","at":1792069229731}
+{"kind":"runtime.tick","at":1792069229731,"n":15}
+{"kind":"discovery.no_gaps","at":1792069259763}
+{"kind":"runtime.tick","at":1792069259763,"n":16}
+{"kind":"discovery.no_gaps","at":1792069289793}
+{"kind":"runtime.tick","at":1792069289793,"n":17}
+{"kind":"discovery.no_gaps","at":1792069319821}
+{"kind":"runtime.tick","at":1792069319821,"n":18}
+{"kind":"invoke.started","at":1792069326711,"capability_id":"agentry.reason.deep","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["failure","intent"]}
+{"kind":"invoke.started","at":1792069326712,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792069327150,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":437}
+{"kind":"invoke.started","at":1792069327151,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792069327763,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":612}
+{"kind":"agentry.reason.deep.tool_called","at":1792069327763,"tool":"web_search","url":null,"query":"\"definitely-not-real-9000\" npm package","error":null,"result_size":65}
+{"kind":"invoke.started","at":1792069327764,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.failed","at":1792069327818,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":55}
+{"kind":"agentry.reason.deep.llm_failed","at":1792069327819,"provider":"groq","model":"qwen/qwen3.8-27b","turn":1,"code":"invoker_failed","message":"invoker invoker.in_process_js failed: llm: rate limited by provider"}
+{"kind":"invoke.started","at":1792069327819,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792069333029,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5210}
+{"kind":"invoke.started","at":1792069333029,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792069333610,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":581}
+{"kind":"agentry.reason.deep.tool_called","at":1792069333610,"tool":"web_search","url":null,"query":"definitely-not-real-9000 package","error":null,"result_size":3155}
+{"kind":"invoke.started","at":1792069333611,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.failed","at":1792069342679,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":9069}
+{"kind":"agentry.reason.deep.llm_failed","at":1792069342679,"provider":"google","model":"gemini-2.5-flash","turn":1,"code":"invoker_failed","message":"invoker invoker.in_process_js failed: llm: HTTP 502 — {\"error\":{\"message\":\"All upstream targets failed for this request.\",\"type\":\"all_upstreams_failed\",\"requested_model\":\"gemini-2.5-flash\",\"matches_in_catalog\":[\"google\"],\"attempts\":[{\"target\":\"gemini\",\"outcome\":\"http_error\",\"status\":503},{\"target\":\"gemini\",\"outcome\":\"http_error\",\"status\":503},{\"target\""}
+{"kind":"agentry.reason.deep.no_final_answer","at":1792069342679,"attempts":[{"provider":"groq","model":"qwen/qwen3.8-27b","turn":1,"ok":false,"code":"invoker_failed","message":"invoker invoker.in_process_js failed: llm: rate limited by provider"},{"provider":"google","model":"gemini-2.5-flash","turn":1,"ok":false,"code":"invoker_failed","message":"invoker invoker.in_process_js failed: llm: HTTP 502 — {\"error\":{\"message\":\"All upstream targets failed for this request.\",\"type\":\"all_upstreams_failed\",\"requested_model\":\"gemini-2.5-flash\",\"matches_in_catalog\":[\"google\"],\"attempts\":[{\"target\":\"gemini\",\"outcome\":\"http_error\",\"status\":503},{\"target\":\"gemini\",\"outcome\":\"http_error\",\"status\":503},{\"target\""}],"turns":5,"model_chain":[{"provider":"groq","model":"qwen/qwen3.8-27b"},{"provider":"google","model":"gemini-2.5-flash"}]}
+{"kind":"invoke.failed","at":1792069342680,"capability_id":"agentry.reason.deep","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":15968}
+{"kind":"mcp.reason.deep_failed_falling_back","at":1792069342680,"code":"invoker_failed","message":"invoker invoker.in_process_js failed: agentry.reason.deep: no final answer after 5 turns on 2 model(s). Last attempt: {\"provider\":\"google\",\"model\":\"gemini-2.5-flash\",\"turn\":1,\"ok\":false,\"code\":\"invoker_failed\",\"message\":\"invoker invoker.in_process_js failed: llm: HTTP 502 — {\\\"error\\\":{\\\"message\\\":\\\"All upstream targets failed for this request.\\\",\\\"type\\\":\\\"all_upstreams_failed\\\",\\\"requested_model\\\":\\\"gemini-2.5-flash\\\",\\\"matches_in_catalog\\\":[\\\"google\\\"],\\\"attempts\\\":[{\\\"target\\\":\\\"gemini\\\",\\\"outcome\\\":\\\"http_error\\\",\\\"status\\\":503},{\\\"target\\\":\\\"gemini\\\",\\\"outcome\\\":\\\"http_error\\\",\\\"status\\\":503},{\\\"target\\\"\"}"}
+{"kind":"invoke.started","at":1792069342680,"capability_id":"agentry.reason","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["failure","intent"]}
+{"kind":"invoke.started","at":1792069342681,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","accept_from"]}
+{"kind":"invoke.succeeded","at":1792069343810,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1129}
+{"kind":"agentry.reason.completed","at":1792069343810,"workspace_id":null,"session_id":null,"missing":null,"gap_id":null,"model_used":"openai/gpt-oss-120b","chain_source":"primary","attempts_count":1,"ms":1129}
+{"kind":"invoke.succeeded","at":1792069343811,"capability_id":"agentry.reason","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1130}
+{"kind":"discovery.no_gaps","at":1792069349852}
+{"kind":"runtime.tick","at":1792069349852,"n":19}
+{"kind":"discovery.no_gaps","at":1792069379882}
+{"kind":"runtime.tick","at":1792069379883,"n":20}
