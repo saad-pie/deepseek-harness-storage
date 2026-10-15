@@ -2385,3 +2385,39 @@
 {"kind":"invoke.succeeded","at":1792073874002,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":809}
 {"kind":"agentry.reason.deep.completed","at":1792073874002,"model_used":"qwen/qwen3.8-27b","turns":1,"tools_used":["web_search","fetch_url","fetch_url","web_search"],"gap_id":null,"ms":3768}
 {"kind":"invoke.succeeded","at":1792073874039,"capability_id":"agentry.reason.deep","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3806}
+{"kind":"invoke.started","at":1792074006827,"capability_id":"agentry.reason.deep","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["failure","intent"]}
+{"kind":"invoke.started","at":1792074006827,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792074007374,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":547}
+{"kind":"invoke.started","at":1792074007378,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792074009037,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1663}
+{"kind":"agentry.reason.deep.tool_called","at":1792074009037,"tool":"web_search","url":null,"query":"flibbertigibbet-9000 npm package","error":null,"result_size":2036}
+{"kind":"invoke.started","at":1792074009040,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","code","env","timeout_ms"]}
+{"kind":"invoke.failed","at":1792074009042,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":5}
+{"kind":"agentry.reason.deep.tool_called","at":1792074009043,"tool":"fetch_url","url":null,"query":null,"error":"fetch_url kernel call failed: invoker_failed: invoker invoker.in_process_js failed: agentry.os node.run: NOT_FOUND: unknown session: deep_fetch_mv9mlf4d","result_size":164}
+{"kind":"invoke.started","at":1792074009045,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792074009467,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":423}
+{"kind":"invoke.started","at":1792074009469,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","code","env","timeout_ms"]}
+{"kind":"invoke.failed","at":1792074009471,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":4}
+{"kind":"agentry.reason.deep.tool_called","at":1792074009471,"tool":"fetch_url","url":null,"query":null,"error":"fetch_url kernel call failed: invoker_failed: invoker invoker.in_process_js failed: agentry.os node.run: NOT_FOUND: unknown session: deep_fetch_mv9mlfgb","result_size":164}
+{"kind":"invoke.started","at":1792074009474,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792074009868,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":397}
+{"kind":"invoke.started","at":1792074009870,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792074010396,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":528}
+{"kind":"agentry.reason.deep.tool_called","at":1792074010396,"tool":"web_search","url":null,"query":"\"flibbertigibbet-9000\" npmjs","error":null,"result_size":55}
+{"kind":"invoke.started","at":1792074010400,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792074011945,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1549}
+{"kind":"invoke.started","at":1792074011948,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792074012455,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":509}
+{"kind":"agentry.reason.deep.tool_called","at":1792074012455,"tool":"web_search","url":null,"query":"flibbertigibbet-9000","error":null,"result_size":2181}
+{"kind":"invoke.started","at":1792074012457,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.failed","at":1792074012519,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":64}
+{"kind":"agentry.reason.deep.llm_failed","at":1792074012519,"provider":"groq","model":"qwen/qwen3.8-27b","turn":4,"code":"invoker_failed","message":"invoker invoker.in_process_js failed: llm: rate limited by provider"}
+{"kind":"invoke.started","at":1792074012522,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792074016853,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4334}
+{"kind":"invoke.started","at":1792074016856,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792074017439,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":585}
+{"kind":"agentry.reason.deep.tool_called","at":1792074017439,"tool":"web_search","url":null,"query":"flibbertigibbet-9000 npm package","error":null,"result_size":1868}
+{"kind":"invoke.started","at":1792074017441,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792074019083,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1644}
+{"kind":"agentry.reason.deep.completed","at":1792074019083,"model_used":"gemini-2.5-flash","turns":1,"tools_used":["web_search"],"gap_id":null,"ms":12256}
+{"kind":"invoke.succeeded","at":1792074019086,"capability_id":"agentry.reason.deep","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":12259}
