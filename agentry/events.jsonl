@@ -360,3 +360,16 @@
 {"kind":"runtime.tick.watches_polled","at":1792064788569,"count":1,"summary":[{"watch_id":"watch_mv9gyj7s_dfmb7e","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null}]}
 {"kind":"discovery.no_gaps","at":1792064813267}
 {"kind":"runtime.tick","at":1792064818574,"n":19}
+{"kind":"discovery.no_gaps","at":1792064843291}
+{"kind":"runtime.tick","at":1792064848578,"n":20}
+{"kind":"invoke.started","at":1792064848578,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792064849446,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":867}
+{"kind":"watch.polled","at":1792064849448,"watch_id":"watch_mv9gyj7s_dfmb7e","source":"discovery.github_search","candidates":30,"fresh":0,"error":null,"ms":870}
+{"kind":"runtime.tick.watches_polled","at":1792064849448,"count":1,"summary":[{"watch_id":"watch_mv9gyj7s_dfmb7e","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null}]}
+{"kind":"discovery.no_gaps","at":1792064873300}
+{"kind":"runtime.tick","at":1792064879454,"n":21}
+{"kind":"runtime.boot.started","at":1792064900147,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792064900150,"loaded":0,"skipped":21,"files":21}
+{"kind":"runtime.boot.watches_loaded","at":1792064900150,"count":1}
+{"kind":"runtime.boot.completed","at":1792064900150,"capabilities":25,"watches":1}
+{"kind":"invoke.started","at":1792064900150,"capability_id":"agentry.checkpoint","invoker":"invoker.in_process_js","task_id":null,"tenant":null,"input_keys":["reason"]}
