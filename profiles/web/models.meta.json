@@ -1,13 +1,13 @@
 {
-  "fetched_at": "2026-10-15T11:37:17.264Z",
+  "fetched_at": "2026-10-15T12:53:07.676Z",
   "base_url": "https://antigravity-seven-delta.vercel.app/v1",
   "total_active_keys": 94,
-  "verified_free_models_count": 147,
+  "verified_free_models_count": 155,
   "diagnostic_report": {
-    "timestamp": "2026-10-15T11:37:17.183Z",
+    "timestamp": "2026-10-15T12:53:07.440Z",
     "environment": "production",
     "total_active_keys": 94,
-    "verified_free_models_count": 147,
+    "verified_free_models_count": 155,
     "live_providers": [
       "google",
       "unorouter",
@@ -32,7 +32,7 @@
       "unorouter": {
         "configured_keys": 5,
         "live": true,
-        "models_count": 52,
+        "models_count": 60,
         "status": "live"
       },
       "aihubmix": {
@@ -69,7 +69,7 @@
   },
   "by_provider": {
     "google": 18,
-    "unorouter": 52,
+    "unorouter": 60,
     "aihubmix": 52,
     "jankrouter": 15,
     "osaii": 7,
@@ -239,6 +239,15 @@
       "weekly_label": null
     },
     {
+      "id": "step-5-preview:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
       "id": "claude-haiku-5-5:free",
       "provider": "unorouter",
       "rpm": 60,
@@ -266,7 +275,25 @@
       "weekly_label": null
     },
     {
+      "id": "mimo-v2.6-flash:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
       "id": "agnes-3.0-flash:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "deepseek-v4.1-flash:free",
       "provider": "unorouter",
       "rpm": 60,
       "tpm": 500000,
@@ -284,6 +311,33 @@
       "weekly_label": null
     },
     {
+      "id": "qwen3.8-flash-next:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "glm-5.3-flash-search:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "glm-5.3-flash-thinking:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
       "id": "glm-5.3-flash:free",
       "provider": "unorouter",
       "rpm": 60,
@@ -293,7 +347,7 @@
       "weekly_label": null
     },
     {
-      "id": "gemini-3.7-flash:free",
+      "id": "qwen3.8-27b:free",
       "provider": "unorouter",
       "rpm": 60,
       "tpm": 500000,
@@ -375,6 +429,15 @@
     },
     {
       "id": "gemini-3.5-flash-lite:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "kimi-k3:free",
       "provider": "unorouter",
       "rpm": 60,
       "tpm": 500000,
@@ -482,6 +545,15 @@
       "weekly_label": null
     },
     {
+      "id": "gemma-4-31b-it:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
       "id": "qwen3.6-plus:free",
       "provider": "unorouter",
       "rpm": 60,
@@ -501,15 +573,6 @@
     },
     {
       "id": "nemotron-3-super-120b-a12b:free",
-      "provider": "unorouter",
-      "rpm": 60,
-      "tpm": 500000,
-      "rpd": 5000,
-      "limit_type": "per_week",
-      "weekly_label": null
-    },
-    {
-      "id": "mercury-2:free",
       "provider": "unorouter",
       "rpm": 60,
       "tpm": 500000,
@@ -563,15 +626,6 @@
       "weekly_label": null
     },
     {
-      "id": "gpt-oss-safeguard-20b:free",
-      "provider": "unorouter",
-      "rpm": 60,
-      "tpm": 500000,
-      "rpd": 5000,
-      "limit_type": "per_week",
-      "weekly_label": null
-    },
-    {
       "id": "granite-4.0-micro:free",
       "provider": "unorouter",
       "rpm": 60,
@@ -608,7 +662,7 @@
       "weekly_label": null
     },
     {
-      "id": "glm-4.5-flash:free",
+      "id": "gpt-oss-120b:free",
       "provider": "unorouter",
       "rpm": 60,
       "tpm": 500000,
@@ -680,6 +734,24 @@
       "weekly_label": null
     },
     {
+      "id": "qwen2.5-coder-32b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "c4ai-aya-expanse-32b:free",
+      "provider": "unorouter",
+      "rpm": 60,
+      "tpm": 500000,
+      "rpd": 5000,
+      "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
       "id": "llama-3.2-11b-vision:free",
       "provider": "unorouter",
       "rpm": 60,
@@ -704,6 +776,24 @@
       "tpm": 500000,
       "rpd": 5000,
       "limit_type": "per_week",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen3.8-flash-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
+      "weekly_label": null
+    },
+    {
+      "id": "qwen3.8-max-free",
+      "provider": "aihubmix",
+      "rpm": 60,
+      "tpm": 1000000,
+      "rpd": 1000,
+      "limit_type": "fixed_token_quota",
       "weekly_label": null
     },
     {
@@ -752,7 +842,7 @@
       "weekly_label": null
     },
     {
-      "id": "union-alpha-free",
+      "id": "intern-s2-free",
       "provider": "aihubmix",
       "rpm": 60,
       "tpm": 1000000,
@@ -761,7 +851,7 @@
       "weekly_label": null
     },
     {
-      "id": "intern-s2-free",
+      "id": "union-alpha-free",
       "provider": "aihubmix",
       "rpm": 60,
       "tpm": 1000000,
@@ -1149,24 +1239,6 @@
     },
     {
       "id": "mistralai/mistral-7b-instruct:free",
-      "provider": "aihubmix",
-      "rpm": 60,
-      "tpm": 1000000,
-      "rpd": 1000,
-      "limit_type": "fixed_token_quota",
-      "weekly_label": null
-    },
-    {
-      "id": "qwen3.8-flash-free",
-      "provider": "aihubmix",
-      "rpm": 60,
-      "tpm": 1000000,
-      "rpd": 1000,
-      "limit_type": "fixed_token_quota",
-      "weekly_label": null
-    },
-    {
-      "id": "qwen3.8-max-free",
       "provider": "aihubmix",
       "rpm": 60,
       "tpm": 1000000,

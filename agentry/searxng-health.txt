@@ -1,10 +1,10 @@
 ════════════════════════════════════════════════════
-  SEARXNG HEALTH CHECK — Thu Oct 15 11:37:32 UTC 2026
+  SEARXNG HEALTH CHECK — Thu Oct 15 12:53:22 UTC 2026
 ════════════════════════════════════════════════════
 --- process state ---
 PID 68 is ALIVE
 --- port 8080 ---
-LISTEN 0      1024         0.0.0.0:8080      0.0.0.0:*    users:(("granian",pid=75,fd=22))
+LISTEN 0      1024         0.0.0.0:8080      0.0.0.0:*    users:(("granian",pid=76,fd=22))
 --- curl test ---
 HTTP 200
 --- FULL searxng output ---
@@ -12,10 +12,9 @@ HTTP 200
 [INFO] Websockets are not supported on WSGI, ignoring
 [INFO] Starting granian (main PID: 68)
 [INFO] Listening at: http://0.0.0.0:8080
-[INFO] Spawning worker-1 with PID: 75
-2026-10-15 11:37:18,220 WARNING:searx.botdetection.config: missing config file: /etc/searxng/limiter.toml
+[INFO] Spawning worker-1 with PID: 76
+2026-10-15 12:53:09,135 WARNING:searx.botdetection.config: missing config file: /etc/searxng/limiter.toml
 [INFO] Started worker-1
-2026-10-15 11:37:32,336 ERROR:searx.botdetection: X-Forwarded-For nor X-Real-IP header is set!
-2026-10-15 11:37:32,679 WARNING:searx.network.brave: HTTP Request failed: GET https://search.brave.com/search?q=test&source=web
-2026-10-15 11:37:40,339 ERROR:searx.engines.duckduckgo: engine timeout
+2026-10-15 12:53:22,834 ERROR:searx.botdetection: X-Forwarded-For nor X-Real-IP header is set!
+2026-10-15 12:53:23,156 WARNING:searx.network.brave: HTTP Request failed: GET https://search.brave.com/search?q=test&source=web
 ════════════════════════════════════════════════════

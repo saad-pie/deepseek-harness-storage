@@ -2,12 +2,10 @@
 [INFO] Websockets are not supported on WSGI, ignoring
 [INFO] Starting granian (main PID: 68)
 [INFO] Listening at: http://0.0.0.0:8080
-[INFO] Spawning worker-1 with PID: 75
-2026-10-15 11:37:18,220 WARNING:searx.botdetection.config: missing config file: /etc/searxng/limiter.toml
+[INFO] Spawning worker-1 with PID: 76
+2026-10-15 12:53:09,135 WARNING:searx.botdetection.config: missing config file: /etc/searxng/limiter.toml
 [INFO] Started worker-1
-2026-10-15 11:37:32,336 ERROR:searx.botdetection: X-Forwarded-For nor X-Real-IP header is set!
-2026-10-15 11:37:32,679 WARNING:searx.network.brave: HTTP Request failed: GET https://search.brave.com/search?q=test&source=web
-2026-10-15 11:37:40,339 ERROR:searx.engines.duckduckgo: engine timeout
-2026-10-15 11:37:40,362 ERROR:searx: call to ResultContainer.add_unresponsive_engine after ResultContainer.close
-2026-10-15 11:37:48,349 ERROR:searx.engines.duckduckgo: engine timeout
-2026-10-15 11:37:48,352 ERROR:searx: call to ResultContainer.add_unresponsive_engine after ResultContainer.close
+2026-10-15 12:53:22,834 ERROR:searx.botdetection: X-Forwarded-For nor X-Real-IP header is set!
+2026-10-15 12:53:23,156 WARNING:searx.network.brave: HTTP Request failed: GET https://search.brave.com/search?q=test&source=web
+2026-10-15 13:02:07,478 WARNING:searx.network.brave: HTTP Request failed: GET https://search.brave.com/search?q=%22definitely-not-real-9000%22+npm+package&source=web
+2026-10-15 13:10:55,767 WARNING:searx.network.brave: HTTP Request failed: GET https://search.brave.com/search?q=test&source=web
