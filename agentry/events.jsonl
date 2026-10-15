@@ -148,3 +148,171 @@
 {"kind":"capability_gap.recorded","at":1792069876779,"key":"gap:tool.test","wanted_kind":"tool","wanted_id":"tool.test","reason":"harness reasoning: The harness attempted to execute a test action but received no response, indicating a missing capability for handling generic test commands.","hits":1,"example_task_id":null}
 {"kind":"agentry.reason.gap_recorded","at":1792069876779,"gap_id":"gap:tool.test","wanted_kind":"tool","hits":1,"workspace_id":null,"session_id":null}
 {"kind":"invoke.started","at":1792069876779,"capability_id":"agentry.checkpoint","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["reason"]}
+{"kind":"checkpoint.pushed","at":1792069877995,"reason":"reason:gap_recorded:gap:tool.test","sha":"d040b14","ms":1216}
+{"kind":"invoke.succeeded","at":1792069877995,"capability_id":"agentry.checkpoint","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1216}
+{"kind":"agentry.reason.completed","at":1792069877995,"workspace_id":null,"session_id":null,"missing":"tool.test","gap_id":"gap:tool.test","model_used":"openai/gpt-oss-120b","chain_source":"primary","attempts_count":1,"ms":2225}
+{"kind":"invoke.succeeded","at":1792069877995,"capability_id":"agentry.reason","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2226}
+{"kind":"invoke.started","at":1792069890364,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792069890365,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:tool.test::discovery.github_search","task_id":null}
+{"kind":"invoke.succeeded","at":1792069890366,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"discovery.watch_created","at":1792069890366,"gap_id":"gap:tool.test","wanted_kind":"tool","watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search"}
+{"kind":"invoke.started","at":1792069890366,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792069890366,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:tool.test::discovery.web_search","task_id":null}
+{"kind":"invoke.succeeded","at":1792069890367,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792069890367,"gap_id":"gap:tool.test","wanted_kind":"tool","watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search"}
+{"kind":"discovery.tick_summary","at":1792069890367,"gaps":1,"uncovered":1,"watched":0,"created":2,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792069890367,"n":37}
+{"kind":"invoke.started","at":1792069890368,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792069890380,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792069891190,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":810}
+{"kind":"watch.polled","at":1792069891191,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","candidates":10,"fresh":10,"error":null,"ms":811}
+{"kind":"watch.result_recorded","at":1792069891192,"watch_result_id":"watch_result:watch_mv9k554u_22xjgx:1792069891191","watch_id":"watch_mv9k554u_22xjgx","gap_id":"gap:tool.test","source":"discovery.web_search","candidates":10}
+{"kind":"invoke.started","at":1792069891192,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.succeeded","at":1792069891278,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":910}
+{"kind":"watch.polled","at":1792069891278,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","candidates":30,"fresh":30,"error":null,"ms":911}
+{"kind":"watch.result_recorded","at":1792069891280,"watch_result_id":"watch_result:watch_mv9k554t_vqelzi:1792069891278","watch_id":"watch_mv9k554t_vqelzi","gap_id":"gap:tool.test","source":"discovery.github_search","candidates":30}
+{"kind":"invoke.started","at":1792069891281,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069891293,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb0-74a8-74b0-a9ee-dbcccb04d014","ms":101}
+{"kind":"invoke.succeeded","at":1792069891293,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":101}
+{"kind":"watch.notified","at":1792069891293,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","key":"https://testdino.com/blog/best-open-source-tools"}
+{"kind":"invoke.started","at":1792069891294,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069891388,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb0-74ff-7e68-b6c8-7646ab51304b","ms":93}
+{"kind":"invoke.succeeded","at":1792069891388,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":95}
+{"kind":"watch.notified","at":1792069891388,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","key":"https://bugreel.io/blog/open-source-qa-tools"}
+{"kind":"invoke.started","at":1792069891389,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069891392,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb0-74fa-7731-951a-29b97c6dee41","ms":111}
+{"kind":"invoke.succeeded","at":1792069891393,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":112}
+{"kind":"watch.notified","at":1792069891393,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"usestrix/strix"}
+{"kind":"invoke.started","at":1792069891393,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069891457,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb0-754d-7213-b546-6eea0447a2ab","ms":68}
+{"kind":"invoke.succeeded","at":1792069891457,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":69}
+{"kind":"watch.notified","at":1792069891457,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","key":"https://www.sphinx-solution.com/blog/open-source-testing-tools/"}
+{"kind":"invoke.started","at":1792069891458,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069891485,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb0-754f-7695-b35b-b7473b6d4a2b","ms":91}
+{"kind":"invoke.succeeded","at":1792069891485,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":92}
+{"kind":"watch.notified","at":1792069891485,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"alibaba/open-code-review"}
+{"kind":"invoke.started","at":1792069891486,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069891557,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb0-759a-7565-8aab-dbf213650831","ms":98}
+{"kind":"invoke.succeeded","at":1792069891557,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":100}
+{"kind":"watch.notified","at":1792069891557,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","key":"https://www.softwaretestinghelp.com/open-source-testing-tools/"}
+{"kind":"invoke.started","at":1792069891559,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069891578,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb0-75b2-71bb-95ab-7073046b44c7","ms":92}
+{"kind":"invoke.succeeded","at":1792069891578,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":93}
+{"kind":"watch.notified","at":1792069891578,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"grafana/k6"}
+{"kind":"invoke.started","at":1792069891579,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069891635,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb0-75f8-7658-b80f-cab8acd3a065","ms":76}
+{"kind":"invoke.succeeded","at":1792069891635,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":78}
+{"kind":"watch.notified","at":1792069891635,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","key":"https://momentic.ai/blog/open-source-test-automation-tools"}
+{"kind":"invoke.started","at":1792069891636,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069891661,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb0-760f-7727-ad3b-e2e56a6b3493","ms":82}
+{"kind":"invoke.succeeded","at":1792069891662,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":83}
+{"kind":"watch.notified","at":1792069891662,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"enaqx/awesome-pentest"}
+{"kind":"invoke.started","at":1792069891664,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069891686,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":24}
+{"kind":"watch.notified","at":1792069891686,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"tsenart/vegeta"}
+{"kind":"invoke.started","at":1792069891687,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069891701,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb0-7643-74dc-aa8f-3923d27bdd33","ms":65}
+{"kind":"invoke.succeeded","at":1792069891701,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":66}
+{"kind":"watch.notified","at":1792069891701,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","key":"https://zairalabs.ai/guide/guides/open-source-testing/"}
+{"kind":"invoke.started","at":1792069891702,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069891714,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":28}
+{"kind":"watch.notified","at":1792069891714,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"probelabs/goreplay"}
+{"kind":"invoke.started","at":1792069891715,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069891723,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":22}
+{"kind":"watch.notified","at":1792069891723,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","key":"https://www.cetpainfotech.com/blogs/best-open-source-testing-tools-and-frameworks"}
+{"kind":"invoke.started","at":1792069891724,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069891733,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":19}
+{"kind":"watch.notified","at":1792069891734,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"adonisjs/core"}
+{"kind":"invoke.started","at":1792069891735,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069891752,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":29}
+{"kind":"watch.notified","at":1792069891752,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","key":"https://www.guru99.com/best-open-source-testing-tools.html"}
+{"kind":"invoke.started","at":1792069891756,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069891760,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":25}
+{"kind":"watch.notified","at":1792069891760,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"CISOfy/lynis"}
+{"kind":"invoke.started","at":1792069891761,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069891773,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":18}
+{"kind":"watch.notified","at":1792069891773,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","key":"https://www.browserstack.com/guide/best-open-source-test-management-tools"}
+{"kind":"invoke.started","at":1792069891775,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069891794,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":34}
+{"kind":"watch.notified","at":1792069891794,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"babalae/better-genshin-impact"}
+{"kind":"invoke.started","at":1792069891795,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069891799,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":26}
+{"kind":"watch.notified","at":1792069891799,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","key":"https://www.ossphere.dev/blog/best-open-source-testing-tools-in-2026"}
+{"kind":"invoke.failed","at":1792069891814,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":19}
+{"kind":"watch.notified","at":1792069891815,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"Manisso/fsociety"}
+{"kind":"invoke.started","at":1792069891816,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069891851,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":36}
+{"kind":"watch.notified","at":1792069891851,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"modelcontextprotocol/inspector"}
+{"kind":"invoke.started","at":1792069891855,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069891879,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":27}
+{"kind":"watch.notified","at":1792069891879,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"axllent/mailpit"}
+{"kind":"invoke.started","at":1792069891881,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069891912,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":33}
+{"kind":"watch.notified","at":1792069891912,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"gskinner/regexr"}
+{"kind":"invoke.started","at":1792069891913,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069891932,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":20}
+{"kind":"watch.notified","at":1792069891933,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"DevExpress/testcafe"}
+{"kind":"invoke.started","at":1792069891934,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069891965,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":32}
+{"kind":"watch.notified","at":1792069891965,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"A-poc/RedTeam-Tools"}
+{"kind":"invoke.started","at":1792069891966,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069891985,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":20}
+{"kind":"watch.notified","at":1792069891985,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"apache/jmeter"}
+{"kind":"invoke.started","at":1792069891986,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069892016,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":31}
+{"kind":"watch.notified","at":1792069892016,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"gotwarlost/istanbul"}
+{"kind":"invoke.started","at":1792069892017,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069892035,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":19}
+{"kind":"watch.notified","at":1792069892035,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"pemistahl/grex"}
+{"kind":"invoke.started","at":1792069892036,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069892064,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":28}
+{"kind":"watch.notified","at":1792069892064,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"deepseek-ai/open-infra-index"}
+{"kind":"invoke.started","at":1792069892066,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069892084,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":20}
+{"kind":"watch.notified","at":1792069892084,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"rehan-remade/universal-modder"}
+{"kind":"invoke.started","at":1792069892085,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069892108,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":24}
+{"kind":"watch.notified","at":1792069892108,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"Blazity/next-enterprise"}
+{"kind":"invoke.started","at":1792069892109,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069892132,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":23}
+{"kind":"watch.notified","at":1792069892132,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"atinfo/awesome-test-automation"}
+{"kind":"invoke.started","at":1792069892133,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069892170,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":38}
+{"kind":"watch.notified","at":1792069892170,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"webhooksite/webhook.site"}
+{"kind":"invoke.started","at":1792069892172,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069892198,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":27}
+{"kind":"watch.notified","at":1792069892198,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"aws/aws-sam-cli"}
+{"kind":"invoke.started","at":1792069892199,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792069892228,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":30}
+{"kind":"watch.notified","at":1792069892228,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"qodo-ai/qodo-cover"}
+{"kind":"invoke.started","at":1792069892229,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069892305,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb0-7898-7452-b556-2876df36dbbe","ms":76}
+{"kind":"invoke.succeeded","at":1792069892305,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":77}
+{"kind":"watch.notified","at":1792069892305,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"baidu/dperf"}
+{"kind":"invoke.started","at":1792069892306,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069892387,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb0-78ec-7165-bee5-2e794ce98c61","ms":80}
+{"kind":"invoke.succeeded","at":1792069892387,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":82}
+{"kind":"watch.notified","at":1792069892387,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"allure-framework/allure2"}
+{"kind":"invoke.started","at":1792069892389,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069892461,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb0-7935-76c4-9eba-a983da2a1c4c","ms":72}
+{"kind":"invoke.succeeded","at":1792069892461,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":74}
+{"kind":"watch.notified","at":1792069892461,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"dotnet/tye"}
+{"kind":"invoke.started","at":1792069892463,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069892546,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb0-7987-7898-bcb4-4e8ae39c596f","ms":83}
+{"kind":"invoke.succeeded","at":1792069892547,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":85}
+{"kind":"watch.notified","at":1792069892547,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"sitespeedio/sitespeed.io"}
+{"kind":"invoke.started","at":1792069892551,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792069892625,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb0-79d4-7ded-ae8f-80d352c66021","ms":74}
+{"kind":"invoke.succeeded","at":1792069892625,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":78}
+{"kind":"watch.notified","at":1792069892625,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","key":"session-replay-tools/tcpcopy"}
+{"kind":"runtime.tick.watches_polled","at":1792069892626,"count":2,"summary":[{"watch_id":"watch_mv9k554t_vqelzi","ok":true,"polled":true,"candidates":30,"fresh":30,"notified":30,"error":null},{"watch_id":"watch_mv9k554u_22xjgx","ok":true,"polled":true,"candidates":10,"fresh":10,"notified":10,"error":null}]}
+{"kind":"runtime.boot.started","at":1792069897248,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792069897251,"loaded":0,"skipped":21,"files":21}
+{"kind":"runtime.boot.watches_loaded","at":1792069897252,"count":2}
+{"kind":"runtime.boot.completed","at":1792069897252,"capabilities":26,"watches":2}
+{"kind":"invoke.started","at":1792069897252,"capability_id":"agentry.reason","invoker":"invoker.in_process_js","task_id":null,"tenant":null,"input_keys":["failure","intent"]}
+{"kind":"invoke.started","at":1792069897253,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","accept_from"]}
+{"kind":"invoke.succeeded","at":1792069898308,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1055}
+{"kind":"capability_gap.recorded","at":1792069898310,"key":"gap:cua.file_write","wanted_kind":"cua","wanted_id":"cua.file_write","reason":"harness reasoning: The harness attempted to create output.txt but lacks any file-write capability, so the operation failed.","hits":1,"example_task_id":null}
+{"kind":"agentry.reason.gap_recorded","at":1792069898310,"gap_id":"gap:cua.file_write","wanted_kind":"cua","hits":1,"workspace_id":null,"session_id":null}
+{"kind":"invoke.started","at":1792069898312,"capability_id":"agentry.checkpoint","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["reason"]}
