@@ -26,6 +26,7 @@ const ACCEPTS = {
 };
 const PRODUCES = {
   "html": "string",
+  "png_base64": "string",
   "bytes": "number",
   "url": "string",
   "captured_at": "number",
@@ -42,11 +43,12 @@ const ENV_MAP = {
   "BUA_URL": "url",
   "BUA_WIDTH": "width",
   "BUA_HEIGHT": "height",
-  "BUA_TIMEOUT": "timeout_ms"
+  "BUA_TIMEOUT_MS": "timeout_ms"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
   "html": "html",
+  "png_base64": "png_base64",
   "bytes": "bytes",
   "url": "url",
   "captured_at": "captured_at",
@@ -55,7 +57,7 @@ const OUTPUT_MAP = {
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "import { chromium } from \"playwright\";\nconst url = process.env.BUA_URL;\nconst width = Number(process.env.BUA_WIDTH || 1280);\nconst height = Number(process.env.BUA_HEIGHT || 720);\nconst timeout = Number(process.env.BUA_TIMEOUT || 30000);\nconst browser = await chromium.launch({ headless: true });\ntry {\n  const context = await browser.newContext({ viewport: { width, height } });\n  const page = await context.newPage();\n  await page.goto(url, { waitUntil: \"networkidle\", timeout });\n  const html = await page.content();\n  const bytes = Buffer.byteLength(html, \"utf8\");\n  const result = {\n    html,\n    bytes,\n    url,\n    captured_at: Date.now(),\n    width,\n    height\n  };\n  process.stdout.write(JSON.stringify(result));\n} finally {\n  await browser.close();\n}";
+const KERNEL_SCRIPT = "import { chromium } from \"playwright\";\nconst url = process.env.BUA_URL;\nconst width = Number(process.env.BUA_WIDTH || 1280);\nconst height = Number(process.env.BUA_HEIGHT || 720);\nconst timeout = Number(process.env.BUA_TIMEOUT_MS || 30000);\nconst browser = await chromium.launch({ headless: true });\ntry {\n  const context = await browser.newContext({ viewport: { width, height } });\n  const page = await context.newPage();\n  await page.goto(url, { waitUntil: \"networkidle\", timeout });\n  const html = await page.content();\n  const buf = await page.screenshot({ fullPage: true, type: \"png\" });\n  const png_base64 = buf.toString(\"base64\");\n  const bytes = Math.floor((png_base64.length * 3) / 4);\n  const result = {\n    html,\n    png_base64,\n    bytes,\n    url,\n    captured_at: Date.now(),\n    width,\n    height\n  };\n  console.log(JSON.stringify(result));\n} finally {\n  await browser.close();\n}\n";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -72,7 +74,7 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const probe = await run({"url":"https://example.com","width":800,"height":600,"timeout_ms":30000}, deps, { session });
+  const probe = await run({"url":"https://example.com","width":640,"height":480,"session":"bua-accept-test"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 500;
   if (minBytes > 0) {
