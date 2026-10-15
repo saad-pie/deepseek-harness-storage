@@ -561,3 +561,277 @@
 {"kind":"invoke.succeeded","at":1792069992269,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
 {"kind":"discovery.watch_created","at":1792069992269,"gap_id":"gap:tool.test","wanted_kind":"tool","watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search"}
 {"kind":"discovery.tick_summary","at":1792069992269,"gaps":2,"uncovered":1,"watched":1,"created":2,"proposals":2,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792070010385,"gaps":2,"uncovered":0,"watched":3,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792070015027,"n":41}
+{"kind":"invoke.started","at":1792070015027,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070015030,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070015031,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070015032,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070015033,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792070015654,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":624}
+{"kind":"watch.polled","at":1792070015660,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":630}
+{"kind":"invoke.succeeded","at":1792070015689,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":652}
+{"kind":"watch.polled","at":1792070015692,"watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search","candidates":10,"fresh":10,"error":null,"ms":659}
+{"kind":"watch.result_recorded","at":1792070015695,"watch_result_id":"watch_result:watch_mv9k7brb_s8r07f:1792070015692","watch_id":"watch_mv9k7brb_s8r07f","gap_id":"gap:tool.test","source":"discovery.web_search","candidates":10}
+{"kind":"invoke.started","at":1792070015699,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070015794,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb2-5afa-7dc9-aee1-134ac1415462","ms":95}
+{"kind":"invoke.succeeded","at":1792070015794,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":98}
+{"kind":"watch.notified","at":1792070015794,"watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search","key":"https://testdino.com/blog/best-open-source-tools"}
+{"kind":"invoke.started","at":1792070015797,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070015880,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb2-5b4c-7218-a401-f95dd9f85225","ms":82}
+{"kind":"invoke.succeeded","at":1792070015880,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":86}
+{"kind":"watch.notified","at":1792070015880,"watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search","key":"https://bugreel.io/blog/open-source-qa-tools"}
+{"kind":"invoke.started","at":1792070015883,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.succeeded","at":1792070015932,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":900}
+{"kind":"watch.polled","at":1792070015937,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","candidates":30,"fresh":30,"error":null,"ms":905}
+{"kind":"watch.result_recorded","at":1792070015943,"watch_result_id":"watch_result:watch_mv9k7bqj_4tr5mg:1792070015937","watch_id":"watch_mv9k7bqj_4tr5mg","gap_id":"gap:tool.test","source":"discovery.github_search","candidates":30}
+{"kind":"invoke.started","at":1792070015952,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.succeeded","at":1792070015954,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":927}
+{"kind":"watch.polled","at":1792070015959,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","candidates":30,"fresh":0,"error":null,"ms":932}
+{"kind":"notify.email.gmail.sent","at":1792070015962,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb2-5b9c-7a0b-bc21-51ad0ecbe057","ms":78}
+{"kind":"invoke.succeeded","at":1792070015967,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":82}
+{"kind":"watch.notified","at":1792070015967,"watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search","key":"https://www.sphinx-solution.com/blog/open-source-testing-tools/"}
+{"kind":"invoke.started","at":1792070015986,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.succeeded","at":1792070015997,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":965}
+{"kind":"watch.polled","at":1792070016000,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","candidates":30,"fresh":0,"error":null,"ms":969}
+{"kind":"notify.email.gmail.sent","at":1792070016029,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb2-5be8-7d60-9260-4a59c64c2e8b","ms":77}
+{"kind":"invoke.succeeded","at":1792070016033,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":86}
+{"kind":"watch.notified","at":1792070016033,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"usestrix/strix"}
+{"kind":"invoke.started","at":1792070016041,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070016067,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb2-5c13-7241-823e-a001e1c4af24","ms":81}
+{"kind":"invoke.succeeded","at":1792070016067,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":100}
+{"kind":"watch.notified","at":1792070016067,"watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search","key":"https://www.softwaretestinghelp.com/open-source-testing-tools/"}
+{"kind":"invoke.started","at":1792070016073,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070016116,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb2-5c3a-7520-afc7-da180956b2fc","ms":74}
+{"kind":"invoke.succeeded","at":1792070016116,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":83}
+{"kind":"watch.notified","at":1792070016116,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"alibaba/open-code-review"}
+{"kind":"invoke.started","at":1792070016120,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070016144,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb2-5c5c-7018-b207-f4fe95b78d2c","ms":71}
+{"kind":"invoke.succeeded","at":1792070016145,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":78}
+{"kind":"watch.notified","at":1792070016145,"watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search","key":"https://momentic.ai/blog/open-source-test-automation-tools"}
+{"kind":"invoke.started","at":1792070016149,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070016189,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb2-5c85-7e88-bc30-fad08b78c16b","ms":69}
+{"kind":"invoke.succeeded","at":1792070016189,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":73}
+{"kind":"watch.notified","at":1792070016189,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"grafana/k6"}
+{"kind":"invoke.started","at":1792070016192,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070016216,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb2-5ca5-73e8-9a81-08bd53848c6f","ms":67}
+{"kind":"invoke.succeeded","at":1792070016216,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":71}
+{"kind":"watch.notified","at":1792070016216,"watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search","key":"https://zairalabs.ai/guide/guides/open-source-testing/"}
+{"kind":"invoke.started","at":1792070016219,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070016242,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":26}
+{"kind":"watch.notified","at":1792070016243,"watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search","key":"https://www.cetpainfotech.com/blogs/best-open-source-testing-tools-and-frameworks"}
+{"kind":"invoke.started","at":1792070016247,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070016261,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb2-5cce-7050-8a63-1ec76f919236","ms":69}
+{"kind":"invoke.succeeded","at":1792070016262,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":73}
+{"kind":"watch.notified","at":1792070016262,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"enaqx/awesome-pentest"}
+{"kind":"invoke.started","at":1792070016278,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070016283,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":40}
+{"kind":"watch.notified","at":1792070016284,"watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search","key":"https://www.guru99.com/best-open-source-testing-tools.html"}
+{"kind":"invoke.started","at":1792070016292,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070016300,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":37}
+{"kind":"watch.notified","at":1792070016300,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"tsenart/vegeta"}
+{"kind":"invoke.started","at":1792070016306,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070016311,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":27}
+{"kind":"watch.notified","at":1792070016311,"watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search","key":"https://www.browserstack.com/guide/best-open-source-test-management-tools"}
+{"kind":"invoke.started","at":1792070016317,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070016326,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":26}
+{"kind":"watch.notified","at":1792070016326,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"probelabs/goreplay"}
+{"kind":"invoke.started","at":1792070016332,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070016343,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":32}
+{"kind":"watch.notified","at":1792070016343,"watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search","key":"https://sourceforge.net/directory/software-testing/"}
+{"kind":"invoke.failed","at":1792070016361,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":28}
+{"kind":"watch.notified","at":1792070016361,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"adonisjs/core"}
+{"kind":"invoke.started","at":1792070016367,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070016388,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":27}
+{"kind":"watch.notified","at":1792070016388,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"CISOfy/lynis"}
+{"kind":"invoke.started","at":1792070016392,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070016412,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":24}
+{"kind":"watch.notified","at":1792070016412,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"babalae/better-genshin-impact"}
+{"kind":"invoke.started","at":1792070016415,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070016438,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":26}
+{"kind":"watch.notified","at":1792070016438,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"Manisso/fsociety"}
+{"kind":"invoke.started","at":1792070016444,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070016465,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":27}
+{"kind":"watch.notified","at":1792070016465,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"modelcontextprotocol/inspector"}
+{"kind":"invoke.started","at":1792070016475,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070016507,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":41}
+{"kind":"watch.notified","at":1792070016507,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"axllent/mailpit"}
+{"kind":"invoke.started","at":1792070016510,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070016529,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":22}
+{"kind":"watch.notified","at":1792070016529,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"gskinner/regexr"}
+{"kind":"invoke.started","at":1792070016533,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070016559,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":30}
+{"kind":"watch.notified","at":1792070016559,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"DevExpress/testcafe"}
+{"kind":"invoke.started","at":1792070016563,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070016581,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":22}
+{"kind":"watch.notified","at":1792070016581,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"A-poc/RedTeam-Tools"}
+{"kind":"invoke.started","at":1792070016585,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070016640,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":59}
+{"kind":"watch.notified","at":1792070016641,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"apache/jmeter"}
+{"kind":"invoke.started","at":1792070016648,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070016677,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":36}
+{"kind":"watch.notified","at":1792070016677,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"gotwarlost/istanbul"}
+{"kind":"invoke.started","at":1792070016681,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070016699,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":22}
+{"kind":"watch.notified","at":1792070016700,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"pemistahl/grex"}
+{"kind":"invoke.started","at":1792070016703,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070016724,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":24}
+{"kind":"watch.notified","at":1792070016724,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"deepseek-ai/open-infra-index"}
+{"kind":"invoke.started","at":1792070016728,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070016791,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb2-5ee6-7889-8447-af7f307347ec","ms":63}
+{"kind":"invoke.succeeded","at":1792070016791,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":67}
+{"kind":"watch.notified","at":1792070016791,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"rehan-remade/universal-modder"}
+{"kind":"invoke.started","at":1792070016795,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070016863,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb2-5f2a-747a-b81a-3ae63d67da03","ms":68}
+{"kind":"invoke.succeeded","at":1792070016864,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":73}
+{"kind":"watch.notified","at":1792070016864,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"Blazity/next-enterprise"}
+{"kind":"invoke.started","at":1792070016870,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070016931,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb2-5f74-7bed-80ed-aa32afec64ae","ms":61}
+{"kind":"invoke.succeeded","at":1792070016931,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":67}
+{"kind":"watch.notified","at":1792070016931,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"atinfo/awesome-test-automation"}
+{"kind":"invoke.started","at":1792070016935,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070017006,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb2-5fb6-7898-801e-44ff1da6faed","ms":71}
+{"kind":"invoke.succeeded","at":1792070017006,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":75}
+{"kind":"watch.notified","at":1792070017006,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"webhooksite/webhook.site"}
+{"kind":"invoke.started","at":1792070017010,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070017075,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb2-6000-7e71-8c61-735ad79e9558","ms":65}
+{"kind":"invoke.succeeded","at":1792070017075,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":69}
+{"kind":"watch.notified","at":1792070017075,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"aws/aws-sam-cli"}
+{"kind":"invoke.started","at":1792070017079,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070017156,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb2-6046-75fb-92b0-34c4b35a1751","ms":77}
+{"kind":"invoke.succeeded","at":1792070017157,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":81}
+{"kind":"watch.notified","at":1792070017158,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"qodo-ai/qodo-cover"}
+{"kind":"invoke.started","at":1792070017166,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070017248,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb2-60aa-7851-9d08-5b49245bd8cd","ms":82}
+{"kind":"invoke.succeeded","at":1792070017248,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":90}
+{"kind":"watch.notified","at":1792070017248,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"baidu/dperf"}
+{"kind":"invoke.started","at":1792070017252,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070017320,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb2-60f3-7638-938f-b047e6d1ec1c","ms":68}
+{"kind":"invoke.succeeded","at":1792070017320,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":72}
+{"kind":"watch.notified","at":1792070017320,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"allure-framework/allure2"}
+{"kind":"invoke.started","at":1792070017324,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070017411,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb2-613a-7ec3-bd2b-92f0cb886937","ms":87}
+{"kind":"invoke.succeeded","at":1792070017411,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":91}
+{"kind":"watch.notified","at":1792070017411,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"dotnet/tye"}
+{"kind":"invoke.started","at":1792070017415,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070017489,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.github_search","message_id":"01a13fb2-6196-713b-aa79-0829c98e96a1","ms":74}
+{"kind":"invoke.succeeded","at":1792070017489,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":78}
+{"kind":"watch.notified","at":1792070017489,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"sitespeedio/sitespeed.io"}
+{"kind":"invoke.started","at":1792070017493,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.failed","at":1792070017511,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":22}
+{"kind":"watch.notified","at":1792070017511,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","key":"session-replay-tools/tcpcopy"}
+{"kind":"runtime.tick.watches_polled","at":1792070017512,"count":5,"summary":[{"watch_id":"watch_mv9k554t_vqelzi","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k554u_22xjgx","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k5uem_h6hj86","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k7bqj_4tr5mg","ok":true,"polled":true,"candidates":30,"fresh":30,"notified":30,"error":null},{"watch_id":"watch_mv9k7brb_s8r07f","ok":true,"polled":true,"candidates":10,"fresh":10,"notified":10,"error":null}]}
+{"kind":"discovery.watch_result_skipped","at":1792070040388,"watch_result_id":"watch_result:watch_mv9k7brb_s8r07f:1792070015692","gap_id":"gap:tool.test","reason":"gap_already_has_open_proposal"}
+{"kind":"discovery.watch_result_skipped","at":1792070040393,"watch_result_id":"watch_result:watch_mv9k7bqj_4tr5mg:1792070015937","gap_id":"gap:tool.test","reason":"gap_already_has_open_proposal"}
+{"kind":"discovery.tick_summary","at":1792070040399,"gaps":2,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792070047519,"n":42}
+{"kind":"discovery.tick_summary","at":1792070070403,"gaps":2,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792070077520,"n":43}
+{"kind":"invoke.started","at":1792070077521,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070077523,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070077524,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070077526,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070077527,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792070078209,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":682}
+{"kind":"watch.polled","at":1792070078216,"watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search","candidates":10,"fresh":1,"error":null,"ms":689}
+{"kind":"watch.result_recorded","at":1792070078220,"watch_result_id":"watch_result:watch_mv9k7brb_s8r07f:1792070078216","watch_id":"watch_mv9k7brb_s8r07f","gap_id":"gap:tool.test","source":"discovery.web_search","candidates":1}
+{"kind":"invoke.started","at":1792070078224,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070078325,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb3-4f33-76cd-ad6d-a39843413690","ms":101}
+{"kind":"invoke.succeeded","at":1792070078325,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":105}
+{"kind":"watch.notified","at":1792070078325,"watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search","key":"https://testomat.io/blog/best-open-source-testing-tools-list/"}
+{"kind":"invoke.succeeded","at":1792070078476,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":944}
+{"kind":"watch.polled","at":1792070078483,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","candidates":30,"fresh":0,"error":null,"ms":959}
+{"kind":"invoke.succeeded","at":1792070078508,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":978}
+{"kind":"watch.polled","at":1792070078512,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","candidates":30,"fresh":0,"error":null,"ms":986}
+{"kind":"invoke.succeeded","at":1792070078517,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":993}
+{"kind":"watch.polled","at":1792070078521,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","candidates":30,"fresh":0,"error":null,"ms":1000}
+{"kind":"invoke.succeeded","at":1792070078582,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1054}
+{"kind":"watch.polled","at":1792070078586,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":1063}
+{"kind":"runtime.tick.watches_polled","at":1792070078586,"count":5,"summary":[{"watch_id":"watch_mv9k554t_vqelzi","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k554u_22xjgx","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k5uem_h6hj86","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k7bqj_4tr5mg","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k7brb_s8r07f","ok":true,"polled":true,"candidates":10,"fresh":1,"notified":1,"error":null}]}
+{"kind":"discovery.watch_result_skipped","at":1792070100414,"watch_result_id":"watch_result:watch_mv9k7brb_s8r07f:1792070078216","gap_id":"gap:tool.test","reason":"gap_already_has_open_proposal"}
+{"kind":"discovery.tick_summary","at":1792070100421,"gaps":2,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792070108592,"n":44}
+{"kind":"discovery.tick_summary","at":1792070130435,"gaps":2,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792070138600,"n":45}
+{"kind":"invoke.started","at":1792070138601,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070138602,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070138603,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070138604,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070138605,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792070139197,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":592}
+{"kind":"watch.polled","at":1792070139201,"watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":596}
+{"kind":"invoke.succeeded","at":1792070139219,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":612}
+{"kind":"watch.polled","at":1792070139223,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":621}
+{"kind":"invoke.succeeded","at":1792070139428,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":821}
+{"kind":"watch.polled","at":1792070139433,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","candidates":30,"fresh":0,"error":null,"ms":830}
+{"kind":"invoke.succeeded","at":1792070140496,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1891}
+{"kind":"watch.polled","at":1792070140501,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","candidates":30,"fresh":0,"error":null,"ms":1900}
+{"kind":"invoke.succeeded","at":1792070140506,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1898}
+{"kind":"watch.polled","at":1792070140511,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","candidates":30,"fresh":0,"error":null,"ms":1907}
+{"kind":"runtime.tick.watches_polled","at":1792070140511,"count":5,"summary":[{"watch_id":"watch_mv9k554t_vqelzi","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k554u_22xjgx","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k5uem_h6hj86","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k7bqj_4tr5mg","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k7brb_s8r07f","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null}]}
+{"kind":"discovery.tick_summary","at":1792070160441,"gaps":2,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792070170517,"n":46}
+{"kind":"discovery.tick_summary","at":1792070190461,"gaps":2,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792070200528,"n":47}
+{"kind":"invoke.started","at":1792070200528,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070200529,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070200530,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070200530,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070200531,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792070201016,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":485}
+{"kind":"watch.polled","at":1792070201021,"watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search","candidates":10,"fresh":1,"error":null,"ms":490}
+{"kind":"watch.result_recorded","at":1792070201026,"watch_result_id":"watch_result:watch_mv9k7brb_s8r07f:1792070201021","watch_id":"watch_mv9k7brb_s8r07f","gap_id":"gap:tool.test","source":"discovery.web_search","candidates":1}
+{"kind":"invoke.started","at":1792070201030,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.succeeded","at":1792070201100,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":571}
+{"kind":"watch.polled","at":1792070201104,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":575}
+{"kind":"notify.email.gmail.sent","at":1792070201124,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb5-2eee-7970-91d2-a5605b5255bd","ms":94}
+{"kind":"invoke.succeeded","at":1792070201128,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":98}
+{"kind":"watch.notified","at":1792070201128,"watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search","key":"https://www.ossphere.dev/blog/best-open-source-testing-tools-in-2026"}
+{"kind":"invoke.succeeded","at":1792070201482,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":950}
+{"kind":"watch.polled","at":1792070201487,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","candidates":30,"fresh":0,"error":null,"ms":959}
+{"kind":"invoke.succeeded","at":1792070201492,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":958}
+{"kind":"watch.polled","at":1792070201496,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","candidates":30,"fresh":0,"error":null,"ms":966}
+{"kind":"invoke.succeeded","at":1792070201542,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1006}
+{"kind":"watch.polled","at":1792070201547,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","candidates":30,"fresh":0,"error":null,"ms":1017}
+{"kind":"runtime.tick.watches_polled","at":1792070201548,"count":5,"summary":[{"watch_id":"watch_mv9k554t_vqelzi","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k554u_22xjgx","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k5uem_h6hj86","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k7bqj_4tr5mg","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k7brb_s8r07f","ok":true,"polled":true,"candidates":10,"fresh":1,"notified":1,"error":null}]}
+{"kind":"discovery.watch_result_skipped","at":1792070220466,"watch_result_id":"watch_result:watch_mv9k7brb_s8r07f:1792070201021","gap_id":"gap:tool.test","reason":"gap_already_has_open_proposal"}
+{"kind":"discovery.tick_summary","at":1792070220473,"gaps":2,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792070231553,"n":48}
+{"kind":"discovery.tick_summary","at":1792070250478,"gaps":2,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792070261563,"n":49}
+{"kind":"invoke.started","at":1792070261564,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070261565,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070261565,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070261566,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792070261567,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792070262153,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":586}
+{"kind":"watch.polled","at":1792070262160,"watch_id":"watch_mv9k7brb_s8r07f","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":593}
+{"kind":"invoke.succeeded","at":1792070262170,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":600}
+{"kind":"watch.polled","at":1792070262174,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","candidates":10,"fresh":4,"error":null,"ms":609}
+{"kind":"watch.result_recorded","at":1792070262179,"watch_result_id":"watch_result:watch_mv9k554u_22xjgx:1792070262174","watch_id":"watch_mv9k554u_22xjgx","gap_id":"gap:tool.test","source":"discovery.web_search","candidates":4}
+{"kind":"invoke.started","at":1792070262184,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070262279,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb6-1dce-7509-831b-c11823818c1f","ms":95}
+{"kind":"invoke.succeeded","at":1792070262279,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":100}
+{"kind":"watch.notified","at":1792070262279,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","key":"https://webhostingbuddy.com/best/open-source-load-testing-tools/"}
+{"kind":"invoke.started","at":1792070262284,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070262371,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb6-1e2e-781d-b9a0-2432214e69ce","ms":87}
+{"kind":"invoke.succeeded","at":1792070262372,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":93}
+{"kind":"watch.notified","at":1792070262372,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","key":"https://www.testmuai.com/blog/open-source-ai-testing-tools/"}
+{"kind":"invoke.started","at":1792070262376,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792070262448,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb6-1e7a-7b14-a4ff-f4f43a627879","ms":72}
+{"kind":"invoke.succeeded","at":1792070262449,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":76}
+{"kind":"watch.notified","at":1792070262449,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","key":"https://aiindigo.com/tutorials/getting-started-with-awesome-open-ai-developer-tools-curate-your-2026-stack"}
+{"kind":"invoke.started","at":1792070262453,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"invoke.succeeded","at":1792070262514,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":950}
+{"kind":"watch.polled","at":1792070262519,"watch_id":"watch_mv9k554t_vqelzi","source":"discovery.github_search","candidates":30,"fresh":0,"error":null,"ms":955}
+{"kind":"invoke.succeeded","at":1792070262524,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":954}
+{"kind":"watch.polled","at":1792070262528,"watch_id":"watch_mv9k7bqj_4tr5mg","source":"discovery.github_search","candidates":30,"fresh":0,"error":null,"ms":962}
+{"kind":"notify.email.gmail.sent","at":1792070262529,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] new from discovery.web_search","message_id":"01a13fb6-1ec4-7727-8da8-f67a6ed1a98d","ms":76}
+{"kind":"invoke.succeeded","at":1792070262533,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":80}
+{"kind":"watch.notified","at":1792070262533,"watch_id":"watch_mv9k554u_22xjgx","source":"discovery.web_search","key":"https://wbcomdesigns.com/best-open-source-testing-tools/"}
+{"kind":"invoke.succeeded","at":1792070262594,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1024}
+{"kind":"watch.polled","at":1792070262598,"watch_id":"watch_mv9k5uem_h6hj86","source":"discovery.github_search","candidates":30,"fresh":0,"error":null,"ms":1033}
+{"kind":"runtime.tick.watches_polled","at":1792070262598,"count":5,"summary":[{"watch_id":"watch_mv9k554t_vqelzi","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k554u_22xjgx","ok":true,"polled":true,"candidates":10,"fresh":4,"notified":4,"error":null},{"watch_id":"watch_mv9k5uem_h6hj86","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k7bqj_4tr5mg","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mv9k7brb_s8r07f","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null}]}
+{"kind":"discovery.watch_result_skipped","at":1792070280481,"watch_result_id":"watch_result:watch_mv9k554u_22xjgx:1792070262174","gap_id":"gap:tool.test","reason":"gap_already_has_open_proposal"}
+{"kind":"discovery.tick_summary","at":1792070280484,"gaps":2,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792070292602,"n":50}
