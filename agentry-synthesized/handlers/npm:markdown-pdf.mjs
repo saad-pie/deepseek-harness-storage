@@ -6,7 +6,11 @@
 const CAP_ID = "npm:markdown-pdf";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "markdown": "string"
+  "markdown": "string",
+  "output_path": {
+    "type": "string",
+    "optional": true
+  }
 };
 const PRODUCES = {
   "pdf_path": "string"
@@ -19,16 +23,14 @@ const REQUIRES = {
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {
-  "MARKDOWN": "markdown"
-};
+const ENV_MAP = {};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
   "pdf_path": "pdf_path"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that MARKDOWN env var is present and write its contents to a temporary .md file.\n  // fails_if: MARKDOWN env var missing or file write fails\n  // BEGIN prepare\n  if (!process.env.MARKDOWN) throw new Error('missing markdown');\n  const fs = require('fs');\n  const os = require('os');\n  const path = require('path');\n  const tmpDir = os.tmpdir();\n  const mdPath = path.join(tmpDir, `input-${Date.now()}.md`);\n  fs.writeFileSync(mdPath, process.env.MARKDOWN);\n  ready = { mdPath, tmpDir };\n  // END prepare\n\n  // -- step 2: execute --\n  // what: Run the markdown-pdf CLI via npx to convert the temporary markdown file to a PDF.\n  // fails_if: markdown-pdf command fails or exits with error\n  // BEGIN execute\n  const { execSync } = require('child_process');\n  const outPath = path.join(ready.tmpDir, `output-${Date.now()}.pdf`);\n  execSync(`npx markdown-pdf \"${ready.mdPath}\" -o \"${outPath}\"`);\n  result = { pdf_path: outPath };\n  // END execute\n\n  // -- step 3: emit --\n  // what: Emit a single JSON object containing the path to the generated PDF.\n  // fails_if: JSON serialization fails or pdf_path is undefined\n  // BEGIN emit\n  console.log(JSON.stringify({ pdf_path: result.pdf_path }));\n  // END emit\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate inputs, write the markdown content to a temporary .md file, and determine the output PDF path.\n  // fails_if: The required 'markdown' input is missing or writing the temporary file fails.\n  // BEGIN prepare\n  if (!input.markdown) throw new Error('Missing markdown input');\n  const fs = require('fs');\n  const os = require('os');\n  const path = require('path');\n  tempMdPath = path.join(os.tmpdir(), `temp-${Date.now()}.md`);\n  fs.writeFileSync(tempMdPath, input.markdown);\n  outputPath = input.output_path || path.join(process.cwd(), `output-${Date.now()}.pdf`);\n  // END prepare\n\n  // -- step 2: execute --\n  // what: Run the markdown-pdf CLI synchronously to convert the temporary markdown file into a PDF at the determined output path.\n  // fails_if: The markdown-pdf command exits with a non‑zero status or cannot be executed.\n  // BEGIN execute\n  const { execSync } = require('child_process');\n  execSync(`npx markdown-pdf -o \"${outputPath}\" \"${tempMdPath}\"`);\n  // END execute\n\n  // -- step 3: emit --\n  // what: Write a single JSON object to stdout containing the path of the generated PDF.\n  // fails_if: JSON serialization fails or the pdf_path variable is undefined.\n  // BEGIN emit\n  console.log(JSON.stringify({ pdf_path: outputPath }));\n  // END emit\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -45,7 +47,7 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const probe = await run({"markdown":"# Sample Document\\n\\nThis is a test markdown content."}, deps, { session });
+  const probe = await run({"markdown":"# Sample Document\\n\\nThis is a test."}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 500;
   if (minBytes > 0) {
