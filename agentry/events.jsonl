@@ -4068,3 +4068,117 @@
 {"kind":"invoke.succeeded","at":1792142562614,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":529}
 {"kind":"watch.polled","at":1792142562624,"watch_id":"watch_mvar4czk_zgz333","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":539}
 {"kind":"runtime.tick.watches_polled","at":1792142562624,"count":2,"summary":[{"watch_id":"watch_mvar4czb_v0xrjn","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":"invoker_failed: invoker invoker.in_process_js failed: github_search: rate limited (remaining=0, reset in 48s)"},{"watch_id":"watch_mvar4czk_zgz333","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null}]}
+{"kind":"discovery.tick_summary","at":1792142587562,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142592628,"n":1747}
+{"kind":"discovery.tick_summary","at":1792142617585,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142622633,"n":1748}
+{"kind":"invoke.started","at":1792142622633,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142622634,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792142622806,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":173}
+{"kind":"watch.polled","at":1792142622806,"watch_id":"watch_mvar4czb_v0xrjn","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":173}
+{"kind":"invoke.succeeded","at":1792142623180,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":546}
+{"kind":"watch.polled","at":1792142623191,"watch_id":"watch_mvar4czk_zgz333","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":557}
+{"kind":"runtime.tick.watches_polled","at":1792142623191,"count":2,"summary":[{"watch_id":"watch_mvar4czb_v0xrjn","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvar4czk_zgz333","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null}]}
+{"kind":"runs.rollup_completed","at":1792142627173,"capabilities":11,"runs":57}
+{"kind":"discovery.tick_summary","at":1792142647597,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142653196,"n":1749}
+{"kind":"runs.rollup_completed","at":1792142662318,"capabilities":11,"runs":57}
+{"kind":"discovery.tick_summary","at":1792142677608,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142683200,"n":1750}
+{"kind":"invoke.started","at":1792142683200,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142683203,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792142683346,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":145}
+{"kind":"watch.polled","at":1792142683346,"watch_id":"watch_mvar4czb_v0xrjn","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":146}
+{"kind":"invoke.succeeded","at":1792142684259,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1055}
+{"kind":"watch.polled","at":1792142684269,"watch_id":"watch_mvar4czk_zgz333","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":1066}
+{"kind":"runtime.tick.watches_polled","at":1792142684269,"count":2,"summary":[{"watch_id":"watch_mvar4czb_v0xrjn","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvar4czk_zgz333","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null}]}
+{"kind":"discovery.tick_summary","at":1792142707613,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142714275,"n":1751}
+{"kind":"discovery.tick_summary","at":1792142737638,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142744280,"n":1752}
+{"kind":"invoke.started","at":1792142744280,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142744281,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.failed","at":1792142744300,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":19}
+{"kind":"watch.polled","at":1792142744300,"watch_id":"watch_mvar4czb_v0xrjn","source":"discovery.github_search","candidates":0,"fresh":0,"error":"invoker_failed: invoker invoker.in_process_js failed: github_search: rate limited (remaining=0, reset in 25s)","ms":20}
+{"kind":"invoke.succeeded","at":1792142744846,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":565}
+{"kind":"watch.polled","at":1792142744856,"watch_id":"watch_mvar4czk_zgz333","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":575}
+{"kind":"runtime.tick.watches_polled","at":1792142744856,"count":2,"summary":[{"watch_id":"watch_mvar4czb_v0xrjn","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":"invoker_failed: invoker invoker.in_process_js failed: github_search: rate limited (remaining=0, reset in 25s)"},{"watch_id":"watch_mvar4czk_zgz333","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null}]}
+{"kind":"discovery.tick_summary","at":1792142767642,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142774862,"n":1753}
+{"kind":"discovery.tick_summary","at":1792142797662,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142804868,"n":1754}
+{"kind":"invoke.started","at":1792142804868,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142804870,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792142805046,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":178}
+{"kind":"watch.polled","at":1792142805047,"watch_id":"watch_mvar4czb_v0xrjn","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":179}
+{"kind":"invoke.succeeded","at":1792142805416,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":545}
+{"kind":"watch.polled","at":1792142805425,"watch_id":"watch_mvar4czk_zgz333","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":555}
+{"kind":"runtime.tick.watches_polled","at":1792142805425,"count":2,"summary":[{"watch_id":"watch_mvar4czb_v0xrjn","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvar4czk_zgz333","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null}]}
+{"kind":"runtime.boot.started","at":1792142817747,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792142817759,"loaded":0,"skipped":22,"files":22}
+{"kind":"runtime.boot.watches_loaded","at":1792142817759,"count":2}
+{"kind":"runtime.boot.completed","at":1792142817759,"capabilities":31,"watches":2}
+{"kind":"runtime.boot.started","at":1792142824858,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792142824871,"loaded":0,"skipped":22,"files":22}
+{"kind":"runtime.boot.watches_loaded","at":1792142824871,"count":2}
+{"kind":"runtime.boot.completed","at":1792142824871,"capabilities":31,"watches":2}
+{"kind":"invoke.started","at":1792142824871,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792142824872,"query":"generate PDF from markdown","sources":["local","npm","github","web"],"limit":10}
+{"kind":"invoke.started","at":1792142824887,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142824889,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792142825437,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":547}
+{"kind":"invoke.succeeded","at":1792142825539,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":652}
+{"kind":"discover.completed","at":1792142826054,"query":"generate PDF from markdown","sources":["local","npm","github","web"],"counts":{"local":10,"npm":10,"github":10,"web":10},"errors":{}}
+{"kind":"invoke.succeeded","at":1792142826054,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1183}
+{"kind":"discovery.tick_summary","at":1792142827666,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.boot.started","at":1792142831919,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792142831931,"loaded":0,"skipped":22,"files":22}
+{"kind":"runtime.boot.watches_loaded","at":1792142831931,"count":2}
+{"kind":"runtime.boot.completed","at":1792142831931,"capabilities":31,"watches":2}
+{"kind":"invoke.started","at":1792142831931,"capability_id":"agentry.reason.deep","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["failure","intent"]}
+{"kind":"invoke.started","at":1792142831940,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792142832365,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":424}
+{"kind":"invoke.started","at":1792142832365,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","sources","limit"]}
+{"kind":"discover.started","at":1792142832365,"query":"convert markdown to PDF","sources":["local","npm","github","web"],"limit":10}
+{"kind":"invoke.started","at":1792142832367,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142832369,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792142832898,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":529}
+{"kind":"invoke.succeeded","at":1792142833004,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":637}
+{"kind":"discover.completed","at":1792142833004,"query":"convert markdown to PDF","sources":["local","npm","github","web"],"counts":{"local":10,"npm":10,"github":10,"web":10},"errors":{}}
+{"kind":"invoke.succeeded","at":1792142833004,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":639}
+{"kind":"agentry.reason.deep.tool_called","at":1792142833005,"tool":"discover_capability","url":null,"query":"convert markdown to PDF","error":null,"result_size":14443}
+{"kind":"invoke.started","at":1792142833005,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792142834137,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1132}
+{"kind":"capability_gap.recorded","at":1792142834137,"key":"gap:npm:@mdpdf/mdpdf","wanted_kind":"tool","wanted_id":"npm:@mdpdf/mdpdf","reason":"deep reasoning: No local capability converts markdown to PDF, but discovery found a purpose-built npm package @mdpdf/mdpdf (v0.1.7) that converts Markdown to PDF via a self-contained Rust binary, with per-platform bi","hits":1,"example_task_id":null}
+{"kind":"agentry.reason.deep.gap_recorded","at":1792142834137,"gap_id":"gap:npm:@mdpdf/mdpdf","wanted_kind":"tool","hits":1,"proposed_id":"npm:@mdpdf/mdpdf","resolved_id":"npm:@mdpdf/mdpdf"}
+{"kind":"agentry.reason.deep.completed","at":1792142834138,"model_used":"qwen/qwen3.8-27b","turns":1,"tools_used":["discover_capability"],"gap_id":"gap:npm:@mdpdf/mdpdf","existing_capability_id":null,"ms":2206}
+{"kind":"invoke.succeeded","at":1792142834138,"capability_id":"agentry.reason.deep","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2207}
+{"kind":"runtime.tick","at":1792142835430,"n":1755}
+{"kind":"invoke.started","at":1792142857695,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792142857695,"watch_id":"watch_mvarl333_uznylq","source":"discovery.github_search","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:npm:@mdpdf/mdpdf::discovery.github_search","task_id":null}
+{"kind":"invoke.succeeded","at":1792142857695,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792142857695,"gap_id":"gap:npm:@mdpdf/mdpdf","wanted_kind":"tool","watch_id":"watch_mvarl333_uznylq","source":"discovery.github_search"}
+{"kind":"invoke.started","at":1792142857711,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792142857711,"watch_id":"watch_mvarl33j_ce8qt7","source":"discovery.web_search","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:npm:@mdpdf/mdpdf::discovery.web_search","task_id":null}
+{"kind":"invoke.succeeded","at":1792142857712,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792142857712,"gap_id":"gap:npm:@mdpdf/mdpdf","wanted_kind":"tool","watch_id":"watch_mvarl33j_ce8qt7","source":"discovery.web_search"}
+{"kind":"discovery.tick_summary","at":1792142857712,"gaps":2,"uncovered":1,"watched":2,"created":2,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142865437,"n":1756}
+{"kind":"invoke.started","at":1792142865447,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142865448,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142865449,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142865450,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792142865589,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":140}
+{"kind":"watch.polled","at":1792142865589,"watch_id":"watch_mvarl333_uznylq","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":140}
+{"kind":"invoke.succeeded","at":1792142865684,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":246}
+{"kind":"watch.polled","at":1792142865694,"watch_id":"watch_mvar4czb_v0xrjn","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":256}
+{"kind":"invoke.succeeded","at":1792142865986,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":538}
+{"kind":"watch.polled","at":1792142865996,"watch_id":"watch_mvar4czk_zgz333","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":548}
+{"kind":"invoke.succeeded","at":1792142866028,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":578}
+{"kind":"watch.polled","at":1792142866036,"watch_id":"watch_mvarl33j_ce8qt7","source":"discovery.web_search","candidates":10,"fresh":10,"error":null,"ms":586}
+{"kind":"watch.result_recorded","at":1792142866057,"watch_result_id":"watch_result:watch_mvarl33j_ce8qt7:1792142866036","watch_id":"watch_mvarl33j_ce8qt7","gap_id":"gap:npm:@mdpdf/mdpdf","source":"discovery.web_search","candidates":10}
+{"kind":"invoke.started","at":1792142866066,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority","candidate_count","candidate_ids"]}
+{"kind":"notify.email.gmail.sent","at":1792142866168,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] 10 new from discovery.web_search","message_id":"01a14409-f6bd-72c3-b170-aab8506831f6","ms":102}
+{"kind":"invoke.succeeded","at":1792142866169,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":111}
+{"kind":"watch.notified","at":1792142866169,"watch_id":"watch_mvarl33j_ce8qt7","source":"discovery.web_search","candidate_count":10}
+{"kind":"runtime.tick.watches_polled","at":1792142866169,"count":4,"summary":[{"watch_id":"watch_mvar4czb_v0xrjn","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvar4czk_zgz333","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvarl333_uznylq","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvarl33j_ce8qt7","ok":true,"polled":true,"candidates":10,"fresh":10,"notified":1,"error":null}]}
