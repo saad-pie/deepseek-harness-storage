@@ -1,0 +1,53 @@
+{
+  "id": "npm:marked",
+  "kind": "unknown",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm:marked",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm:marked.mjs",
+  "accepts": {
+    "markdown": "string"
+  },
+  "produces": {
+    "html": "string"
+  },
+  "requires": {
+    "npm": [
+      "marked"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Load the marked npm package and ensure the environment is ready.",
+      "fails_if": "The marked package cannot be required or the environment lacks Node.js.",
+      "code": "let markedPkg = require('marked');\nlet ready = true;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Parse the provided markdown string into HTML using marked.",
+      "fails_if": "The markdown input is missing or marked.parse throws an error.",
+      "code": "let markdown = inputs.markdown;\nlet html = markedPkg.parse(markdown);"
+    },
+    {
+      "step": 3,
+      "verb": "post",
+      "what": "Validate the HTML output and assign it to the final result.",
+      "fails_if": "The output is not a string or is empty.",
+      "code": "if (typeof html !== 'string' || html.length === 0) { throw new Error('Parsing failed or produced empty HTML'); }\nlet finalResult = html;"
+    },
+    {
+      "step": 4,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the HTML result to stdout.",
+      "fails_if": "JSON serialization fails or finalResult is undefined.",
+      "code": "console.log(JSON.stringify({html: finalResult}));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
