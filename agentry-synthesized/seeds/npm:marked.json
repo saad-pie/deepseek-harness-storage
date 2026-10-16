@@ -1,6 +1,6 @@
 {
   "id": "npm:marked",
-  "kind": "unknown",
+  "kind": "tool",
   "invoked_via": "invoker.in_process_js",
   "handler": "npm:marked",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm:marked.mjs",
@@ -22,30 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Load the marked npm package and ensure the environment is ready.",
-      "fails_if": "The marked package cannot be required or the environment lacks Node.js.",
-      "code": "let markedPkg = require('marked');\nlet ready = true;"
+      "what": "Validate that a markdown string is provided via env and write it to a temporary file.",
+      "fails_if": "MARKDOWN env var is missing or file write fails",
+      "code": "const { writeFileSync } = await import('node:fs');\nconst markdown = process.env.MARKDOWN;\nif (!markdown) throw new Error('Missing MARKDOWN env var');\nconst path = '/tmp/input.md';\nwriteFileSync(path, markdown, 'utf8');\nglobalThis.inputPath = path;\nglobalThis.markdown = markdown;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Parse the provided markdown string into HTML using marked.",
-      "fails_if": "The markdown input is missing or marked.parse throws an error.",
-      "code": "let markdown = inputs.markdown;\nlet html = markedPkg.parse(markdown);"
+      "what": "Load marked, read the markdown, convert it to HTML, and store the result.",
+      "fails_if": "marked import fails, parsing throws, or result is undefined",
+      "code": "const { readFileSync } = await import('node:fs');\nconst { marked } = await import('marked');\nconst md = globalThis.markdown ?? readFileSync(globalThis.inputPath, 'utf8');\nconst html = marked.parse(md);\nglobalThis.html = html;"
     },
     {
       "step": 3,
-      "verb": "post",
-      "what": "Validate the HTML output and assign it to the final result.",
-      "fails_if": "The output is not a string or is empty.",
-      "code": "if (typeof html !== 'string' || html.length === 0) { throw new Error('Parsing failed or produced empty HTML'); }\nlet finalResult = html;"
-    },
-    {
-      "step": 4,
       "verb": "emit",
-      "what": "Emit a JSON object containing the HTML result to stdout.",
-      "fails_if": "JSON serialization fails or finalResult is undefined.",
-      "code": "console.log(JSON.stringify({html: finalResult}));"
+      "what": "Emit a single JSON object containing the generated HTML.",
+      "fails_if": "JSON serialization fails or html is undefined",
+      "code": "console.log(JSON.stringify({ html: globalThis.html }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",
