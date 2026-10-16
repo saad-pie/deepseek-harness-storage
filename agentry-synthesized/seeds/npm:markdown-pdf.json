@@ -5,7 +5,7 @@
   "handler": "npm:markdown-pdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm:markdown-pdf.mjs",
   "accepts": {
-    "markdown_path": "string",
+    "markdown": "string",
     "output_path": {
       "type": "string",
       "optional": true
@@ -26,23 +26,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate the markdown_path input, ensure the file exists, and determine the output PDF path.",
-      "fails_if": "markdown_path is missing or the file does not exist",
-      "code": "let markdownPath = process.env.MARKDOWN_PATH;\nlet outputPath = process.env.OUTPUT_PATH;\nconst fs = require('fs');\nif (!markdownPath) { throw new Error('Missing markdown_path'); }\nif (!fs.existsSync(markdownPath)) { throw new Error('Markdown file not found'); }\nif (!outputPath) { outputPath = markdownPath.replace(/\\.md$/i, '.pdf'); }"
+      "what": "Validate markdown input, write it to a temporary .md file and determine output PDF path.",
+      "fails_if": "markdown input missing or file write fails",
+      "code": "const fs = require('fs');\nconst os = require('os');\nconst path = require('path');\nif (typeof inputs.markdown !== 'string') { throw new Error('markdown input required'); }\nlet markdownContent = inputs.markdown;\nlet tmpMdPath = path.join(os.tmpdir(), `tmp_${Date.now()}.md`);\nfs.writeFileSync(tmpMdPath, markdownContent);\nlet pdfPath = inputs.output_path || path.join(process.cwd(), 'output.pdf');"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Run markdown-pdf via npx to convert the markdown file to a PDF.",
-      "fails_if": "The markdown-pdf command exits with an error",
-      "code": "const { execSync } = require('child_process');\ntry {\n  execSync(`npx markdown-pdf \"${markdownPath}\" -o \"${outputPath}\"`);\n  execResult = true;\n} catch (e) {\n  execError = e;\n}"
+      "what": "Run markdown-pdf to convert the temporary markdown file to a PDF at the desired location.",
+      "fails_if": "markdown-pdf conversion error or timeout",
+      "code": "const markdownPdf = require('markdown-pdf');\nawait new Promise((resolve, reject) => {\n  markdownPdf().from(tmpMdPath).to(pdfPath, err => {\n    if (err) reject(err); else resolve();\n  });\n});"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a JSON object containing the path to the generated PDF.",
-      "fails_if": "Conversion failed or pdf_path is undefined",
-      "code": "if (execError) { throw execError; }\nconsole.log(JSON.stringify({ pdf_path: outputPath }));"
+      "what": "Output JSON with the path of the generated PDF.",
+      "fails_if": "pdfPath undefined or console.log fails",
+      "code": "console.log(JSON.stringify({ pdf_path: pdfPath }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",
