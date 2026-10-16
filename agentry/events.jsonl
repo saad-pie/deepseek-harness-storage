@@ -4182,3 +4182,352 @@
 {"kind":"invoke.succeeded","at":1792142866169,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":111}
 {"kind":"watch.notified","at":1792142866169,"watch_id":"watch_mvarl33j_ce8qt7","source":"discovery.web_search","candidate_count":10}
 {"kind":"runtime.tick.watches_polled","at":1792142866169,"count":4,"summary":[{"watch_id":"watch_mvar4czb_v0xrjn","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvar4czk_zgz333","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvarl333_uznylq","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvarl33j_ce8qt7","ok":true,"polled":true,"candidates":10,"fresh":10,"notified":1,"error":null}]}
+{"kind":"invoke.started","at":1792142887694,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["gap","candidates","notify"]}
+{"kind":"invoke.started","at":1792142887695,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","accept_from"]}
+{"kind":"invoke.succeeded","at":1792142893103,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5408}
+{"kind":"proposal.created","at":1792142893111,"proposal_id":"proposal_mvarluen_ezwpsb","gap_id":"gap:npm:@mdpdf/mdpdf","candidates":10,"model_used":"openai/gpt-oss-120b","provider_used":"groq","recommended_id":"https://www.npmjs.com/package/@mdpdf/mdpdf","auto_approved":false}
+{"kind":"invoke.started","at":1792142893122,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","primary","fallback"]}
+{"kind":"invoke.started","at":1792142893122,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792142893208,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] proposal: https://www.npmjs.com/package/@mdpdf/mdpdf for tool","message_id":"01a1440a-6060-7344-b9ea-6ccaf833d782","ms":86}
+{"kind":"invoke.succeeded","at":1792142893208,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":86}
+{"kind":"notify.fallback.primary_ok","at":1792142893208,"primary":"notify.email.gmail","subject":"[agentry] proposal: https://www.npmjs.com/package/@mdpdf/mdpdf for tool"}
+{"kind":"invoke.succeeded","at":1792142893208,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":96}
+{"kind":"proposal.notified","at":1792142893208,"proposal_id":"proposal_mvarluen_ezwpsb","channel":"notify.email.gmail","primary_ok":true,"fallback_used":false,"message_id":"01a1440a-6060-7344-b9ea-6ccaf833d782"}
+{"kind":"invoke.succeeded","at":1792142893208,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5514}
+{"kind":"discovery.proposal_created","at":1792142893208,"watch_result_id":"watch_result:watch_mvarl33j_ce8qt7:1792142866036","gap_id":"gap:npm:@mdpdf/mdpdf","source":"discovery.web_search","proposal_id":"proposal_mvarluen_ezwpsb"}
+{"kind":"discovery.tick_summary","at":1792142893220,"gaps":2,"uncovered":0,"watched":4,"created":0,"proposals":1,"adopted":0}
+{"kind":"runtime.tick","at":1792142896172,"n":1757}
+{"kind":"discovery.tick_summary","at":1792142917707,"gaps":2,"uncovered":0,"watched":4,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142926180,"n":1758}
+{"kind":"invoke.started","at":1792142926180,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142926181,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142926182,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142926182,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792142926341,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":161}
+{"kind":"watch.polled","at":1792142926341,"watch_id":"watch_mvar4czb_v0xrjn","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":161}
+{"kind":"invoke.succeeded","at":1792142926356,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":174}
+{"kind":"watch.polled","at":1792142926366,"watch_id":"watch_mvarl333_uznylq","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":184}
+{"kind":"invoke.succeeded","at":1792142926719,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":537}
+{"kind":"watch.polled","at":1792142926729,"watch_id":"watch_mvarl33j_ce8qt7","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":547}
+{"kind":"invoke.succeeded","at":1792142926730,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":549}
+{"kind":"watch.polled","at":1792142926739,"watch_id":"watch_mvar4czk_zgz333","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":558}
+{"kind":"runtime.tick.watches_polled","at":1792142926739,"count":4,"summary":[{"watch_id":"watch_mvar4czb_v0xrjn","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvar4czk_zgz333","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvarl333_uznylq","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvarl33j_ce8qt7","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null}]}
+{"kind":"discovery.tick_summary","at":1792142947711,"gaps":2,"uncovered":0,"watched":4,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142956744,"n":1759}
+{"kind":"runs.rollup_completed","at":1792142962347,"capabilities":11,"runs":87}
+{"kind":"discovery.tick_summary","at":1792142977717,"gaps":2,"uncovered":0,"watched":4,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142986754,"n":1760}
+{"kind":"invoke.started","at":1792142986754,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142986756,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142986757,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142986758,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792142986904,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":150}
+{"kind":"watch.polled","at":1792142986904,"watch_id":"watch_mvar4czb_v0xrjn","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":150}
+{"kind":"invoke.succeeded","at":1792142986907,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":149}
+{"kind":"watch.polled","at":1792142986917,"watch_id":"watch_mvarl333_uznylq","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":160}
+{"kind":"invoke.succeeded","at":1792142987284,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":525}
+{"kind":"watch.polled","at":1792142987294,"watch_id":"watch_mvarl33j_ce8qt7","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":536}
+{"kind":"invoke.succeeded","at":1792142987330,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":574}
+{"kind":"watch.polled","at":1792142987338,"watch_id":"watch_mvar4czk_zgz333","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":582}
+{"kind":"runtime.tick.watches_polled","at":1792142987338,"count":4,"summary":[{"watch_id":"watch_mvar4czb_v0xrjn","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvar4czk_zgz333","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvarl333_uznylq","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvarl33j_ce8qt7","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null}]}
+{"kind":"discovery.tick_summary","at":1792143007721,"gaps":2,"uncovered":0,"watched":4,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792143017344,"n":1761}
+{"kind":"discovery.tick_summary","at":1792143037740,"gaps":2,"uncovered":0,"watched":4,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792143047355,"n":1762}
+{"kind":"invoke.started","at":1792143047355,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792143047356,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792143047357,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792143047357,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792143047498,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":140}
+{"kind":"watch.polled","at":1792143047498,"watch_id":"watch_mvarl333_uznylq","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":141}
+{"kind":"invoke.succeeded","at":1792143047501,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":146}
+{"kind":"watch.polled","at":1792143047519,"watch_id":"watch_mvar4czb_v0xrjn","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":164}
+{"kind":"invoke.succeeded","at":1792143047908,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":552}
+{"kind":"watch.polled","at":1792143047919,"watch_id":"watch_mvar4czk_zgz333","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":563}
+{"kind":"invoke.succeeded","at":1792143047925,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":567}
+{"kind":"watch.polled","at":1792143047932,"watch_id":"watch_mvarl33j_ce8qt7","source":"discovery.web_search","candidates":10,"fresh":1,"error":null,"ms":575}
+{"kind":"watch.result_recorded","at":1792143047949,"watch_result_id":"watch_result:watch_mvarl33j_ce8qt7:1792143047933","watch_id":"watch_mvarl33j_ce8qt7","gap_id":"gap:npm:@mdpdf/mdpdf","source":"discovery.web_search","candidates":1}
+{"kind":"invoke.started","at":1792143047957,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority","candidate_count","candidate_ids"]}
+{"kind":"notify.email.gmail.sent","at":1792143048100,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] 1 new from discovery.web_search","message_id":"01a1440c-bd3e-71a7-ae75-d129b1871722","ms":143}
+{"kind":"invoke.succeeded","at":1792143048100,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":151}
+{"kind":"watch.notified","at":1792143048100,"watch_id":"watch_mvarl33j_ce8qt7","source":"discovery.web_search","candidate_count":1}
+{"kind":"runtime.tick.watches_polled","at":1792143048100,"count":4,"summary":[{"watch_id":"watch_mvar4czb_v0xrjn","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvar4czk_zgz333","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvarl333_uznylq","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvarl33j_ce8qt7","ok":true,"polled":true,"candidates":10,"fresh":1,"notified":1,"error":null}]}
+{"kind":"runtime.boot.started","at":1792143062714,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792143062727,"loaded":0,"skipped":22,"files":22}
+{"kind":"runtime.boot.watches_loaded","at":1792143062727,"count":4}
+{"kind":"runtime.boot.completed","at":1792143062728,"capabilities":40,"watches":4}
+{"kind":"discovery.watch_result_skipped","at":1792143067743,"watch_result_id":"watch_result:watch_mvarl33j_ce8qt7:1792143047933","gap_id":"gap:npm:@mdpdf/mdpdf","reason":"gap_already_has_open_proposal"}
+{"kind":"discovery.tick_summary","at":1792143067754,"gaps":2,"uncovered":0,"watched":4,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.boot.started","at":1792143074468,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792143074480,"loaded":0,"skipped":22,"files":22}
+{"kind":"runtime.boot.watches_loaded","at":1792143074481,"count":4}
+{"kind":"runtime.boot.completed","at":1792143074481,"capabilities":40,"watches":4}
+{"kind":"discovery.reasoner_candidate_proposed","at":1792143074493,"gap_id":"gap:npm:markdown-pdf","wanted_id":"npm:markdown-pdf","proposal_id":"proposal_mvarpqd9_0tvcfd","source":"npm"}
+{"kind":"discovery.tick_summary","at":1792143074503,"gaps":3,"uncovered":0,"watched":4,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792143078106,"n":1763}
+{"kind":"runtime.boot.started","at":1792143091161,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792143091175,"loaded":0,"skipped":22,"files":22}
+{"kind":"runtime.boot.watches_loaded","at":1792143091175,"count":4}
+{"kind":"runtime.boot.completed","at":1792143091175,"capabilities":42,"watches":4}
+{"kind":"invoke.started","at":1792143091186,"capability_id":"agentry.adopt","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id"]}
+{"kind":"invoke.started","at":1792143091187,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id","candidate_id"]}
+{"kind":"synthesize.started","at":1792143091188,"proposal_id":"proposal_mvarpqd9_0tvcfd","candidate_id":"npm:markdown-pdf","gap_id":"gap:npm:markdown-pdf","candidate_kind":"npm_package","wanted_kind":"tool","shape_verbs":["prepare","execute","emit"]}
+{"kind":"invoke.started","at":1792143091188,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792143091208,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":19}
+{"kind":"invoke.started","at":1792143091208,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","packages"]}
+{"kind":"invoke.started","at":1792143097760,"capability_id":"agentry.adopt","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id"]}
+{"kind":"invoke.started","at":1792143097761,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id","candidate_id"]}
+{"kind":"synthesize.started","at":1792143097761,"proposal_id":"proposal_mvarpqd9_0tvcfd","candidate_id":"npm:markdown-pdf","gap_id":"gap:npm:markdown-pdf","candidate_kind":"npm_package","wanted_kind":"tool","shape_verbs":["prepare","execute","emit"]}
+{"kind":"invoke.started","at":1792143097762,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792143099270,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":8062}
+{"kind":"invoke.started","at":1792143099270,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","path"]}
+{"kind":"invoke.succeeded","at":1792143099274,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4}
+{"kind":"invoke.started","at":1792143099274,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","path"]}
+{"kind":"invoke.succeeded","at":1792143099276,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"invoke.started","at":1792143099276,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","path"]}
+{"kind":"invoke.succeeded","at":1792143099279,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3}
+{"kind":"synthesize.npm_read","at":1792143099279,"proposal_id":"proposal_mvarpqd9_0tvcfd","candidate_id":"npm:markdown-pdf","installed":true,"error":null,"npm_package_name":"markdown-pdf","readme_len":9226,"manifest":"package.json","top_level_count":11}
+{"kind":"invoke.started","at":1792143099279,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens"]}
+{"kind":"invoke.failed","at":1792143099342,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":63}
+{"kind":"invoke.started","at":1792143099343,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792143101542,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3780}
+{"kind":"synthesize.id_stripped","at":1792143101542,"proposal_id":"proposal_mvarpqd9_0tvcfd","candidate_id":"npm:markdown-pdf","original":"gap:npm:markdown-pdf","normalized":"npm:markdown-pdf"}
+{"kind":"tool","at":1792143101543,"proposal_id":"proposal_mvarpqd9_0tvcfd","candidate_id":"npm:markdown-pdf","gap_id":"gap:npm:markdown-pdf","capability_id":"npm:markdown-pdf","wanted_kind":"tool","shape_steps":3,"plan_steps":3,"handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/npm:markdown-pdf.mjs","seed_path":"/tmp/home/.dsh/agentry-synthesized/seeds/npm:markdown-pdf.json","composed_capabilities":[],"pre_invoke_count":0,"model_used":"groq/openai/gpt-oss-120b","ms":3782}
+{"kind":"invoke.succeeded","at":1792143101543,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3782}
+{"kind":"adoption.synthesize_completed","at":1792143101543,"proposal_id":"proposal_mvarpqd9_0tvcfd","candidate_id":"npm:markdown-pdf","capability_id":"npm:markdown-pdf","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/npm:markdown-pdf.mjs"}
+{"kind":"invoke.started","at":1792143101543,"capability_id":"agentry.trial","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["capability_id","handler_path","seed_path"]}
+{"kind":"trial.started","at":1792143101544,"capability_id":"npm:markdown-pdf","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/npm:markdown-pdf.mjs","session":"trial_npm_markdown-pdf_mvarqb8o"}
+{"kind":"trial.node_written","at":1792143101544,"capability_id":"npm:markdown-pdf","handler_file":"/tmp/home/.dsh/agentry-synthesized/handlers/npm:markdown-pdf.mjs"}
+{"kind":"invoke.started","at":1792143101554,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792143101560,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":6}
+{"kind":"invoke.started","at":1792143101560,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792143101564,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4}
+{"kind":"installer.npm_starting","at":1792143101564,"capId":"npm:markdown-pdf","session":"trial_npm_markdown-pdf_mvarqb8o","packages":["markdown-pdf"]}
+{"kind":"invoke.started","at":1792143101564,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","packages"]}
+{"kind":"invoke.succeeded","at":1792143101881,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2538}
+{"kind":"synthesize.id_stripped","at":1792143101881,"proposal_id":"proposal_mvarpqd9_0tvcfd","candidate_id":"npm:markdown-pdf","original":"gap:npm:markdown-pdf","normalized":"npm:markdown-pdf"}
+{"kind":"tool","at":1792143101882,"proposal_id":"proposal_mvarpqd9_0tvcfd","candidate_id":"npm:markdown-pdf","gap_id":"gap:npm:markdown-pdf","capability_id":"npm:markdown-pdf","wanted_kind":"tool","shape_steps":3,"plan_steps":3,"handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/npm:markdown-pdf.mjs","seed_path":"/tmp/home/.dsh/agentry-synthesized/seeds/npm:markdown-pdf.json","composed_capabilities":[],"pre_invoke_count":0,"model_used":"groq/openai/gpt-oss-20b","ms":10694}
+{"kind":"invoke.succeeded","at":1792143101882,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":10695}
+{"kind":"adoption.synthesize_completed","at":1792143101882,"proposal_id":"proposal_mvarpqd9_0tvcfd","candidate_id":"npm:markdown-pdf","capability_id":"npm:markdown-pdf","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/npm:markdown-pdf.mjs"}
+{"kind":"invoke.started","at":1792143101882,"capability_id":"agentry.trial","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["capability_id","handler_path","seed_path"]}
+{"kind":"trial.started","at":1792143101882,"capability_id":"npm:markdown-pdf","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/npm:markdown-pdf.mjs","session":"trial_npm_markdown-pdf_mvarqbi2"}
+{"kind":"trial.node_written","at":1792143101883,"capability_id":"npm:markdown-pdf","handler_file":"/tmp/home/.dsh/agentry-synthesized/handlers/npm:markdown-pdf.mjs"}
+{"kind":"invoke.started","at":1792143101892,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792143106460,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4896}
+{"kind":"installer.npm_complete","at":1792143106460,"capId":"npm:markdown-pdf","session":"trial_npm_markdown-pdf_mvarqb8o","packages":["markdown-pdf"]}
+{"kind":"invoke.started","at":1792143106460,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.failed","at":1792143106461,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":4568}
+{"kind":"trial.prepare_failed","at":1792143106461,"capability_id":"npm:markdown-pdf","session":"trial_npm_markdown-pdf_mvarqbi2","phase":"prepare","error":"installer: session.create failed — invoker_failed: invoker invoker.in_process_js failed: agentry.os: kernel fetch failed (http://127.0.0.1:7864/session/create): fetch failed. Is the kernel running?"}
+{"kind":"trial.node_retired","at":1792143106461,"capability_id":"npm:markdown-pdf","reason":"trial prepare: installer: session.create failed — invoker_failed: invoker invoker.in_process_js failed: agentry.os: kernel fetch failed (http://127.0.0.1:7864/session/create): fetch failed. Is the kernel running?"}
+{"kind":"invoke.succeeded","at":1792143106461,"capability_id":"agentry.trial","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4579}
+{"kind":"adoption.trial_failed","at":1792143106461,"proposal_id":"proposal_mvarpqd9_0tvcfd","candidate_id":"npm:markdown-pdf","capability_id":"npm:markdown-pdf","phase":"prepare","error":"installer: session.create failed — invoker_failed: invoker invoker.in_process_js failed: agentry.os: kernel fetch failed (http://127.0.0.1:7864/session/create): fetch failed. Is the kernel running?"}
+{"kind":"invoke.succeeded","at":1792143106462,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"installer.prepared","at":1792143106462,"capId":"npm:markdown-pdf","session":"trial_npm_markdown-pdf_mvarqb8o","steps":[{"step":"node.install","ok":true,"packages":["markdown-pdf"]}]}
+{"kind":"trial.prepared","at":1792143106462,"capability_id":"npm:markdown-pdf","session":"trial_npm_markdown-pdf_mvarqb8o","prep":{"already_prepared":false,"steps":[{"step":"node.install","ok":true,"packages":["markdown-pdf"]}]}}
+{"kind":"invoke.started","at":1792143106463,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792143106464,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"invoke.started","at":1792143106464,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792143106465,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"installer.already_prepared","at":1792143106465,"capId":"npm:markdown-pdf","session":"trial_npm_markdown-pdf_mvarqb8o"}
+{"kind":"invoke.started","at":1792143106466,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792143106467,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"invoke.started","at":1792143106467,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792143106468,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"installer.already_prepared","at":1792143106469,"capId":"npm:markdown-pdf","session":"trial_npm_markdown-pdf_mvarqb8o"}
+{"kind":"invoke.started","at":1792143106469,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792143106470,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"invoke.started","at":1792143106470,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","code","env","timeout_ms"]}
+{"kind":"adoption.synthesis_attempt_recorded","at":1792143106471,"proposal_id":"proposal_mvarpqd9_0tvcfd","candidate_id":"npm:markdown-pdf","phase":"trial_prepare","error_preview":"installer: session.create failed — invoker_failed: invoker invoker.in_process_js failed: agentry.os: kernel fetch failed","attempt_id":"synthesis_attempt:proposal_mvarpqd9_0tvcfd:npm:markdown-pdf:1792143106461"}
+{"kind":"proposal.adopted","at":1792143106480,"proposal_id":"proposal_mvarpqd9_0tvcfd","adopted":[],"failed":[{"candidate_id":"npm:markdown-pdf","capability_id":"npm:markdown-pdf","phase":"trial_prepare","error":"installer: session.create failed — invoker_failed: invoker invoker.in_process_js failed: agentry.os: kernel fetch failed (http://127.0.0.1:7864/session/create): fetch failed. Is the kernel running?","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/npm:markdown-pdf.mjs"}],"retired_gap":null,"retired_watches":[],"decision":"rejected"}
+{"kind":"invoke.started","at":1792143106490,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","primary","fallback"]}
+{"kind":"invoke.started","at":1792143106490,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792143106581,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] synthesis failed: tool","message_id":"01a1440d-a1d9-7621-93ea-877146806f3e","ms":91}
+{"kind":"invoke.succeeded","at":1792143106582,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":91}
+{"kind":"notify.fallback.primary_ok","at":1792143106582,"primary":"notify.email.gmail","subject":"[agentry] synthesis failed: tool"}
+{"kind":"invoke.succeeded","at":1792143106582,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":102}
+{"kind":"adoption.notified","at":1792143106582,"proposal_id":"proposal_mvarpqd9_0tvcfd","channel":"notify.email.gmail","primary_ok":true,"fallback_used":false,"message_id":"01a1440d-a1d9-7621-93ea-877146806f3e"}
+{"kind":"invoke.succeeded","at":1792143106582,"capability_id":"agentry.adopt","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":15396}
+{"kind":"discovery.adoption_completed","at":1792143106582,"proposal_id":"proposal_mvarpqd9_0tvcfd","adopted":[]}
+{"kind":"discovery.reasoner_candidate_proposed","at":1792143106582,"gap_id":"gap:npm:markdown-pdf","wanted_id":"npm:markdown-pdf","proposal_id":"proposal_mvarqf4m_ivo1lt","source":"npm"}
+{"kind":"discovery.tick_summary","at":1792143106591,"gaps":3,"uncovered":0,"watched":4,"created":0,"proposals":0,"adopted":0}
+{"kind":"invoke.succeeded","at":1792143106637,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":166}
+{"kind":"trial.accept_threw","at":1792143106637,"capability_id":"npm:markdown-pdf","session":"trial_npm_markdown-pdf_mvarqb8o","error":"npm:markdown-pdf: kernel exited 1 — Error: Input file does not exist: sample.md\n    at file:///tmp/home/.dsh/agentry-kernel/work/trial_npm_markdown-pdf_mvarqb8o/.agentry_scripts/script_mvarqf1j_mdfn.mjs:14:40\n"}
+{"kind":"trial.node_retired","at":1792143106637,"capability_id":"npm:markdown-pdf","reason":"trial accept: npm:markdown-pdf: kernel exited 1 — Error: Input file does not exist: sample.md\n    at file:///tmp/home/.dsh/agentry-kernel/work/trial_npm_markdown-pdf_mvarqb8o/.agentry_scripts/script_mvarqf1j_mdfn.mjs:14:40\n"}
+{"kind":"invoke.succeeded","at":1792143106637,"capability_id":"agentry.trial","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5094}
+{"kind":"adoption.trial_failed","at":1792143106637,"proposal_id":"proposal_mvarpqd9_0tvcfd","candidate_id":"npm:markdown-pdf","capability_id":"npm:markdown-pdf","phase":"accept","error":"npm:markdown-pdf: kernel exited 1 — Error: Input file does not exist: sample.md\n    at file:///tmp/home/.dsh/agentry-kernel/work/trial_npm_markdown-pdf_mvarqb8o/.agentry_scripts/script_mvarqf1j_mdfn.mjs:14:40\n"}
+{"kind":"adoption.synthesis_attempt_recorded","at":1792143106649,"proposal_id":"proposal_mvarpqd9_0tvcfd","candidate_id":"npm:markdown-pdf","phase":"trial_accept","error_preview":"npm:markdown-pdf: kernel exited 1 — Error: Input file does not exist: sample.md\n    at file:///tmp/home/.dsh/agentry-ker","attempt_id":"synthesis_attempt:proposal_mvarpqd9_0tvcfd:npm:markdown-pdf:1792143106637"}
+{"kind":"proposal.adopted","at":1792143106658,"proposal_id":"proposal_mvarpqd9_0tvcfd","adopted":[],"failed":[{"candidate_id":"npm:markdown-pdf","capability_id":"npm:markdown-pdf","phase":"trial_accept","error":"npm:markdown-pdf: kernel exited 1 — Error: Input file does not exist: sample.md\n    at file:///tmp/home/.dsh/agentry-kernel/work/trial_npm_markdown-pdf_mvarqb8o/.agentry_scripts/script_mvarqf1j_mdfn.mjs:14:40\n","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/npm:markdown-pdf.mjs"}],"retired_gap":null,"retired_watches":[],"decision":"rejected"}
+{"kind":"invoke.started","at":1792143106667,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","primary","fallback"]}
+{"kind":"invoke.started","at":1792143106667,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792143106754,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] synthesis failed: tool","message_id":"01a1440d-a28b-77e7-9c90-4a3e0d97d4ff","ms":87}
+{"kind":"invoke.succeeded","at":1792143106754,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":87}
+{"kind":"notify.fallback.primary_ok","at":1792143106754,"primary":"notify.email.gmail","subject":"[agentry] synthesis failed: tool"}
+{"kind":"invoke.succeeded","at":1792143106754,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":95}
+{"kind":"adoption.notified","at":1792143106754,"proposal_id":"proposal_mvarpqd9_0tvcfd","channel":"notify.email.gmail","primary_ok":true,"fallback_used":false,"message_id":"01a1440d-a28b-77e7-9c90-4a3e0d97d4ff"}
+{"kind":"invoke.succeeded","at":1792143106754,"capability_id":"agentry.adopt","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":8994}
+{"kind":"discovery.adoption_completed","at":1792143106754,"proposal_id":"proposal_mvarpqd9_0tvcfd","adopted":[]}
+{"kind":"invoke.started","at":1792143106755,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792143106755,"watch_id":"watch_mvarqf9f_8bn302","source":"discovery.github_search","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:npm:markdown-pdf::discovery.github_search","task_id":null}
+{"kind":"invoke.succeeded","at":1792143106755,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792143106755,"gap_id":"gap:npm:markdown-pdf","wanted_kind":"tool","watch_id":"watch_mvarqf9f_8bn302","source":"discovery.github_search"}
+{"kind":"invoke.started","at":1792143106771,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792143106771,"watch_id":"watch_mvarqf9v_myr3h6","source":"discovery.web_search","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:npm:markdown-pdf::discovery.web_search","task_id":null}
+{"kind":"invoke.succeeded","at":1792143106771,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792143106771,"gap_id":"gap:npm:markdown-pdf","wanted_kind":"tool","watch_id":"watch_mvarqf9v_myr3h6","source":"discovery.web_search"}
+{"kind":"discovery.tick_summary","at":1792143106771,"gaps":3,"uncovered":1,"watched":4,"created":2,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792143108107,"n":1764}
+{"kind":"invoke.started","at":1792143108115,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792143108116,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792143108117,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792143108118,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792143108118,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792143108270,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":163}
+{"kind":"watch.polled","at":1792143108270,"watch_id":"watch_mvar4czb_v0xrjn","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":163}
+{"kind":"invoke.succeeded","at":1792143108271,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":154}
+{"kind":"watch.polled","at":1792143108280,"watch_id":"watch_mvarl333_uznylq","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":163}
+{"kind":"invoke.succeeded","at":1792143108473,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":355}
+{"kind":"watch.polled","at":1792143108482,"watch_id":"watch_mvarqf9f_8bn302","source":"discovery.github_search","candidates":6,"fresh":6,"error":null,"ms":364}
+{"kind":"watch.result_recorded","at":1792143108510,"watch_result_id":"watch_result:watch_mvarqf9f_8bn302:1792143108482","watch_id":"watch_mvarqf9f_8bn302","gap_id":"gap:npm:markdown-pdf","source":"discovery.github_search","candidates":6}
+{"kind":"invoke.started","at":1792143108525,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority","candidate_count","candidate_ids"]}
+{"kind":"notify.email.gmail.sent","at":1792143108674,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] 6 new from discovery.github_search","message_id":"01a1440d-a9c4-7edb-8a62-bb945cf96d67","ms":149}
+{"kind":"invoke.succeeded","at":1792143108675,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":165}
+{"kind":"watch.notified","at":1792143108675,"watch_id":"watch_mvarqf9f_8bn302","source":"discovery.github_search","candidate_count":6}
+{"kind":"invoke.succeeded","at":1792143108675,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":557}
+{"kind":"watch.polled","at":1792143108675,"watch_id":"watch_mvarl33j_ce8qt7","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":557}
+{"kind":"invoke.succeeded","at":1792143108681,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":565}
+{"kind":"watch.polled","at":1792143108696,"watch_id":"watch_mvar4czk_zgz333","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":580}
+{"kind":"runtime.tick.watches_polled","at":1792143108696,"count":5,"summary":[{"watch_id":"watch_mvar4czb_v0xrjn","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvar4czk_zgz333","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvarl333_uznylq","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvarl33j_ce8qt7","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvarqf9f_8bn302","ok":true,"polled":true,"candidates":6,"fresh":6,"notified":1,"error":null}]}
+{"kind":"discovery.watch_result_skipped","at":1792143127778,"watch_result_id":"watch_result:watch_mvarqf9f_8bn302:1792143108482","gap_id":"gap:npm:markdown-pdf","reason":"gap_already_has_open_proposal"}
+{"kind":"invoke.started","at":1792143127805,"capability_id":"agentry.adopt","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id"]}
+{"kind":"invoke.started","at":1792143127805,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id","candidate_id"]}
+{"kind":"synthesize.started","at":1792143127805,"proposal_id":"proposal_mvarqf4m_ivo1lt","candidate_id":"npm:markdown-pdf","gap_id":"gap:npm:markdown-pdf","candidate_kind":"npm_package","wanted_kind":"tool","shape_verbs":["prepare","execute","emit"]}
+{"kind":"invoke.started","at":1792143127805,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792143131722,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3916}
+{"kind":"synthesize.id_stripped","at":1792143131722,"proposal_id":"proposal_mvarqf4m_ivo1lt","candidate_id":"npm:markdown-pdf","original":"gap:npm:markdown-pdf","normalized":"npm:markdown-pdf"}
+{"kind":"tool","at":1792143131722,"proposal_id":"proposal_mvarqf4m_ivo1lt","candidate_id":"npm:markdown-pdf","gap_id":"gap:npm:markdown-pdf","capability_id":"npm:markdown-pdf","wanted_kind":"tool","shape_steps":3,"plan_steps":3,"handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/npm:markdown-pdf.mjs","seed_path":"/tmp/home/.dsh/agentry-synthesized/seeds/npm:markdown-pdf.json","composed_capabilities":[],"pre_invoke_count":0,"model_used":"groq/openai/gpt-oss-120b","ms":3917}
+{"kind":"invoke.succeeded","at":1792143131722,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3917}
+{"kind":"adoption.synthesize_completed","at":1792143131722,"proposal_id":"proposal_mvarqf4m_ivo1lt","candidate_id":"npm:markdown-pdf","capability_id":"npm:markdown-pdf","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/npm:markdown-pdf.mjs"}
+{"kind":"invoke.started","at":1792143131722,"capability_id":"agentry.trial","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["capability_id","handler_path","seed_path"]}
+{"kind":"trial.started","at":1792143131722,"capability_id":"npm:markdown-pdf","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/npm:markdown-pdf.mjs","session":"trial_npm_markdown-pdf_mvarqyiy"}
+{"kind":"trial.node_written","at":1792143131723,"capability_id":"npm:markdown-pdf","handler_file":"/tmp/home/.dsh/agentry-synthesized/handlers/npm:markdown-pdf.mjs"}
+{"kind":"invoke.started","at":1792143131746,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792143131750,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3}
+{"kind":"invoke.started","at":1792143131750,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792143131753,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3}
+{"kind":"installer.npm_starting","at":1792143131753,"capId":"npm:markdown-pdf","session":"trial_npm_markdown-pdf_mvarqyiy","packages":["markdown-pdf"]}
+{"kind":"invoke.started","at":1792143131754,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","packages"]}
+{"kind":"invoke.succeeded","at":1792143136407,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4653}
+{"kind":"installer.npm_complete","at":1792143136407,"capId":"npm:markdown-pdf","session":"trial_npm_markdown-pdf_mvarqyiy","packages":["markdown-pdf"]}
+{"kind":"invoke.started","at":1792143136407,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792143136409,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"installer.prepared","at":1792143136409,"capId":"npm:markdown-pdf","session":"trial_npm_markdown-pdf_mvarqyiy","steps":[{"step":"node.install","ok":true,"packages":["markdown-pdf"]}]}
+{"kind":"trial.prepared","at":1792143136409,"capability_id":"npm:markdown-pdf","session":"trial_npm_markdown-pdf_mvarqyiy","prep":{"already_prepared":false,"steps":[{"step":"node.install","ok":true,"packages":["markdown-pdf"]}]}}
+{"kind":"invoke.started","at":1792143136410,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792143136411,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"invoke.started","at":1792143136411,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792143136412,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"installer.already_prepared","at":1792143136412,"capId":"npm:markdown-pdf","session":"trial_npm_markdown-pdf_mvarqyiy"}
+{"kind":"invoke.started","at":1792143136412,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792143136413,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"invoke.started","at":1792143136413,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792143136414,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"installer.already_prepared","at":1792143136414,"capId":"npm:markdown-pdf","session":"trial_npm_markdown-pdf_mvarqyiy"}
+{"kind":"invoke.started","at":1792143136414,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792143136415,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"invoke.started","at":1792143136415,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","code","env","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792143136453,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":38}
+{"kind":"trial.accept_threw","at":1792143136453,"capability_id":"npm:markdown-pdf","session":"trial_npm_markdown-pdf_mvarqyiy","error":"npm:markdown-pdf: kernel exited 1 — ReferenceError: require is not defined\n    at file:///tmp/home/.dsh/agentry-kernel/work/trial_npm_markdown-pdf_mvarqyiy/.agentry_scripts/script_mvarr25c_uwz9.mjs:9:14\n    at file:///tmp/home/.dsh/agentry-kernel/work/trial_npm_markdown-pdf_mvarqyiy/.agentry_scripts/script_mvarr25c_uwz9.mjs:36:3\n    a"}
+{"kind":"trial.node_retired","at":1792143136454,"capability_id":"npm:markdown-pdf","reason":"trial accept: npm:markdown-pdf: kernel exited 1 — ReferenceError: require is not defined\n    at file:///tmp/home/.dsh/agentry-kernel/work/trial_npm_markdown-pdf_mvarqyiy/.agentry_scripts/script_mvarr25c_uwz9.mjs:9:14\n    at file:///tmp/home/.dsh/agentry-kernel/work/trial_npm_markdown-pdf_mvarqyiy/.agentry_scripts/script_mvarr25c_uwz9.mjs:36:3\n    a"}
+{"kind":"invoke.succeeded","at":1792143136454,"capability_id":"agentry.trial","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4732}
+{"kind":"adoption.trial_failed","at":1792143136454,"proposal_id":"proposal_mvarqf4m_ivo1lt","candidate_id":"npm:markdown-pdf","capability_id":"npm:markdown-pdf","phase":"accept","error":"npm:markdown-pdf: kernel exited 1 — ReferenceError: require is not defined\n    at file:///tmp/home/.dsh/agentry-kernel/work/trial_npm_markdown-pdf_mvarqyiy/.agentry_scripts/script_mvarr25c_uwz9.mjs:9:14\n    at file:///tmp/home/.dsh/agentry-kernel/work/trial_npm_markdown-pdf_mvarqyiy/.agentry_scripts/script_mvarr25c_uwz9.mjs:36:3\n    a"}
+{"kind":"adoption.synthesis_attempt_recorded","at":1792143136477,"proposal_id":"proposal_mvarqf4m_ivo1lt","candidate_id":"npm:markdown-pdf","phase":"trial_accept","error_preview":"npm:markdown-pdf: kernel exited 1 — ReferenceError: require is not defined\n    at file:///tmp/home/.dsh/agentry-kernel/w","attempt_id":"synthesis_attempt:proposal_mvarqf4m_ivo1lt:npm:markdown-pdf:1792143136454"}
+{"kind":"adoption.watch_retired","at":1792143136497,"proposal_id":"proposal_mvarqf4m_ivo1lt","watch_id":"watch_mvarqf9f_8bn302","gap_id":"gap:npm:markdown-pdf"}
+{"kind":"adoption.watch_retired","at":1792143136521,"proposal_id":"proposal_mvarqf4m_ivo1lt","watch_id":"watch_mvarqf9v_myr3h6","gap_id":"gap:npm:markdown-pdf"}
+{"kind":"proposal.adopted","at":1792143136559,"proposal_id":"proposal_mvarqf4m_ivo1lt","adopted":[],"failed":[{"candidate_id":"npm:markdown-pdf","capability_id":"npm:markdown-pdf","phase":"trial_accept","error":"npm:markdown-pdf: kernel exited 1 — ReferenceError: require is not defined\n    at file:///tmp/home/.dsh/agentry-kernel/work/trial_npm_markdown-pdf_mvarqyiy/.agentry_scripts/script_mvarr25c_uwz9.mjs:9:14\n    at file:///tmp/home/.dsh/agentry-kernel/work/trial_npm_markdown-pdf_mvarqyiy/.agentry_scripts/script_mvarr25c_uwz9.mjs:36:3\n    a","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/npm:markdown-pdf.mjs"}],"retired_gap":null,"retired_watches":["watch_mvarqf9f_8bn302","watch_mvarqf9v_myr3h6"],"decision":"rejected"}
+{"kind":"invoke.started","at":1792143136584,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","primary","fallback"]}
+{"kind":"invoke.started","at":1792143136584,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792143136666,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] synthesis failed: tool","message_id":"01a1440e-1766-75c2-bcc0-f5faab2056cb","ms":82}
+{"kind":"invoke.succeeded","at":1792143136667,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":83}
+{"kind":"notify.fallback.primary_ok","at":1792143136667,"primary":"notify.email.gmail","subject":"[agentry] synthesis failed: tool"}
+{"kind":"invoke.succeeded","at":1792143136667,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":108}
+{"kind":"adoption.notified","at":1792143136667,"proposal_id":"proposal_mvarqf4m_ivo1lt","channel":"notify.email.gmail","primary_ok":true,"fallback_used":false,"message_id":"01a1440e-1766-75c2-bcc0-f5faab2056cb"}
+{"kind":"invoke.succeeded","at":1792143136667,"capability_id":"agentry.adopt","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":8862}
+{"kind":"discovery.adoption_completed","at":1792143136667,"proposal_id":"proposal_mvarqf4m_ivo1lt","adopted":[]}
+{"kind":"invoke.started","at":1792143136667,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792143136668,"watch_id":"watch_mvarr2cb_mbpglu","source":"discovery.github_search","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:npm:markdown-pdf::discovery.github_search","task_id":null}
+{"kind":"invoke.succeeded","at":1792143136668,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"discovery.watch_created","at":1792143136668,"gap_id":"gap:npm:markdown-pdf","wanted_kind":"tool","watch_id":"watch_mvarr2cb_mbpglu","source":"discovery.github_search"}
+{"kind":"invoke.started","at":1792143136689,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792143136689,"watch_id":"watch_mvarr2cx_lgxmqy","source":"discovery.web_search","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:npm:markdown-pdf::discovery.web_search","task_id":null}
+{"kind":"invoke.succeeded","at":1792143136690,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792143136690,"gap_id":"gap:npm:markdown-pdf","wanted_kind":"tool","watch_id":"watch_mvarr2cx_lgxmqy","source":"discovery.web_search"}
+{"kind":"discovery.tick_summary","at":1792143136690,"gaps":3,"uncovered":1,"watched":4,"created":2,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792143138698,"n":1765}
+{"kind":"invoke.started","at":1792143138735,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792143138736,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792143138737,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792143138778,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":42}
+{"kind":"watch.polled","at":1792143138778,"watch_id":"watch_mvarr2cb_mbpglu","source":"discovery.github_search","candidates":6,"fresh":6,"error":null,"ms":42}
+{"kind":"watch.result_recorded","at":1792143138835,"watch_result_id":"watch_result:watch_mvarr2cb_mbpglu:1792143138778","watch_id":"watch_mvarr2cb_mbpglu","gap_id":"gap:npm:markdown-pdf","source":"discovery.github_search","candidates":6}
+{"kind":"invoke.started","at":1792143138864,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority","candidate_count","candidate_ids"]}
+{"kind":"notify.email.gmail.sent","at":1792143138935,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] 6 new from discovery.github_search","message_id":"01a1440e-203e-7e46-adc4-b490b006339b","ms":71}
+{"kind":"invoke.succeeded","at":1792143138935,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":100}
+{"kind":"watch.notified","at":1792143138936,"watch_id":"watch_mvarr2cb_mbpglu","source":"discovery.github_search","candidate_count":6}
+{"kind":"invoke.succeeded","at":1792143139331,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":594}
+{"kind":"watch.polled","at":1792143139331,"watch_id":"watch_mvarr2cx_lgxmqy","source":"discovery.web_search","candidates":10,"fresh":10,"error":null,"ms":594}
+{"kind":"watch.result_recorded","at":1792143139389,"watch_result_id":"watch_result:watch_mvarr2cx_lgxmqy:1792143139331","watch_id":"watch_mvarr2cx_lgxmqy","gap_id":"gap:npm:markdown-pdf","source":"discovery.web_search","candidates":10}
+{"kind":"invoke.started","at":1792143139416,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority","candidate_count","candidate_ids"]}
+{"kind":"invoke.succeeded","at":1792143139418,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":720}
+{"kind":"watch.polled","at":1792143139418,"watch_id":"watch_mvarqf9v_myr3h6","source":"discovery.web_search","candidates":10,"fresh":10,"error":null,"ms":720}
+{"kind":"watch.result_recorded","at":1792143139474,"watch_result_id":"watch_result:watch_mvarqf9v_myr3h6:1792143139418","watch_id":"watch_mvarqf9v_myr3h6","gap_id":"gap:npm:markdown-pdf","source":"discovery.web_search","candidates":10}
+{"kind":"invoke.started","at":1792143139500,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority","candidate_count","candidate_ids"]}
+{"kind":"notify.email.gmail.sent","at":1792143139508,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] 10 new from discovery.web_search","message_id":"01a1440e-226a-74b6-82e2-e899a726f892","ms":91}
+{"kind":"invoke.succeeded","at":1792143139509,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":120}
+{"kind":"watch.notified","at":1792143139509,"watch_id":"watch_mvarr2cx_lgxmqy","source":"discovery.web_search","candidate_count":10}
+{"kind":"notify.email.gmail.sent","at":1792143139583,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] 10 new from discovery.web_search","message_id":"01a1440e-22c6-7949-b3ce-3660f4287c48","ms":83}
+{"kind":"invoke.succeeded","at":1792143139583,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":109}
+{"kind":"watch.notified","at":1792143139583,"watch_id":"watch_mvarqf9v_myr3h6","source":"discovery.web_search","candidate_count":10}
+{"kind":"runtime.tick.watches_polled","at":1792143139583,"count":3,"summary":[{"watch_id":"watch_mvarqf9v_myr3h6","ok":true,"polled":true,"candidates":10,"fresh":10,"notified":1,"error":null},{"watch_id":"watch_mvarr2cb_mbpglu","ok":true,"polled":true,"candidates":6,"fresh":6,"notified":1,"error":null},{"watch_id":"watch_mvarr2cx_lgxmqy","ok":true,"polled":true,"candidates":10,"fresh":10,"notified":1,"error":null}]}
+{"kind":"invoke.started","at":1792143157812,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["gap","candidates","notify"]}
+{"kind":"invoke.started","at":1792143157814,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","accept_from"]}
+{"kind":"invoke.failed","at":1792143158376,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":561}
+{"kind":"proposal.llm_failed","at":1792143158376,"provider":"groq","model":"openai/gpt-oss-120b","code":"invoker_failed","message":"invoker invoker.in_process_js failed: llm: HTTP 400 — {\"error\":{\"message\":\"Please reduce the length of the messages or completion.\",\"type\":\"invalid_request_error\",\"param\":\"messages\"}}\n","substituted":false}
+{"kind":"invoke.started","at":1792143158376,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","accept_from"]}
+{"kind":"invoke.failed","at":1792143159962,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":1586}
+{"kind":"proposal.llm_failed","at":1792143159962,"provider":"groq","model":"openai/gpt-oss-20b","code":"invoker_failed","message":"invoker invoker.in_process_js failed: llm: HTTP 400 — {\"error\":{\"message\":\"Please reduce the length of the messages or completion.\",\"type\":\"invalid_request_error\",\"param\":\"messages\"}}\n","substituted":false}
+{"kind":"invoke.started","at":1792143159962,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","accept_from"]}
+{"kind":"invoke.failed","at":1792143160501,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":539}
+{"kind":"proposal.llm_failed","at":1792143160501,"provider":"groq","model":"qwen/qwen3.8-27b","code":"invoker_failed","message":"invoker invoker.in_process_js failed: llm: HTTP 400 — {\"error\":{\"message\":\"Please reduce the length of the messages or completion.\",\"type\":\"invalid_request_error\",\"param\":\"messages\"}}\n","substituted":false}
+{"kind":"invoke.started","at":1792143160501,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","accept_from"]}
+{"kind":"runtime.tick","at":1792143169583,"n":1766}
+{"kind":"invoke.started","at":1792143169584,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792143169585,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792143169585,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792143169586,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792143169586,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792143169718,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":134}
+{"kind":"watch.polled","at":1792143169719,"watch_id":"watch_mvar4czb_v0xrjn","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":135}
+{"kind":"invoke.succeeded","at":1792143169740,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":155}
+{"kind":"watch.polled","at":1792143169772,"watch_id":"watch_mvarl333_uznylq","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":187}
+{"kind":"invoke.succeeded","at":1792143169935,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":348}
+{"kind":"watch.polled","at":1792143169986,"watch_id":"watch_mvarqf9f_8bn302","source":"discovery.github_search","candidates":6,"fresh":0,"error":null,"ms":400}
+{"kind":"invoke.succeeded","at":1792143170151,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":566}
+{"kind":"watch.polled","at":1792143170199,"watch_id":"watch_mvar4czk_zgz333","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":614}
+{"kind":"invoke.succeeded","at":1792143170217,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":630}
+{"kind":"watch.polled","at":1792143170264,"watch_id":"watch_mvarl33j_ce8qt7","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":678}
+{"kind":"runtime.tick.watches_polled","at":1792143170264,"count":5,"summary":[{"watch_id":"watch_mvar4czb_v0xrjn","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvar4czk_zgz333","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvarl333_uznylq","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvarl33j_ce8qt7","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvarqf9f_8bn302","ok":true,"polled":true,"candidates":6,"fresh":0,"notified":0,"error":null}]}
+{"kind":"invoke.failed","at":1792143170977,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":10476}
+{"kind":"proposal.llm_failed","at":1792143170977,"provider":"google","model":"gemini-2.5-flash","code":"invoker_failed","message":"invoker invoker.in_process_js failed: llm: HTTP 502 — {\"error\":{\"message\":\"All upstream targets failed for this request.\",\"type\":\"all_upstreams_failed\",\"requested_model\":\"gemini-2.5-flash\",\"matches_in_catalog\":[\"google\"],\"attempts\":[{\"target\":\"gemini\",\"outcome\":\"timeout\",\"detail\":\"The operation was aborted\"},{\"target\":\"gemini\",\"outcome\":\"http_error\",\"s","substituted":false}
+{"kind":"proposal.created","at":1792143171099,"proposal_id":"proposal_mvarrste_jet9l1","gap_id":"gap:npm:markdown-pdf","candidates":6,"model_used":null,"provider_used":null,"recommended_id":null,"auto_approved":false}
+{"kind":"invoke.started","at":1792143171167,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","primary","fallback"]}
+{"kind":"invoke.started","at":1792143171167,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792143171367,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] proposal: 6 candidates for tool","message_id":"01a1440e-9ea0-7e63-ae7c-783cfcb7bf5e","ms":200}
+{"kind":"invoke.succeeded","at":1792143171367,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":200}
+{"kind":"notify.fallback.primary_ok","at":1792143171367,"primary":"notify.email.gmail","subject":"[agentry] proposal: 6 candidates for tool"}
+{"kind":"invoke.succeeded","at":1792143171367,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":266}
+{"kind":"proposal.notified","at":1792143171367,"proposal_id":"proposal_mvarrste_jet9l1","channel":"notify.email.gmail","primary_ok":true,"fallback_used":false,"message_id":"01a1440e-9ea0-7e63-ae7c-783cfcb7bf5e"}
+{"kind":"invoke.succeeded","at":1792143171367,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":13555}
+{"kind":"discovery.proposal_created","at":1792143171367,"watch_result_id":"watch_result:watch_mvarr2cb_mbpglu:1792143138778","gap_id":"gap:npm:markdown-pdf","source":"discovery.github_search","proposal_id":"proposal_mvarrste_jet9l1"}
+{"kind":"discovery.watch_result_skipped","at":1792143171415,"watch_result_id":"watch_result:watch_mvarr2cx_lgxmqy:1792143139331","gap_id":"gap:npm:markdown-pdf","reason":"gap_already_has_open_proposal"}
+{"kind":"discovery.watch_result_skipped","at":1792143171453,"watch_result_id":"watch_result:watch_mvarqf9v_myr3h6:1792143139418","gap_id":"gap:npm:markdown-pdf","reason":"gap_already_has_open_proposal"}
+{"kind":"discovery.tick_summary","at":1792143171492,"gaps":3,"uncovered":0,"watched":8,"created":0,"proposals":1,"adopted":0}

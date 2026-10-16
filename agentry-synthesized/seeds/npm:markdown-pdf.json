@@ -1,0 +1,50 @@
+{
+  "id": "npm:markdown-pdf",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm:markdown-pdf",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm:markdown-pdf.mjs",
+  "accepts": {
+    "markdown_path": "string",
+    "output_path": {
+      "type": "string",
+      "optional": true
+    }
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "markdown-pdf"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the markdown_path input, ensure the file exists, and determine the output PDF path.",
+      "fails_if": "markdown_path is missing or the file does not exist",
+      "code": "let markdownPath = process.env.MARKDOWN_PATH;\nlet outputPath = process.env.OUTPUT_PATH;\nconst fs = require('fs');\nif (!markdownPath) { throw new Error('Missing markdown_path'); }\nif (!fs.existsSync(markdownPath)) { throw new Error('Markdown file not found'); }\nif (!outputPath) { outputPath = markdownPath.replace(/\\.md$/i, '.pdf'); }"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Run markdown-pdf via npx to convert the markdown file to a PDF.",
+      "fails_if": "The markdown-pdf command exits with an error",
+      "code": "const { execSync } = require('child_process');\ntry {\n  execSync(`npx markdown-pdf \"${markdownPath}\" -o \"${outputPath}\"`);\n  execResult = true;\n} catch (e) {\n  execError = e;\n}"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the path to the generated PDF.",
+      "fails_if": "Conversion failed or pdf_path is undefined",
+      "code": "if (execError) { throw execError; }\nconsole.log(JSON.stringify({ pdf_path: outputPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
