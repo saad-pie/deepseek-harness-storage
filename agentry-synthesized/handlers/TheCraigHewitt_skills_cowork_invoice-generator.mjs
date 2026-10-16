@@ -11,7 +11,7 @@ import { runSkill, buildSystemPrompt, defaultPreamble } from "/tmp/home/.dsh/nod
 const CAP_ID = "TheCraigHewitt_skills_cowork_invoice-generator";
 const CAP_KIND = "agent_skill";
 const ACCEPTS = {
-  "input": "string"
+  "request": "string"
 };
 const PRODUCES = {
   "content": "string"
@@ -23,7 +23,7 @@ const REQUIRES = {
   "capability": []
 };
 const INPUT_MAP = {
-  "input": "Invoice request"
+  "request": "Invoice request"
 };
 const LLM_PROVIDER = "groq";
 const LLM_MODEL = "qwen/qwen3.8-27b";
@@ -125,7 +125,7 @@ async function run(input, ctx, opts = {}) {
 
 export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
-  const probe = await run({"input":"Invoice Acme Corp $5,000 for the November consulting retainer"}, deps, { session });
+  const probe = await run({"request":"Invoice Acme Corp $5,000 for the November consulting retainer"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {
