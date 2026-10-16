@@ -26,23 +26,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate inputs, write the markdown content to a temporary .md file, and determine the output PDF path.",
-      "fails_if": "The required 'markdown' input is missing or writing the temporary file fails.",
-      "code": "if (!input.markdown) throw new Error('Missing markdown input');\nconst fs = require('fs');\nconst os = require('os');\nconst path = require('path');\ntempMdPath = path.join(os.tmpdir(), `temp-${Date.now()}.md`);\nfs.writeFileSync(tempMdPath, input.markdown);\noutputPath = input.output_path || path.join(process.cwd(), `output-${Date.now()}.pdf`);"
+      "what": "Validate markdown input and determine output PDF path, creating temporary file names.",
+      "fails_if": "Missing MARKDOWN environment variable",
+      "code": "const markdown = process.env.MARKDOWN;\nif (!markdown) throw new Error('Missing MARKDOWN input');\nconst path = require('path');\nconst os = require('os');\nconst outPath = process.env.OUTPUT_PATH || path.join(os.tmpdir(), `md-${Date.now()}.pdf`);\n"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Run the markdown-pdf CLI synchronously to convert the temporary markdown file into a PDF at the determined output path.",
-      "fails_if": "The markdown-pdf command exits with a non‑zero status or cannot be executed.",
-      "code": "const { execSync } = require('child_process');\nexecSync(`npx markdown-pdf -o \"${outputPath}\" \"${tempMdPath}\"`);"
+      "what": "Write markdown to a temporary .md file and invoke markdown-pdf to generate the PDF.",
+      "fails_if": "markdown-pdf conversion error or file write failure",
+      "code": "const markdownPdf = require('markdown-pdf');\nconst fs = require('fs');\nconst path = require('path');\nconst os = require('os');\nconst tmpDir = os.tmpdir();\nconst mdFile = path.join(tmpDir, `md-${Date.now()}.md`);\nfs.writeFileSync(mdFile, markdown);\nawait new Promise((resolve, reject) => {\n  markdownPdf().from(mdFile).to(outPath, err => {\n    if (err) reject(err);\n    else resolve();\n  });\n});\n"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write a single JSON object to stdout containing the path of the generated PDF.",
-      "fails_if": "JSON serialization fails or the pdf_path variable is undefined.",
-      "code": "console.log(JSON.stringify({ pdf_path: outputPath }));"
+      "what": "Emit JSON with pdf_path to stdout.",
+      "fails_if": "JSON serialization error or undefined outPath",
+      "code": "console.log(JSON.stringify({ pdf_path: outPath }));\n"
     }
   ],
   "source": "synthesized:agentry.synthesize",

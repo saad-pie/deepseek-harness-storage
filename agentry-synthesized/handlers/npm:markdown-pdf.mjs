@@ -23,14 +23,17 @@ const REQUIRES = {
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {};
+const ENV_MAP = {
+  "MARKDOWN": "markdown",
+  "OUTPUT_PATH": "output_path"
+};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
   "pdf_path": "pdf_path"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate inputs, write the markdown content to a temporary .md file, and determine the output PDF path.\n  // fails_if: The required 'markdown' input is missing or writing the temporary file fails.\n  // BEGIN prepare\n  if (!input.markdown) throw new Error('Missing markdown input');\n  const fs = require('fs');\n  const os = require('os');\n  const path = require('path');\n  tempMdPath = path.join(os.tmpdir(), `temp-${Date.now()}.md`);\n  fs.writeFileSync(tempMdPath, input.markdown);\n  outputPath = input.output_path || path.join(process.cwd(), `output-${Date.now()}.pdf`);\n  // END prepare\n\n  // -- step 2: execute --\n  // what: Run the markdown-pdf CLI synchronously to convert the temporary markdown file into a PDF at the determined output path.\n  // fails_if: The markdown-pdf command exits with a non‑zero status or cannot be executed.\n  // BEGIN execute\n  const { execSync } = require('child_process');\n  execSync(`npx markdown-pdf -o \"${outputPath}\" \"${tempMdPath}\"`);\n  // END execute\n\n  // -- step 3: emit --\n  // what: Write a single JSON object to stdout containing the path of the generated PDF.\n  // fails_if: JSON serialization fails or the pdf_path variable is undefined.\n  // BEGIN emit\n  console.log(JSON.stringify({ pdf_path: outputPath }));\n  // END emit\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate markdown input and determine output PDF path, creating temporary file names.\n  // fails_if: Missing MARKDOWN environment variable\n  // BEGIN prepare\n  const markdown = process.env.MARKDOWN;\n  if (!markdown) throw new Error('Missing MARKDOWN input');\n  const path = require('path');\n  const os = require('os');\n  const outPath = process.env.OUTPUT_PATH || path.join(os.tmpdir(), `md-${Date.now()}.pdf`);\n  // END prepare\n\n  // -- step 2: execute --\n  // what: Write markdown to a temporary .md file and invoke markdown-pdf to generate the PDF.\n  // fails_if: markdown-pdf conversion error or file write failure\n  // BEGIN execute\n  const markdownPdf = require('markdown-pdf');\n  const fs = require('fs');\n  const path = require('path');\n  const os = require('os');\n  const tmpDir = os.tmpdir();\n  const mdFile = path.join(tmpDir, `md-${Date.now()}.md`);\n  fs.writeFileSync(mdFile, markdown);\n  await new Promise((resolve, reject) => {\n    markdownPdf().from(mdFile).to(outPath, err => {\n      if (err) reject(err);\n      else resolve();\n    });\n  });\n  // END execute\n\n  // -- step 3: emit --\n  // what: Emit JSON with pdf_path to stdout.\n  // fails_if: JSON serialization error or undefined outPath\n  // BEGIN emit\n  console.log(JSON.stringify({ pdf_path: outPath }));\n  // END emit\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
