@@ -5,11 +5,7 @@
   "handler": "npm:markdown-pdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm:markdown-pdf.mjs",
   "accepts": {
-    "markdown": "string",
-    "output_path": {
-      "type": "string",
-      "optional": true
-    }
+    "markdown": "string"
   },
   "produces": {
     "pdf_path": "string"
@@ -26,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate markdown input, write it to a temporary .md file and determine output PDF path.",
-      "fails_if": "markdown input missing or file write fails",
-      "code": "const fs = require('fs');\nconst os = require('os');\nconst path = require('path');\nif (typeof inputs.markdown !== 'string') { throw new Error('markdown input required'); }\nlet markdownContent = inputs.markdown;\nlet tmpMdPath = path.join(os.tmpdir(), `tmp_${Date.now()}.md`);\nfs.writeFileSync(tmpMdPath, markdownContent);\nlet pdfPath = inputs.output_path || path.join(process.cwd(), 'output.pdf');"
+      "what": "Validate that MARKDOWN env var is present and write its contents to a temporary .md file.",
+      "fails_if": "MARKDOWN env var missing or file write fails",
+      "code": "if (!process.env.MARKDOWN) throw new Error('missing markdown');\nconst fs = require('fs');\nconst os = require('os');\nconst path = require('path');\nconst tmpDir = os.tmpdir();\nconst mdPath = path.join(tmpDir, `input-${Date.now()}.md`);\nfs.writeFileSync(mdPath, process.env.MARKDOWN);\nready = { mdPath, tmpDir };"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Run markdown-pdf to convert the temporary markdown file to a PDF at the desired location.",
-      "fails_if": "markdown-pdf conversion error or timeout",
-      "code": "const markdownPdf = require('markdown-pdf');\nawait new Promise((resolve, reject) => {\n  markdownPdf().from(tmpMdPath).to(pdfPath, err => {\n    if (err) reject(err); else resolve();\n  });\n});"
+      "what": "Run the markdown-pdf CLI via npx to convert the temporary markdown file to a PDF.",
+      "fails_if": "markdown-pdf command fails or exits with error",
+      "code": "const { execSync } = require('child_process');\nconst outPath = path.join(ready.tmpDir, `output-${Date.now()}.pdf`);\nexecSync(`npx markdown-pdf \"${ready.mdPath}\" -o \"${outPath}\"`);\nresult = { pdf_path: outPath };"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Output JSON with the path of the generated PDF.",
-      "fails_if": "pdfPath undefined or console.log fails",
-      "code": "console.log(JSON.stringify({ pdf_path: pdfPath }));"
+      "what": "Emit a single JSON object containing the path to the generated PDF.",
+      "fails_if": "JSON serialization fails or pdf_path is undefined",
+      "code": "console.log(JSON.stringify({ pdf_path: result.pdf_path }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",
