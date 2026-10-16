@@ -1,6 +1,6 @@
 {
   "id": "npm:marked",
-  "kind": "tool",
+  "kind": "unknown",
   "invoked_via": "invoker.in_process_js",
   "handler": "npm:marked",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm:marked.mjs",
@@ -22,23 +22,30 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that a markdown string is provided via environment and store it for later steps",
-      "fails_if": "process.env.MARKDOWN_INPUT is missing or empty",
-      "code": "if (!process.env.MARKDOWN_INPUT) { throw new Error('Missing markdown input'); }\\nglobalThis.markdown = process.env.MARKDOWN_INPUT;"
+      "what": "Validate that the input markdown is a non-empty string and store it in global state.",
+      "fails_if": "Input is missing, not a string, or empty.",
+      "code": "const input = process.env.MARKDOWN_INPUT || '';\nif (typeof input !== 'string' || input.length === 0) {\n  throw new Error('Input markdown must be a non-empty string');\n}\nglobalThis.markdownInput = input;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Load the marked package and convert the markdown to HTML",
-      "fails_if": "marked fails to parse or throws an exception",
-      "code": "const { marked } = await import('marked');\\nif (!marked || typeof marked.parse !== 'function') { throw new Error('Marked API not available'); }\\nconst html = marked.parse(globalThis.markdown);\\nglobalThis.html = html;"
+      "what": "Import the marked package and parse the markdown string into HTML.",
+      "fails_if": "The marked package fails to load or the parse operation throws an error.",
+      "code": "const mod = await import('marked');\nconst marked = mod.default || mod;\nconst html = marked.parse(globalThis.markdownInput);\nglobalThis.htmlOutput = html;"
     },
     {
       "step": 3,
+      "verb": "post",
+      "what": "Verify the generated HTML is a non-empty string and trim any leading/trailing whitespace.",
+      "fails_if": "The parsed HTML is empty or not a string.",
+      "code": "if (typeof globalThis.htmlOutput !== 'string' || globalThis.htmlOutput.trim().length === 0) {\n  throw new Error('Parsed HTML is empty or invalid');\n}\nglobalThis.finalHtml = globalThis.htmlOutput.trim();"
+    },
+    {
+      "step": 4,
       "verb": "emit",
-      "what": "Write a single JSON object containing the HTML result to stdout",
-      "fails_if": "JSON serialization fails or html is undefined",
-      "code": "if (typeof globalThis.html !== 'string') { throw new Error('HTML output missing'); }\\nconsole.log(JSON.stringify({ html: globalThis.html }));"
+      "what": "Write the final HTML result as a JSON object to stdout.",
+      "fails_if": "JSON serialization fails or the output is malformed.",
+      "code": "console.log(JSON.stringify({ html: globalThis.finalHtml }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",
