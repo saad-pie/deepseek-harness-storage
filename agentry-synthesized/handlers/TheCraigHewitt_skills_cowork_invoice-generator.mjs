@@ -14,7 +14,8 @@ const ACCEPTS = {
   "request": "string"
 };
 const PRODUCES = {
-  "content": "string"
+  "invoice_path": "string",
+  "summary": "string"
 };
 const REQUIRES = {
   "npm": [],
@@ -23,7 +24,7 @@ const REQUIRES = {
   "capability": []
 };
 const INPUT_MAP = {
-  "request": "Invoice request"
+  "request": "Invoice request description"
 };
 const LLM_PROVIDER = "groq";
 const LLM_MODEL = "qwen/qwen3.8-27b";
