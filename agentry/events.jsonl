@@ -16422,3 +16422,17 @@
 {"kind":"invoker.lazy_loaded_handler","at":1792161612822,"capability_id":"TheCraigHewitt_skills_cowork_invoice-generator","handler_id":"TheCraigHewitt_skills_cowork_invoice-generator","handler_file":"/tmp/home/.dsh/agentry-synthesized/handlers/TheCraigHewitt_skills_cowork_invoice-generator.mjs"}
 {"kind":"invoke.failed","at":1792161612822,"capability_id":"TheCraigHewitt_skills_cowork_invoice-generator","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":169}
 {"kind":"mcp.invoke.failed","at":1792161612823,"capability_id":"TheCraigHewitt_skills_cowork_invoice-generator","code":"invalid_spec","ms":170}
+{"kind":"invoke.started","at":1792161706207,"capability_id":"TheCraigHewitt_skills_cowork_invoice-generator","invoker":"invoker.in_process_js","task_id":null,"tenant":"mcp","input_keys":["request","conversation_id"]}
+{"kind":"invoke.failed","at":1792161706207,"capability_id":"TheCraigHewitt_skills_cowork_invoice-generator","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":185}
+{"kind":"mcp.invoke.failed","at":1792161706207,"capability_id":"TheCraigHewitt_skills_cowork_invoice-generator","code":"invalid_spec","ms":185}
+{"kind":"invoke.started","at":1792161778304,"capability_id":"TheCraigHewitt_skills_cowork_invoice-generator","invoker":"invoker.in_process_js","task_id":null,"tenant":"mcp","input_keys":["prompt","conversation_id"]}
+{"kind":"invoke.started","at":1792161778305,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792161779185,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":880}
+{"kind":"invoke.succeeded","at":1792161779186,"capability_id":"TheCraigHewitt_skills_cowork_invoice-generator","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1055}
+{"kind":"mcp.invoke.succeeded","at":1792161779187,"capability_id":"TheCraigHewitt_skills_cowork_invoice-generator","ms":1055}
+{"kind":"invoke.started","at":1792161789802,"capability_id":"TheCraigHewitt_skills_cowork_invoice-generator","invoker":"invoker.in_process_js","task_id":null,"tenant":"mcp","input_keys":["prompt","conversation_id"]}
+{"kind":"invoke.started","at":1792161789802,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792161790472,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":670}
+{"kind":"invoke.succeeded","at":1792161790473,"capability_id":"TheCraigHewitt_skills_cowork_invoice-generator","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":848}
+{"kind":"mcp.invoke.succeeded","at":1792161790473,"capability_id":"TheCraigHewitt_skills_cowork_invoice-generator","ms":849}
+{"kind":"runs.rollup_completed","at":1792161860714,"capabilities":17,"runs":3331}
