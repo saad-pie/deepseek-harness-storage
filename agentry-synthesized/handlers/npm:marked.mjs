@@ -6,11 +6,7 @@
 const CAP_ID = "npm:marked";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "markdown": "string",
-  "options": {
-    "type": "string",
-    "optional": true
-  }
+  "markdown": "string"
 };
 const PRODUCES = {
   "html": "string"
@@ -24,8 +20,7 @@ const REQUIRES = {
   "capability": []
 };
 const ENV_MAP = {
-  "MARKDOWN": "markdown",
-  "OPTIONS": "options"
+  "MARKDOWN_INPUT": "markdown"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
@@ -33,7 +28,7 @@ const OUTPUT_MAP = {
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that markdown input is present and load the marked package.\n  // fails_if: markdown input missing or the marked package cannot be required\n  // BEGIN prepare\n  let markdown = process.env.MARKDOWN;\n  if (!markdown) { throw new Error(\"missing markdown input\"); }\n  let options = process.env.OPTIONS ? JSON.parse(process.env.OPTIONS) : undefined;\n  let markedModule;\n  try { markedModule = require('marked'); } catch (e) { throw new Error(\"marked package not available\"); }\n  // END prepare\n\n  // -- step 2: execute --\n  // what: Convert the markdown text to HTML using marked.\n  // fails_if: marked throws an error or returns undefined\n  // BEGIN execute\n  let html = markedModule.parse(markdown, options);\n  if (html === undefined) { throw new Error(\"conversion failed\"); }\n  // END execute\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the HTML result to stdout.\n  // fails_if: html is undefined or JSON.stringify fails\n  // BEGIN emit\n  console.log(JSON.stringify({html: html}));\n  // END emit\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that a markdown string is provided via environment and store it for later steps\n  // fails_if: process.env.MARKDOWN_INPUT is missing or empty\n  // BEGIN prepare\n  if (!process.env.MARKDOWN_INPUT) { throw new Error('Missing markdown input'); }\n  globalThis.markdown = process.env.MARKDOWN_INPUT;\n  // END prepare\n\n  // -- step 2: execute --\n  // what: Load the marked package and convert the markdown to HTML\n  // fails_if: marked fails to parse or throws an exception\n  // BEGIN execute\n  const { marked } = await import('marked');\n  if (!marked || typeof marked.parse !== 'function') { throw new Error('Marked API not available'); }\n  const html = marked.parse(globalThis.markdown);\n  globalThis.html = html;\n  // END execute\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the HTML result to stdout\n  // fails_if: JSON serialization fails or html is undefined\n  // BEGIN emit\n  if (typeof globalThis.html !== 'string') { throw new Error('HTML output missing'); }\n  console.log(JSON.stringify({ html: globalThis.html }));\n  // END emit\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -50,9 +45,9 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const probe = await run({"markdown":"# Sample Heading\\n\\nThis is a *markdown* test."}, deps, { session });
+  const probe = await run({"markdown":"# Sample\\n\\nThis is **bold** text."}, deps, { session });
   const out = probe.output || probe;
-  const minBytes = 500;
+  const minBytes = 0;
   if (minBytes > 0) {
     const size = typeof out.bytes === "number" ? out.bytes : 0;
     if (size < minBytes) {

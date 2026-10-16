@@ -5,11 +5,7 @@
   "handler": "npm:marked",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm:marked.mjs",
   "accepts": {
-    "markdown": "string",
-    "options": {
-      "type": "string",
-      "optional": true
-    }
+    "markdown": "string"
   },
   "produces": {
     "html": "string"
@@ -26,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that markdown input is present and load the marked package.",
-      "fails_if": "markdown input missing or the marked package cannot be required",
-      "code": "let markdown = process.env.MARKDOWN;\nif (!markdown) { throw new Error(\"missing markdown input\"); }\nlet options = process.env.OPTIONS ? JSON.parse(process.env.OPTIONS) : undefined;\nlet markedModule;\ntry { markedModule = require('marked'); } catch (e) { throw new Error(\"marked package not available\"); }"
+      "what": "Validate that a markdown string is provided via environment and store it for later steps",
+      "fails_if": "process.env.MARKDOWN_INPUT is missing or empty",
+      "code": "if (!process.env.MARKDOWN_INPUT) { throw new Error('Missing markdown input'); }\\nglobalThis.markdown = process.env.MARKDOWN_INPUT;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Convert the markdown text to HTML using marked.",
-      "fails_if": "marked throws an error or returns undefined",
-      "code": "let html = markedModule.parse(markdown, options);\nif (html === undefined) { throw new Error(\"conversion failed\"); }"
+      "what": "Load the marked package and convert the markdown to HTML",
+      "fails_if": "marked fails to parse or throws an exception",
+      "code": "const { marked } = await import('marked');\\nif (!marked || typeof marked.parse !== 'function') { throw new Error('Marked API not available'); }\\nconst html = marked.parse(globalThis.markdown);\\nglobalThis.html = html;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write a single JSON object containing the HTML result to stdout.",
-      "fails_if": "html is undefined or JSON.stringify fails",
-      "code": "console.log(JSON.stringify({html: html}));"
+      "what": "Write a single JSON object containing the HTML result to stdout",
+      "fails_if": "JSON serialization fails or html is undefined",
+      "code": "if (typeof globalThis.html !== 'string') { throw new Error('HTML output missing'); }\\nconsole.log(JSON.stringify({ html: globalThis.html }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",
