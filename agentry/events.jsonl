@@ -3976,3 +3976,95 @@
 {"kind":"invoke.succeeded","at":1792142259885,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":555}
 {"kind":"watch.polled","at":1792142259894,"watch_id":"watch_mvar4czk_zgz333","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":564}
 {"kind":"runtime.tick.watches_polled","at":1792142259894,"count":2,"summary":[{"watch_id":"watch_mvar4czb_v0xrjn","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvar4czk_zgz333","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null}]}
+{"kind":"discovery.tick_summary","at":1792142287448,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142289896,"n":1737}
+{"kind":"discovery.tick_summary","at":1792142317475,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142319897,"n":1738}
+{"kind":"invoke.started","at":1792142319898,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142319899,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792142320035,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":138}
+{"kind":"watch.polled","at":1792142320035,"watch_id":"watch_mvar4czb_v0xrjn","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":138}
+{"kind":"invoke.succeeded","at":1792142320423,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":524}
+{"kind":"watch.polled","at":1792142320432,"watch_id":"watch_mvar4czk_zgz333","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":533}
+{"kind":"runtime.tick.watches_polled","at":1792142320432,"count":2,"summary":[{"watch_id":"watch_mvar4czb_v0xrjn","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvar4czk_zgz333","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null}]}
+{"kind":"runtime.boot.started","at":1792142327026,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792142327037,"loaded":0,"skipped":22,"files":22}
+{"kind":"runtime.boot.watches_loaded","at":1792142327037,"count":2}
+{"kind":"runtime.boot.completed","at":1792142327038,"capabilities":31,"watches":2}
+{"kind":"runtime.boot.started","at":1792142335846,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792142335857,"loaded":0,"skipped":22,"files":22}
+{"kind":"runtime.boot.watches_loaded","at":1792142335857,"count":2}
+{"kind":"runtime.boot.completed","at":1792142335857,"capabilities":31,"watches":2}
+{"kind":"invoke.started","at":1792142335857,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792142335857,"query":"generate PDF from markdown","sources":["local","npm","github","web"],"limit":10}
+{"kind":"invoke.started","at":1792142335872,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142335874,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792142336454,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":580}
+{"kind":"invoke.succeeded","at":1792142336587,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":715}
+{"kind":"discover.completed","at":1792142336600,"query":"generate PDF from markdown","sources":["local","npm","github","web"],"candidates_total":10,"top_id":"fraserxu/electron-pdf","top_source":"github","top_fit":0.79,"errors":{}}
+{"kind":"invoke.succeeded","at":1792142336600,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":743}
+{"kind":"discovery.tick_summary","at":1792142347478,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142350433,"n":1739}
+{"kind":"runs.rollup_completed","at":1792142362306,"capabilities":11,"runs":41}
+{"kind":"discovery.tick_summary","at":1792142377484,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142380436,"n":1740}
+{"kind":"invoke.started","at":1792142380436,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142380438,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792142380583,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":147}
+{"kind":"watch.polled","at":1792142380583,"watch_id":"watch_mvar4czb_v0xrjn","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":147}
+{"kind":"invoke.succeeded","at":1792142380976,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":538}
+{"kind":"watch.polled","at":1792142380985,"watch_id":"watch_mvar4czk_zgz333","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":547}
+{"kind":"runtime.tick.watches_polled","at":1792142380985,"count":2,"summary":[{"watch_id":"watch_mvar4czb_v0xrjn","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvar4czk_zgz333","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null}]}
+{"kind":"discovery.tick_summary","at":1792142407485,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142410989,"n":1741}
+{"kind":"runtime.boot.started","at":1792142424693,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792142424705,"loaded":0,"skipped":22,"files":22}
+{"kind":"runtime.boot.watches_loaded","at":1792142424706,"count":2}
+{"kind":"runtime.boot.completed","at":1792142424706,"capabilities":31,"watches":2}
+{"kind":"invoke.started","at":1792142424707,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792142424707,"query":"markdown to pdf","sources":["local","npm","github","web"],"limit":10}
+{"kind":"invoke.started","at":1792142424723,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142424725,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.failed","at":1792142424747,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":23}
+{"kind":"invoke.succeeded","at":1792142425269,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":544}
+{"kind":"discover.completed","at":1792142425295,"query":"markdown to pdf","sources":["local","npm","github","web"],"candidates_total":10,"top_id":"npm:gutterpress","top_source":"npm","top_fit":1,"errors":{"github":"github: invoker_failed"}}
+{"kind":"invoke.succeeded","at":1792142425296,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":589}
+{"kind":"invoke.started","at":1792142425296,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792142425296,"query":"generate PDF from markdown","sources":["local","npm","github","web"],"limit":10}
+{"kind":"invoke.started","at":1792142425297,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142425298,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.failed","at":1792142425304,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":6}
+{"kind":"invoke.succeeded","at":1792142425872,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":574}
+{"kind":"discover.completed","at":1792142425873,"query":"generate PDF from markdown","sources":["local","npm","github","web"],"candidates_total":10,"top_id":"npm:jspdf-autotable","top_source":"npm","top_fit":0.6,"errors":{"github":"github: invoker_failed"}}
+{"kind":"invoke.succeeded","at":1792142425873,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":577}
+{"kind":"discovery.tick_summary","at":1792142437510,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142440994,"n":1742}
+{"kind":"invoke.started","at":1792142440994,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142440995,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792142441154,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":160}
+{"kind":"watch.polled","at":1792142441154,"watch_id":"watch_mvar4czb_v0xrjn","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":160}
+{"kind":"invoke.succeeded","at":1792142441529,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":534}
+{"kind":"watch.polled","at":1792142441538,"watch_id":"watch_mvar4czk_zgz333","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":543}
+{"kind":"runtime.tick.watches_polled","at":1792142441538,"count":2,"summary":[{"watch_id":"watch_mvar4czb_v0xrjn","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvar4czk_zgz333","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null}]}
+{"kind":"discovery.tick_summary","at":1792142467509,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142471542,"n":1743}
+{"kind":"discovery.tick_summary","at":1792142497536,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142501546,"n":1744}
+{"kind":"invoke.started","at":1792142501546,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142501547,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792142501700,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":154}
+{"kind":"watch.polled","at":1792142501700,"watch_id":"watch_mvar4czb_v0xrjn","source":"discovery.github_search","candidates":0,"fresh":0,"error":null,"ms":154}
+{"kind":"invoke.succeeded","at":1792142502065,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":518}
+{"kind":"watch.polled","at":1792142502074,"watch_id":"watch_mvar4czk_zgz333","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":527}
+{"kind":"runtime.tick.watches_polled","at":1792142502074,"count":2,"summary":[{"watch_id":"watch_mvar4czb_v0xrjn","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvar4czk_zgz333","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null}]}
+{"kind":"discovery.tick_summary","at":1792142527536,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142532079,"n":1745}
+{"kind":"discovery.tick_summary","at":1792142557562,"gaps":1,"uncovered":0,"watched":2,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792142562084,"n":1746}
+{"kind":"invoke.started","at":1792142562084,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792142562085,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.failed","at":1792142562103,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":19}
+{"kind":"watch.polled","at":1792142562104,"watch_id":"watch_mvar4czb_v0xrjn","source":"discovery.github_search","candidates":0,"fresh":0,"error":"invoker_failed: invoker invoker.in_process_js failed: github_search: rate limited (remaining=0, reset in 48s)","ms":20}
+{"kind":"invoke.succeeded","at":1792142562614,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":529}
+{"kind":"watch.polled","at":1792142562624,"watch_id":"watch_mvar4czk_zgz333","source":"discovery.web_search","candidates":10,"fresh":0,"error":null,"ms":539}
+{"kind":"runtime.tick.watches_polled","at":1792142562624,"count":2,"summary":[{"watch_id":"watch_mvar4czb_v0xrjn","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":"invoker_failed: invoker invoker.in_process_js failed: github_search: rate limited (remaining=0, reset in 48s)"},{"watch_id":"watch_mvar4czk_zgz333","ok":true,"polled":true,"candidates":10,"fresh":0,"notified":0,"error":null}]}
