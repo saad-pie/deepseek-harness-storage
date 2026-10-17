@@ -1,0 +1,51 @@
+{
+  "id": "pdf-lib-draw-table-beta",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "pdf-lib-draw-table-beta",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/pdf-lib-draw-table-beta.mjs",
+  "accepts": {
+    "image_base64": "string",
+    "output_path": {
+      "type": "string",
+      "optional": true
+    }
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "pdf-lib-draw-table-beta",
+      "pdf-lib"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate inputs, decode base64 image, and set output file path.",
+      "fails_if": "Missing image_base64 input or it is not a valid base64 string.",
+      "code": "const { writeFileSync } = await import('node:fs');\nif (!input || typeof input.image_base64 !== 'string') {\n  throw new Error('Required input \"image_base64\" missing or not a string');\n}\nglobalThis.imageBase64 = input.image_base64;\nglobalThis.outputPath = input.output_path || '/tmp/img2pdf_output.pdf';"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Create a PDF, embed the decoded PNG image, and write the PDF to disk.",
+      "fails_if": "PDF creation or file write fails, or image data cannot be embedded.",
+      "code": "const { PDFDocument } = (await import('pdf-lib')).default || await import('pdf-lib');\nconst pdfLibDrawTable = (await import('pdf-lib-draw-table-beta')).default || await import('pdf-lib-draw-table-beta');\nconst { writeFileSync } = await import('node:fs');\nconst imgBytes = Buffer.from(globalThis.imageBase64, 'base64');\nconst pdfDoc = await PDFDocument.create();\nlet img;\ntry {\n  img = await pdfDoc.embedPng(imgBytes);\n} catch (e) {\n  // If not a PNG, try JPEG\n  img = await pdfDoc.embedJpg(imgBytes);\n}\nconst { width, height } = img.scale(1);\nconst page = pdfDoc.addPage([width, height]);\npage.drawImage(img, { x: 0, y: 0, width, height });\nconst pdfBytes = await pdfDoc.save();\nwriteFileSync(globalThis.outputPath, pdfBytes);\nglobalThis.pdfPath = globalThis.outputPath;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Output a JSON object containing the path to the generated PDF.",
+      "fails_if": "JSON serialization fails or pdf_path is undefined.",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

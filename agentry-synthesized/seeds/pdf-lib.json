@@ -1,0 +1,46 @@
+{
+  "id": "pdf-lib",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "pdf-lib",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/pdf-lib.mjs",
+  "accepts": {
+    "image_path": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "pdf-lib"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that the input image file exists and set up output path",
+      "fails_if": "Input image file does not exist",
+      "code": "const { existsSync } = await import('node:fs');\nif (!existsSync(globalThis.input.image_path)) {\n  throw new Error('Input image file does not exist');\n}\nglobalThis.imagePath = globalThis.input.image_path;\nglobalThis.outputPath = '/tmp/out.pdf';"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Create a PDF containing the image and write it to disk",
+      "fails_if": "PDF creation or file write fails",
+      "code": "const { readFileSync, writeFileSync } = await import('node:fs');\nconst { PDFDocument } = await import('pdf-lib');\nconst imageBytes = readFileSync(globalThis.imagePath);\nconst pdfDoc = await PDFDocument.create();\nconst pngImage = await pdfDoc.embedPng(imageBytes);\nconst page = pdfDoc.addPage();\nconst { width, height } = page.getSize();\npage.drawImage(pngImage, { x: 0, y: 0, width, height });\nconst pdfBytes = await pdfDoc.save();\nwriteFileSync(globalThis.outputPath, pdfBytes);\nglobalThis.pdfPath = globalThis.outputPath;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Output the path to the generated PDF as JSON",
+      "fails_if": "JSON serialization fails",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

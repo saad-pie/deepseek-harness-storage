@@ -1,0 +1,46 @@
+{
+  "id": "adnsistemas_placeholder-pdf-lib",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "adnsistemas_placeholder-pdf-lib",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/adnsistemas_placeholder-pdf-lib.mjs",
+  "accepts": {
+    "image_path": "string"
+  },
+  "produces": {
+    "pdf_base64": "string"
+  },
+  "requires": {
+    "npm": [],
+    "pip": [
+      "img2pdf"
+    ],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that IMAGE_PATH env var is provided and points to an existing file, then store the path for later steps.",
+      "fails_if": "IMAGE_PATH is missing or the file does not exist",
+      "code": "import os, sys\\nimage_path = os.getenv('IMAGE_PATH')\\nif not image_path:\\n    raise ValueError('Missing IMAGE_PATH env var')\\nif not os.path.isfile(image_path):\\n    raise FileNotFoundError(f'Image file not found: {image_path}')\\nglobals()['image_path'] = image_path"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Convert the image at the stored path to a PDF using img2pdf and encode the result as base64.",
+      "fails_if": "img2pdf conversion throws or base64 encoding fails",
+      "code": "import img2pdf, base64, os\\npath = globals().get('image_path')\\npdf_bytes = img2pdf.convert(path)\\npdf_b64 = base64.b64encode(pdf_bytes).decode('utf-8')\\nglobals()['pdf_b64'] = pdf_b64"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Print a single JSON object containing the base64‑encoded PDF to stdout.",
+      "fails_if": "The JSON cannot be printed or pdf_b64 is undefined",
+      "code": "import json, sys\\npdf_b64 = globals().get('pdf_b64')\\nprint(json.dumps({'pdf_base64': pdf_b64}))"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

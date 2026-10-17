@@ -1,0 +1,47 @@
+{
+  "id": "signpdf_placeholder-pdf-lib",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "signpdf_placeholder-pdf-lib",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/signpdf_placeholder-pdf-lib.mjs",
+  "accepts": {
+    "image_path": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "@signpdf/placeholder-pdf-lib",
+      "pdf-lib"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the image path input and set up output location.",
+      "fails_if": "IMAGE_PATH env var missing or file does not exist",
+      "code": "const { existsSync } = await import('node:fs');\nconst imagePath = process.env.IMAGE_PATH;\nif (!imagePath) { throw new Error('Missing IMAGE_PATH env var'); }\nif (!existsSync(imagePath)) { throw new Error('Image file not found at ' + imagePath); }\nglobalThis.imagePath = imagePath;\nglobalThis.pdfPath = '/tmp/output.pdf';"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Create a PDF embedding the PNG image and write it to disk.",
+      "fails_if": "PDF creation or file write fails",
+      "code": "const { PDFDocument } = await import('pdf-lib');\nconst { readFileSync, writeFileSync } = await import('node:fs');\nconst imgBytes = readFileSync(globalThis.imagePath);\nconst pdfDoc = await PDFDocument.create();\nconst pngImage = await pdfDoc.embedPng(imgBytes);\nconst pngDims = pngImage.scale(1);\nconst page = pdfDoc.addPage([pngDims.width, pngDims.height]);\npage.drawImage(pngImage, { x: 0, y: 0, width: pngDims.width, height: pngDims.height });\nconst pdfBytes = await pdfDoc.save();\nwriteFileSync(globalThis.pdfPath, pdfBytes);\nglobalThis.resultPath = globalThis.pdfPath;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit the path of the generated PDF as JSON.",
+      "fails_if": "JSON output is malformed or pdf_path is undefined",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.resultPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

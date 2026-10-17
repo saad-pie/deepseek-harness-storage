@@ -1,0 +1,47 @@
+{
+  "id": "pdf-lib-incremental-save",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "pdf-lib-incremental-save",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/pdf-lib-incremental-save.mjs",
+  "accepts": {
+    "image_path": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "pdf-lib",
+      "pdf-lib-incremental-save"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that an image_path input is provided and store it for later steps",
+      "fails_if": "input missing or image_path not supplied",
+      "code": "const { readFileSync } = await import('node:fs');\nif (!globalThis.input || typeof globalThis.input.image_path !== 'string') {\n  throw new Error('Missing required input: image_path');\n}\nglobalThis.imagePath = globalThis.input.image_path;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Create a PDF containing the supplied image and write it to a temporary file",
+      "fails_if": "reading the image, creating the PDF, or writing the file throws",
+      "code": "const { readFileSync, writeFileSync } = await import('node:fs');\nconst { PDFDocument } = await import('pdf-lib');\nconst imgBytes = readFileSync(globalThis.imagePath);\nconst pdfDoc = await PDFDocument.create();\nlet img;\nif (globalThis.imagePath.toLowerCase().endsWith('.png')) {\n  img = await pdfDoc.embedPng(imgBytes);\n} else {\n  img = await pdfDoc.embedJpg(imgBytes);\n}\nconst page = pdfDoc.addPage([img.width, img.height]);\npage.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });\nconst pdfBytes = await pdfDoc.save();\nconst outPath = '/tmp/output.pdf';\nwriteFileSync(outPath, pdfBytes);\nglobalThis.pdfPath = outPath;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object with the path to the generated PDF",
+      "fails_if": "JSON serialization fails or pdf_path is undefined",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

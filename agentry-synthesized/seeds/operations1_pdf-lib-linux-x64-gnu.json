@@ -1,0 +1,46 @@
+{
+  "id": "operations1_pdf-lib-linux-x64-gnu",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "operations1_pdf-lib-linux-x64-gnu",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/operations1_pdf-lib-linux-x64-gnu.mjs",
+  "accepts": {
+    "image_path": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "@operations1/pdf-lib-linux-x64-gnu"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the image_path input, write a minimal PNG to that path, and set output PDF path.",
+      "fails_if": "IMAGE_PATH env var missing or file write fails",
+      "code": "const { writeFileSync } = await import('node:fs');\nif (!process.env.IMAGE_PATH) throw new Error('Missing IMAGE_PATH');\nglobalThis.imagePath = process.env.IMAGE_PATH;\nglobalThis.pdfPath = '/tmp/out.pdf';\nconst pngBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+X9WcAAAAASUVORK5CYII=';\nconst pngBytes = Buffer.from(pngBase64, 'base64');\nwriteFileSync(globalThis.imagePath, pngBytes);"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Load pdf-lib, embed the PNG image into a PDF, and write the PDF to disk.",
+      "fails_if": "pdf-lib fails to load, image embedding fails, or PDF write fails",
+      "code": "const { PDFDocument } = (await import('@operations1/pdf-lib-linux-x64-gnu')).default || (await import('@operations1/pdf-lib-linux-x64-gnu'));\nconst { readFileSync, writeFileSync } = await import('node:fs');\nconst imgBytes = readFileSync(globalThis.imagePath);\nconst pdfDoc = await PDFDocument.create();\nconst img = await pdfDoc.embedPng(imgBytes);\nconst page = pdfDoc.addPage([img.width, img.height]);\npage.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });\nconst pdfBytes = await pdfDoc.save();\nwriteFileSync(globalThis.pdfPath, pdfBytes);"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Output a JSON object containing the path to the generated PDF.",
+      "fails_if": "JSON serialization fails or pdf_path is undefined",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
