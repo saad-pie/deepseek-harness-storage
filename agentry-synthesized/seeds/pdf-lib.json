@@ -8,7 +8,7 @@
     "image_path": "string"
   },
   "produces": {
-    "pdf_base64": "string"
+    "pdf_path": "string"
   },
   "requires": {
     "npm": [
@@ -22,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that the provided image_path exists and read the image file into memory",
-      "fails_if": "image_path is missing or the file does not exist",
-      "code": "const { existsSync, readFileSync } = await import('node:fs');\nif (!input.image_path) throw new Error('Missing required input: image_path');\nif (!existsSync(input.image_path)) throw new Error(`Image file not found at ${input.image_path}`);\nglobalThis.imageBuffer = readFileSync(input.image_path);"
+      "what": "Validate the image path and set up output path",
+      "fails_if": "Missing image_path or file does not exist",
+      "code": "const {statSync}=await import('node:fs');const {join}=await import('node:path');const {tmpdir}=await import('node:os');const imagePath=globalThis.input.image_path;if(!imagePath)throw new Error('Missing image_path');try{statSync(imagePath);}catch(e){throw new Error('Image file not found');}globalThis.imagePath=imagePath;globalThis.outputPath=join(tmpdir(),'out.pdf');"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Create a PDF, embed the PNG image, add a page sized to the image, and serialize the PDF to bytes",
-      "fails_if": "pdf-lib fails to embed the image or save the PDF",
-      "code": "const mod = await import('pdf-lib');\nconst pdfLib = mod.default || mod;\nconst { PDFDocument } = pdfLib;\nconst pdfDoc = await PDFDocument.create();\nconst img = await pdfDoc.embedPng(globalThis.imageBuffer);\nconst { width, height } = img;\nconst page = pdfDoc.addPage([width, height]);\npage.drawImage(img, { x: 0, y: 0, width, height });\nglobalThis.pdfBytes = await pdfDoc.save();"
+      "what": "Create a PDF with the image embedded",
+      "fails_if": "Any PDF creation or file write error",
+      "code": "const {PDFDocument}=await import('pdf-lib');const {readFileSync,writeFileSync}=await import('node:fs');const imageBytes=readFileSync(globalThis.imagePath);const pdfDoc=await PDFDocument.create();const pngImage=await pdfDoc.embedPng(imageBytes);const page=pdfDoc.addPage();const {width,height}=page.getSize();const pngDims=pngImage.scale(1);page.drawImage(pngImage,{x:0,y:0,width:pngDims.width,height:pngDims.height});const pdfBytes=await pdfDoc.save();writeFileSync(globalThis.outputPath,pdfBytes);globalThis.pdfPath=globalThis.outputPath;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Encode the PDF bytes as base64 and output a single JSON object with the pdf_base64 field",
-      "fails_if": "JSON output is malformed or pdf_base64 is undefined",
-      "code": "const { Buffer } = await import('node:buffer');\nconst base64 = Buffer.from(globalThis.pdfBytes).toString('base64');\nconsole.log(JSON.stringify({ pdf_base64: base64 }));"
+      "what": "Output the path of the generated PDF as JSON",
+      "fails_if": "JSON serialization error",
+      "code": "console.log(JSON.stringify({pdf_path:globalThis.pdfPath}));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

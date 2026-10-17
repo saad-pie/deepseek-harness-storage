@@ -23,23 +23,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate the input PDF path and set the output path for the placeholder‑augmented PDF",
-      "fails_if": "The PDF_PATH environment variable is missing or the file does not exist",
-      "code": "const { existsSync } = await import('node:fs');\nconst input = process.env.PDF_PATH;\nif (!input) throw new Error('Missing PDF_PATH');\nif (!existsSync(input)) throw new Error('Input PDF not found');\nglobalThis.pdfPath = input;\nglobalThis.outPath = input.replace(/\\.pdf$/i, '_placeholder.pdf');"
+      "what": "Validate that the provided PDF file exists and store its path for later steps",
+      "fails_if": "The pdf_path environment variable is missing or the file does not exist",
+      "code": "const { existsSync } = await import('node:fs');\nconst pdfPath = process.env.PDF_PATH;\nif (!pdfPath || !existsSync(pdfPath)) { throw new Error('Missing or invalid pdf_path'); }\nglobalThis.pdfPath = pdfPath;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Load the PDF, add a signature placeholder using @signpdf/placeholder-pdf-lib, and write the new PDF",
+      "what": "Load the PDF, add a signature placeholder using the placeholder‑pdf‑lib, and write the modified PDF to a temporary file",
       "fails_if": "Loading the PDF, adding the placeholder, or writing the output fails",
-      "code": "const { PDFDocument } = await import('pdf-lib');\nconst { pdflibAddPlaceholder } = await import('@signpdf/placeholder-pdf-lib');\nconst { promises: fsPromises } = await import('node:fs');\nconst data = await fsPromises.readFile(globalThis.pdfPath);\nconst pdfDoc = await PDFDocument.load(data);\nawait pdflibAddPlaceholder({ pdfDoc });\nconst newPdfBytes = await pdfDoc.save();\nawait fsPromises.writeFile(globalThis.outPath, newPdfBytes);"
+      "code": "const { PDFDocument } = await import('pdf-lib');\nconst { pdflibAddPlaceholder } = await import('@signpdf/placeholder-pdf-lib');\nconst { readFile, writeFile } = await import('node:fs').then(m => m.promises);\nconst existingBytes = await readFile(globalThis.pdfPath);\nconst pdfDoc = await PDFDocument.load(existingBytes);\nawait pdflibAddPlaceholder({ pdfDoc });\nconst pdfBytes = await pdfDoc.save();\nconst outPath = '/tmp/output.pdf';\nawait writeFile(outPath, pdfBytes);\nglobalThis.outputPath = outPath;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a JSON object containing the path of the generated PDF",
-      "fails_if": "The JSON cannot be stringified or the output_path is undefined",
-      "code": "console.log(JSON.stringify({ output_path: globalThis.outPath }));"
+      "what": "Emit a JSON object containing the path to the generated PDF",
+      "fails_if": "JSON serialization fails or output_path is undefined",
+      "code": "console.log(JSON.stringify({ output_path: globalThis.outputPath }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

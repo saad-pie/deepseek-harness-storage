@@ -6,28 +6,27 @@
 const CAP_ID = "adnsistemas_placeholder-pdf-lib";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "pdf_path": "string",
-  "output_path": "string"
+  "image_path": "string"
 };
 const PRODUCES = {
-  "output_path": "string"
+  "pdf_base64": "string"
 };
 const REQUIRES = {
   "npm": [
     "@adnsistemas/placeholder-pdf-lib"
   ],
   "pip": [],
-  "post_install": null,
+  "post_install": "npm i pdf-lib",
   "capability": []
 };
 const ENV_MAP = {};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "output_path": "output_path"
+  "pdf_base64": "pdf_base64"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate inputs and store paths in global state for later steps.\n  // fails_if: Missing pdf_path or output_path in the provided input object.\n  // BEGIN prepare\n  const { pdf_path, output_path } = input;\n  if (!pdf_path || !output_path) { throw new Error('Missing required inputs'); }\n  globalThis.pdfPath = pdf_path;\n  globalThis.outPath = output_path;\n  // END prepare\n\n  // -- step 2: execute --\n  // what: Copy the source PDF to the destination path (placeholder for real image‑to‑PDF conversion).\n  // fails_if: File read/write errors or unexpected exceptions during the copy operation.\n  // BEGIN execute\n  const { readFileSync, writeFileSync } = await import('node:fs');\n  const data = readFileSync(globalThis.pdfPath);\n  writeFileSync(globalThis.outPath, data);\n  // Load placeholder‑pdf‑lib to satisfy the declared dependency (no actual use here)\n  const placeholderMod = await import('@adnsistemas/placeholder-pdf-lib');\n  const placeholderFn = placeholderMod.default || placeholderMod;\n  // No further action; the library is imported to ensure it is available.\n  // END execute\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the path of the produced PDF.\n  // fails_if: The output_path variable is undefined or console.log fails.\n  // BEGIN emit\n  console.log(JSON.stringify({ output_path: globalThis.outPath }));\n  // END emit\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that the provided image_path exists and read its bytes into memory.\n  // fails_if: input missing, image_path missing, or file does not exist\n  { // scope for step 1\n    // BEGIN prepare\n    const { existsSync, readFileSync } = await import('node:fs');\n    if (!globalThis.input || typeof globalThis.input.image_path !== 'string') { throw new Error('Missing required input: image_path'); }\n    if (!existsSync(globalThis.input.image_path)) { throw new Error('Image file not found at ' + globalThis.input.image_path); }\n    globalThis.imagePath = globalThis.input.image_path;\n    globalThis.imageData = readFileSync(globalThis.imagePath);\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Create a PDF, embed the image, and serialize the PDF to a base64 string.\n  // fails_if: pdf-lib fails to load, image format unsupported, or PDF generation throws\n  { // scope for step 2\n    // BEGIN execute\n    const pdfLibMod = await import('pdf-lib');\n    const { PDFDocument } = pdfLibMod.default || pdfLibMod;\n    const imgBytes = globalThis.imageData;\n    const pdfDoc = await PDFDocument.create();\n    let img;\n    if (imgBytes[0] === 0x89) {\n      img = await pdfDoc.embedPng(imgBytes);\n    } else {\n      img = await pdfDoc.embedJpg(imgBytes);\n    }\n    const page = pdfDoc.addPage([img.width, img.height]);\n    page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });\n    const pdfBytes = await pdfDoc.save();\n    globalThis.pdfBase64 = Buffer.from(pdfBytes).toString('base64');\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the base64‑encoded PDF to stdout.\n  // fails_if: the pdf_base64 field is undefined or JSON serialization fails\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -44,16 +43,16 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/input.pdf":"%PDF-1.4\\n%âãÏÓ\\n1 0 obj\\n<< /Type /Catalog /Pages 2 0 R >>\\nendobj\\n2 0 obj\\n<< /Type /Pages /Count 0 >>\\nendobj\\ntrailer\\n<< /Root 1 0 R >>\\n%%EOF"};
+  const FIXTURES = {"/tmp/sample.png":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK6cAAAAASUVORK5CYII="};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
-      try { fs.mkdirSync(path.dirname(fp), { recursive: true }); fs.writeFileSync(fp, String(content)); } catch (e) {}
+      try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"pdf_path":"/tmp/input.pdf","output_path":"/tmp/output.pdf"}, deps, { session });
+  const probe = await run({"image_path":"/tmp/sample.png"}, deps, { session });
   const out = probe.output || probe;
-  const minBytes = 0;
+  const minBytes = 500;
   if (minBytes > 0) {
     const size = typeof out.bytes === "number" ? out.bytes : 0;
     if (size < minBytes) {

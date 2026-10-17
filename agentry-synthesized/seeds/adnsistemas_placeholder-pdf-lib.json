@@ -5,41 +5,40 @@
   "handler": "adnsistemas_placeholder-pdf-lib",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/adnsistemas_placeholder-pdf-lib.mjs",
   "accepts": {
-    "pdf_path": "string",
-    "output_path": "string"
+    "image_path": "string"
   },
   "produces": {
-    "output_path": "string"
+    "pdf_base64": "string"
   },
   "requires": {
     "npm": [
       "@adnsistemas/placeholder-pdf-lib"
     ],
     "pip": [],
-    "post_install": null,
+    "post_install": "npm i pdf-lib",
     "capability": []
   },
   "plan": [
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate inputs and store paths in global state for later steps.",
-      "fails_if": "Missing pdf_path or output_path in the provided input object.",
-      "code": "const { pdf_path, output_path } = input;\\nif (!pdf_path || !output_path) { throw new Error('Missing required inputs'); }\\nglobalThis.pdfPath = pdf_path;\\nglobalThis.outPath = output_path;"
+      "what": "Validate that the provided image_path exists and read its bytes into memory.",
+      "fails_if": "input missing, image_path missing, or file does not exist",
+      "code": "const { existsSync, readFileSync } = await import('node:fs');\nif (!globalThis.input || typeof globalThis.input.image_path !== 'string') { throw new Error('Missing required input: image_path'); }\nif (!existsSync(globalThis.input.image_path)) { throw new Error('Image file not found at ' + globalThis.input.image_path); }\nglobalThis.imagePath = globalThis.input.image_path;\nglobalThis.imageData = readFileSync(globalThis.imagePath);\n"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Copy the source PDF to the destination path (placeholder for real image‑to‑PDF conversion).",
-      "fails_if": "File read/write errors or unexpected exceptions during the copy operation.",
-      "code": "const { readFileSync, writeFileSync } = await import('node:fs');\\nconst data = readFileSync(globalThis.pdfPath);\\nwriteFileSync(globalThis.outPath, data);\\n// Load placeholder‑pdf‑lib to satisfy the declared dependency (no actual use here)\\nconst placeholderMod = await import('@adnsistemas/placeholder-pdf-lib');\\nconst placeholderFn = placeholderMod.default || placeholderMod;\\n// No further action; the library is imported to ensure it is available."
+      "what": "Create a PDF, embed the image, and serialize the PDF to a base64 string.",
+      "fails_if": "pdf-lib fails to load, image format unsupported, or PDF generation throws",
+      "code": "const pdfLibMod = await import('pdf-lib');\nconst { PDFDocument } = pdfLibMod.default || pdfLibMod;\nconst imgBytes = globalThis.imageData;\nconst pdfDoc = await PDFDocument.create();\nlet img;\nif (imgBytes[0] === 0x89) {\n  img = await pdfDoc.embedPng(imgBytes);\n} else {\n  img = await pdfDoc.embedJpg(imgBytes);\n}\nconst page = pdfDoc.addPage([img.width, img.height]);\npage.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });\nconst pdfBytes = await pdfDoc.save();\nglobalThis.pdfBase64 = Buffer.from(pdfBytes).toString('base64');\n"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a JSON object containing the path of the produced PDF.",
-      "fails_if": "The output_path variable is undefined or console.log fails.",
-      "code": "console.log(JSON.stringify({ output_path: globalThis.outPath }));"
+      "what": "Write a single JSON object containing the base64‑encoded PDF to stdout.",
+      "fails_if": "the pdf_base64 field is undefined or JSON serialization fails",
+      "code": "console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));\n"
     }
   ],
   "source": "synthesized:agentry.synthesize",

@@ -1,0 +1,47 @@
+{
+  "id": "artdotstyle_filepix",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "artdotstyle_filepix",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/artdotstyle_filepix.mjs",
+  "accepts": {
+    "image_path": "string",
+    "pdf_path": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "@artdotstyle/filepix"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate inputs, store paths, and write a tiny PNG fixture to the supplied image path.",
+      "fails_if": "Missing required input keys or failure to write the fixture file.",
+      "code": "globalThis.imagePath = input.image_path;\nglobalThis.pdfPath = input.pdf_path;\nconst { writeFileSync } = await import('node:fs');\nconst imgBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+X9ZcAAAAASUVORK5CYII=';\nwriteFileSync(globalThis.imagePath, Buffer.from(imgBase64, 'base64'));\n"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Load @artdotstyle/filepix and invoke its conversion function to turn the PNG into a PDF at the target path.",
+      "fails_if": "The module fails to load or the conversion function throws/rejects.",
+      "code": "const mod = await import('@artdotstyle/filepix');\nconst fn = mod.default || mod;\nawait fn(globalThis.imagePath, globalThis.pdfPath);\n"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Read the generated PDF to confirm it exists and emit a JSON object containing the PDF path.",
+      "fails_if": "The PDF file cannot be read or the emitted JSON is malformed.",
+      "code": "const { readFileSync } = await import('node:fs');\nreadFileSync(globalThis.pdfPath);\nconsole.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));\n"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

@@ -1,0 +1,48 @@
+{
+  "id": "vijayhardaha_video2pdf",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "vijayhardaha_video2pdf",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/vijayhardaha_video2pdf.mjs",
+  "accepts": {
+    "video_path": "string",
+    "fps": "number"
+  },
+  "produces": {
+    "pdf_path": "string",
+    "frame_count": "number"
+  },
+  "requires": {
+    "npm": [
+      "@vijayhardaha/video2pdf"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the video file exists and has a supported extension, and ensure the FPS value is a positive number.",
+      "fails_if": "The video file does not exist, has an invalid extension, or the FPS is not a positive number.",
+      "code": "const fs = await import('node:fs');\nconst path = await import('node:path');\nconst videoPath = globalThis.input_video_path;\nconst fps = globalThis.input_fps;\n\nif (!videoPath) throw new Error('video_path is required');\nif (typeof fps !== 'number' || fps <= 0) throw new Error('fps must be a positive number');\n\nif (!fs.existsSync(videoPath)) throw new Error(`Video file not found: ${videoPath}`);\n\nconst ext = path.extname(videoPath).toLowerCase();\nconst validExts = ['.mp4', '.mov', '.avi', '.mkv', '.webm'];\nif (!validExts.includes(ext)) throw new Error(`Unsupported video extension: ${ext}`);\n\nglobalThis.validatedVideoPath = videoPath;\nglobalThis.validatedFps = fps;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Invoke the video2pdf CLI to extract frames and generate the PDF.",
+      "fails_if": "The CLI command fails, times out, or produces no output.",
+      "code": "const { execSync } = await import('node:child_process');\nconst path = await import('node:path');\nconst fs = await import('node:fs');\n\nconst videoPath = globalThis.validatedVideoPath;\nconst fps = globalThis.validatedFps;\n\nconst baseName = path.basename(videoPath, path.extname(videoPath));\nconst slugified = baseName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');\nconst outputDir = path.join(process.cwd(), `v2p-${slugified}`);\n\ntry {\n  execSync(`video2pdf \"${videoPath}\" -f ${fps}`, { stdio: 'pipe', timeout: 300000 });\n} catch (e) {\n  throw new Error(`video2pdf execution failed: ${e.message}`);\n}\n\nif (!fs.existsSync(outputDir)) throw new Error(`Output directory not found: ${outputDir}`);\n\nconst pdfPath = path.join(outputDir, 'combined-images.pdf');\nif (!fs.existsSync(pdfPath)) throw new Error(`PDF file not found: ${pdfPath}`);\n\nconst files = fs.readdirSync(outputDir);\nconst frameCount = files.filter(f => f.endsWith('.png')).length;\n\nglobalThis.pdfPath = pdfPath;\nglobalThis.frameCount = frameCount;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write the result JSON to stdout.",
+      "fails_if": "The JSON is malformed or a field is undefined.",
+      "code": "const result = {\n  pdf_path: globalThis.pdfPath,\n  frame_count: globalThis.frameCount\n};\nconsole.log(JSON.stringify(result));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

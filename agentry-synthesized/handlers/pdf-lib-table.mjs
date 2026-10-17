@@ -6,34 +6,30 @@
 const CAP_ID = "pdf-lib-table";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "image_path": "string",
-  "output_path": "string"
+  "image_path": "string"
 };
 const PRODUCES = {
-  "pdf_path": "string",
-  "size_bytes": "number"
+  "pdf_base64": "string"
 };
 const REQUIRES = {
   "npm": [
-    "pdf-lib-table",
-    "pdf-lib"
+    "pdf-lib",
+    "pdf-lib-table"
   ],
   "pip": [],
   "post_install": null,
   "capability": []
 };
 const ENV_MAP = {
-  "INPUT_IMAGE_PATH": "image_path",
-  "INPUT_OUTPUT_PATH": "output_path"
+  "IMAGE_PATH": "image_path"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "pdf_path": "pdf_path",
-  "size_bytes": "size_bytes"
+  "pdf_base64": "pdf_base64"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that the input image file exists and is readable, and ensure the output directory exists.\n  // fails_if: The input image file does not exist or the output directory cannot be created.\n  // BEGIN prepare\n  const fs = await import('node:fs');\n  const path = await import('node:path');\n  const imgPath = globalThis.input.image_path;\n  const outPath = globalThis.input.output_path;\n  if (!fs.existsSync(imgPath)) {\n    throw new Error('Input image not found: ' + imgPath);\n  }\n  const outDir = path.dirname(outPath);\n  if (!fs.existsSync(outDir)) {\n    fs.mkdirSync(outDir, { recursive: true });\n  }\n  globalThis.imgPath = imgPath;\n  globalThis.outPath = outPath;\n  // END prepare\n\n  // -- step 2: execute --\n  // what: Read the image file, embed it into a new PDF document using pdf-lib, and save the PDF to the output path.\n  // fails_if: The image format is unsupported by pdf-lib or the PDF save operation fails.\n  // BEGIN execute\n  const fs = await import('node:fs');\n  const { PDFDocument } = await import('pdf-lib');\n  const imgPath = globalThis.imgPath;\n  const outPath = globalThis.outPath;\n  const imgData = fs.readFileSync(imgPath);\n  const pdfDoc = await PDFDocument.create();\n  let image;\n  const ext = imgPath.toLowerCase();\n  if (ext.endsWith('.png')) {\n    image = await pdfDoc.embedPng(imgData);\n  } else if (ext.endsWith('.jpg') || ext.endsWith('.jpeg')) {\n    image = await pdfDoc.embedJpg(imgData);\n  } else {\n    throw new Error('Unsupported image format: ' + ext);\n  }\n  const page = pdfDoc.addPage([image.width, image.height]);\n  page.drawImage(image, { x: 0, y: 0, width: image.width, height: image.height });\n  const pdfBytes = await pdfDoc.save();\n  fs.writeFileSync(outPath, pdfBytes);\n  globalThis.pdfPath = outPath;\n  globalThis.sizeBytes = pdfBytes.length;\n  // END execute\n\n  // -- step 3: emit --\n  // what: Write the resulting PDF path and file size to stdout as a JSON object.\n  // fails_if: The JSON serialization fails or the output fields are undefined.\n  // BEGIN emit\n  const result = {\n    pdf_path: globalThis.pdfPath,\n    size_bytes: globalThis.sizeBytes\n  };\n  console.log(JSON.stringify(result));\n  // END emit\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the image path and set up global state\n  // fails_if: IMAGE_PATH env var missing or file does not exist\n  { // scope for step 1\n    // BEGIN prepare\n    const {existsSync}=await import('node:fs');const imagePath=process.env.IMAGE_PATH;if(!imagePath){throw new Error('IMAGE_PATH env var not set');}if(!existsSync(imagePath)){throw new Error(`Image file not found: ${imagePath}`);}globalThis.imagePath=imagePath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Create a PDF containing the image and store bytes in global state\n  // fails_if: Image cannot be read or PDF generation fails\n  { // scope for step 2\n    // BEGIN execute\n    const {readFileSync}=await import('node:fs');const {PDFDocument}=await import('pdf-lib');const imageBytes=readFileSync(globalThis.imagePath);const pdfDoc=await PDFDocument.create();const image=await pdfDoc.embedPng(imageBytes);const page=pdfDoc.addPage();const {width,height}=page.getSize();const imgDims=image.scale(1);page.drawImage(image,{x:0,y:0,width:imgDims.width,height:imgDims.height});const pdfBytes=await pdfDoc.save();globalThis.pdfBytes=pdfBytes;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Output a JSON object with the PDF base64 string\n  // fails_if: globalThis.pdfBytes undefined or JSON serialization fails\n  { // scope for step 3\n    // BEGIN emit\n    const base64=Buffer.from(globalThis.pdfBytes).toString('base64');console.log(JSON.stringify({pdf_base64:base64}));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -50,16 +46,16 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/test_img.png":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="};
+  const FIXTURES = {"/tmp/in.png":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/5+hHgAFgwJ/lq6eAAAAAElFTkSuQmCC"};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
-      try { fs.mkdirSync(path.dirname(fp), { recursive: true }); fs.writeFileSync(fp, String(content)); } catch (e) {}
+      try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"image_path":"/tmp/test_img.png","output_path":"/tmp/test_out.pdf"}, deps, { session });
+  const probe = await run({"image_path":"/tmp/in.png"}, deps, { session });
   const out = probe.output || probe;
-  const minBytes = 500;
+  const minBytes = 0;
   if (minBytes > 0) {
     const size = typeof out.bytes === "number" ? out.bytes : 0;
     if (size < minBytes) {

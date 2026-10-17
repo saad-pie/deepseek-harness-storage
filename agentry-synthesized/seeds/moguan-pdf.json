@@ -1,0 +1,46 @@
+{
+  "id": "moguan-pdf",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "moguan-pdf",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/moguan-pdf.mjs",
+  "accepts": {
+    "image_path": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "moguan-pdf"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the input image path, ensure it exists, and set the output PDF path.",
+      "fails_if": "IMG_PATH env var missing or the file is not readable",
+      "code": "const { accessSync, constants } = await import('node:fs');\nconst imgPath = process.env.IMG_PATH;\nif (!imgPath) throw new Error('IMG_PATH not set');\ntry { accessSync(imgPath, constants.R_OK); } catch { throw new Error('Image file not accessible'); }\nglobalThis.imgPath = imgPath;\nglobalThis.outPath = '/tmp/out.pdf';"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Run moguan-pdf's img2pdf command to convert the image to a PDF file.",
+      "fails_if": "The moguan-pdf process exits with an error",
+      "code": "const { execFile } = await import('node:child_process');\nconst args = ['node_modules/moguan-pdf/dist/index.mjs', 'img2pdf', globalThis.imgPath, '-o', globalThis.outPath];\nawait new Promise((resolve, reject) => {\n  execFile('node', args, (error, stdout, stderr) => {\n    if (error) reject(error);\n    else resolve();\n  });\n});"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the path to the generated PDF.",
+      "fails_if": "The JSON cannot be stringified or pdf_path is undefined",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.outPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

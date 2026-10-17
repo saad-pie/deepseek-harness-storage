@@ -1,0 +1,50 @@
+{
+  "id": "slice2pdf",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "slice2pdf",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/slice2pdf.mjs",
+  "accepts": {
+    "image_path": "string",
+    "output_path": {
+      "type": "string",
+      "optional": true
+    }
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "slice2pdf"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the image_path input, ensure the file exists, and determine the output PDF path.",
+      "fails_if": "image_path missing, file does not exist, or filesystem check throws.",
+      "code": "const { existsSync } = await import('node:fs');\nconst imagePath = process.env.IMAGE_PATH;\nif (!imagePath) throw new Error('Missing required input: image_path');\nif (!existsSync(imagePath)) throw new Error(`Image file not found at ${imagePath}`);\nlet outputPath = process.env.OUTPUT_PATH;\nif (!outputPath) {\n  outputPath = imagePath.replace(/\\.[^.]+$/, '.pdf');\n}\nglobalThis.imagePath = imagePath;\nglobalThis.outputPath = outputPath;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Invoke slice2pdf to convert the image file to a PDF at the determined output path.",
+      "fails_if": "slice2pdf throws or returns a rejected promise.",
+      "code": "const mod = await import('slice2pdf');\nconst fn = mod.default || mod;\nawait fn(globalThis.imagePath, globalThis.outputPath);"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a JSON object containing the path of the generated PDF to stdout.",
+      "fails_if": "JSON serialization fails or pdf_path is undefined.",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.outputPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

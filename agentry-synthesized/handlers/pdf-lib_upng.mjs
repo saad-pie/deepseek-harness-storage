@@ -6,10 +6,12 @@
 const CAP_ID = "pdf-lib_upng";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "png_base64": "string"
+  "image_path": "string",
+  "output_path": "string"
 };
 const PRODUCES = {
-  "pdf_base64": "string"
+  "pdf_path": "string",
+  "page_count": "number"
 };
 const REQUIRES = {
   "npm": [
@@ -20,14 +22,18 @@ const REQUIRES = {
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {};
+const ENV_MAP = {
+  "INPUT_PATH": "image_path",
+  "OUTPUT_PATH": "output_path"
+};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "pdf_base64": "pdf_base64"
+  "pdf_path": "pdf_path",
+  "page_count": "page_count"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the base64 PNG input and decode it to a Uint8Array stored in global state.\n  // fails_if: Missing png_base64 input or base64 decoding fails.\n  // BEGIN prepare\n  const { Buffer } = await import('node:buffer');\n  if (!globalThis.input || typeof globalThis.input.png_base64 !== 'string') {\n    throw new Error('Missing png_base64 input');\n  }\n  globalThis.pngBytes = Buffer.from(globalThis.input.png_base64, 'base64');\n  // END prepare\n\n  // -- step 2: execute --\n  // what: Create a PDF containing the PNG image using pdf-lib and store the PDF as a base64 string.\n  // fails_if: Any error while loading modules, embedding the PNG, or saving the PDF.\n  // BEGIN execute\n  const upngMod = await import('@pdf-lib/upng');\n  const upng = upngMod.default || upngMod;\n  const pdfLibMod = await import('pdf-lib');\n  const { PDFDocument } = pdfLibMod;\n  const pngBytes = globalThis.pngBytes;\n  const pdfDoc = await PDFDocument.create();\n  const pngImage = await pdfDoc.embedPng(pngBytes);\n  const page = pdfDoc.addPage([pngImage.width, pngImage.height]);\n  page.drawImage(pngImage, { x: 0, y: 0, width: pngImage.width, height: pngImage.height });\n  const pdfBytes = await pdfDoc.save();\n  const { Buffer } = await import('node:buffer');\n  globalThis.pdfBase64 = Buffer.from(pdfBytes).toString('base64');\n  // END execute\n\n  // -- step 3: emit --\n  // what: Write a single JSON object with the base64‑encoded PDF to stdout.\n  // fails_if: The pdfBase64 value is undefined or JSON serialization fails.\n  // BEGIN emit\n  console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));\n  // END emit\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Read the input image file and decode it into RGBA pixel data using @pdf-lib/upng.\n  // fails_if: The input file does not exist, is not a valid PNG, or decoding fails.\n  { // scope for step 1\n    // BEGIN prepare\n    const fs = await import('node:fs');\n    const path = await import('node:path');\n    const inputPath = process.env.INPUT_PATH;\n    const outputPath = process.env.OUTPUT_PATH;\n    if (!inputPath || !outputPath) throw new Error('Missing INPUT_PATH or OUTPUT_PATH');\n    if (!fs.existsSync(inputPath)) throw new Error('Input file not found: ' + inputPath);\n    const pngBuffer = fs.readFileSync(inputPath);\n    const mod = await import('@pdf-lib/upng');\n    const UPNG = mod.default || mod;\n    const img = UPNG.decode(pngBuffer);\n    const rgba = UPNG.toRGBA8(img)[0];\n    globalThis.width = img.width;\n    globalThis.height = img.height;\n    globalThis.rgba = rgba;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Create a PDF document and embed the decoded image as a PNG on a single page.\n  // fails_if: PDF creation fails or the image cannot be embedded.\n  { // scope for step 2\n    // BEGIN execute\n    const { PDFDocument } = await import('pdf-lib');\n    const pdfDoc = await PDFDocument.create();\n    const pngImage = await pdfDoc.embedPng(globalThis.rgba);\n    const page = pdfDoc.addPage([globalThis.width, globalThis.height]);\n    page.drawImage(pngImage, { x: 0, y: 0, width: globalThis.width, height: globalThis.height });\n    const pdfBytes = await pdfDoc.save();\n    globalThis.pdfBytes = pdfBytes;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write the generated PDF to the output path and emit the result JSON.\n  // fails_if: Writing the file fails or the output path is invalid.\n  { // scope for step 3\n    // BEGIN emit\n    const fs = await import('node:fs');\n    const outputPath = process.env.OUTPUT_PATH;\n    fs.writeFileSync(outputPath, globalThis.pdfBytes);\n    const result = { pdf_path: outputPath, page_count: 1 };\n    console.log(JSON.stringify(result));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -44,16 +50,16 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {};
+  const FIXTURES = {"/tmp/test.png":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==","/tmp/out.pdf":"JVBERi0xLjQKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0NvdW50IDAvS2lkc1tdPj4KZW5kb2JqCnhyZWYKMCAzCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAwOSAwMDAwMCBuIAowMDAwMDAwMDUyIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSAzL1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKMTAzCiUlRU9GCg=="};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
-      try { fs.mkdirSync(path.dirname(fp), { recursive: true }); fs.writeFileSync(fp, String(content)); } catch (e) {}
+      try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"png_base64":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+X6V8AAAAASUVORK5CYII="}, deps, { session });
+  const probe = await run({"image_path":"/tmp/test.png","output_path":"/tmp/out.pdf"}, deps, { session });
   const out = probe.output || probe;
-  const minBytes = 0;
+  const minBytes = 500;
   if (minBytes > 0) {
     const size = typeof out.bytes === "number" ? out.bytes : 0;
     if (size < minBytes) {

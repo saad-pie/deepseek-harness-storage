@@ -1,0 +1,50 @@
+{
+  "id": "dicepdf_cli",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "dicepdf_cli",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/dicepdf_cli.mjs",
+  "accepts": {
+    "image_path": "string",
+    "output_path": {
+      "type": "string",
+      "optional": true
+    }
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "@dicepdf/cli"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that the input image exists and set a default output path if none is provided.",
+      "fails_if": "image_path missing, file does not exist, or filesystem check fails",
+      "code": "const { existsSync } = await import('node:fs');\nif (!globalThis.image_path) { throw new Error('image_path input missing'); }\nif (!existsSync(globalThis.image_path)) { throw new Error('image file does not exist'); }\nif (!globalThis.output_path) { globalThis.output_path = '/tmp/output.pdf'; }"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Run dicepdf's img2pdf command to convert the image to a PDF file.",
+      "fails_if": "dicepdf CLI returns a non‑zero exit code or cannot be invoked",
+      "code": "const { execFileSync } = await import('node:child_process');\nconst { join } = await import('node:path');\nconst bin = join(process.cwd(), 'node_modules', '@dicepdf', 'cli', 'dist', 'index.js');\nexecFileSync('node', [bin, 'img2pdf', globalThis.image_path, '-o', globalThis.output_path]);\nglobalThis.pdf_path = globalThis.output_path;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the path to the generated PDF.",
+      "fails_if": "JSON serialization fails or pdf_path is undefined",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdf_path }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

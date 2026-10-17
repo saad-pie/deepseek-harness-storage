@@ -5,15 +5,13 @@
   "handler": "pdf-lib-incremental-save",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/pdf-lib-incremental-save.mjs",
   "accepts": {
-    "image_path": "string",
-    "output_path": "string"
+    "image_path": "string"
   },
   "produces": {
-    "pdf_path": "string"
+    "pdf_base64": "string"
   },
   "requires": {
     "npm": [
-      "pdf-lib",
       "pdf-lib-incremental-save"
     ],
     "pip": [],
@@ -24,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate inputs, read the image file into memory and load required packages.",
-      "fails_if": "Missing image_path or output_path, or the image file cannot be read.",
-      "code": "const { readFileSync } = await import('node:fs');\nawait import('pdf-lib-incremental-save'); // ensure candidate package is loaded\nconst imagePath = input.image_path;\nconst outputPath = input.output_path;\nif (!imagePath || !outputPath) throw new Error('Missing required inputs');\nconst imageBytes = readFileSync(imagePath);\nglobalThis.imageBytes = imageBytes;\nglobalThis.imagePath = imagePath;\nglobalThis.outputPath = outputPath;"
+      "what": "Validate the input image path and load the image bytes into global state",
+      "fails_if": "Missing image_path or file does not exist",
+      "code": "const { readFileSync, existsSync } = await import('node:fs');\nconst imagePath = globalThis.input.image_path;\nif (!imagePath || !existsSync(imagePath)) {\n  throw new Error('Input image_path missing or file does not exist');\n}\nconst content = readFileSync(imagePath, 'utf8');\nglobalThis.imageBytes = Buffer.from(content, 'base64');\nglobalThis.imagePath = imagePath;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Create a PDF, embed the image, write the PDF to the requested output path.",
-      "fails_if": "PDF creation fails or writing the file fails.",
-      "code": "const pdfLibMod = await import('pdf-lib');\nconst { PDFDocument } = pdfLibMod.default || pdfLibMod;\nconst imageBytes = globalThis.imageBytes;\nconst pdfDoc = await PDFDocument.create();\nlet img;\nif (globalThis.imagePath.toLowerCase().endsWith('.png')) {\n  img = await pdfDoc.embedPng(imageBytes);\n} else {\n  img = await pdfDoc.embedJpg(imageBytes);\n}\nconst { width, height } = img.scale(1);\nconst page = pdfDoc.addPage([width, height]);\npage.drawImage(img, { x: 0, y: 0, width, height });\nconst pdfBytes = await pdfDoc.save();\nconst { writeFileSync } = await import('node:fs');\nwriteFileSync(globalThis.outputPath, pdfBytes);\nglobalThis.resultPath = globalThis.outputPath;"
+      "what": "Create a PDF containing the image using pdf-lib-incremental-save and store the base64 string",
+      "fails_if": "PDF creation or image embedding fails",
+      "code": "const mod = await import('pdf-lib-incremental-save');\nconst lib = mod.default || mod;\nconst { PDFDocument } = lib;\nconst pdfDoc = await PDFDocument.create();\nconst pngImage = await pdfDoc.embedPng(globalThis.imageBytes);\nconst page = pdfDoc.addPage();\nconst { width, height } = pngImage.scale(1);\npage.drawImage(pngImage, { x: 0, y: 0, width, height });\nconst pdfBytes = await pdfDoc.save();\nglobalThis.pdfBase64 = Buffer.from(pdfBytes).toString('base64');"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Output a JSON object containing the path of the generated PDF.",
-      "fails_if": "The JSON cannot be stringified or the pdf_path is undefined.",
-      "code": "console.log(JSON.stringify({ pdf_path: globalThis.resultPath }));"
+      "what": "Output the PDF as a base64 JSON object",
+      "fails_if": "JSON serialization fails",
+      "code": "console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

@@ -1,0 +1,49 @@
+{
+  "id": "nodetopy",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "nodetopy",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/nodetopy.mjs",
+  "accepts": {
+    "image_path": "string",
+    "pdf_path": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "nodetopy"
+    ],
+    "pip": [
+      "img2pdf"
+    ],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate inputs, write a pip requirements file, install img2pdf via nodetopy, and store input paths in global state.",
+      "fails_if": "Missing IMAGE_PATH or PDF_PATH env vars, failure to write the requirements file, or pip install error.",
+      "code": "const { default: nodetopy } = await import('nodetopy');\nconst fn = nodetopy.default || nodetopy;\nconst { writeFileSync } = await import('node:fs');\nconst depFile = '/tmp/deps.txt';\nwriteFileSync(depFile, 'img2pdf==0.5.1');\nawait fn(depFile);\nif (!process.env.IMAGE_PATH) throw new Error('IMAGE_PATH env var missing');\nif (!process.env.PDF_PATH) throw new Error('PDF_PATH env var missing');\nglobalThis.imagePath = process.env.IMAGE_PATH;\nglobalThis.pdfPath = process.env.PDF_PATH;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Create a temporary Python script that uses img2pdf to convert the image to PDF and run it via nodetopy.",
+      "fails_if": "Failure to write the Python script, execution error from the Python process, or img2pdf conversion error.",
+      "code": "const { writeFileSync } = await import('node:fs');\nconst pyScript = `import img2pdf\nimg_path = r\"${globalThis.imagePath}\"\npdf_path = r\"${globalThis.pdfPath}\"\nwith open(pdf_path, \"wb\") as f:\n    f.write(img2pdf.convert(img_path))`;\nwriteFileSync('/tmp/convert.py', pyScript);\nconst { default: nodetopy } = await import('nodetopy');\nconst fn = nodetopy.default || nodetopy;\nawait fn('/tmp/convert.py');"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Output a JSON object containing the path of the generated PDF.",
+      "fails_if": "JSON.stringify throws or pdf_path is undefined.",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

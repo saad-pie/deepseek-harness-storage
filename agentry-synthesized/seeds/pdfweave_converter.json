@@ -1,0 +1,50 @@
+{
+  "id": "pdfweave_converter",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "pdfweave_converter",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/pdfweave_converter.mjs",
+  "accepts": {
+    "images": "string",
+    "size": {
+      "type": "string",
+      "optional": true
+    }
+  },
+  "produces": {
+    "pdf_base64": "string"
+  },
+  "requires": {
+    "npm": [
+      "@pdfweave/converter"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate required inputs and store parsed images and optional size in global state.",
+      "fails_if": "IMG_INPUT env var missing or JSON parsing fails.",
+      "code": "const { IMG_INPUT, IMG_SIZE } = process.env;\\nif (!IMG_INPUT) { throw new Error('Missing IMG_INPUT'); }\\nglobalThis.images = JSON.parse(IMG_INPUT);\\nglobalThis.size = IMG_SIZE || undefined;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Call img2pdf from @pdfweave/converter to convert images to a PDF and encode result as base64.",
+      "fails_if": "Import fails, img2pdf throws, or result cannot be encoded.",
+      "code": "const { img2pdf } = await import('@pdfweave/converter');\\nconst pdfBytes = await img2pdf(globalThis.images, globalThis.size ? { size: globalThis.size } : undefined);\\nglobalThis.pdfBase64 = Buffer.from(pdfBytes).toString('base64');"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object containing the base64 PDF to stdout.",
+      "fails_if": "pdfBase64 is undefined or console.log fails.",
+      "code": "console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

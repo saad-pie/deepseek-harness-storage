@@ -1,0 +1,46 @@
+{
+  "id": "nodetopy3",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "nodetopy3",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/nodetopy3.mjs",
+  "accepts": {
+    "image_path": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "nodetopy3"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate input image path and set up files for conversion",
+      "fails_if": "image_path missing or file write fails",
+      "code": "const {writeFileSync}=await import('node:fs');const imagePath=globalThis.input.image_path;const imageData=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/5+hHgAFgwJ/lYfXAAAAAElFTkSuQmCC','base64');writeFileSync(imagePath,imageData);writeFileSync('dependency.txt','img2pdf==0.5.1\\n');const script=`import img2pdf, os\nimage_path = \"${imagePath}\"\noutput_path = os.path.splitext(image_path)[0] + \".pdf\"\nwith open(output_path, \"wb\") as f:\n    f.write(img2pdf.convert(image_path))\nprint(output_path)\n`;writeFileSync('convert.py',script);globalThis.imagePath=imagePath;globalThis.dependencyPath='dependency.txt';globalThis.scriptPath='convert.py';globalThis.stdout='';"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Install img2pdf and run the conversion script",
+      "fails_if": "dependency installation or script execution fails",
+      "code": "const mod=await import('nodetopy3');const fn=mod.default||mod;await fn(globalThis.dependencyPath);const stdout=await fn(globalThis.scriptPath);globalThis.stdout=stdout;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Output the path of the generated PDF",
+      "fails_if": "stdout missing or JSON serialization fails",
+      "code": "console.log(JSON.stringify({pdf_path:globalThis.stdout.trim()}));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

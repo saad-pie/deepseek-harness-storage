@@ -5,17 +5,15 @@
   "handler": "pdf-lib-table",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/pdf-lib-table.mjs",
   "accepts": {
-    "image_path": "string",
-    "output_path": "string"
+    "image_path": "string"
   },
   "produces": {
-    "pdf_path": "string",
-    "size_bytes": "number"
+    "pdf_base64": "string"
   },
   "requires": {
     "npm": [
-      "pdf-lib-table",
-      "pdf-lib"
+      "pdf-lib",
+      "pdf-lib-table"
     ],
     "pip": [],
     "post_install": null,
@@ -25,23 +23,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that the input image file exists and is readable, and ensure the output directory exists.",
-      "fails_if": "The input image file does not exist or the output directory cannot be created.",
-      "code": "const fs = await import('node:fs');\nconst path = await import('node:path');\nconst imgPath = globalThis.input.image_path;\nconst outPath = globalThis.input.output_path;\nif (!fs.existsSync(imgPath)) {\n  throw new Error('Input image not found: ' + imgPath);\n}\nconst outDir = path.dirname(outPath);\nif (!fs.existsSync(outDir)) {\n  fs.mkdirSync(outDir, { recursive: true });\n}\nglobalThis.imgPath = imgPath;\nglobalThis.outPath = outPath;"
+      "what": "Validate the image path and set up global state",
+      "fails_if": "IMAGE_PATH env var missing or file does not exist",
+      "code": "const {existsSync}=await import('node:fs');const imagePath=process.env.IMAGE_PATH;if(!imagePath){throw new Error('IMAGE_PATH env var not set');}if(!existsSync(imagePath)){throw new Error(`Image file not found: ${imagePath}`);}globalThis.imagePath=imagePath;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Read the image file, embed it into a new PDF document using pdf-lib, and save the PDF to the output path.",
-      "fails_if": "The image format is unsupported by pdf-lib or the PDF save operation fails.",
-      "code": "const fs = await import('node:fs');\nconst { PDFDocument } = await import('pdf-lib');\nconst imgPath = globalThis.imgPath;\nconst outPath = globalThis.outPath;\nconst imgData = fs.readFileSync(imgPath);\nconst pdfDoc = await PDFDocument.create();\nlet image;\nconst ext = imgPath.toLowerCase();\nif (ext.endsWith('.png')) {\n  image = await pdfDoc.embedPng(imgData);\n} else if (ext.endsWith('.jpg') || ext.endsWith('.jpeg')) {\n  image = await pdfDoc.embedJpg(imgData);\n} else {\n  throw new Error('Unsupported image format: ' + ext);\n}\nconst page = pdfDoc.addPage([image.width, image.height]);\npage.drawImage(image, { x: 0, y: 0, width: image.width, height: image.height });\nconst pdfBytes = await pdfDoc.save();\nfs.writeFileSync(outPath, pdfBytes);\nglobalThis.pdfPath = outPath;\nglobalThis.sizeBytes = pdfBytes.length;"
+      "what": "Create a PDF containing the image and store bytes in global state",
+      "fails_if": "Image cannot be read or PDF generation fails",
+      "code": "const {readFileSync}=await import('node:fs');const {PDFDocument}=await import('pdf-lib');const imageBytes=readFileSync(globalThis.imagePath);const pdfDoc=await PDFDocument.create();const image=await pdfDoc.embedPng(imageBytes);const page=pdfDoc.addPage();const {width,height}=page.getSize();const imgDims=image.scale(1);page.drawImage(image,{x:0,y:0,width:imgDims.width,height:imgDims.height});const pdfBytes=await pdfDoc.save();globalThis.pdfBytes=pdfBytes;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write the resulting PDF path and file size to stdout as a JSON object.",
-      "fails_if": "The JSON serialization fails or the output fields are undefined.",
-      "code": "const result = {\n  pdf_path: globalThis.pdfPath,\n  size_bytes: globalThis.sizeBytes\n};\nconsole.log(JSON.stringify(result));"
+      "what": "Output a JSON object with the PDF base64 string",
+      "fails_if": "globalThis.pdfBytes undefined or JSON serialization fails",
+      "code": "const base64=Buffer.from(globalThis.pdfBytes).toString('base64');console.log(JSON.stringify({pdf_base64:base64}));"
     }
   ],
   "source": "synthesized:agentry.synthesize",
