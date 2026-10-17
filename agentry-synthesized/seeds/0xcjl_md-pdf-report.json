@@ -6,7 +6,10 @@
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/0xcjl_md-pdf-report.mjs",
   "accepts": {
     "markdown": "string",
-    "output_path": "string"
+    "output_path": {
+      "type": "string",
+      "optional": true
+    }
   },
   "produces": {
     "pdf_path": "string"

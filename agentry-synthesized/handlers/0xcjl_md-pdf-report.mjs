@@ -12,7 +12,10 @@ const CAP_ID = "0xcjl_md-pdf-report";
 const CAP_KIND = "agent_skill";
 const ACCEPTS = {
   "markdown": "string",
-  "output_path": "string"
+  "output_path": {
+    "type": "string",
+    "optional": true
+  }
 };
 const PRODUCES = {
   "pdf_path": "string"
@@ -27,13 +30,13 @@ const REQUIRES = {
 };
 const INPUT_MAP = {
   "markdown": "Markdown content",
-  "output_path": "Output PDF file path"
+  "output_path": "Output PDF file path (optional)"
 };
 const LLM_PROVIDER = "groq";
 const LLM_MODEL = "qwen/qwen3.8-27b";
 const LLM_TEMPERATURE = 0.2;
 const LLM_MAX_TOKENS = 4000;
-const SKILL_BODY = "# md-pdf-report\\n\\nThis skill converts provided Markdown content into a PDF file and saves it to the specified path.\\n\\n**Inputs**\\n- `markdown` (string): The Markdown text to be rendered.\\n- `output_path` (string): Full filesystem path where the generated PDF should be written.\\n\\n**Process**\\n1. Use the `markdown-pdf` npm package to render the Markdown to PDF.\\n2. Write the resulting PDF binary to `output_path`.\\n3. Return the path of the created PDF.\\n\\n**Output**\\n- `pdf_path` (string): The same value as `output_path` confirming where the PDF was saved.";
+const SKILL_BODY = "Convert the provided markdown content into a PDF file and save it to disk.\\n\\nThe skill writes the markdown to a temporary .md file, invokes the `markdown-pdf` npm package to generate a PDF, optionally using a user‑provided output path, and returns the absolute path of the created PDF file.";
 const SYSTEM_PROMPT = buildSystemPrompt(defaultPreamble(), SKILL_BODY);
 
 const STATE_DIR = process.env.AGENTRY_DIR || "/tmp/home/.dsh/agentry";
@@ -129,7 +132,7 @@ async function run(input, ctx, opts = {}) {
 
 export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
-  const probe = await run({"markdown":"# Sample Report\\n\\nThis is a test report generated from markdown.","output_path":"/tmp/sample_report.pdf"}, deps, { session });
+  const probe = await run({"markdown":"# Sample Report\\n\\nThis is a **test** markdown document.","output_path":"/tmp/sample_report.pdf"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {
