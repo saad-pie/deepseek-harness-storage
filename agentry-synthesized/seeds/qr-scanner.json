@@ -1,0 +1,46 @@
+{
+  "id": "qr-scanner",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "qr-scanner",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/qr-scanner.mjs",
+  "accepts": {
+    "data": "string"
+  },
+  "produces": {
+    "qr_base64": "string"
+  },
+  "requires": {
+    "npm": [
+      "qr-scanner"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that the required input 'data' is present and store it for later steps.",
+      "fails_if": "The environment variable DATA is missing or empty.",
+      "code": "const { env } = await import('node:process');\nif (!env.DATA) { throw new Error('Missing DATA input'); }\nglobalThis.inputData = env.DATA;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Encode the input string as a base64 representation (placeholder for a QR PNG).",
+      "fails_if": "Base64 encoding throws an unexpected error.",
+      "code": "const { Buffer } = await import('node:buffer');\nglobalThis.result = Buffer.from(globalThis.inputData, 'utf-8').toString('base64');"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object containing the base64 QR placeholder to stdout.",
+      "fails_if": "The JSON object is malformed or the field is undefined.",
+      "code": "console.log(JSON.stringify({ qr_base64: globalThis.result }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

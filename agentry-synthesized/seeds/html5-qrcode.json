@@ -1,0 +1,50 @@
+{
+  "id": "html5-qrcode",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "html5-qrcode",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/html5-qrcode.mjs",
+  "accepts": {
+    "data": "string",
+    "output_path": {
+      "type": "string",
+      "optional": true
+    }
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "qrcode"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate inputs and set up resources: files, sessions, connections.",
+      "fails_if": "Missing required input: data or invalid data type",
+      "code": "const { resolve } = await import('node:path');\nif (!globalThis.input || typeof globalThis.input.data !== 'string') {\n  throw new Error('Missing required input: data');\n}\nglobalThis.data = globalThis.input.data;\nglobalThis.outputPath = globalThis.input.output_path || resolve(process.cwd(), 'qrcode.png');"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Generate QR code PNG using qrcode package.",
+      "fails_if": "QR code generation failed",
+      "code": "const QRCode = (await import('qrcode')).default || (await import('qrcode'));\nawait QRCode.toFile(globalThis.outputPath, globalThis.data, { type: 'png', width: 300 });"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write ONE JSON object to stdout with exactly the fields promised in produces.",
+      "fails_if": "Failed to write JSON output",
+      "code": "console.log(JSON.stringify({ output_path: globalThis.outputPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

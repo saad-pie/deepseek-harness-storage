@@ -1,0 +1,46 @@
+{
+  "id": "qrcode",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "qrcode",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/qrcode.mjs",
+  "accepts": {
+    "text": "string"
+  },
+  "produces": {
+    "data_url": "string"
+  },
+  "requires": {
+    "npm": [
+      "qrcode"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that the required input text is present and store it in global state.",
+      "fails_if": "The TEXT environment variable is missing or empty.",
+      "code": "const { env } = await import('node:process');\nif (!env['TEXT']) { throw new Error('Missing required input: text'); }\nglobalThis.text = env['TEXT'];\nglobalThis.options = {};\n"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Generate a QR code data URL from the input text using the qrcode package.",
+      "fails_if": "The qrcode library throws an error or fails to produce a data URL.",
+      "code": "const mod = await import('qrcode');\nconst fn = mod.default || mod;\nconst dataUrl = await fn.toDataURL(globalThis.text);\nglobalThis.result = dataUrl;\n"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object containing the generated data URL to stdout.",
+      "fails_if": "JSON serialization fails or the data_url field is undefined.",
+      "code": "console.log(JSON.stringify({ data_url: globalThis.result }));\n"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

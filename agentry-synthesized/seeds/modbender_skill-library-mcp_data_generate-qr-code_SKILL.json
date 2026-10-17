@@ -1,0 +1,34 @@
+{
+  "id": "modbender_skill-library-mcp_data_generate-qr-code_SKILL",
+  "kind": "agent_skill",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "modbender_skill-library-mcp_data_generate-qr-code_SKILL",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/modbender_skill-library-mcp_data_generate-qr-code_SKILL.mjs",
+  "accepts": {
+    "text": "string",
+    "size": {
+      "type": "number",
+      "optional": true
+    },
+    "color": {
+      "type": "string",
+      "optional": true
+    },
+    "save_path": {
+      "type": "string",
+      "optional": true
+    }
+  },
+  "produces": {
+    "path": "string"
+  },
+  "requires": {
+    "npm": [],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": null,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
