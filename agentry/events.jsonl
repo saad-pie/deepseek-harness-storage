@@ -10286,3 +10286,72 @@
 {"kind":"watch.polled","at":1792260503176,"watch_id":"watch_mvcjtxt0_chgp98","source":"agentry.discover","candidates":187,"fresh":0,"error":null,"ms":3244}
 {"kind":"runtime.tick.watches_polled","at":1792260503176,"count":1,"summary":[{"watch_id":"watch_mvcjtxt0_chgp98","ok":true,"polled":true,"candidates":187,"fresh":0,"notified":0,"error":null}]}
 {"kind":"discovery.tick_summary","at":1792260526094,"gaps":1,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792260533184,"n":190}
+{"kind":"discovery.tick_summary","at":1792260556119,"gaps":1,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792260563192,"n":191}
+{"kind":"invoke.started","at":1792260563192,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792260563192,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792260563198,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792260563804,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":606}
+{"kind":"invoke.started","at":1792260565838,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792260565839,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792260566092,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":254}
+{"kind":"invoke.succeeded","at":1792260566373,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":534}
+{"kind":"discover.completed","at":1792260566373,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":30,"clawhub":0,"crates":30,"dsh_plugins":29,"gomod":1,"hermes_atlas":16,"huggingface":0,"local":30,"maven":0,"npm":30,"nuget":0,"pypi":10,"github":1,"web":10},"errors":{}}
+{"kind":"invoke.succeeded","at":1792260566373,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3181}
+{"kind":"watch.polled","at":1792260566374,"watch_id":"watch_mvcjtxt0_chgp98","source":"agentry.discover","candidates":187,"fresh":0,"error":null,"ms":3182}
+{"kind":"runtime.tick.watches_polled","at":1792260566374,"count":1,"summary":[{"watch_id":"watch_mvcjtxt0_chgp98","ok":true,"polled":true,"candidates":187,"fresh":0,"notified":0,"error":null}]}
+{"kind":"discovery.tick_summary","at":1792260586134,"gaps":1,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792260596374,"n":192}
+{"kind":"discovery.tick_summary","at":1792260616138,"gaps":1,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792260626380,"n":193}
+{"kind":"invoke.started","at":1792260626380,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792260626380,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792260626387,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792260626875,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":488}
+{"kind":"invoke.started","at":1792260636387,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792260636389,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792260636660,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":273}
+{"kind":"invoke.succeeded","at":1792260636852,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":463}
+{"kind":"discover.completed","at":1792260636853,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":30,"clawhub":0,"crates":30,"dsh_plugins":29,"gomod":1,"hermes_atlas":16,"huggingface":0,"local":30,"maven":0,"npm":30,"nuget":0,"pypi":10,"github":1,"web":10},"errors":{"maven":"The operation was aborted due to timeout"}}
+{"kind":"invoke.succeeded","at":1792260636853,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":10473}
+{"kind":"watch.polled","at":1792260636853,"watch_id":"watch_mvcjtxt0_chgp98","source":"agentry.discover","candidates":187,"fresh":0,"error":null,"ms":10473}
+{"kind":"runtime.tick.watches_polled","at":1792260636854,"count":1,"summary":[{"watch_id":"watch_mvcjtxt0_chgp98","ok":true,"polled":true,"candidates":187,"fresh":0,"notified":0,"error":null}]}
+{"kind":"discovery.tick_summary","at":1792260646130,"gaps":1,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792260666859,"n":194}
+{"kind":"discovery.tick_summary","at":1792260676149,"gaps":1,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792260696880,"n":195}
+{"kind":"invoke.started","at":1792260696880,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792260696880,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792260696885,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792260697411,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":525}
+{"kind":"invoke.started","at":1792260699198,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792260699198,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792260699447,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":249}
+{"kind":"invoke.succeeded","at":1792260699628,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":430}
+{"kind":"discover.completed","at":1792260699628,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":30,"clawhub":0,"crates":30,"dsh_plugins":29,"gomod":1,"hermes_atlas":16,"huggingface":0,"local":30,"maven":0,"npm":30,"nuget":0,"pypi":10,"github":1,"web":10},"errors":{}}
+{"kind":"invoke.succeeded","at":1792260699628,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2748}
+{"kind":"watch.polled","at":1792260699628,"watch_id":"watch_mvcjtxt0_chgp98","source":"agentry.discover","candidates":187,"fresh":0,"error":null,"ms":2748}
+{"kind":"runtime.tick.watches_polled","at":1792260699629,"count":1,"summary":[{"watch_id":"watch_mvcjtxt0_chgp98","ok":true,"polled":true,"candidates":187,"fresh":0,"notified":0,"error":null}]}
+{"kind":"discovery.tick_summary","at":1792260706141,"gaps":1,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792260729637,"n":196}
+{"kind":"discovery.tick_summary","at":1792260736161,"gaps":1,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792260759660,"n":197}
+{"kind":"invoke.started","at":1792260759660,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792260759660,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792260759666,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792260760210,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":543}
+{"kind":"discovery.tick_summary","at":1792260766145,"gaps":1,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"invoke.started","at":1792260769666,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792260769667,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792260769945,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":279}
+{"kind":"invoke.succeeded","at":1792260770237,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":570}
+{"kind":"discover.completed","at":1792260770237,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":30,"clawhub":0,"crates":30,"dsh_plugins":29,"gomod":1,"hermes_atlas":16,"huggingface":0,"local":30,"maven":0,"npm":30,"nuget":0,"pypi":10,"github":1,"web":10},"errors":{"maven":"The operation was aborted due to timeout"}}
+{"kind":"invoke.succeeded","at":1792260770237,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":10577}
+{"kind":"watch.polled","at":1792260770238,"watch_id":"watch_mvcjtxt0_chgp98","source":"agentry.discover","candidates":187,"fresh":0,"error":null,"ms":10578}
+{"kind":"runtime.tick.watches_polled","at":1792260770238,"count":1,"summary":[{"watch_id":"watch_mvcjtxt0_chgp98","ok":true,"polled":true,"candidates":187,"fresh":0,"notified":0,"error":null}]}
+{"kind":"runs.rollup_completed","at":1792260774272,"capabilities":7,"runs":422}
+{"kind":"runs.rollup_completed","at":1792260794836,"capabilities":7,"runs":422}
+{"kind":"discovery.tick_summary","at":1792260796131,"gaps":1,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792260800242,"n":198}
+{"kind":"discovery.tick_summary","at":1792260826179,"gaps":1,"uncovered":0,"watched":5,"created":0,"proposals":0,"adopted":0}
