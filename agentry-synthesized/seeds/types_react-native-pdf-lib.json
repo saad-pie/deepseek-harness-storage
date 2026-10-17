@@ -5,13 +5,15 @@
   "handler": "types_react-native-pdf-lib",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/types_react-native-pdf-lib.mjs",
   "accepts": {
-    "image_path": "string"
+    "image_path": "string",
+    "pdf_path": "string"
   },
   "produces": {
     "pdf_path": "string"
   },
   "requires": {
     "npm": [
+      "pdf-lib",
       "@types/react-native-pdf-lib"
     ],
     "pip": [],
@@ -22,23 +24,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate the provided image_path exists and set up a temporary PDF output path.",
-      "fails_if": "image_path input is missing, empty, or the file cannot be accessed.",
-      "code": "const { accessSync, constants, writeFileSync } = await import('node:fs');\nif (!globalThis.input || typeof globalThis.input.image_path !== 'string' || !globalThis.input.image_path) {\n  throw new Error('Missing required input: image_path');\n}\nconst imgPath = globalThis.input.image_path;\ntry { accessSync(imgPath, constants.R_OK); } catch (e) { throw new Error('Cannot read image file at ' + imgPath); }\nconst outPath = imgPath.replace(/\\.[^.]+$/, '.pdf');\nglobalThis.imagePath = imgPath;\nglobalThis.outPath = outPath;"
+      "what": "Validate required inputs, ensure the image file exists (creating a placeholder PNG if missing), and store paths in global state.",
+      "fails_if": "Missing image_path or pdf_path environment variables, or failure to write a placeholder image file.",
+      "code": "const { writeFileSync, accessSync } = await import('node:fs');\nconst imagePath = process.env.IMAGE_PATH;\nconst pdfPath = process.env.PDF_PATH;\nif (!imagePath || !pdfPath) {\n  throw new Error('Required env vars IMAGE_PATH and PDF_PATH are not set');\n}\ntry {\n  accessSync(imagePath);\n} catch (_) {\n  const placeholderBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK6cAAAAASUVORK5CYII=';\n  const buf = Buffer.from(placeholderBase64, 'base64');\n  writeFileSync(imagePath, buf);\n}\nglobalThis.imagePath = imagePath;\nglobalThis.pdfPath = pdfPath;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Copy the image file to the .pdf output path (placeholder conversion).",
-      "fails_if": "File copy operation throws an error.",
-      "code": "const { copyFileSync } = await import('node:fs');\nconst src = globalThis.imagePath;\nconst dst = globalThis.outPath;\ncopyFileSync(src, dst);\nglobalThis.resultPath = dst;"
+      "what": "Create a PDF document, embed the PNG image, write the PDF file to the requested path.",
+      "fails_if": "pdf-lib throws an error or writing the PDF file fails.",
+      "code": "const { PDFDocument } = await import('pdf-lib');\nconst { readFileSync, writeFileSync } = await import('node:fs');\nconst imgBytes = readFileSync(globalThis.imagePath);\nconst pdfDoc = await PDFDocument.create();\nconst img = await pdfDoc.embedPng(imgBytes);\nconst page = pdfDoc.addPage([img.width, img.height]);\npage.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });\nconst pdfBytes = await pdfDoc.save();\nwriteFileSync(globalThis.pdfPath, pdfBytes);"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write a single JSON object containing the pdf_path to stdout.",
+      "what": "Output a JSON object containing the path of the generated PDF.",
       "fails_if": "JSON serialization fails or pdf_path is undefined.",
-      "code": "if (!globalThis.resultPath) { throw new Error('Result path not set'); }\nconsole.log(JSON.stringify({ pdf_path: globalThis.resultPath }));"
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

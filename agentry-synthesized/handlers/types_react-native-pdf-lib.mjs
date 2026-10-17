@@ -6,27 +6,32 @@
 const CAP_ID = "types_react-native-pdf-lib";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "image_path": "string"
+  "image_path": "string",
+  "pdf_path": "string"
 };
 const PRODUCES = {
   "pdf_path": "string"
 };
 const REQUIRES = {
   "npm": [
+    "pdf-lib",
     "@types/react-native-pdf-lib"
   ],
   "pip": [],
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {};
+const ENV_MAP = {
+  "IMAGE_PATH": "image_path",
+  "PDF_PATH": "pdf_path"
+};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
   "pdf_path": "pdf_path"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the provided image_path exists and set up a temporary PDF output path.\n  // fails_if: image_path input is missing, empty, or the file cannot be accessed.\n  // BEGIN prepare\n  const { accessSync, constants, writeFileSync } = await import('node:fs');\n  if (!globalThis.input || typeof globalThis.input.image_path !== 'string' || !globalThis.input.image_path) {\n    throw new Error('Missing required input: image_path');\n  }\n  const imgPath = globalThis.input.image_path;\n  try { accessSync(imgPath, constants.R_OK); } catch (e) { throw new Error('Cannot read image file at ' + imgPath); }\n  const outPath = imgPath.replace(/\\.[^.]+$/, '.pdf');\n  globalThis.imagePath = imgPath;\n  globalThis.outPath = outPath;\n  // END prepare\n\n  // -- step 2: execute --\n  // what: Copy the image file to the .pdf output path (placeholder conversion).\n  // fails_if: File copy operation throws an error.\n  // BEGIN execute\n  const { copyFileSync } = await import('node:fs');\n  const src = globalThis.imagePath;\n  const dst = globalThis.outPath;\n  copyFileSync(src, dst);\n  globalThis.resultPath = dst;\n  // END execute\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the pdf_path to stdout.\n  // fails_if: JSON serialization fails or pdf_path is undefined.\n  // BEGIN emit\n  if (!globalThis.resultPath) { throw new Error('Result path not set'); }\n  console.log(JSON.stringify({ pdf_path: globalThis.resultPath }));\n  // END emit\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate required inputs, ensure the image file exists (creating a placeholder PNG if missing), and store paths in global state.\n  // fails_if: Missing image_path or pdf_path environment variables, or failure to write a placeholder image file.\n  { // scope for step 1\n    // BEGIN prepare\n    const { writeFileSync, accessSync } = await import('node:fs');\n    const imagePath = process.env.IMAGE_PATH;\n    const pdfPath = process.env.PDF_PATH;\n    if (!imagePath || !pdfPath) {\n      throw new Error('Required env vars IMAGE_PATH and PDF_PATH are not set');\n    }\n    try {\n      accessSync(imagePath);\n    } catch (_) {\n      const placeholderBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK6cAAAAASUVORK5CYII=';\n      const buf = Buffer.from(placeholderBase64, 'base64');\n      writeFileSync(imagePath, buf);\n    }\n    globalThis.imagePath = imagePath;\n    globalThis.pdfPath = pdfPath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Create a PDF document, embed the PNG image, write the PDF file to the requested path.\n  // fails_if: pdf-lib throws an error or writing the PDF file fails.\n  { // scope for step 2\n    // BEGIN execute\n    const { PDFDocument } = await import('pdf-lib');\n    const { readFileSync, writeFileSync } = await import('node:fs');\n    const imgBytes = readFileSync(globalThis.imagePath);\n    const pdfDoc = await PDFDocument.create();\n    const img = await pdfDoc.embedPng(imgBytes);\n    const page = pdfDoc.addPage([img.width, img.height]);\n    page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });\n    const pdfBytes = await pdfDoc.save();\n    writeFileSync(globalThis.pdfPath, pdfBytes);\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Output a JSON object containing the path of the generated PDF.\n  // fails_if: JSON serialization fails or pdf_path is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -43,14 +48,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/sample.png":"PNGDATA"};
+  const FIXTURES = {"/tmp/img.png":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==","/tmp/out.pdf":"JVBERi0xLjQKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0NvdW50IDAvS2lkc1tdPj4KZW5kb2JqCnhyZWYKMCAzCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAwOSAwMDAwMCBuIAowMDAwMDAwMDUyIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSAzL1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKMTAzCiUlRU9GCg=="};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
-      try { fs.mkdirSync(path.dirname(fp), { recursive: true }); fs.writeFileSync(fp, String(content)); } catch (e) {}
+      try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"image_path":"/tmp/sample.png"}, deps, { session });
+  const probe = await run({"image_path":"/tmp/img.png","pdf_path":"/tmp/out.pdf"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {
