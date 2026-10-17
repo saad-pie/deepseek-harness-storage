@@ -1118,3 +1118,25 @@
 {"kind":"capability_gap.recorded","at":1792225391005,"key":"gap:pdf.render","wanted_kind":"pdf","wanted_id":"pdf.render","reason":"invoke_failed: invoker_failed: invoker invoker.in_process_js failed: pdf.render: python exit 1 — Traceback (most recent call last):\n  File \"/tmp/home/.dsh/agentry-kernel/work/pdf.render-mvc4q25q/.agentry_scripts/script_mvc4q26k_782o.py\", line 2, in <module>\n    from reportlab.lib.pagesizes import le","hits":1,"example_task_id":null}
 {"kind":"runs.rollup_completed","at":1792225524667,"capabilities":15,"runs":249}
 {"kind":"runs.rollup_completed","at":1792225824706,"capabilities":15,"runs":249}
+{"kind":"runtime.boot.started","at":1792226050851,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792226050859,"loaded":0,"skipped":23,"files":23}
+{"kind":"runtime.boot.watches_loaded","at":1792226050859,"count":6}
+{"kind":"runtime.boot.completed","at":1792226050859,"capabilities":64,"watches":6}
+{"kind":"invoke.started","at":1792226050860,"capability_id":"pdf.render","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["markdown","title","output_path"]}
+{"kind":"invoke.started","at":1792226050861,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792226050884,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":24}
+{"kind":"invoke.started","at":1792226050885,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792226050889,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4}
+{"kind":"installer.already_prepared","at":1792226050889,"capId":"pdf.render","session":"pdf.render-default"}
+{"kind":"invoker.session_prepared","at":1792226050889,"capability_id":"pdf.render","session":"pdf.render-default"}
+{"kind":"invoke.started","at":1792226050890,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792226050894,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4}
+{"kind":"invoke.started","at":1792226050894,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792226050897,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3}
+{"kind":"installer.pip_starting","at":1792226050897,"capId":"pdf.render","session":"pdf.render-mvc547d6","packages":["reportlab"]}
+{"kind":"invoke.started","at":1792226050897,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","packages"]}
+{"kind":"invoke.failed","at":1792226052638,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":1741}
+{"kind":"capability_gap.recorded","at":1792226052639,"key":"gap:agentry.os","wanted_kind":"agentry","wanted_id":"agentry.os","reason":"invoke_failed: invoker_failed: invoker invoker.in_process_js failed: agentry.os python.install: PIP_BOOTSTRAP_FAILED: python3 pip bootstrap failed: error: externally-managed-environment\n\n× This environment is externally managed\n╰─> To install Python packages system-wide, try apt install\n    python3-","hits":1,"example_task_id":null}
+{"kind":"invoke.failed","at":1792226052639,"capability_id":"pdf.render","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":1779}
+{"kind":"capability_gap.recurred","at":1792226052644,"key":"gap:pdf.render","wanted_kind":"pdf","wanted_id":"pdf.render","reason":"invoke_failed: invoker_failed: invoker invoker.in_process_js failed: installer: python.install failed — invoker_failed: invoker invoker.in_process_js failed: agentry.os python.install: PIP_BOOTSTRAP_FAILED: python3 pip bootstrap failed: error: externally-managed-environment\n\n× This environment is ex","hits":2,"example_task_id":null}
+{"kind":"runs.rollup_completed","at":1792226124725,"capabilities":15,"runs":255}
