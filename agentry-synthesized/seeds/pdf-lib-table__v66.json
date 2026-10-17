@@ -1,0 +1,52 @@
+{
+  "id": "pdf-lib-table__v66",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "pdf-lib-table__v66",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/pdf-lib-table__v66.mjs",
+  "accepts": {
+    "image_path": "string"
+  },
+  "produces": {
+    "pdf_base64": "string"
+  },
+  "requires": {
+    "npm": [
+      "pdf-lib",
+      "pdf-lib-table"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the image path and set up global state",
+      "fails_if": "IMAGE_PATH env var missing or file does not exist",
+      "code": "const { existsSync } = await import('node:fs');\nconst imagePath = process.env.IMAGE_PATH;\nif (!imagePath) { throw new Error('IMAGE_PATH env var not set'); }\nif (!existsSync(imagePath)) { throw new Error(`Image file not found: ${imagePath}`); }\nglobalThis.imagePath = imagePath;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Create a PDF containing rendered markdown and the image, store bytes in global state",
+      "fails_if": "Image cannot be read, PDF generation fails, or markdown rendering errors",
+      "code": "const { readFileSync } = await import('node:fs');\nconst { PDFDocument, StandardFonts } = await import('pdf-lib');\n\n// Read image bytes\nconst imageBytes = readFileSync(globalThis.imagePath);\n\n// Create PDF document\nconst pdfDoc = await PDFDocument.create();\nconst helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);\nconst pngImage = await pdfDoc.embedPng(imageBytes);\n\n// Define layout constants\nconst margin = 50;\nconst pageWidth = 612; // 8.5in * 72\nconst pageHeight = 792; // 11in * 72\nlet yPos = pageHeight - margin;\n\n// Helper to add a new page when needed\nfunction addPageIfNeeded(requiredSpace) {\n  if (yPos - requiredSpace < margin) {\n    const newPage = pdfDoc.addPage([pageWidth, pageHeight]);\n    yPos = pageHeight - margin;\n    return newPage;\n  }\n  return null;\n}\n\n// Add first page\nlet page = pdfDoc.addPage([pageWidth, pageHeight]);\n\n// Render markdown (simple parser)\nconst markdown = `# Sample Heading\\n## Subheading Example\\n- First bullet item\\n- Second bullet item\\n\\nThis is a paragraph of body text that demonstrates rendering of regular text in the PDF. It can span multiple lines and will continue onto the next page if needed.`;\nconst lines = markdown.split(/\\n/);\nfor (const rawLine of lines) {\n  let line = rawLine.trim();\n  let fontSize = 12;\n  let text = line;\n  if (line.startsWith('# ')) {\n    fontSize = 24;\n    text = line.replace(/^#\\s+/, '');\n  } else if (line.startsWith('## ')) {\n    fontSize = 18;\n    text = line.replace(/^##\\s+/, '');\n  } else if (line.startsWith('- ')) {\n    fontSize = 12;\n    text = '\\u2022 ' + line.replace(/^[-*]\\s+/, '');\n  }\n  const lineHeight = fontSize + 4;\n  addPageIfNeeded(lineHeight);\n  page.drawText(text, {\n    x: margin,\n    y: yPos - lineHeight,\n    size: fontSize,\n    font: helvetica,\n    color: rgb(0, 0, 0)\n  });\n  yPos -= lineHeight;\n}\n\n// Embed the image at the bottom of the last page (scaled to fit width)\nconst imgDims = pngImage.scale(0.5);\nif (yPos - imgDims.height < margin) {\n  page = pdfDoc.addPage([pageWidth, pageHeight]);\n  yPos = pageHeight - margin;\n}\npage.drawImage(pngImage, {\n  x: margin,\n  y: yPos - imgDims.height,\n  width: imgDims.width,\n  height: imgDims.height\n});\n\nyPos -= imgDims.height + 20;\n\n// Save PDF bytes\nconst pdfBytes = await pdfDoc.save();\nglobalThis.pdfBytes = pdfBytes;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Output a JSON object with the PDF base64 string",
+      "fails_if": "globalThis.pdfBytes undefined or JSON serialization fails",
+      "code": "const base64 = Buffer.from(globalThis.pdfBytes).toString('base64');\nconsole.log(JSON.stringify({ pdf_base64: base64 }));"
+    }
+  ],
+  "accept_spec": {
+    "input": {
+      "image_path": "/tmp/home/.dsh/agentry-kernel/work/demo/shot.png"
+    }
+  },
+  "source": "matured:pdf-lib-table",
+  "notes": "Maturation rubric: Render markdown text (# heading, ## subheading, - bullet items, paragraphs) alongside the embedded image. Multi-page if content exceeds one page. Use at least 2 distinct font sizes (heading larger than body)."
+}
