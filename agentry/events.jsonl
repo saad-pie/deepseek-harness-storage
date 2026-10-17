@@ -5599,3 +5599,148 @@
 {"kind":"runtime.tick","at":1792241429042,"n":3}
 {"kind":"discovery.no_gaps","at":1792241458977}
 {"kind":"runtime.tick","at":1792241459041,"n":4}
+{"kind":"discovery.no_gaps","at":1792241489003}
+{"kind":"runtime.tick","at":1792241489042,"n":5}
+{"kind":"discovery.no_gaps","at":1792241519032}
+{"kind":"runtime.tick","at":1792241519042,"n":6}
+{"kind":"discovery.no_gaps","at":1792241549072}
+{"kind":"runtime.tick","at":1792241549073,"n":7}
+{"kind":"runtime.boot.started","at":1792241572970,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792241573004,"loaded":0,"skipped":23,"files":23}
+{"kind":"runtime.boot.watches_loaded","at":1792241573004,"count":4}
+{"kind":"runtime.boot.completed","at":1792241573005,"capabilities":144,"watches":4}
+{"kind":"discovery.no_gaps","at":1792241579092}
+{"kind":"runtime.tick","at":1792241579093,"n":8}
+{"kind":"runtime.boot.started","at":1792241592736,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792241592771,"loaded":0,"skipped":23,"files":23}
+{"kind":"runtime.boot.watches_loaded","at":1792241592772,"count":4}
+{"kind":"runtime.boot.completed","at":1792241592772,"capabilities":144,"watches":4}
+{"kind":"invoke.started","at":1792241592772,"capability_id":"bua.screenshot","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["url","width","height","session"]}
+{"kind":"invoke.started","at":1792241592773,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792241592796,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":23}
+{"kind":"invoke.started","at":1792241592796,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792241592803,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":6}
+{"kind":"installer.npm_starting","at":1792241592803,"capId":"bua.screenshot","session":"demo","packages":["playwright"]}
+{"kind":"invoke.started","at":1792241592803,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","packages"]}
+{"kind":"invoke.succeeded","at":1792241594352,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1549}
+{"kind":"installer.npm_complete","at":1792241594352,"capId":"bua.screenshot","session":"demo","packages":["playwright"]}
+{"kind":"installer.post_install_starting","at":1792241594352,"capId":"bua.screenshot","session":"demo","cmd":"npx playwright install chromium"}
+{"kind":"invoke.started","at":1792241594353,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","cmd","args","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792241594363,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":10}
+{"kind":"invoke.started","at":1792241594364,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","pid","wait_ms"]}
+{"kind":"invoke.succeeded","at":1792241602244,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":7880}
+{"kind":"installer.post_install_complete","at":1792241602244,"capId":"bua.screenshot","session":"demo"}
+{"kind":"invoke.started","at":1792241602244,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792241602247,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3}
+{"kind":"installer.prepared","at":1792241602247,"capId":"bua.screenshot","session":"demo","steps":[{"step":"node.install","ok":true,"packages":["playwright"]},{"step":"post_install","ok":true,"cmd":"npx playwright install chromium"}]}
+{"kind":"invoker.session_prepared","at":1792241602247,"capability_id":"bua.screenshot","session":"demo"}
+{"kind":"invoke.started","at":1792241602248,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792241602249,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"invoke.started","at":1792241602249,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792241602251,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"installer.already_prepared","at":1792241602251,"capId":"bua.screenshot","session":"demo"}
+{"kind":"invoke.started","at":1792241602251,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792241602253,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"invoke.started","at":1792241602253,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","code","env","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792241603470,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1217}
+{"kind":"invoke.succeeded","at":1792241603470,"capability_id":"bua.screenshot","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":10698}
+{"kind":"invoke.started","at":1792241603471,"capability_id":"pdf-lib-table","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":[]}
+{"kind":"invoker.lazy_loaded_handler","at":1792241603472,"capability_id":"pdf-lib-table","handler_id":"pdf-lib-table","handler_file":"/tmp/home/.dsh/agentry-synthesized/handlers/pdf-lib-table.mjs"}
+{"kind":"invoke.failed","at":1792241603472,"capability_id":"pdf-lib-table","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":1}
+{"kind":"discovery.no_gaps","at":1792241609136}
+{"kind":"runtime.tick","at":1792241609137,"n":9}
+{"kind":"runtime.boot.started","at":1792241634977,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792241635009,"loaded":0,"skipped":23,"files":23}
+{"kind":"runtime.boot.watches_loaded","at":1792241635010,"count":4}
+{"kind":"runtime.boot.completed","at":1792241635010,"capabilities":144,"watches":4}
+{"kind":"invoke.started","at":1792241635010,"capability_id":"pdf-lib-table","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["image_path"]}
+{"kind":"invoker.lazy_loaded_handler","at":1792241635011,"capability_id":"pdf-lib-table","handler_id":"pdf-lib-table","handler_file":"/tmp/home/.dsh/agentry-synthesized/handlers/pdf-lib-table.mjs"}
+{"kind":"invoke.started","at":1792241635011,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792241635034,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":23}
+{"kind":"invoke.started","at":1792241635034,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792241635040,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5}
+{"kind":"installer.npm_starting","at":1792241635040,"capId":"pdf-lib-table","session":"pdf-lib-table-default","packages":["pdf-lib","pdf-lib-table"]}
+{"kind":"invoke.started","at":1792241635040,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","packages"]}
+{"kind":"invoke.succeeded","at":1792241636455,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1415}
+{"kind":"installer.npm_complete","at":1792241636455,"capId":"pdf-lib-table","session":"pdf-lib-table-default","packages":["pdf-lib","pdf-lib-table"]}
+{"kind":"invoke.started","at":1792241636455,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792241636457,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"installer.prepared","at":1792241636457,"capId":"pdf-lib-table","session":"pdf-lib-table-default","steps":[{"step":"node.install","ok":true,"packages":["pdf-lib","pdf-lib-table"]}]}
+{"kind":"invoker.session_prepared","at":1792241636457,"capability_id":"pdf-lib-table","session":"pdf-lib-table-default"}
+{"kind":"invoke.started","at":1792241636458,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792241636460,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"invoke.started","at":1792241636460,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792241636462,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"installer.already_prepared","at":1792241636462,"capId":"pdf-lib-table","session":"pdf-lib-table-default"}
+{"kind":"invoke.started","at":1792241636462,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792241636463,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"invoke.started","at":1792241636463,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","code","env","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792241636825,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":362}
+{"kind":"invoke.succeeded","at":1792241636826,"capability_id":"pdf-lib-table","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1816}
+{"kind":"discovery.no_gaps","at":1792241639156}
+{"kind":"runtime.tick","at":1792241639156,"n":10}
+{"kind":"runs.rollup_completed","at":1792241657461,"capabilities":16,"runs":1381}
+{"kind":"runs.rollup_completed","at":1792241669349,"capabilities":16,"runs":1381}
+{"kind":"discovery.no_gaps","at":1792241669373}
+{"kind":"runtime.tick","at":1792241669373,"n":11}
+{"kind":"invoke.started","at":1792241699441,"capability_id":"agentry.adopt","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id"]}
+{"kind":"invoke.started","at":1792241699441,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id","candidate_id"]}
+{"kind":"invoke.failed","at":1792241699442,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":1}
+{"kind":"adoption.synthesize_failed","at":1792241699442,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"pypi:img2pdf","code":"invoker_failed","message":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"}
+{"kind":"adoption.synthesis_attempt_recorded","at":1792241699442,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"pypi:img2pdf","phase":"synthesize","error_preview":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found","attempt_id":"synthesis_attempt:proposal_v0242_1792241384252:pypi:img2pdf:1792241699442"}
+{"kind":"invoke.started","at":1792241699475,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id","candidate_id"]}
+{"kind":"invoke.failed","at":1792241699476,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":33}
+{"kind":"adoption.synthesize_failed","at":1792241699476,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:img2pdf","code":"invoker_failed","message":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"}
+{"kind":"adoption.synthesis_attempt_recorded","at":1792241699476,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:img2pdf","phase":"synthesize","error_preview":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found","attempt_id":"synthesis_attempt:proposal_v0242_1792241384252:npm:img2pdf:1792241699476"}
+{"kind":"invoke.started","at":1792241699509,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id","candidate_id"]}
+{"kind":"invoke.failed","at":1792241699509,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":33}
+{"kind":"adoption.synthesize_failed","at":1792241699510,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:filepix","code":"invoker_failed","message":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"}
+{"kind":"adoption.synthesis_attempt_recorded","at":1792241699510,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:filepix","phase":"synthesize","error_preview":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found","attempt_id":"synthesis_attempt:proposal_v0242_1792241384252:npm:filepix:1792241699510"}
+{"kind":"invoke.started","at":1792241699556,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id","candidate_id"]}
+{"kind":"invoke.failed","at":1792241699556,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":46}
+{"kind":"adoption.synthesize_failed","at":1792241699556,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:@artdotstyle/filepix","code":"invoker_failed","message":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"}
+{"kind":"adoption.synthesis_attempt_recorded","at":1792241699556,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:@artdotstyle/filepix","phase":"synthesize","error_preview":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found","attempt_id":"synthesis_attempt:proposal_v0242_1792241384252:npm:@artdotstyle/filepix:1792241699556"}
+{"kind":"invoke.started","at":1792241699580,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id","candidate_id"]}
+{"kind":"invoke.failed","at":1792241699580,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":24}
+{"kind":"adoption.synthesize_failed","at":1792241699581,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:slice2pdf","code":"invoker_failed","message":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"}
+{"kind":"adoption.synthesis_attempt_recorded","at":1792241699581,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:slice2pdf","phase":"synthesize","error_preview":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found","attempt_id":"synthesis_attempt:proposal_v0242_1792241384252:npm:slice2pdf:1792241699581"}
+{"kind":"invoke.started","at":1792241699613,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id","candidate_id"]}
+{"kind":"invoke.failed","at":1792241699613,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":32}
+{"kind":"adoption.synthesize_failed","at":1792241699614,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:@pdfweave/converter","code":"invoker_failed","message":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"}
+{"kind":"adoption.synthesis_attempt_recorded","at":1792241699614,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:@pdfweave/converter","phase":"synthesize","error_preview":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found","attempt_id":"synthesis_attempt:proposal_v0242_1792241384252:npm:@pdfweave/converter:1792241699614"}
+{"kind":"invoke.started","at":1792241699654,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id","candidate_id"]}
+{"kind":"invoke.failed","at":1792241699654,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":40}
+{"kind":"adoption.synthesize_failed","at":1792241699655,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:moguan-pdf","code":"invoker_failed","message":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"}
+{"kind":"adoption.synthesis_attempt_recorded","at":1792241699655,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:moguan-pdf","phase":"synthesize","error_preview":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found","attempt_id":"synthesis_attempt:proposal_v0242_1792241384252:npm:moguan-pdf:1792241699655"}
+{"kind":"invoke.started","at":1792241699687,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id","candidate_id"]}
+{"kind":"invoke.failed","at":1792241699688,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":32}
+{"kind":"adoption.synthesize_failed","at":1792241699688,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:@dicepdf/cli","code":"invoker_failed","message":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"}
+{"kind":"adoption.synthesis_attempt_recorded","at":1792241699688,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:@dicepdf/cli","phase":"synthesize","error_preview":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found","attempt_id":"synthesis_attempt:proposal_v0242_1792241384252:npm:@dicepdf/cli:1792241699688"}
+{"kind":"invoke.started","at":1792241699721,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id","candidate_id"]}
+{"kind":"invoke.failed","at":1792241699721,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":33}
+{"kind":"adoption.synthesize_failed","at":1792241699721,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:nodetopy3","code":"invoker_failed","message":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"}
+{"kind":"adoption.synthesis_attempt_recorded","at":1792241699721,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:nodetopy3","phase":"synthesize","error_preview":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found","attempt_id":"synthesis_attempt:proposal_v0242_1792241384252:npm:nodetopy3:1792241699721"}
+{"kind":"invoke.started","at":1792241699745,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id","candidate_id"]}
+{"kind":"invoke.failed","at":1792241699745,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":24}
+{"kind":"adoption.synthesize_failed","at":1792241699745,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:nodetopy","code":"invoker_failed","message":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"}
+{"kind":"adoption.synthesis_attempt_recorded","at":1792241699745,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:nodetopy","phase":"synthesize","error_preview":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found","attempt_id":"synthesis_attempt:proposal_v0242_1792241384252:npm:nodetopy:1792241699745"}
+{"kind":"invoke.started","at":1792241699770,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id","candidate_id"]}
+{"kind":"invoke.failed","at":1792241699770,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":25}
+{"kind":"adoption.synthesize_failed","at":1792241699770,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:@vijayhardaha/video2pdf","code":"invoker_failed","message":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"}
+{"kind":"adoption.synthesis_attempt_recorded","at":1792241699770,"proposal_id":"proposal_v0242_1792241384252","candidate_id":"npm:@vijayhardaha/video2pdf","phase":"synthesize","error_preview":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found","attempt_id":"synthesis_attempt:proposal_v0242_1792241384252:npm:@vijayhardaha/video2pdf:1792241699770"}
+{"kind":"proposal.adopted","at":1792241699796,"proposal_id":"proposal_v0242_1792241384252","adopted":[],"failed":[{"candidate_id":"pypi:img2pdf","capability_id":"pypi:img2pdf","phase":"synthesize","error":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"},{"candidate_id":"npm:img2pdf","capability_id":"pypi:img2pdf","phase":"synthesize","error":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"},{"candidate_id":"npm:filepix","capability_id":"pypi:img2pdf","phase":"synthesize","error":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"},{"candidate_id":"npm:@artdotstyle/filepix","capability_id":"pypi:img2pdf","phase":"synthesize","error":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"},{"candidate_id":"npm:slice2pdf","capability_id":"pypi:img2pdf","phase":"synthesize","error":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"},{"candidate_id":"npm:@pdfweave/converter","capability_id":"pypi:img2pdf","phase":"synthesize","error":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"},{"candidate_id":"npm:moguan-pdf","capability_id":"pypi:img2pdf","phase":"synthesize","error":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"},{"candidate_id":"npm:@dicepdf/cli","capability_id":"pypi:img2pdf","phase":"synthesize","error":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"},{"candidate_id":"npm:nodetopy3","capability_id":"pypi:img2pdf","phase":"synthesize","error":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"},{"candidate_id":"npm:nodetopy","capability_id":"pypi:img2pdf","phase":"synthesize","error":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"},{"candidate_id":"npm:@vijayhardaha/video2pdf","capability_id":"pypi:img2pdf","phase":"synthesize","error":"invoker invoker.in_process_js failed: agentry.synthesize: gap gap:pypi:img2pdf not found"}],"retired_gap":null,"retired_watches":[],"decision":"rejected","attempt":3,"retry_exhausted":true}
+{"kind":"invoke.started","at":1792241699823,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","primary","fallback"]}
+{"kind":"invoke.started","at":1792241699823,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"runtime.tick","at":1792241699833,"n":12}
+{"kind":"notify.email.gmail.sent","at":1792241699922,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] synthesis failed: tool","message_id":"01a149ee-0c1f-782c-b524-926a4678c07f","ms":99}
+{"kind":"invoke.succeeded","at":1792241699922,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":99}
+{"kind":"notify.fallback.primary_ok","at":1792241699922,"primary":"notify.email.gmail","subject":"[agentry] synthesis failed: tool"}
+{"kind":"invoke.succeeded","at":1792241699922,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":126}
+{"kind":"adoption.notified","at":1792241699922,"proposal_id":"proposal_v0242_1792241384252","channel":"notify.email.gmail","primary_ok":true,"fallback_used":false,"message_id":"01a149ee-0c1f-782c-b524-926a4678c07f"}
+{"kind":"invoke.succeeded","at":1792241699922,"capability_id":"agentry.adopt","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":518}
+{"kind":"discovery.adoption_completed","at":1792241699922,"proposal_id":"proposal_v0242_1792241384252","adopted":[]}
+{"kind":"discovery.no_gaps","at":1792241699922}
+{"kind":"discovery.no_gaps","at":1792241729418}
+{"kind":"runtime.tick","at":1792241729834,"n":13}
+{"kind":"discovery.no_gaps","at":1792241759459}
+{"kind":"runtime.tick","at":1792241759835,"n":14}
