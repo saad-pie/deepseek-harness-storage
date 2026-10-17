@@ -1140,3 +1140,24 @@
 {"kind":"invoke.failed","at":1792226052639,"capability_id":"pdf.render","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":1779}
 {"kind":"capability_gap.recurred","at":1792226052644,"key":"gap:pdf.render","wanted_kind":"pdf","wanted_id":"pdf.render","reason":"invoke_failed: invoker_failed: invoker invoker.in_process_js failed: installer: python.install failed — invoker_failed: invoker invoker.in_process_js failed: agentry.os python.install: PIP_BOOTSTRAP_FAILED: python3 pip bootstrap failed: error: externally-managed-environment\n\n× This environment is ex","hits":2,"example_task_id":null}
 {"kind":"runs.rollup_completed","at":1792226124725,"capabilities":15,"runs":255}
+{"kind":"runtime.boot.started","at":1792226298070,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792226298078,"loaded":0,"skipped":23,"files":23}
+{"kind":"runtime.boot.watches_loaded","at":1792226298078,"count":6}
+{"kind":"runtime.boot.completed","at":1792226298078,"capabilities":65,"watches":6}
+{"kind":"invoke.started","at":1792226298079,"capability_id":"pdf.render","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["markdown","title","output_path"]}
+{"kind":"invoke.started","at":1792226298079,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792226298100,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":20}
+{"kind":"invoke.started","at":1792226298100,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792226298105,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4}
+{"kind":"installer.already_prepared","at":1792226298105,"capId":"pdf.render","session":"pdf.render-default"}
+{"kind":"invoker.session_prepared","at":1792226298105,"capability_id":"pdf.render","session":"pdf.render-default"}
+{"kind":"invoke.started","at":1792226298105,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792226298108,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3}
+{"kind":"invoke.started","at":1792226298108,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792226298110,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"installer.already_prepared","at":1792226298110,"capId":"pdf.render","session":"pdf.render-default"}
+{"kind":"invoke.started","at":1792226298111,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","code","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792226298129,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":19}
+{"kind":"invoke.failed","at":1792226298130,"capability_id":"pdf.render","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":50}
+{"kind":"capability_gap.recurred","at":1792226298130,"key":"gap:pdf.render","wanted_kind":"pdf","wanted_id":"pdf.render","reason":"invoke_failed: invoker_failed: invoker invoker.in_process_js failed: pdf.render: python exit 1 — Traceback (most recent call last):\n  File \"/tmp/home/.dsh/agentry-kernel/work/pdf.render-default/.agentry_scripts/script_mvc59i4g_wcbq.py\", line 2, in <module>\n    from reportlab.lib.pagesizes import let","hits":3,"example_task_id":null}
+{"kind":"runs.rollup_completed","at":1792226424760,"capabilities":15,"runs":261}
