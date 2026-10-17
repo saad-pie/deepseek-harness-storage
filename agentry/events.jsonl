@@ -1725,3 +1725,85 @@
 {"kind":"discovery.watch_created","at":1792239315920,"gap_id":"gap:crates:topdf","wanted_kind":"tool","watch_id":"watch_mvcd0iq8_hr2upg","source":"agentry.discover"}
 {"kind":"discovery.tick_summary","at":1792239315920,"gaps":1,"uncovered":1,"watched":6,"created":1,"proposals":0,"adopted":0}
 {"kind":"discovery.tick_summary","at":1792239345940,"gaps":1,"uncovered":0,"watched":7,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792239375966,"gaps":1,"uncovered":0,"watched":7,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.boot.started","at":1792239404412,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792239404425,"loaded":0,"skipped":23,"files":23}
+{"kind":"runtime.boot.watches_loaded","at":1792239404425,"count":7}
+{"kind":"runtime.boot.completed","at":1792239404425,"capabilities":85,"watches":7}
+{"kind":"runtime.boot.started","at":1792239404478,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792239404486,"loaded":0,"skipped":23,"files":23}
+{"kind":"runtime.boot.watches_loaded","at":1792239404486,"count":0}
+{"kind":"runtime.boot.completed","at":1792239404486,"capabilities":78,"watches":0}
+{"kind":"invoke.started","at":1792239405998,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792239405999,"watch_id":"watch_mvcd2g8f_89fa2e","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:crates:topdf::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792239405999,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"discovery.watch_created","at":1792239405999,"gap_id":"gap:crates:topdf","wanted_kind":"tool","watch_id":"watch_mvcd2g8f_89fa2e","source":"agentry.discover"}
+{"kind":"discovery.tick_summary","at":1792239405999,"gaps":1,"uncovered":1,"watched":0,"created":1,"proposals":0,"adopted":0}
+{"kind":"runtime.boot.started","at":1792239434114,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792239434125,"loaded":0,"skipped":23,"files":23}
+{"kind":"runtime.boot.watches_loaded","at":1792239434125,"count":1}
+{"kind":"runtime.boot.completed","at":1792239434126,"capabilities":79,"watches":1}
+{"kind":"approval.server_started","at":1792239434132,"host":"127.0.0.1","port":7862}
+{"kind":"discovery.tick_summary","at":1792239434141,"gaps":1,"uncovered":0,"watched":1,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792239464161,"gaps":1,"uncovered":0,"watched":1,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792239494190,"gaps":1,"uncovered":0,"watched":1,"created":0,"proposals":0,"adopted":0}
+{"kind":"runs.rollup_completed","at":1792239509302,"capabilities":9,"runs":151}
+{"kind":"discovery.tick_summary","at":1792239524224,"gaps":1,"uncovered":0,"watched":1,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.boot.started","at":1792239568140,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792239568157,"loaded":0,"skipped":23,"files":23}
+{"kind":"runtime.boot.watches_loaded","at":1792239568157,"count":1}
+{"kind":"runtime.boot.completed","at":1792239568158,"capabilities":79,"watches":1}
+{"kind":"runtime.boot.started","at":1792239576908,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792239576921,"loaded":0,"skipped":23,"files":23}
+{"kind":"runtime.boot.watches_loaded","at":1792239576921,"count":0}
+{"kind":"runtime.boot.completed","at":1792239576921,"capabilities":77,"watches":0}
+{"kind":"approval.server_started","at":1792239576928,"host":"127.0.0.1","port":7862}
+{"kind":"discovery.no_gaps","at":1792239576937}
+{"kind":"discovery.no_gaps","at":1792239606960}
+{"kind":"runtime.boot.started","at":1792239621281,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792239621294,"loaded":0,"skipped":23,"files":23}
+{"kind":"runtime.boot.watches_loaded","at":1792239621294,"count":0}
+{"kind":"runtime.boot.completed","at":1792239621294,"capabilities":77,"watches":0}
+{"kind":"invoke.started","at":1792239621294,"capability_id":"agentry.reason.deep","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["intent","failure"]}
+{"kind":"invoke.started","at":1792239621302,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792239622679,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1376}
+{"kind":"invoke.started","at":1792239622679,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","sources","limit"]}
+{"kind":"discover.started","at":1792239622679,"query":"convert PNG image to PDF file","sources":["npm","pypi","github","web"],"limit":10}
+{"kind":"invoke.started","at":1792239622684,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792239623702,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1018}
+{"kind":"invoke.started","at":1792239623703,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792239623704,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792239624310,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":606}
+{"kind":"invoke.succeeded","at":1792239624490,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":787}
+{"kind":"discover.completed","at":1792239624491,"query":"convert PNG image to PDF file","sources":["npm","pypi","github","web"],"counts":{"npm":10,"pypi":10,"github":10,"web":10},"errors":{}}
+{"kind":"invoke.succeeded","at":1792239624491,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1812}
+{"kind":"agentry.reason.deep.tool_called","at":1792239624491,"tool":"discover_capability","url":null,"query":"convert PNG image to PDF file","error":null,"result_size":13102}
+{"kind":"invoke.started","at":1792239624491,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792239625135,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":643}
+{"kind":"invoke.started","at":1792239625135,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","code","env","timeout_ms"]}
+{"kind":"invoke.failed","at":1792239625138,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":3}
+{"kind":"agentry.reason.deep.tool_called","at":1792239625139,"tool":"fetch_url","url":null,"query":null,"error":"fetch_url kernel call failed: invoker_failed: invoker invoker.in_process_js failed: agentry.os node.run: NOT_FOUND: unknown session: deep_fetch_mvcd75bj","result_size":164}
+{"kind":"invoke.started","at":1792239625139,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"llm.key_rotated","at":1792239625230,"provider":"groq","model":"qwen/qwen3.8-27b","attempt":1,"max_attempts":4,"retry_after_ms":43000}
+{"kind":"invoke.succeeded","at":1792239625864,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":725}
+{"kind":"invoke.started","at":1792239625865,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","code","env","timeout_ms"]}
+{"kind":"invoke.failed","at":1792239625867,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":2}
+{"kind":"agentry.reason.deep.tool_called","at":1792239625867,"tool":"fetch_url","url":null,"query":null,"error":"fetch_url kernel call failed: invoker_failed: invoker invoker.in_process_js failed: agentry.os node.run: NOT_FOUND: unknown session: deep_fetch_mvcd75vt","result_size":164}
+{"kind":"invoke.started","at":1792239625867,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"llm.key_rotated","at":1792239625960,"provider":"groq","model":"qwen/qwen3.8-27b","attempt":1,"max_attempts":4,"retry_after_ms":32000}
+{"kind":"invoke.succeeded","at":1792239626565,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":698}
+{"kind":"invoke.started","at":1792239626565,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792239627163,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":598}
+{"kind":"agentry.reason.deep.tool_called","at":1792239627163,"tool":"web_search","url":null,"query":"img2pdf pypi convert PNG to PDF python","error":null,"result_size":3183}
+{"kind":"invoke.started","at":1792239627163,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"llm.key_rotated","at":1792239627248,"provider":"groq","model":"qwen/qwen3.8-27b","attempt":1,"max_attempts":4,"retry_after_ms":39000}
+{"kind":"invoke.succeeded","at":1792239628368,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1205}
+{"kind":"capability_gap.recorded","at":1792239628369,"key":"gap:pypi:img2pdf","wanted_kind":"tool","wanted_id":"pypi:img2pdf","wanted_description":"convert PNG image to PDF file","reason":"deep reasoning: No image-to-PDF capability exists in the graph (only pdf.render, which is markdown→PDF). Discovery found strong installable matches: pypi:img2pdf (lossless PNG→PDF, well-known) and npm:image-to-pdf. P","hits":1,"example_task_id":null}
+{"kind":"agentry.reason.deep.gap_recorded","at":1792239628369,"gap_id":"gap:pypi:img2pdf","wanted_kind":"tool","hits":1,"proposed_id":"pypi:img2pdf","resolved_id":"pypi:img2pdf"}
+{"kind":"agentry.reason.deep.completed","at":1792239628369,"model_used":"qwen/qwen3.8-27b","turns":1,"tools_used":["discover_capability","fetch_url","fetch_url","web_search"],"gap_id":"gap:pypi:img2pdf","existing_capability_id":null,"ms":7074}
+{"kind":"invoke.succeeded","at":1792239628369,"capability_id":"agentry.reason.deep","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":7075}
+{"kind":"invoke.started","at":1792239636989,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792239636989,"watch_id":"watch_mvcd7egt_vtgg2a","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:pypi:img2pdf::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792239636990,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792239636990,"gap_id":"gap:pypi:img2pdf","wanted_kind":"tool","watch_id":"watch_mvcd7egt_vtgg2a","source":"agentry.discover"}
+{"kind":"discovery.tick_summary","at":1792239636990,"gaps":1,"uncovered":1,"watched":0,"created":1,"proposals":0,"adopted":0}
