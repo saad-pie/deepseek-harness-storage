@@ -1,0 +1,46 @@
+{
+  "id": "react-pdf_svg",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "react-pdf_svg",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/react-pdf_svg.mjs",
+  "accepts": {
+    "svg_string": "string"
+  },
+  "produces": {
+    "svg_tree": "string"
+  },
+  "requires": {
+    "npm": [
+      "@react-pdf/svg"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that an SVG string is provided via environment and store it for later steps.",
+      "fails_if": "SVG_STRING env var is missing or empty",
+      "code": "const { SVG_STRING } = process.env;\\nif (!SVG_STRING) { throw new Error('Missing SVG_STRING env var'); }\\nglobalThis.svgString = SVG_STRING;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Import @react-pdf/svg, parse the SVG string into a node tree, and serialize it.",
+      "fails_if": "Package import fails or parseSvg is unavailable or parsing throws",
+      "code": "const mod = await import('@react-pdf/svg');\\nconst parseSvg = mod.parseSvg || (mod.default && mod.default.parseSvg) || mod.default;\\nif (!parseSvg) { throw new Error('parseSvg not found in @react-pdf/svg'); }\\nconst tree = parseSvg(globalThis.svgString);\\nglobalThis.svgTree = JSON.stringify(tree);"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Output a JSON object containing the serialized SVG node tree.",
+      "fails_if": "JSON serialization fails or svgTree is undefined",
+      "code": "console.log(JSON.stringify({ svg_tree: globalThis.svgTree }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

@@ -1,0 +1,46 @@
+{
+  "id": "pdf-lib_upng",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "pdf-lib_upng",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/pdf-lib_upng.mjs",
+  "accepts": {
+    "png_path": "string"
+  },
+  "produces": {
+    "rgba_base64": "string"
+  },
+  "requires": {
+    "npm": [
+      "@pdf-lib/upng"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate input PNG path and set ready state",
+      "fails_if": "input missing or file not found",
+      "code": "const fs = await import('node:fs');\nconst path = process.env.PNG_PATH;\nif (!path) throw new Error('PNG_PATH not set');\nif (!fs.existsSync(path)) throw new Error('PNG file not found');\nglobalThis.pngPath = path;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Decode PNG to RGBA and encode to base64",
+      "fails_if": "decoding error",
+      "code": "const fs = await import('node:fs');\nconst upng = await import('@pdf-lib/upng');\nconst mod = upng.default || upng;\nconst UPNG = mod;\nconst data = await fs.promises.readFile(globalThis.pngPath);\nconst arrBuf = data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);\nconst img = UPNG.decode(arrBuf);\nconst rgba = UPNG.toRGBA8(img)[0];\nglobalThis.rgbaBase64 = Buffer.from(rgba).toString('base64');"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Output JSON with rgba_base64",
+      "fails_if": "JSON stringify error",
+      "code": "console.log(JSON.stringify({ rgba_base64: globalThis.rgbaBase64 }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
