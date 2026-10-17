@@ -376,3 +376,25 @@
 {"kind":"agent_skill","at":1792221895432,"proposal_id":"proposal_mvc2lbqe_d979sw","candidate_id":"clawhub:0xcjl/md-pdf-report","capability_id":"0xcjl_md-pdf-report","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/0xcjl_md-pdf-report.mjs","source":"synthesized:web:clawhub:0xcjl/md-pdf-report"}
 {"kind":"proposal.adopted","at":1792221895437,"proposal_id":"proposal_mvc2lbqe_d979sw","adopted":[{"candidate_id":"clawhub:0xcjl/md-pdf-report","candidate_url":"https://clawhub.ai/0xcjl/skills/md-pdf-report","capability_id":"0xcjl_md-pdf-report","kind":"agent_skill","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/0xcjl_md-pdf-report.mjs","trial_session":"trial_0xcjl_md-pdf-report_mvc2mqbm"}],"failed":[],"retired_gap":null,"retired_watches":[],"decision":"adopted","attempt":0,"retry_exhausted":false}
 {"kind":"invoke.started","at":1792221895438,"capability_id":"agentry.checkpoint","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["reason"]}
+{"kind":"checkpoint.pushed","at":1792221896571,"reason":"adopt:1_capabilities","sha":"71dc3bb","ms":1133}
+{"kind":"invoke.succeeded","at":1792221896571,"capability_id":"agentry.checkpoint","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1134}
+{"kind":"invoke.started","at":1792221896571,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","primary","fallback"]}
+{"kind":"invoke.started","at":1792221896571,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792221896647,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] adopted: 0xcjl_md-pdf-report","message_id":"01a148bf-df92-71fe-8988-7191a842694c","ms":76}
+{"kind":"invoke.succeeded","at":1792221896647,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":76}
+{"kind":"notify.fallback.primary_ok","at":1792221896647,"primary":"notify.email.gmail","subject":"[agentry] adopted: 0xcjl_md-pdf-report"}
+{"kind":"invoke.succeeded","at":1792221896647,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":76}
+{"kind":"adoption.notified","at":1792221896647,"proposal_id":"proposal_mvc2lbqe_d979sw","channel":"notify.email.gmail","primary_ok":true,"fallback_used":false,"message_id":"01a148bf-df92-71fe-8988-7191a842694c"}
+{"kind":"invoke.succeeded","at":1792221896648,"capability_id":"agentry.adopt","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":25763}
+{"kind":"discovery.adoption_completed","at":1792221896648,"proposal_id":"proposal_mvc2lbqe_d979sw","adopted":[{"candidate_id":"clawhub:0xcjl/md-pdf-report","candidate_url":"https://clawhub.ai/0xcjl/skills/md-pdf-report","capability_id":"0xcjl_md-pdf-report","kind":"agent_skill","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/0xcjl_md-pdf-report.mjs","trial_session":"trial_0xcjl_md-pdf-report_mvc2mqbm"}]}
+{"kind":"discovery.no_gaps","at":1792221896648}
+{"kind":"discovery.no_gaps","at":1792221900886}
+{"kind":"runtime.tick","at":1792221900898,"n":56}
+{"kind":"discovery.no_gaps","at":1792221930887}
+{"kind":"runtime.tick","at":1792221930898,"n":57}
+{"kind":"discovery.no_gaps","at":1792221960894}
+{"kind":"runtime.tick","at":1792221960899,"n":58}
+{"kind":"discovery.no_gaps","at":1792221990904}
+{"kind":"runtime.tick","at":1792221990904,"n":59}
+{"kind":"discovery.no_gaps","at":1792222020934}
+{"kind":"runtime.tick","at":1792222020934,"n":60}
