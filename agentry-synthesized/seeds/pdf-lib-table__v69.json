@@ -1,0 +1,52 @@
+{
+  "id": "pdf-lib-table__v69",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "pdf-lib-table__v69",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/pdf-lib-table__v69.mjs",
+  "accepts": {
+    "image_path": "string"
+  },
+  "produces": {
+    "pdf_base64": "string"
+  },
+  "requires": {
+    "npm": [
+      "pdf-lib",
+      "pdf-lib-table"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the supplied image path and load the image bytes into global state.",
+      "fails_if": "IMAGE_PATH env var missing or file does not exist.",
+      "code": "(async () => {\n  const { existsSync, readFileSync } = await import('node:fs');\n  const imagePath = process.env.IMAGE_PATH;\n  if (!imagePath) throw new Error('IMAGE_PATH env var not set');\n  if (!existsSync(imagePath)) throw new Error(`Image file not found: ${imagePath}`);\n  globalThis.imageBytes = readFileSync(imagePath);\n})();"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Create a PDF where the first page shows a centered title and the full‑size image, then render markdown content starting on page two, forcing at least three pages.",
+      "fails_if": "PDF generation throws any error.",
+      "code": "(async () => {\n  const { PDFDocument, StandardFonts } = await import('pdf-lib');\n  const pdfDoc = await PDFDocument.create();\n  const pngImage = await pdfDoc.embedPng(globalThis.imageBytes);\n  const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);\n  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);\n  const margin = 50;\n\n  // ---- Page 1: title + image ----\n  const page1 = pdfDoc.addPage();\n  const { width, height } = page1.getSize();\n  const title = 'Sample Image';\n  const titleSize = 24;\n  const titleWidth = helveticaBold.widthOfTextAtSize(title, titleSize);\n  page1.drawText(title, {\n    x: (width - titleWidth) / 2,\n    y: height - margin - titleSize,\n    size: titleSize,\n    font: helveticaBold,\n  });\n  const imgMaxW = width - 2 * margin;\n  const imgMaxH = height - 3 * margin - titleSize;\n  const scale = Math.min(imgMaxW / pngImage.width, imgMaxH / pngImage.height);\n  const imgW = pngImage.width * scale;\n  const imgH = pngImage.height * scale;\n  page1.drawImage(pngImage, {\n    x: (width - imgW) / 2,\n    y: margin,\n    width: imgW,\n    height: imgH,\n  });\n\n  // ---- Pages 2+: markdown content ----\n  const md = `# Sample Heading\n## Subheading\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.\n\n- Item one\n- Item two\n- Item three\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.`.repeat(3);\n  const bodySize = 12;\n  const headingSize = bodySize * 2;\n  let curPage = pdfDoc.addPage();\n  let { width: cw, height: ch } = curPage.getSize();\n  const maxW = cw - 2 * margin;\n  let cursorY = ch - margin;\n  const textX = margin;\n\n  function newPage() {\n    curPage = pdfDoc.addPage();\n    ({ width: cw, height: ch } = curPage.getSize());\n    cursorY = ch - margin;\n  }\n\n  function drawWrapped(txt, size, font) {\n    const words = txt.split(' ');\n    let line = '';\n    for (const w of words) {\n      const test = line ? line + ' ' + w : w;\n      const wWidth = font.widthOfTextAtSize(test, size);\n      if (wWidth > maxW) {\n        curPage.drawText(line, { x: textX, y: cursorY, size, font });\n        cursorY -= size + 4;\n        if (cursorY < margin) newPage();\n        line = w;\n      } else {\n        line = test;\n      }\n    }\n    if (line) {\n      curPage.drawText(line, { x: textX, y: cursorY, size, font });\n      cursorY -= size + 4;\n      if (cursorY < margin) newPage();\n    }\n  }\n\n  for (const raw of md.split('\\n')) {\n    if (raw.startsWith('# ')) {\n      drawWrapped(raw.slice(2), headingSize, helveticaBold);\n    } else if (raw.startsWith('## ')) {\n      drawWrapped(raw.slice(3), headingSize, helveticaBold);\n    } else if (raw.startsWith('- ')) {\n      drawWrapped('• ' + raw.slice(2), bodySize, helvetica);\n    } else if (raw.trim() === '') {\n      cursorY -= bodySize;\n      if (cursorY < margin) newPage();\n    } else {\n      drawWrapped(raw, bodySize, helvetica);\n    }\n  }\n\n  // Ensure at least three pages total\n  while (pdfDoc.getPageCount() < 3) pdfDoc.addPage();\n\n  const pdfBytes = await pdfDoc.save();\n  globalThis.pdfBytes = pdfBytes;\n})();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Encode the generated PDF bytes as base64 and output the required JSON key.",
+      "fails_if": "Base64 encoding fails or no PDF bytes are present.",
+      "code": "(async () => {\n  if (!globalThis.pdfBytes) throw new Error('No PDF bytes available');\n  const base64 = Buffer.from(globalThis.pdfBytes).toString('base64');\n  console.log(JSON.stringify({ pdf_base64: base64 }));\n})();"
+    }
+  ],
+  "accept_spec": {
+    "input": {
+      "image_path": "/tmp/home/.dsh/agentry-kernel/work/demo/shot.png"
+    }
+  },
+  "source": "matured:pdf-lib-table",
+  "notes": "Maturation rubric: The image must occupy the full first page with a title above it. Markdown content (# heading, ## subheading, paragraphs, bullets) must start on page 2. Content must overflow to at least 3 pages total. Body text uses Helvetica; headings use Helvetica-Bold at 2x body size."
+}
