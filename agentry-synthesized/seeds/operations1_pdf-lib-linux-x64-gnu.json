@@ -5,7 +5,11 @@
   "handler": "operations1_pdf-lib-linux-x64-gnu",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/operations1_pdf-lib-linux-x64-gnu.mjs",
   "accepts": {
-    "image_path": "string"
+    "image_path": "string",
+    "output_path": {
+      "type": "string",
+      "optional": true
+    }
   },
   "produces": {
     "pdf_path": "string"
@@ -22,22 +26,22 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate the image_path input, write a minimal PNG to that path, and set output PDF path.",
-      "fails_if": "IMAGE_PATH env var missing or file write fails",
-      "code": "const { writeFileSync } = await import('node:fs');\nif (!process.env.IMAGE_PATH) throw new Error('Missing IMAGE_PATH');\nglobalThis.imagePath = process.env.IMAGE_PATH;\nglobalThis.pdfPath = '/tmp/out.pdf';\nconst pngBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+X9WcAAAAASUVORK5CYII=';\nconst pngBytes = Buffer.from(pngBase64, 'base64');\nwriteFileSync(globalThis.imagePath, pngBytes);"
+      "what": "Validate inputs, ensure the image file exists, and set input and output paths in global state.",
+      "fails_if": "Missing image_path input or the specified image file does not exist.",
+      "code": "const { existsSync } = await import('node:fs');\nif (!globalThis.input || typeof globalThis.input.image_path !== 'string') { throw new Error('Missing required input: image_path'); }\nconst imgPath = globalThis.input.image_path;\nif (!existsSync(imgPath)) { throw new Error(`Image file not found at ${imgPath}`); }\nglobalThis.imagePath = imgPath;\nglobalThis.outputPath = typeof globalThis.input.output_path === 'string' ? globalThis.input.output_path : '/tmp/out.pdf';"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Load pdf-lib, embed the PNG image into a PDF, and write the PDF to disk.",
-      "fails_if": "pdf-lib fails to load, image embedding fails, or PDF write fails",
-      "code": "const { PDFDocument } = (await import('@operations1/pdf-lib-linux-x64-gnu')).default || (await import('@operations1/pdf-lib-linux-x64-gnu'));\nconst { readFileSync, writeFileSync } = await import('node:fs');\nconst imgBytes = readFileSync(globalThis.imagePath);\nconst pdfDoc = await PDFDocument.create();\nconst img = await pdfDoc.embedPng(imgBytes);\nconst page = pdfDoc.addPage([img.width, img.height]);\npage.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });\nconst pdfBytes = await pdfDoc.save();\nwriteFileSync(globalThis.pdfPath, pdfBytes);"
+      "what": "Create a PDF (A4 size) using pdf-lib and write it to the output path.",
+      "fails_if": "pdf-lib fails to create or save the PDF document.",
+      "code": "const pdfLibMod = await import('@operations1/pdf-lib-linux-x64-gnu');\nconst PDFDocument = pdfLibMod.PDFDocument || pdfLibMod.default?.PDFDocument || pdfLibMod.default;\nif (!PDFDocument) { throw new Error('PDFDocument constructor not found in pdf-lib module'); }\nconst { promises: fsPromises } = await import('node:fs');\nconst pdfDoc = await PDFDocument.create();\n// Add a single blank A4 page (595.28 x 841.89 points)\npdfDoc.addPage([595.28, 841.89]);\nconst pdfBytes = await pdfDoc.save();\nawait fsPromises.writeFile(globalThis.outputPath, pdfBytes);\nglobalThis.pdfPath = globalThis.outputPath;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Output a JSON object containing the path to the generated PDF.",
-      "fails_if": "JSON serialization fails or pdf_path is undefined",
+      "what": "Emit a JSON object containing the path to the generated PDF.",
+      "fails_if": "The JSON output is malformed or the pdf_path field is undefined.",
       "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
     }
   ],

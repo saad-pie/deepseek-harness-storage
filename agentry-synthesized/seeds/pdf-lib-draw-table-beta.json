@@ -5,21 +5,16 @@
   "handler": "pdf-lib-draw-table-beta",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/pdf-lib-draw-table-beta.mjs",
   "accepts": {
-    "image_base64": "string",
-    "output_path": {
-      "type": "string",
-      "optional": true
-    }
+    "image_path": "string"
   },
   "produces": {
     "pdf_path": "string"
   },
   "requires": {
-    "npm": [
-      "pdf-lib-draw-table-beta",
-      "pdf-lib"
+    "npm": [],
+    "pip": [
+      "img2pdf"
     ],
-    "pip": [],
     "post_install": null,
     "capability": []
   },
@@ -27,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate inputs, decode base64 image, and set output file path.",
-      "fails_if": "Missing image_base64 input or it is not a valid base64 string.",
-      "code": "const { writeFileSync } = await import('node:fs');\nif (!input || typeof input.image_base64 !== 'string') {\n  throw new Error('Required input \"image_base64\" missing or not a string');\n}\nglobalThis.imageBase64 = input.image_base64;\nglobalThis.outputPath = input.output_path || '/tmp/img2pdf_output.pdf';"
+      "what": "Validate that IMAGE_PATH env var is provided and store it for later steps",
+      "fails_if": "IMAGE_PATH is missing or empty",
+      "code": "import os\nimage_path = os.getenv('IMAGE_PATH')\nif not image_path:\n    raise ValueError('Missing IMAGE_PATH')\nglobals()['image_path'] = image_path"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Create a PDF, embed the decoded PNG image, and write the PDF to disk.",
-      "fails_if": "PDF creation or file write fails, or image data cannot be embedded.",
-      "code": "const { PDFDocument } = (await import('pdf-lib')).default || await import('pdf-lib');\nconst pdfLibDrawTable = (await import('pdf-lib-draw-table-beta')).default || await import('pdf-lib-draw-table-beta');\nconst { writeFileSync } = await import('node:fs');\nconst imgBytes = Buffer.from(globalThis.imageBase64, 'base64');\nconst pdfDoc = await PDFDocument.create();\nlet img;\ntry {\n  img = await pdfDoc.embedPng(imgBytes);\n} catch (e) {\n  // If not a PNG, try JPEG\n  img = await pdfDoc.embedJpg(imgBytes);\n}\nconst { width, height } = img.scale(1);\nconst page = pdfDoc.addPage([width, height]);\npage.drawImage(img, { x: 0, y: 0, width, height });\nconst pdfBytes = await pdfDoc.save();\nwriteFileSync(globalThis.outputPath, pdfBytes);\nglobalThis.pdfPath = globalThis.outputPath;"
+      "what": "Convert the input image to a PDF using img2pdf and write it to a temporary file",
+      "fails_if": "Image file does not exist, img2pdf conversion fails, or writing the PDF fails",
+      "code": "import os, pathlib, tempfile, img2pdf\nimage_path = globals().get('image_path')\nif not os.path.isfile(image_path):\n    raise FileNotFoundError(f'Image file not found: {image_path}')\nwith open(image_path, 'rb') as f:\n    img_bytes = f.read()\npdf_bytes = img2pdf.convert(img_bytes)\nout_path = pathlib.Path(tempfile.gettempdir()) / (pathlib.Path(image_path).stem + '.pdf')\nwith open(out_path, 'wb') as f:\n    f.write(pdf_bytes)\nglobals()['pdf_path'] = str(out_path)"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Output a JSON object containing the path to the generated PDF.",
-      "fails_if": "JSON serialization fails or pdf_path is undefined.",
-      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
+      "what": "Print a JSON object containing the path to the generated PDF",
+      "fails_if": "JSON serialization fails or pdf_path is undefined",
+      "code": "import json, sys\npdf_path = globals().get('pdf_path')\nprint(json.dumps({'pdf_path': pdf_path}))"
     }
   ],
   "source": "synthesized:agentry.synthesize",

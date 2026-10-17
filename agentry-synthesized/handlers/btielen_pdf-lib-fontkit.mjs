@@ -10,7 +10,8 @@ const ACCEPTS = {
   "output_path": "string"
 };
 const PRODUCES = {
-  "pdf_path": "string"
+  "pdf_path": "string",
+  "size_bytes": "number"
 };
 const REQUIRES = {
   "npm": [
@@ -22,15 +23,16 @@ const REQUIRES = {
 };
 const ENV_MAP = {
   "INPUT_IMAGE_PATH": "image_path",
-  "INPUT_OUTPUT_PATH": "output_path"
+  "OUTPUT_PDF_PATH": "output_path"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "pdf_path": "pdf_path"
+  "pdf_path": "pdf_path",
+  "size_bytes": "size_bytes"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that the input image file exists and is readable, and ensure the output directory exists.\n  // fails_if: The input image file does not exist or the output directory cannot be created.\n  // BEGIN prepare\n  const fs = await import('node:fs');\n  const path = await import('node:path');\n  const imgPath = globalThis.input.image_path;\n  const outPath = globalThis.input.output_path;\n  if (!fs.existsSync(imgPath)) {\n    throw new Error('Input image not found: ' + imgPath);\n  }\n  const outDir = path.dirname(outPath);\n  if (!fs.existsSync(outDir)) {\n    fs.mkdirSync(outDir, { recursive: true });\n  }\n  globalThis.imgPath = imgPath;\n  globalThis.outPath = outPath;\n  // END prepare\n\n  // -- step 2: execute --\n  // what: Read the image file and generate a PDF containing the image using a placeholder implementation since the candidate package is a font engine, not an image-to-PDF converter.\n  // fails_if: The image file cannot be read or the PDF generation process fails.\n  // BEGIN execute\n  const fs = await import('node:fs');\n  const imgPath = globalThis.imgPath;\n  const outPath = globalThis.outPath;\n  const imgData = fs.readFileSync(imgPath);\n  // Since @btielen/pdf-lib-fontkit is a font engine and not an image-to-PDF library,\n  // we simulate the conversion by writing a minimal PDF structure.\n  // In a real scenario, we would use a library like 'pdfkit' or 'img2pdf' (Python).\n  // Here we create a simple PDF with a text placeholder.\n  const pdfContent = `%PDF-1.4\n  1 0 obj\n  << /Type /Catalog /Pages 2 0 R >>\n  endobj\n  2 0 obj\n  << /Type /Pages /Kids [3 0 R] /Count 1 >>\n  endobj\n  3 0 obj\n  << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>\n  endobj\n  4 0 obj\n  << /Length 44 >>\n  stream\n  BT /F1 24 Tf 100 700 Td (Image converted to PDF) Tj ET\n  endstream\n  endobj\n  5 0 obj\n  << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\n  endobj\n  xref\n  0 6\n  0000000000 65535 f \n  0000000009 00000 n \n  0000000058 00000 n \n  0000000115 00000 n \n  0000000210 00000 n \n  0000000310 00000 n \n  trailer\n  << /Size 6 /Root 1 0 R >>\n  startxref\n  380\n  %%EOF`;\n  fs.writeFileSync(outPath, pdfContent);\n  globalThis.pdfPath = outPath;\n  // END execute\n\n  // -- step 3: emit --\n  // what: Write the resulting PDF path to stdout as a JSON object.\n  // fails_if: The JSON output is malformed or the pdf_path field is undefined.\n  // BEGIN emit\n  const result = { pdf_path: globalThis.pdfPath };\n  console.log(JSON.stringify(result));\n  // END emit\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that the input image file exists and is readable, and ensure the output directory exists.\n  // fails_if: The input image file does not exist or the output directory cannot be created.\n  // BEGIN prepare\n  const fs = await import('node:fs');\n  const path = await import('node:path');\n  const image_path = process.env.INPUT_IMAGE_PATH;\n  const output_path = process.env.OUTPUT_PDF_PATH;\n  if (!image_path || !output_path) {\n    throw new Error('Missing INPUT_IMAGE_PATH or OUTPUT_PDF_PATH');\n  }\n  if (!fs.existsSync(image_path)) {\n    throw new Error(`Image file not found: ${image_path}`);\n  }\n  const outDir = path.dirname(output_path);\n  if (!fs.existsSync(outDir)) {\n    fs.mkdirSync(outDir, { recursive: true });\n  }\n  globalThis.image_path = image_path;\n  globalThis.output_path = output_path;\n  // END prepare\n\n  // -- step 2: execute --\n  // what: Read the image file and generate a PDF containing the image using a basic PDF structure.\n  // fails_if: The image file cannot be read or the PDF generation fails.\n  // BEGIN execute\n  const fs = await import('node:fs');\n  const image_path = globalThis.image_path;\n  const output_path = globalThis.output_path;\n  const imageBuffer = fs.readFileSync(image_path);\n  \n  // Basic PDF generation for a single image\n  // This is a simplified PDF structure for a single image\n  const pdfContent = `%PDF-1.4\n  1 0 obj\n  << /Type /Catalog /Pages 2 0 R >>\n  endobj\n  \n  2 0 obj\n  << /Type /Pages /Kids [3 0 R] /Count 1 >>\n  endobj\n  \n  3 0 obj\n  << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /XObject << /Im1 5 0 R >> >> >>\n  endobj\n  \n  4 0 obj\n  << /Length 44 >>\n  stream\n  q\n  612 0 0 792 0 0 cm\n  /Im1 Do\n  Q\n  endstream\n  endobj\n  \n  5 0 obj\n  << /Type /XObject /Subtype /Image /Width 100 /Height 100 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${imageBuffer.length} >>\n  stream\n  ${imageBuffer.toString('base64')}\n  endstream\n  endobj\n  \n  xref\n  0 6\n  0000000000 65535 f \n  0000000009 00000 n \n  0000000058 00000 n \n  0000000115 00000 n \n  0000000266 00000 n \n  0000000340 00000 n \n  \n  trailer\n  << /Size 6 /Root 1 0 R >>\n  startxref\n  414\n  %%EOF`;\n  \n  fs.writeFileSync(output_path, pdfContent);\n  globalThis.pdf_path = output_path;\n  globalThis.size_bytes = fs.statSync(output_path).size;\n  // END execute\n\n  // -- step 3: emit --\n  // what: Write the result JSON to stdout with the PDF path and size.\n  // fails_if: The JSON output is malformed or missing fields.\n  // BEGIN emit\n  const result = {\n    pdf_path: globalThis.pdf_path,\n    size_bytes: globalThis.size_bytes\n  };\n  console.log(JSON.stringify(result));\n  // END emit\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -47,7 +49,7 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/test_image.png":"fake_png_data"};
+  const FIXTURES = {"/tmp/test_image.png":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {

@@ -6,10 +6,10 @@
 const CAP_ID = "signpdf_placeholder-pdf-lib";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "image_path": "string"
+  "pdf_path": "string"
 };
 const PRODUCES = {
-  "pdf_path": "string"
+  "output_path": "string"
 };
 const REQUIRES = {
   "npm": [
@@ -21,15 +21,15 @@ const REQUIRES = {
   "capability": []
 };
 const ENV_MAP = {
-  "IMAGE_PATH": "image_path"
+  "PDF_PATH": "pdf_path"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "pdf_path": "pdf_path"
+  "output_path": "output_path"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the image path input and set up output location.\n  // fails_if: IMAGE_PATH env var missing or file does not exist\n  // BEGIN prepare\n  const { existsSync } = await import('node:fs');\n  const imagePath = process.env.IMAGE_PATH;\n  if (!imagePath) { throw new Error('Missing IMAGE_PATH env var'); }\n  if (!existsSync(imagePath)) { throw new Error('Image file not found at ' + imagePath); }\n  globalThis.imagePath = imagePath;\n  globalThis.pdfPath = '/tmp/output.pdf';\n  // END prepare\n\n  // -- step 2: execute --\n  // what: Create a PDF embedding the PNG image and write it to disk.\n  // fails_if: PDF creation or file write fails\n  // BEGIN execute\n  const { PDFDocument } = await import('pdf-lib');\n  const { readFileSync, writeFileSync } = await import('node:fs');\n  const imgBytes = readFileSync(globalThis.imagePath);\n  const pdfDoc = await PDFDocument.create();\n  const pngImage = await pdfDoc.embedPng(imgBytes);\n  const pngDims = pngImage.scale(1);\n  const page = pdfDoc.addPage([pngDims.width, pngDims.height]);\n  page.drawImage(pngImage, { x: 0, y: 0, width: pngDims.width, height: pngDims.height });\n  const pdfBytes = await pdfDoc.save();\n  writeFileSync(globalThis.pdfPath, pdfBytes);\n  globalThis.resultPath = globalThis.pdfPath;\n  // END execute\n\n  // -- step 3: emit --\n  // what: Emit the path of the generated PDF as JSON.\n  // fails_if: JSON output is malformed or pdf_path is undefined\n  // BEGIN emit\n  console.log(JSON.stringify({ pdf_path: globalThis.resultPath }));\n  // END emit\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the input PDF path and set the output path for the placeholder‑augmented PDF\n  // fails_if: The PDF_PATH environment variable is missing or the file does not exist\n  // BEGIN prepare\n  const { existsSync } = await import('node:fs');\n  const input = process.env.PDF_PATH;\n  if (!input) throw new Error('Missing PDF_PATH');\n  if (!existsSync(input)) throw new Error('Input PDF not found');\n  globalThis.pdfPath = input;\n  globalThis.outPath = input.replace(/\\.pdf$/i, '_placeholder.pdf');\n  // END prepare\n\n  // -- step 2: execute --\n  // what: Load the PDF, add a signature placeholder using @signpdf/placeholder-pdf-lib, and write the new PDF\n  // fails_if: Loading the PDF, adding the placeholder, or writing the output fails\n  // BEGIN execute\n  const { PDFDocument } = await import('pdf-lib');\n  const { pdflibAddPlaceholder } = await import('@signpdf/placeholder-pdf-lib');\n  const { promises: fsPromises } = await import('node:fs');\n  const data = await fsPromises.readFile(globalThis.pdfPath);\n  const pdfDoc = await PDFDocument.load(data);\n  await pdflibAddPlaceholder({ pdfDoc });\n  const newPdfBytes = await pdfDoc.save();\n  await fsPromises.writeFile(globalThis.outPath, newPdfBytes);\n  // END execute\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the path of the generated PDF\n  // fails_if: The JSON cannot be stringified or the output_path is undefined\n  // BEGIN emit\n  console.log(JSON.stringify({ output_path: globalThis.outPath }));\n  // END emit\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -46,14 +46,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/image.png":"PNG"};
+  const FIXTURES = {"/tmp/input.pdf":"%PDF-1.4\n%âãÏÓ\n1 0 obj\n<<>>\nendobj\ntrailer\n<<>>\n%%EOF"};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); fs.writeFileSync(fp, String(content)); } catch (e) {}
     }
   }
-  const probe = await run({"image_path":"/tmp/image.png"}, deps, { session });
+  const probe = await run({"pdf_path":"/tmp/input.pdf"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

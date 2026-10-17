@@ -5,10 +5,10 @@
   "handler": "pdf-lib_upng",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/pdf-lib_upng.mjs",
   "accepts": {
-    "png_path": "string"
+    "png_base64": "string"
   },
   "produces": {
-    "pdf_path": "string"
+    "pdf_base64": "string"
   },
   "requires": {
     "npm": [
@@ -23,23 +23,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that the provided PNG file path exists and store it for later steps.",
-      "fails_if": "The input key png_path is missing or the file cannot be accessed.",
-      "code": "const { writeFileSync, readFileSync, accessSync, constants } = await import('node:fs');\nif (!globalThis.input || typeof globalThis.input.png_path !== 'string') {\n  throw new Error('Missing required input png_path');\n}\nconst pngPath = globalThis.input.png_path;\ntry { accessSync(pngPath, constants.R_OK); } catch (e) { throw new Error('Cannot read PNG file at ' + pngPath); }\nglobalThis.pngPath = pngPath;"
+      "what": "Validate the base64 PNG input and decode it to a Uint8Array stored in global state.",
+      "fails_if": "Missing png_base64 input or base64 decoding fails.",
+      "code": "const { Buffer } = await import('node:buffer');\nif (!globalThis.input || typeof globalThis.input.png_base64 !== 'string') {\n  throw new Error('Missing png_base64 input');\n}\nglobalThis.pngBytes = Buffer.from(globalThis.input.png_base64, 'base64');"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Read the PNG, embed it into a PDF using pdf-lib, write the PDF to a temporary file, and store the output path.",
-      "fails_if": "Reading the PNG, creating the PDF, or writing the PDF file throws an error.",
-      "code": "const { readFile, writeFile } = await import('node:fs').then(m => m.promises);\nconst upngMod = await import('@pdf-lib/upng');\nconst upng = upngMod.default || upngMod;\nconst { PDFDocument } = await import('pdf-lib');\nconst pngBytes = await readFile(globalThis.pngPath);\n// Optional: decode with upng to ensure validity (not strictly needed for pdf-lib)\ntry { upng.decode(pngBytes.buffer); } catch (_) { /* ignore decode errors, pdf-lib will handle */ }\nconst pdfDoc = await PDFDocument.create();\nconst pngImage = await pdfDoc.embedPng(pngBytes);\nconst { width, height } = pngImage.scale(1);\nconst page = pdfDoc.addPage([width, height]);\npage.drawImage(pngImage, { x: 0, y: 0, width, height });\nconst pdfBytes = await pdfDoc.save();\nconst outPath = globalThis.pngPath.replace(/\\.png$/i, '.pdf');\nawait writeFile(outPath, pdfBytes);\nglobalThis.pdfPath = outPath;"
+      "what": "Create a PDF containing the PNG image using pdf-lib and store the PDF as a base64 string.",
+      "fails_if": "Any error while loading modules, embedding the PNG, or saving the PDF.",
+      "code": "const upngMod = await import('@pdf-lib/upng');\nconst upng = upngMod.default || upngMod;\nconst pdfLibMod = await import('pdf-lib');\nconst { PDFDocument } = pdfLibMod;\nconst pngBytes = globalThis.pngBytes;\nconst pdfDoc = await PDFDocument.create();\nconst pngImage = await pdfDoc.embedPng(pngBytes);\nconst page = pdfDoc.addPage([pngImage.width, pngImage.height]);\npage.drawImage(pngImage, { x: 0, y: 0, width: pngImage.width, height: pngImage.height });\nconst pdfBytes = await pdfDoc.save();\nconst { Buffer } = await import('node:buffer');\nglobalThis.pdfBase64 = Buffer.from(pdfBytes).toString('base64');"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Output a JSON object containing the path to the generated PDF.",
-      "fails_if": "The pdf_path variable is undefined or JSON serialization fails.",
-      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
+      "what": "Write a single JSON object with the base64‑encoded PDF to stdout.",
+      "fails_if": "The pdfBase64 value is undefined or JSON serialization fails.",
+      "code": "console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

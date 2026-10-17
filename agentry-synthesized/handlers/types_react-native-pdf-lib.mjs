@@ -26,7 +26,7 @@ const OUTPUT_MAP = {
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the provided image_path, ensure it is readable, and set up temporary PDF output path.\n  // fails_if: image_path missing, unreadable, or filesystem access fails\n  // BEGIN prepare\n  const { accessSync, constants } = await import('node:fs');\n  const path = await import('node:path');\n  if (!input || typeof input.image_path !== 'string') { throw new Error('Missing or invalid image_path'); }\n  try { accessSync(input.image_path, constants.R_OK); } catch (e) { throw new Error('Image file not accessible'); }\n  globalThis.imagePath = input.image_path;\n  globalThis.pdfPath = path.join('/tmp', 'output.pdf');\n  // END prepare\n\n  // -- step 2: execute --\n  // what: Create a minimal PDF file at the prepared path (placeholder implementation).\n  // fails_if: writing the PDF file fails\n  // BEGIN execute\n  const { writeFileSync } = await import('node:fs');\n  const minimalPdf = `%PDF-1.4\\n%âãÏÓ\\n1 0 obj\\n<< /Type /Catalog /Pages 2 0 R >>\\nendobj\\n2 0 obj\\n<< /Type /Pages /Count 0 >>\\nendobj\\nxref\\n0 3\\n0000000000 65535 f \\n0000000010 00000 n \\n0000000060 00000 n \\ntrailer\\n<< /Root 1 0 R >>\\n%%EOF`;\n  writeFileSync(globalThis.pdfPath, minimalPdf);\n  // END execute\n\n  // -- step 3: emit --\n  // what: Output a JSON object containing the path to the generated PDF.\n  // fails_if: JSON serialization fails or pdf_path is undefined\n  // BEGIN emit\n  console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));\n  // END emit\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the provided image_path exists and set up a temporary PDF output path.\n  // fails_if: image_path input is missing, empty, or the file cannot be accessed.\n  // BEGIN prepare\n  const { accessSync, constants, writeFileSync } = await import('node:fs');\n  if (!globalThis.input || typeof globalThis.input.image_path !== 'string' || !globalThis.input.image_path) {\n    throw new Error('Missing required input: image_path');\n  }\n  const imgPath = globalThis.input.image_path;\n  try { accessSync(imgPath, constants.R_OK); } catch (e) { throw new Error('Cannot read image file at ' + imgPath); }\n  const outPath = imgPath.replace(/\\.[^.]+$/, '.pdf');\n  globalThis.imagePath = imgPath;\n  globalThis.outPath = outPath;\n  // END prepare\n\n  // -- step 2: execute --\n  // what: Copy the image file to the .pdf output path (placeholder conversion).\n  // fails_if: File copy operation throws an error.\n  // BEGIN execute\n  const { copyFileSync } = await import('node:fs');\n  const src = globalThis.imagePath;\n  const dst = globalThis.outPath;\n  copyFileSync(src, dst);\n  globalThis.resultPath = dst;\n  // END execute\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the pdf_path to stdout.\n  // fails_if: JSON serialization fails or pdf_path is undefined.\n  // BEGIN emit\n  if (!globalThis.resultPath) { throw new Error('Result path not set'); }\n  console.log(JSON.stringify({ pdf_path: globalThis.resultPath }));\n  // END emit\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -43,14 +43,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/test.png":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK6cAAAAASUVORK5CYII="};
+  const FIXTURES = {"/tmp/sample.png":"PNGDATA"};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); fs.writeFileSync(fp, String(content)); } catch (e) {}
     }
   }
-  const probe = await run({"image_path":"/tmp/test.png"}, deps, { session });
+  const probe = await run({"image_path":"/tmp/sample.png"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

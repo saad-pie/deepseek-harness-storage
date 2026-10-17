@@ -22,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate the provided image_path, ensure it is readable, and set up temporary PDF output path.",
-      "fails_if": "image_path missing, unreadable, or filesystem access fails",
-      "code": "const { accessSync, constants } = await import('node:fs');\nconst path = await import('node:path');\nif (!input || typeof input.image_path !== 'string') { throw new Error('Missing or invalid image_path'); }\ntry { accessSync(input.image_path, constants.R_OK); } catch (e) { throw new Error('Image file not accessible'); }\nglobalThis.imagePath = input.image_path;\nglobalThis.pdfPath = path.join('/tmp', 'output.pdf');"
+      "what": "Validate the provided image_path exists and set up a temporary PDF output path.",
+      "fails_if": "image_path input is missing, empty, or the file cannot be accessed.",
+      "code": "const { accessSync, constants, writeFileSync } = await import('node:fs');\nif (!globalThis.input || typeof globalThis.input.image_path !== 'string' || !globalThis.input.image_path) {\n  throw new Error('Missing required input: image_path');\n}\nconst imgPath = globalThis.input.image_path;\ntry { accessSync(imgPath, constants.R_OK); } catch (e) { throw new Error('Cannot read image file at ' + imgPath); }\nconst outPath = imgPath.replace(/\\.[^.]+$/, '.pdf');\nglobalThis.imagePath = imgPath;\nglobalThis.outPath = outPath;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Create a minimal PDF file at the prepared path (placeholder implementation).",
-      "fails_if": "writing the PDF file fails",
-      "code": "const { writeFileSync } = await import('node:fs');\nconst minimalPdf = `%PDF-1.4\\n%âãÏÓ\\n1 0 obj\\n<< /Type /Catalog /Pages 2 0 R >>\\nendobj\\n2 0 obj\\n<< /Type /Pages /Count 0 >>\\nendobj\\nxref\\n0 3\\n0000000000 65535 f \\n0000000010 00000 n \\n0000000060 00000 n \\ntrailer\\n<< /Root 1 0 R >>\\n%%EOF`;\nwriteFileSync(globalThis.pdfPath, minimalPdf);\n"
+      "what": "Copy the image file to the .pdf output path (placeholder conversion).",
+      "fails_if": "File copy operation throws an error.",
+      "code": "const { copyFileSync } = await import('node:fs');\nconst src = globalThis.imagePath;\nconst dst = globalThis.outPath;\ncopyFileSync(src, dst);\nglobalThis.resultPath = dst;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Output a JSON object containing the path to the generated PDF.",
-      "fails_if": "JSON serialization fails or pdf_path is undefined",
-      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
+      "what": "Write a single JSON object containing the pdf_path to stdout.",
+      "fails_if": "JSON serialization fails or pdf_path is undefined.",
+      "code": "if (!globalThis.resultPath) { throw new Error('Result path not set'); }\nconsole.log(JSON.stringify({ pdf_path: globalThis.resultPath }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

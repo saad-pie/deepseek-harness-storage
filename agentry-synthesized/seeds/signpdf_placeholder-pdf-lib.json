@@ -5,10 +5,10 @@
   "handler": "signpdf_placeholder-pdf-lib",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/signpdf_placeholder-pdf-lib.mjs",
   "accepts": {
-    "image_path": "string"
+    "pdf_path": "string"
   },
   "produces": {
-    "pdf_path": "string"
+    "output_path": "string"
   },
   "requires": {
     "npm": [
@@ -23,23 +23,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate the image path input and set up output location.",
-      "fails_if": "IMAGE_PATH env var missing or file does not exist",
-      "code": "const { existsSync } = await import('node:fs');\nconst imagePath = process.env.IMAGE_PATH;\nif (!imagePath) { throw new Error('Missing IMAGE_PATH env var'); }\nif (!existsSync(imagePath)) { throw new Error('Image file not found at ' + imagePath); }\nglobalThis.imagePath = imagePath;\nglobalThis.pdfPath = '/tmp/output.pdf';"
+      "what": "Validate the input PDF path and set the output path for the placeholder‑augmented PDF",
+      "fails_if": "The PDF_PATH environment variable is missing or the file does not exist",
+      "code": "const { existsSync } = await import('node:fs');\nconst input = process.env.PDF_PATH;\nif (!input) throw new Error('Missing PDF_PATH');\nif (!existsSync(input)) throw new Error('Input PDF not found');\nglobalThis.pdfPath = input;\nglobalThis.outPath = input.replace(/\\.pdf$/i, '_placeholder.pdf');"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Create a PDF embedding the PNG image and write it to disk.",
-      "fails_if": "PDF creation or file write fails",
-      "code": "const { PDFDocument } = await import('pdf-lib');\nconst { readFileSync, writeFileSync } = await import('node:fs');\nconst imgBytes = readFileSync(globalThis.imagePath);\nconst pdfDoc = await PDFDocument.create();\nconst pngImage = await pdfDoc.embedPng(imgBytes);\nconst pngDims = pngImage.scale(1);\nconst page = pdfDoc.addPage([pngDims.width, pngDims.height]);\npage.drawImage(pngImage, { x: 0, y: 0, width: pngDims.width, height: pngDims.height });\nconst pdfBytes = await pdfDoc.save();\nwriteFileSync(globalThis.pdfPath, pdfBytes);\nglobalThis.resultPath = globalThis.pdfPath;"
+      "what": "Load the PDF, add a signature placeholder using @signpdf/placeholder-pdf-lib, and write the new PDF",
+      "fails_if": "Loading the PDF, adding the placeholder, or writing the output fails",
+      "code": "const { PDFDocument } = await import('pdf-lib');\nconst { pdflibAddPlaceholder } = await import('@signpdf/placeholder-pdf-lib');\nconst { promises: fsPromises } = await import('node:fs');\nconst data = await fsPromises.readFile(globalThis.pdfPath);\nconst pdfDoc = await PDFDocument.load(data);\nawait pdflibAddPlaceholder({ pdfDoc });\nconst newPdfBytes = await pdfDoc.save();\nawait fsPromises.writeFile(globalThis.outPath, newPdfBytes);"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit the path of the generated PDF as JSON.",
-      "fails_if": "JSON output is malformed or pdf_path is undefined",
-      "code": "console.log(JSON.stringify({ pdf_path: globalThis.resultPath }));"
+      "what": "Emit a JSON object containing the path of the generated PDF",
+      "fails_if": "The JSON cannot be stringified or the output_path is undefined",
+      "code": "console.log(JSON.stringify({ output_path: globalThis.outPath }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

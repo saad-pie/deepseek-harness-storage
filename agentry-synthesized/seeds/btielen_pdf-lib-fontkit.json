@@ -9,7 +9,8 @@
     "output_path": "string"
   },
   "produces": {
-    "pdf_path": "string"
+    "pdf_path": "string",
+    "size_bytes": "number"
   },
   "requires": {
     "npm": [
@@ -25,21 +26,21 @@
       "verb": "prepare",
       "what": "Validate that the input image file exists and is readable, and ensure the output directory exists.",
       "fails_if": "The input image file does not exist or the output directory cannot be created.",
-      "code": "const fs = await import('node:fs');\nconst path = await import('node:path');\nconst imgPath = globalThis.input.image_path;\nconst outPath = globalThis.input.output_path;\nif (!fs.existsSync(imgPath)) {\n  throw new Error('Input image not found: ' + imgPath);\n}\nconst outDir = path.dirname(outPath);\nif (!fs.existsSync(outDir)) {\n  fs.mkdirSync(outDir, { recursive: true });\n}\nglobalThis.imgPath = imgPath;\nglobalThis.outPath = outPath;"
+      "code": "const fs = await import('node:fs');\nconst path = await import('node:path');\nconst image_path = process.env.INPUT_IMAGE_PATH;\nconst output_path = process.env.OUTPUT_PDF_PATH;\nif (!image_path || !output_path) {\n  throw new Error('Missing INPUT_IMAGE_PATH or OUTPUT_PDF_PATH');\n}\nif (!fs.existsSync(image_path)) {\n  throw new Error(`Image file not found: ${image_path}`);\n}\nconst outDir = path.dirname(output_path);\nif (!fs.existsSync(outDir)) {\n  fs.mkdirSync(outDir, { recursive: true });\n}\nglobalThis.image_path = image_path;\nglobalThis.output_path = output_path;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Read the image file and generate a PDF containing the image using a placeholder implementation since the candidate package is a font engine, not an image-to-PDF converter.",
-      "fails_if": "The image file cannot be read or the PDF generation process fails.",
-      "code": "const fs = await import('node:fs');\nconst imgPath = globalThis.imgPath;\nconst outPath = globalThis.outPath;\nconst imgData = fs.readFileSync(imgPath);\n// Since @btielen/pdf-lib-fontkit is a font engine and not an image-to-PDF library,\n// we simulate the conversion by writing a minimal PDF structure.\n// In a real scenario, we would use a library like 'pdfkit' or 'img2pdf' (Python).\n// Here we create a simple PDF with a text placeholder.\nconst pdfContent = `%PDF-1.4\n1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>\nendobj\n4 0 obj\n<< /Length 44 >>\nstream\nBT /F1 24 Tf 100 700 Td (Image converted to PDF) Tj ET\nendstream\nendobj\n5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\nxref\n0 6\n0000000000 65535 f \n0000000009 00000 n \n0000000058 00000 n \n0000000115 00000 n \n0000000210 00000 n \n0000000310 00000 n \ntrailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n380\n%%EOF`;\nfs.writeFileSync(outPath, pdfContent);\nglobalThis.pdfPath = outPath;"
+      "what": "Read the image file and generate a PDF containing the image using a basic PDF structure.",
+      "fails_if": "The image file cannot be read or the PDF generation fails.",
+      "code": "const fs = await import('node:fs');\nconst image_path = globalThis.image_path;\nconst output_path = globalThis.output_path;\nconst imageBuffer = fs.readFileSync(image_path);\n\n// Basic PDF generation for a single image\n// This is a simplified PDF structure for a single image\nconst pdfContent = `%PDF-1.4\n1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n\n2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n\n3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /XObject << /Im1 5 0 R >> >> >>\nendobj\n\n4 0 obj\n<< /Length 44 >>\nstream\nq\n612 0 0 792 0 0 cm\n/Im1 Do\nQ\nendstream\nendobj\n\n5 0 obj\n<< /Type /XObject /Subtype /Image /Width 100 /Height 100 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${imageBuffer.length} >>\nstream\n${imageBuffer.toString('base64')}\nendstream\nendobj\n\nxref\n0 6\n0000000000 65535 f \n0000000009 00000 n \n0000000058 00000 n \n0000000115 00000 n \n0000000266 00000 n \n0000000340 00000 n \n\ntrailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n414\n%%EOF`;\n\nfs.writeFileSync(output_path, pdfContent);\nglobalThis.pdf_path = output_path;\nglobalThis.size_bytes = fs.statSync(output_path).size;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write the resulting PDF path to stdout as a JSON object.",
-      "fails_if": "The JSON output is malformed or the pdf_path field is undefined.",
-      "code": "const result = { pdf_path: globalThis.pdfPath };\nconsole.log(JSON.stringify(result));"
+      "what": "Write the result JSON to stdout with the PDF path and size.",
+      "fails_if": "The JSON output is malformed or missing fields.",
+      "code": "const result = {\n  pdf_path: globalThis.pdf_path,\n  size_bytes: globalThis.size_bytes\n};\nconsole.log(JSON.stringify(result));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

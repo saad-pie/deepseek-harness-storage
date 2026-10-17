@@ -9,7 +9,7 @@ const ACCEPTS = {
   "image_path": "string"
 };
 const PRODUCES = {
-  "pdf_path": "string"
+  "pdf_base64": "string"
 };
 const REQUIRES = {
   "npm": [
@@ -22,11 +22,11 @@ const REQUIRES = {
 const ENV_MAP = {};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "pdf_path": "pdf_path"
+  "pdf_base64": "pdf_base64"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that the input image file exists and set up output path\n  // fails_if: Input image file does not exist\n  // BEGIN prepare\n  const { existsSync } = await import('node:fs');\n  if (!existsSync(globalThis.input.image_path)) {\n    throw new Error('Input image file does not exist');\n  }\n  globalThis.imagePath = globalThis.input.image_path;\n  globalThis.outputPath = '/tmp/out.pdf';\n  // END prepare\n\n  // -- step 2: execute --\n  // what: Create a PDF containing the image and write it to disk\n  // fails_if: PDF creation or file write fails\n  // BEGIN execute\n  const { readFileSync, writeFileSync } = await import('node:fs');\n  const { PDFDocument } = await import('pdf-lib');\n  const imageBytes = readFileSync(globalThis.imagePath);\n  const pdfDoc = await PDFDocument.create();\n  const pngImage = await pdfDoc.embedPng(imageBytes);\n  const page = pdfDoc.addPage();\n  const { width, height } = page.getSize();\n  page.drawImage(pngImage, { x: 0, y: 0, width, height });\n  const pdfBytes = await pdfDoc.save();\n  writeFileSync(globalThis.outputPath, pdfBytes);\n  globalThis.pdfPath = globalThis.outputPath;\n  // END execute\n\n  // -- step 3: emit --\n  // what: Output the path to the generated PDF as JSON\n  // fails_if: JSON serialization fails\n  // BEGIN emit\n  console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));\n  // END emit\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that the provided image_path exists and read the image file into memory\n  // fails_if: image_path is missing or the file does not exist\n  // BEGIN prepare\n  const { existsSync, readFileSync } = await import('node:fs');\n  if (!input.image_path) throw new Error('Missing required input: image_path');\n  if (!existsSync(input.image_path)) throw new Error(`Image file not found at ${input.image_path}`);\n  globalThis.imageBuffer = readFileSync(input.image_path);\n  // END prepare\n\n  // -- step 2: execute --\n  // what: Create a PDF, embed the PNG image, add a page sized to the image, and serialize the PDF to bytes\n  // fails_if: pdf-lib fails to embed the image or save the PDF\n  // BEGIN execute\n  const mod = await import('pdf-lib');\n  const pdfLib = mod.default || mod;\n  const { PDFDocument } = pdfLib;\n  const pdfDoc = await PDFDocument.create();\n  const img = await pdfDoc.embedPng(globalThis.imageBuffer);\n  const { width, height } = img;\n  const page = pdfDoc.addPage([width, height]);\n  page.drawImage(img, { x: 0, y: 0, width, height });\n  globalThis.pdfBytes = await pdfDoc.save();\n  // END execute\n\n  // -- step 3: emit --\n  // what: Encode the PDF bytes as base64 and output a single JSON object with the pdf_base64 field\n  // fails_if: JSON output is malformed or pdf_base64 is undefined\n  // BEGIN emit\n  const { Buffer } = await import('node:buffer');\n  const base64 = Buffer.from(globalThis.pdfBytes).toString('base64');\n  console.log(JSON.stringify({ pdf_base64: base64 }));\n  // END emit\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -43,14 +43,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/in.png":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/5+hHgAFgwJ/lZ4YAAAAAElFTkSuQmCC"};
+  const FIXTURES = {"/tmp/test.png":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+X2V8AAAAASUVORK5CYII="};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); fs.writeFileSync(fp, String(content)); } catch (e) {}
     }
   }
-  const probe = await run({"image_path":"/tmp/in.png"}, deps, { session });
+  const probe = await run({"image_path":"/tmp/test.png"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

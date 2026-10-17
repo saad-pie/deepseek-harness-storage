@@ -1,0 +1,24 @@
+{
+  "id": "zebbern_claude-code-guide_skills_pdf_SKILL",
+  "kind": "agent_skill",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "zebbern_claude-code-guide_skills_pdf_SKILL",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/zebbern_claude-code-guide_skills_pdf_SKILL.mjs",
+  "accepts": {
+    "image_paths": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "pdf_path": "string",
+    "status": "string"
+  },
+  "requires": {
+    "npm": [],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": null,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
