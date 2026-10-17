@@ -16890,3 +16890,26 @@
 {"kind":"runs.rollup_completed","at":1792218231862,"capabilities":17,"runs":3408}
 {"kind":"runs.rollup_completed","at":1792218532027,"capabilities":17,"runs":3408}
 {"kind":"runs.rollup_completed","at":1792218831902,"capabilities":17,"runs":3408}
+{"kind":"runtime.boot.started","at":1792218966836,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792218967020,"loaded":0,"skipped":22,"files":22}
+{"kind":"runtime.boot.watches_loaded","at":1792218967020,"count":14}
+{"kind":"runtime.boot.completed","at":1792218967020,"capabilities":256,"watches":14}
+{"kind":"invoke.started","at":1792218967021,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","sources","limit"]}
+{"kind":"discover.started","at":1792218967022,"query":"generate pdf reportlab","sources":["agentskills_code","clawhub","github"],"limit":8}
+{"kind":"invoke.started","at":1792218972637,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792218973369,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":730}
+{"kind":"discover.completed","at":1792218973370,"query":"generate pdf reportlab","sources":["agentskills_code","clawhub","github"],"counts":{"agentskills_code":8,"clawhub":0,"github":8},"errors":{}}
+{"kind":"invoke.succeeded","at":1792218973370,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":6349}
+{"kind":"invoke.started","at":1792218973370,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","sources","limit"]}
+{"kind":"discover.started","at":1792218973371,"query":"pdf generation python","sources":["agentskills_code","clawhub","github"],"limit":8}
+{"kind":"invoke.started","at":1792218976096,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792218976894,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":798}
+{"kind":"discover.completed","at":1792218976894,"query":"pdf generation python","sources":["agentskills_code","clawhub","github"],"counts":{"agentskills_code":8,"clawhub":0,"github":8},"errors":{}}
+{"kind":"invoke.succeeded","at":1792218976894,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3524}
+{"kind":"invoke.started","at":1792218976894,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","sources","limit"]}
+{"kind":"discover.started","at":1792218976895,"query":"create pdf file","sources":["agentskills_code","clawhub","github"],"limit":8}
+{"kind":"invoke.started","at":1792218985986,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792218986724,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":737}
+{"kind":"discover.completed","at":1792218986724,"query":"create pdf file","sources":["agentskills_code","clawhub","github"],"counts":{"agentskills_code":8,"clawhub":8,"github":8},"errors":{}}
+{"kind":"invoke.succeeded","at":1792218986724,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":9830}
+{"kind":"runs.rollup_completed","at":1792219131914,"capabilities":17,"runs":3414}
