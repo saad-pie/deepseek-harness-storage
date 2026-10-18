@@ -1,0 +1,53 @@
+{
+  "id": "npm_imagemagick-stream",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_imagemagick-stream",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_imagemagick-stream.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string",
+    "resize": "string",
+    "quality": {
+      "type": "number",
+      "optional": true
+    }
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "imagemagick-stream"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate required environment inputs and store them on globalThis for later steps.",
+      "fails_if": "Any required env var (INPUT_PATH, OUTPUT_PATH) is missing or malformed.",
+      "code": "const { env } = await import('node:process');\nif (!env.INPUT_PATH) throw new Error('Missing INPUT_PATH');\nif (!env.OUTPUT_PATH) throw new Error('Missing OUTPUT_PATH');\nglobalThis.inputPath = env.INPUT_PATH;\nglobalThis.outputPath = env.OUTPUT_PATH;\nglobalThis.resize = env.RESIZE || null;\nglobalThis.quality = env.QUALITY !== undefined ? Number(env.QUALITY) : null;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Run ImageMagick via imagemagick-stream to transform the input image according to the requested options.",
+      "fails_if": "The ImageMagick process errors, the input file cannot be read, or the output cannot be written.",
+      "code": "const { createReadStream, createWriteStream } = await import('node:fs');\nconst imMod = await import('imagemagick-stream');\nconst im = imMod.default || imMod;\nlet stream = im();\nif (globalThis.resize) stream = stream.resize(globalThis.resize);\nif (globalThis.quality !== null) stream = stream.quality(globalThis.quality);\nconst read = createReadStream(globalThis.inputPath);\nconst write = createWriteStream(globalThis.outputPath);\nawait new Promise((resolve, reject) => {\n  read.pipe(stream).pipe(write);\n  write.on('finish', resolve);\n  write.on('error', reject);\n  stream.on('error', reject);\n});"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a single JSON object containing the path of the generated output file.",
+      "fails_if": "JSON serialization fails or the output_path field is undefined.",
+      "code": "console.log(JSON.stringify({ output_path: globalThis.outputPath }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

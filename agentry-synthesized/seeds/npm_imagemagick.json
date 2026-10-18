@@ -1,0 +1,56 @@
+{
+  "id": "npm_imagemagick",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_imagemagick",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_imagemagick.mjs",
+  "accepts": {
+    "srcPath": "string",
+    "dstPath": "string",
+    "width": {
+      "type": "number",
+      "optional": true
+    },
+    "height": {
+      "type": "number",
+      "optional": true
+    }
+  },
+  "produces": {
+    "success": "boolean"
+  },
+  "requires": {
+    "npm": [
+      "imagemagick"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate required inputs and ensure source file exists, storing paths in global state.",
+      "fails_if": "Missing srcPath or dstPath env vars, or source file does not exist.",
+      "code": "const { existsSync } = await import('node:fs');\nconst src = process.env.SRC_PATH;\nconst dst = process.env.DST_PATH;\nif (!src || !dst) throw new Error('Missing inputs');\nif (!existsSync(src)) throw new Error('Source file missing');\nglobalThis.srcPath = src;\nglobalThis.dstPath = dst;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Invoke imagemagick resize using the wrapper with provided options.",
+      "fails_if": "imagemagick resize callback returns an error.",
+      "code": "const mod = await import('imagemagick');\nconst im = mod.default || mod;\nconst widthEnv = process.env.WIDTH;\nconst heightEnv = process.env.HEIGHT;\nconst options = { srcPath: globalThis.srcPath, dstPath: globalThis.dstPath };\nif (widthEnv) options.width = parseInt(widthEnv, 10);\nif (heightEnv) options.height = parseInt(heightEnv, 10);\nawait new Promise((resolve, reject) => {\n  im.resize(options, (err, stdout, stderr) => {\n    if (err) reject(err);\n    else resolve();\n  });\n});\nglobalThis.success = true;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object with the success flag to stdout.",
+      "fails_if": "JSON serialization fails or success is undefined.",
+      "code": "if (globalThis.success === undefined) throw new Error('Result undefined');\nconsole.log(JSON.stringify({ success: globalThis.success }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

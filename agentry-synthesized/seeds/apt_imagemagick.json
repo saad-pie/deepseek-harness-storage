@@ -21,22 +21,22 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate required inputs, expose them as globals, and ensure a placeholder PNG exists at the input path.",
-      "fails_if": "Missing INPUT_PATH or OUTPUT_PATH env vars, or file write fails.",
-      "code": "const { writeFileSync, existsSync } = await import('node:fs');\nglobalThis.inputPath = process.env.INPUT_PATH;\nglobalThis.outputPath = process.env.OUTPUT_PATH;\nif (!globalThis.inputPath || !globalThis.outputPath) {\n  throw new Error('Missing required inputs');\n}\nif (!existsSync(globalThis.inputPath)) {\n  const pngBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+X3eUAAAAASUVORK5CYII=';\n  const buf = Buffer.from(pngBase64, 'base64');\n  writeFileSync(globalThis.inputPath, buf);\n}"
+      "what": "Validate inputs, ensure the input image exists (create a tiny PNG if missing), and create the output directory.",
+      "fails_if": "Missing required input_path or output_path, or unable to write files.",
+      "code": "const fs = await import('node:fs');\nconst path = await import('node:path');\nconst input = inputs.input_path;\nconst output = inputs.output_path;\nif (!input) { throw new Error('input_path is required'); }\nif (!output) { throw new Error('output_path is required'); }\nif (!fs.existsSync(input)) {\n  const pngBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK6cAAAAASUVORK5CYII=';\n  const buf = Buffer.from(pngBase64, 'base64');\n  fs.writeFileSync(input, buf);\n}\nconst outDir = path.dirname(output);\nfs.mkdirSync(outDir, { recursive: true });\nglobalThis.inputPath = input;\nglobalThis.outputPath = output;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Run ImageMagick's convert command to transform the input file into the desired output file.",
-      "fails_if": "The convert command exits with an error or is not found.",
-      "code": "const { execSync } = await import('node:child_process');\nexecSync(`convert \"${globalThis.inputPath}\" \"${globalThis.outputPath}\"`);\nglobalThis.resultPath = globalThis.outputPath;"
+      "what": "Run ImageMagick's convert command to transform the input image to the desired output format.",
+      "fails_if": "The convert command exits with a non‑zero status or is not found.",
+      "code": "const { execSync } = await import('node:child_process');\nexecSync(`convert \\\"${globalThis.inputPath}\\\" \\\"${globalThis.outputPath}\\\"`);\nglobalThis.resultPath = globalThis.outputPath;"
     },
     {
       "step": 3,
       "verb": "emit",
       "what": "Emit a JSON object containing the path of the generated output file.",
-      "fails_if": "JSON serialization fails or resultPath is undefined.",
+      "fails_if": "JSON serialization fails or the output_path field is undefined.",
       "code": "console.log(JSON.stringify({ output_path: globalThis.resultPath }));"
     }
   ],

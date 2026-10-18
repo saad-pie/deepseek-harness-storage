@@ -1,0 +1,51 @@
+{
+  "id": "npm_types_imagemagick",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_types_imagemagick",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_types_imagemagick.mjs",
+  "accepts": {
+    "command": "string",
+    "args": {
+      "type": "string",
+      "optional": true
+    }
+  },
+  "produces": {
+    "output": "string"
+  },
+  "requires": {
+    "npm": [
+      "@types/imagemagick"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate inputs and set up the ImageMagick command and arguments.",
+      "fails_if": "The CMD environment variable is missing or empty.",
+      "code": "const { env } = await import('node:process');\nif (!env.CMD) { throw new Error('Missing CMD env var'); }\nglobalThis.command = env.CMD;\nglobalThis.args = env.ARGS ? env.ARGS.split(' ') : [];\n"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Run the ImageMagick command via child_process and capture its stdout.",
+      "fails_if": "The command fails to start, exits with a non‑zero code, or an error occurs while reading output.",
+      "code": "const { spawn } = await import('node:child_process');\nawait new Promise((resolve, reject) => {\n  const proc = spawn(globalThis.command, globalThis.args);\n  let stdout = '';\n  let stderr = '';\n  proc.stdout.on('data', d => { stdout += d.toString(); });\n  proc.stderr.on('data', d => { stderr += d.toString(); });\n  proc.on('error', err => reject(err));\n  proc.on('close', code => {\n    if (code !== 0) { reject(new Error(`Command exited with code ${code}: ${stderr}`)); }\n    else { globalThis.result = stdout.trim(); resolve(); }\n  });\n});\n"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object containing the captured output to stdout.",
+      "fails_if": "The result is undefined or JSON serialization fails.",
+      "code": "if (globalThis.result === undefined) { throw new Error('No result to emit'); }\nconsole.log(JSON.stringify({ output: globalThis.result }));\n"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

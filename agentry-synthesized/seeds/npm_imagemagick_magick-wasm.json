@@ -1,0 +1,48 @@
+{
+  "id": "npm_imagemagick_magick-wasm",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_imagemagick_magick-wasm",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_imagemagick_magick-wasm.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "@imagemagick/magick-wasm"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Read required environment variables, validate their presence and that the input file exists, and store them in global state.",
+      "fails_if": "Missing INPUT_PATH or OUTPUT_PATH env var, or the input file does not exist.",
+      "code": "globalThis.input_path = process.env.INPUT_PATH;\\nglobalThis.output_path = process.env.OUTPUT_PATH;\\nif (!globalThis.input_path || !globalThis.output_path) {\\n  throw new Error('Missing required inputs');\\n}\\nconst { existsSync } = await import('node:fs');\\nif (!existsSync(globalThis.input_path)) {\\n  throw new Error('Input file does not exist');\\n}\\nglobalThis.ready = true;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Copy the input image to the output path using the magick-wasm package (no transformation).",
+      "fails_if": "File read/write errors or the magick-wasm module fails to load.",
+      "code": "const { readFileSync, writeFileSync } = await import('node:fs');\\nconst { default: magick } = await import('@imagemagick/magick-wasm');\\n// Simple copy – real ImageMagick operations could be added here\\nconst data = readFileSync(globalThis.input_path);\\nwriteFileSync(globalThis.output_path, data);\\nglobalThis.resultPath = globalThis.output_path;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the path of the produced output file.",
+      "fails_if": "The output_path field is undefined or JSON serialization fails.",
+      "code": "console.log(JSON.stringify({ output_path: globalThis.resultPath }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

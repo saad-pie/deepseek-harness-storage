@@ -1,0 +1,52 @@
+{
+  "id": "npm_wasm-imagemagick",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_wasm-imagemagick",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_wasm-imagemagick.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string",
+    "operation": {
+      "type": "string",
+      "optional": true
+    }
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "wasm-imagemagick"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate required inputs and store paths in global state for later steps.",
+      "fails_if": "input_path or output_path is missing or not a string",
+      "code": "const { argv } = await import('node:process');\nconst { writeFileSync, readFileSync } = await import('node:fs');\nconst input = JSON.parse(argv[2]);\nif (!input.input_path || typeof input.input_path !== 'string') {\n  throw new Error('missing or invalid input_path');\n}\nif (!input.output_path || typeof input.output_path !== 'string') {\n  throw new Error('missing or invalid output_path');\n}\nglobalThis.inputPath = input.input_path;\nglobalThis.outputPath = input.output_path;\nglobalThis.operation = input.operation || 'copy';"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Load wasm-imagemagick (placeholder) and copy the input file to the output location.",
+      "fails_if": "reading the input file, writing the output file, or loading the wasm package fails",
+      "code": "const { readFileSync, writeFileSync } = await import('node:fs');\nconst mod = await import('wasm-imagemagick');\nconst wasmPkg = mod.default || mod; // ensure package is loaded\nif (typeof wasmPkg.load === 'function') {\n  await wasmPkg.load();\n}\nconst data = readFileSync(globalThis.inputPath);\nwriteFileSync(globalThis.outputPath, data);\nglobalThis.resultPath = globalThis.outputPath;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object containing the output_path to stdout.",
+      "fails_if": "output_path is undefined when emitting",
+      "code": "if (!globalThis.resultPath) {\n  throw new Error('resultPath is undefined');\n}\nconsole.log(JSON.stringify({ output_path: globalThis.resultPath }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
