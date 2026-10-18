@@ -5,14 +5,15 @@
   "handler": "docx2pdf-converter",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/docx2pdf-converter.mjs",
   "accepts": {
-    "png_path": "string"
+    "input_path": "string",
+    "output_path": "string"
   },
   "produces": {
     "pdf_path": "string"
   },
   "requires": {
     "npm": [
-      "pdfkit"
+      "docx2pdf-converter"
     ],
     "pip": [],
     "post_install": null,
@@ -22,23 +23,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate the PNG input path, write a minimal PNG file if needed, and compute the output PDF path.",
-      "fails_if": "PNG_PATH env var missing or unable to write the placeholder PNG file",
-      "code": "const { writeFileSync } = await import('node:fs');\nconst { basename, dirname, join, extname } = await import('node:path');\nconst pngPath = process.env.PNG_PATH;\nif (!pngPath) throw new Error('Missing PNG_PATH');\nconst pngData = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK6cAAAAASUVORK5CYII=', 'base64');\nwriteFileSync(pngPath, pngData);\nglobalThis.pngPath = pngPath;\nconst pdfPath = join(dirname(pngPath), basename(pngPath, extname(pngPath)) + '.pdf');\nglobalThis.pdfPath = pdfPath;"
+      "what": "Validate inputs and ensure the input DOCX file exists and the output directory is created.",
+      "fails_if": "Missing INPUT_PATH or OUTPUT_PATH environment variables, or filesystem errors while creating files/directories.",
+      "code": "const { writeFileSync, mkdirSync, existsSync } = await import('node:fs');\nconst path = await import('node:path');\nglobalThis.inputPath = process.env.INPUT_PATH;\nglobalThis.outputPath = process.env.OUTPUT_PATH;\nif (!globalThis.inputPath || !globalThis.outputPath) { throw new Error('Missing required env vars'); }\nif (!existsSync(globalThis.inputPath)) { writeFileSync(globalThis.inputPath, ''); }\nconst outDir = path.dirname(globalThis.outputPath);\nif (!existsSync(outDir)) { mkdirSync(outDir, { recursive: true }); }"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Create a PDF document, embed the PNG image, and write it to the computed PDF path.",
-      "fails_if": "PDF generation fails or the image cannot be embedded",
-      "code": "const { createWriteStream } = await import('node:fs');\nconst PDFDocument = (await import('pdfkit')).default;\nconst doc = new PDFDocument();\nconst out = createWriteStream(globalThis.pdfPath);\ndoc.pipe(out);\ndoc.image(globalThis.pngPath, 0, 0);\ndoc.end();\nawait new Promise((resolve, reject) => {\n  out.on('finish', resolve);\n  out.on('error', reject);\n});"
+      "what": "Invoke docx2pdf-converter to convert the DOCX file to a PDF at the specified output path.",
+      "fails_if": "The conversion function throws an error or fails to produce the PDF file.",
+      "code": "const mod = await import('docx2pdf-converter');\nconst topdf = mod.default || mod;\nif (typeof topdf.convert !== 'function') { throw new Error('convert function not found'); }\n// The convert API is synchronous; wrap in try/catch for safety\ntry {\n  topdf.convert(globalThis.inputPath, globalThis.outputPath);\n} catch (e) {\n  throw new Error('Conversion failed: ' + e.message);\n}"
     },
     {
       "step": 3,
       "verb": "emit",
       "what": "Emit a JSON object containing the path to the generated PDF.",
-      "fails_if": "JSON serialization fails or pdf_path is undefined",
-      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
+      "fails_if": "The JSON output is malformed or the pdf_path field is undefined.",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.outputPath }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

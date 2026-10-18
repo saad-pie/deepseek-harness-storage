@@ -9,7 +9,7 @@ const ACCEPTS = {
   "note_path": "string"
 };
 const PRODUCES = {
-  "pdf_path": "string"
+  "pdf_bytes": "string"
 };
 const REQUIRES = {
   "npm": [
@@ -19,16 +19,14 @@ const REQUIRES = {
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {
-  "INPUT_PATH": "note_path"
-};
+const ENV_MAP = {};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "pdf_path": "pdf_path"
+  "pdf_bytes": "pdf_bytes"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Read the input .note file from disk and validate its existence.\n  // fails_if: The input file does not exist or cannot be read.\n  { // scope for step 1\n    // BEGIN prepare\n    const fs = await import('node:fs');\n    const path = globalThis.inputPath;\n    if (!fs.existsSync(path)) {\n      throw new Error('Input file not found: ' + path);\n    }\n    const buffer = fs.readFileSync(path);\n    globalThis.noteBuffer = buffer;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Parse the Supernote note and convert it to PDF bytes using the supernote-typescript library.\n  // fails_if: The note file is corrupted, not a valid Supernote format, or the PDF generation fails.\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('supernote-typescript');\n    const { SupernoteX, toPdf } = mod;\n    const note = new SupernoteX(globalThis.noteBuffer);\n    const pdfBytes = await toPdf(note);\n    globalThis.pdfBytes = pdfBytes;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write the generated PDF to a file and output the result as JSON.\n  // fails_if: The file write fails or the JSON output is malformed.\n  { // scope for step 3\n    // BEGIN emit\n    const fs = await import('node:fs');\n    const outputPath = globalThis.inputPath.replace(/\\.note$/, '.pdf');\n    fs.writeFileSync(outputPath, globalThis.pdfBytes);\n    console.log(JSON.stringify({ pdf_path: outputPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that the note_path input exists and read its contents into a buffer\n  // fails_if: note_path missing or file cannot be read\n  { // scope for step 1\n    // BEGIN prepare\n    const { readFileSync, existsSync } = await import('node:fs');\n    const path = globalThis.input.note_path;\n    if (!path || !existsSync(path)) {\n      throw new Error('Input note_path is missing or file does not exist');\n    }\n    globalThis.noteBuffer = readFileSync(path);\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Create a SupernoteX instance and convert it to PDF bytes\n  // fails_if: SupernoteX construction or toPdf fails\n  { // scope for step 2\n    // BEGIN execute\n    const { SupernoteX, toPdf } = await import('supernote-typescript');\n    const note = new SupernoteX(globalThis.noteBuffer);\n    const pdfBytes = await toPdf(note);\n    globalThis.pdfBytes = pdfBytes;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Output a JSON object containing the PDF bytes as a base64 string\n  // fails_if: pdf_bytes undefined or not a Buffer\n  { // scope for step 3\n    // BEGIN emit\n    if (!globalThis.pdfBytes) throw new Error('PDF bytes not produced');\n    console.log(JSON.stringify({ pdf_bytes: globalThis.pdfBytes.toString('base64') }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -45,14 +43,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/test.note":"dummy-note-content-for-testing"};
+  const FIXTURES = {"/tmp/note.note":"IyBmaXh0dXJlIGZvciAvdG1wL25vdGUubm90ZQoKaGVsbG8K"};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"note_path":"/tmp/test.note"}, deps, { session });
+  const probe = await run({"note_path":"/tmp/note.note"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

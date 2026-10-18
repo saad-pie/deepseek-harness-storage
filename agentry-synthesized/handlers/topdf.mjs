@@ -20,17 +20,14 @@ const REQUIRES = {
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {
-  "HTML": "html",
-  "OUTPUT_PATH": "output_path"
-};
+const ENV_MAP = {};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
   "pdf_path": "pdf_path"
 };
-const RESULT_PARSE = "stdout_json";
+const RESULT_PARSE = "stdout_text";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate inputs and write the provided HTML to a temporary file for conversion.\n  // fails_if: Missing HTML or output_path environment variable.\n  { // scope for step 1\n    // BEGIN prepare\n    const { writeFileSync } = await import('node:fs');\n    const html = process.env.HTML;\n    const outPath = process.env.OUTPUT_PATH;\n    if (!html) throw new Error('Missing HTML input');\n    if (!outPath) throw new Error('Missing output_path');\n    const inputPath = '/tmp/input.html';\n    writeFileSync(inputPath, html);\n    globalThis.inputPath = inputPath;\n    globalThis.outputPath = outPath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Invoke the topdf library to convert the temporary HTML file into a PDF at the requested location.\n  // fails_if: topdf conversion throws an error or fails to produce the PDF file.\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('topdf');\n    const fn = mod.default || mod;\n    await fn(globalThis.inputPath, globalThis.outputPath);\n    globalThis.resultPath = globalThis.outputPath;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a single JSON object containing the path to the generated PDF.\n  // fails_if: The resultPath is undefined or JSON serialization fails.\n  { // scope for step 3\n    // BEGIN emit\n    if (!globalThis.resultPath) throw new Error('No result PDF path');\n    console.log(JSON.stringify({ pdf_path: globalThis.resultPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate inputs and write the provided HTML to a temporary file, storing paths for later steps.\n  // fails_if: Missing html or output_path input, or file write fails.\n  { // scope for step 1\n    // BEGIN prepare\n    const { writeFileSync } = await import('node:fs');\n    if (!globalThis.input || typeof globalThis.input.html !== 'string' || typeof globalThis.input.output_path !== 'string') {\n      throw new Error('Required inputs \"html\" and \"output_path\" are missing or not strings');\n    }\n    const htmlPath = '/tmp/input.html';\n    writeFileSync(htmlPath, globalThis.input.html);\n    globalThis.htmlPath = htmlPath;\n    globalThis.pdfPath = globalThis.input.output_path;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Load the topdf package and invoke it to convert the HTML file into a PDF at the requested location.\n  // fails_if: topdf module cannot be loaded, its API is unexpected, or the conversion throws an error.\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('topdf');\n    const topdf = mod.default || mod;\n    if (typeof topdf === 'function') {\n      // Assume signature (htmlPath, pdfPath) returns a Promise or uses callback\n      const result = topdf(globalThis.htmlPath, globalThis.pdfPath);\n      if (result && typeof result.then === 'function') await result;\n    } else if (typeof topdf.convert === 'function') {\n      const result = topdf.convert(globalThis.htmlPath, globalThis.pdfPath);\n      if (result && typeof result.then === 'function') await result;\n    } else {\n      throw new Error('Unsupported topdf API: no callable function found');\n    }\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the path to the generated PDF.\n  // fails_if: The PDF path is undefined or JSON serialization fails.\n  { // scope for step 3\n    // BEGIN emit\n    if (!globalThis.pdfPath) {\n      throw new Error('PDF path not set');\n    }\n    console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -54,9 +51,9 @@ export async function accept(deps, opts = {}) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"html":"<h1>Test Document</h1><p>Hello, world!</p>","output_path":"/tmp/output.pdf"}, deps, { session });
+  const probe = await run({"html":"<!DOCTYPE html><html><body><h1>Test PDF</h1></body></html>","output_path":"/tmp/output.pdf"}, deps, { session });
   const out = probe.output || probe;
-  const minBytes = 0;
+  const minBytes = 500;
   if (minBytes > 0) {
     const size = typeof out.bytes === "number" ? out.bytes : 0;
     if (size < minBytes) {

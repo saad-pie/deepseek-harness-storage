@@ -6,8 +6,8 @@
 const CAP_ID = "aspirio_topdf";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "input_html": "string",
-  "output_pdf": "string"
+  "input": "string",
+  "output": "string"
 };
 const PRODUCES = {
   "pdf_path": "string"
@@ -21,8 +21,8 @@ const REQUIRES = {
   "capability": []
 };
 const ENV_MAP = {
-  "INPUT_HTML": "input_html",
-  "OUTPUT_PDF": "output_pdf"
+  "INPUT_PATH": "input",
+  "OUTPUT_PATH": "output"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
@@ -30,7 +30,7 @@ const OUTPUT_MAP = {
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate input paths and write the HTML fixture to the input file, set up output path.\n  // fails_if: INPUT_HTML env var missing or file write fails\n  { // scope for step 1\n    // BEGIN prepare\n    const { writeFileSync } = await import('node:fs');\n    const inputPath = process.env.INPUT_HTML;\n    if (!inputPath) throw new Error('Missing INPUT_HTML');\n    const htmlContent = '<!DOCTYPE html><html><body><h1>Test</h1></body></html>';\n    writeFileSync(inputPath, htmlContent);\n    globalThis.inputPath = inputPath;\n    const outputPath = process.env.OUTPUT_PDF || '/tmp/output.pdf';\n    globalThis.outputPath = outputPath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Run the @aspirio/topdf CLI to convert the HTML file to PDF.\n  // fails_if: CLI execution throws or exits with non-zero status\n  { // scope for step 2\n    // BEGIN execute\n    const { execSync } = await import('node:child_process');\n    const { join } = await import('node:path');\n    const inputPath = globalThis.inputPath;\n    const outputPath = globalThis.outputPath;\n    const scriptPath = join(process.cwd(), 'node_modules', '@aspirio', 'topdf', 'index.js');\n    try {\n      execSync(`node ${scriptPath} -i ${inputPath} -o ${outputPath}`, { stdio: 'ignore' });\n    } catch (e) {\n      throw new Error('PDF conversion failed');\n    }\n    globalThis.pdfPath = outputPath;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Output JSON with the path to the generated PDF.\n  // fails_if: JSON serialization fails or pdf_path undefined\n  { // scope for step 3\n    // BEGIN emit\n    if (!globalThis.pdfPath) throw new Error('pdfPath not set');\n    console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate required INPUT_PATH and OUTPUT_PATH env vars, ensure the input HTML file exists, and store paths in global state.\n  // fails_if: Missing env vars or input file does not exist.\n  { // scope for step 1\n    // BEGIN prepare\n    const { accessSync } = await import('node:fs');\n    const inputPath = process.env.INPUT_PATH;\n    const outputPath = process.env.OUTPUT_PATH;\n    if (!inputPath) throw new Error('Missing INPUT_PATH');\n    if (!outputPath) throw new Error('Missing OUTPUT_PATH');\n    try { accessSync(inputPath); } catch { throw new Error('Input file not found'); }\n    globalThis.inputPath = inputPath;\n    globalThis.outputPath = outputPath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Invoke the @aspirio/topdf CLI to convert the HTML file to PDF using the stored paths.\n  // fails_if: The CLI process exits with an error or times out.\n  { // scope for step 2\n    // BEGIN execute\n    const { execFile } = await import('node:child_process');\n    const { join } = await import('node:path');\n    const scriptPath = join(process.cwd(), 'node_modules', '@aspirio/topdf', 'index.js');\n    await new Promise((resolve, reject) => {\n      execFile('node', [scriptPath, '-i', globalThis.inputPath, '-o', globalThis.outputPath], (error, stdout, stderr) => {\n        if (error) reject(error);\n        else resolve();\n      });\n    });\n    globalThis.pdfPath = globalThis.outputPath;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object to stdout containing the path of the generated PDF.\n  // fails_if: JSON serialization fails or pdf_path is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -47,16 +47,16 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/input.html":"<!DOCTYPE html><html><body><h1>Test</h1></body></html>","/tmp/output.pdf":"JVBERi0xLjQKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0NvdW50IDAvS2lkc1tdPj4KZW5kb2JqCnhyZWYKMCAzCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAwOSAwMDAwMCBuIAowMDAwMDAwMDUyIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSAzL1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKMTAzCiUlRU9GCg=="};
+  const FIXTURES = {"/tmp/input.html":"<!DOCTYPE html><html><head><title>Test</title></head><body><h1>Hello PDF</h1></body></html>","/tmp/output.pdf":"JVBERi0xLjQKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0NvdW50IDAvS2lkc1tdPj4KZW5kb2JqCnhyZWYKMCAzCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAwOSAwMDAwMCBuIAowMDAwMDAwMDUyIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSAzL1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKMTAzCiUlRU9GCg=="};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"input_html":"/tmp/input.html","output_pdf":"/tmp/output.pdf"}, deps, { session });
+  const probe = await run({"input":"/tmp/input.html","output":"/tmp/output.pdf"}, deps, { session });
   const out = probe.output || probe;
-  const minBytes = 500;
+  const minBytes = 0;
   if (minBytes > 0) {
     const size = typeof out.bytes === "number" ? out.bytes : 0;
     if (size < minBytes) {

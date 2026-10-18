@@ -23,23 +23,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate inputs and write the provided HTML to a temporary file for conversion.",
-      "fails_if": "Missing HTML or output_path environment variable.",
-      "code": "const { writeFileSync } = await import('node:fs');\nconst html = process.env.HTML;\nconst outPath = process.env.OUTPUT_PATH;\nif (!html) throw new Error('Missing HTML input');\nif (!outPath) throw new Error('Missing output_path');\nconst inputPath = '/tmp/input.html';\nwriteFileSync(inputPath, html);\nglobalThis.inputPath = inputPath;\nglobalThis.outputPath = outPath;"
+      "what": "Validate inputs and write the provided HTML to a temporary file, storing paths for later steps.",
+      "fails_if": "Missing html or output_path input, or file write fails.",
+      "code": "const { writeFileSync } = await import('node:fs');\nif (!globalThis.input || typeof globalThis.input.html !== 'string' || typeof globalThis.input.output_path !== 'string') {\n  throw new Error('Required inputs \"html\" and \"output_path\" are missing or not strings');\n}\nconst htmlPath = '/tmp/input.html';\nwriteFileSync(htmlPath, globalThis.input.html);\nglobalThis.htmlPath = htmlPath;\nglobalThis.pdfPath = globalThis.input.output_path;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Invoke the topdf library to convert the temporary HTML file into a PDF at the requested location.",
-      "fails_if": "topdf conversion throws an error or fails to produce the PDF file.",
-      "code": "const mod = await import('topdf');\nconst fn = mod.default || mod;\nawait fn(globalThis.inputPath, globalThis.outputPath);\nglobalThis.resultPath = globalThis.outputPath;"
+      "what": "Load the topdf package and invoke it to convert the HTML file into a PDF at the requested location.",
+      "fails_if": "topdf module cannot be loaded, its API is unexpected, or the conversion throws an error.",
+      "code": "const mod = await import('topdf');\nconst topdf = mod.default || mod;\nif (typeof topdf === 'function') {\n  // Assume signature (htmlPath, pdfPath) returns a Promise or uses callback\n  const result = topdf(globalThis.htmlPath, globalThis.pdfPath);\n  if (result && typeof result.then === 'function') await result;\n} else if (typeof topdf.convert === 'function') {\n  const result = topdf.convert(globalThis.htmlPath, globalThis.pdfPath);\n  if (result && typeof result.then === 'function') await result;\n} else {\n  throw new Error('Unsupported topdf API: no callable function found');\n}"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a single JSON object containing the path to the generated PDF.",
-      "fails_if": "The resultPath is undefined or JSON serialization fails.",
-      "code": "if (!globalThis.resultPath) throw new Error('No result PDF path');\nconsole.log(JSON.stringify({ pdf_path: globalThis.resultPath }));"
+      "what": "Emit a JSON object containing the path to the generated PDF.",
+      "fails_if": "The PDF path is undefined or JSON serialization fails.",
+      "code": "if (!globalThis.pdfPath) {\n  throw new Error('PDF path not set');\n}\nconsole.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

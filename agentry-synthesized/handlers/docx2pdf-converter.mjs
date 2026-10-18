@@ -6,21 +6,23 @@
 const CAP_ID = "docx2pdf-converter";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "png_path": "string"
+  "input_path": "string",
+  "output_path": "string"
 };
 const PRODUCES = {
   "pdf_path": "string"
 };
 const REQUIRES = {
   "npm": [
-    "pdfkit"
+    "docx2pdf-converter"
   ],
   "pip": [],
   "post_install": null,
   "capability": []
 };
 const ENV_MAP = {
-  "PNG_PATH": "png_path"
+  "INPUT_PATH": "input_path",
+  "OUTPUT_PATH": "output_path"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
@@ -28,7 +30,7 @@ const OUTPUT_MAP = {
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the PNG input path, write a minimal PNG file if needed, and compute the output PDF path.\n  // fails_if: PNG_PATH env var missing or unable to write the placeholder PNG file\n  { // scope for step 1\n    // BEGIN prepare\n    const { writeFileSync } = await import('node:fs');\n    const { basename, dirname, join, extname } = await import('node:path');\n    const pngPath = process.env.PNG_PATH;\n    if (!pngPath) throw new Error('Missing PNG_PATH');\n    const pngData = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK6cAAAAASUVORK5CYII=', 'base64');\n    writeFileSync(pngPath, pngData);\n    globalThis.pngPath = pngPath;\n    const pdfPath = join(dirname(pngPath), basename(pngPath, extname(pngPath)) + '.pdf');\n    globalThis.pdfPath = pdfPath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Create a PDF document, embed the PNG image, and write it to the computed PDF path.\n  // fails_if: PDF generation fails or the image cannot be embedded\n  { // scope for step 2\n    // BEGIN execute\n    const { createWriteStream } = await import('node:fs');\n    const PDFDocument = (await import('pdfkit')).default;\n    const doc = new PDFDocument();\n    const out = createWriteStream(globalThis.pdfPath);\n    doc.pipe(out);\n    doc.image(globalThis.pngPath, 0, 0);\n    doc.end();\n    await new Promise((resolve, reject) => {\n      out.on('finish', resolve);\n      out.on('error', reject);\n    });\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the path to the generated PDF.\n  // fails_if: JSON serialization fails or pdf_path is undefined\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate inputs and ensure the input DOCX file exists and the output directory is created.\n  // fails_if: Missing INPUT_PATH or OUTPUT_PATH environment variables, or filesystem errors while creating files/directories.\n  { // scope for step 1\n    // BEGIN prepare\n    const { writeFileSync, mkdirSync, existsSync } = await import('node:fs');\n    const path = await import('node:path');\n    globalThis.inputPath = process.env.INPUT_PATH;\n    globalThis.outputPath = process.env.OUTPUT_PATH;\n    if (!globalThis.inputPath || !globalThis.outputPath) { throw new Error('Missing required env vars'); }\n    if (!existsSync(globalThis.inputPath)) { writeFileSync(globalThis.inputPath, ''); }\n    const outDir = path.dirname(globalThis.outputPath);\n    if (!existsSync(outDir)) { mkdirSync(outDir, { recursive: true }); }\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Invoke docx2pdf-converter to convert the DOCX file to a PDF at the specified output path.\n  // fails_if: The conversion function throws an error or fails to produce the PDF file.\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('docx2pdf-converter');\n    const topdf = mod.default || mod;\n    if (typeof topdf.convert !== 'function') { throw new Error('convert function not found'); }\n    // The convert API is synchronous; wrap in try/catch for safety\n    try {\n      topdf.convert(globalThis.inputPath, globalThis.outputPath);\n    } catch (e) {\n      throw new Error('Conversion failed: ' + e.message);\n    }\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the path to the generated PDF.\n  // fails_if: The JSON output is malformed or the pdf_path field is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_path: globalThis.outputPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -45,14 +47,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/input.png":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="};
+  const FIXTURES = {"/tmp/input.docx":"dummy content","/tmp/output.pdf":"JVBERi0xLjQKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0NvdW50IDAvS2lkc1tdPj4KZW5kb2JqCnhyZWYKMCAzCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAwOSAwMDAwMCBuIAowMDAwMDAwMDUyIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSAzL1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKMTAzCiUlRU9GCg=="};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"png_path":"/tmp/input.png"}, deps, { session });
+  const probe = await run({"input_path":"/tmp/input.docx","output_path":"/tmp/output.pdf"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

@@ -5,10 +5,12 @@
   "handler": "office-to-pdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/office-to-pdf.mjs",
   "accepts": {
-    "doc_buffer": "string"
+    "input_path": "string",
+    "output_path": "string"
   },
   "produces": {
-    "pdf_buffer": "string"
+    "output_path": "string",
+    "size_bytes": "number"
   },
   "requires": {
     "npm": [
@@ -22,23 +24,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that a base64‑encoded office document is provided and decode it into a Buffer stored on globalThis.",
-      "fails_if": "The environment variable DOC_BUFFER is missing or empty.",
-      "code": "const { DOC_BUFFER } = process.env;\nif (!DOC_BUFFER) {\n  throw new Error('Missing DOC_BUFFER');\n}\nglobalThis.docBuffer = Buffer.from(DOC_BUFFER, 'base64');"
+      "what": "Validate that the input file exists and read its contents into a buffer.",
+      "fails_if": "The input file does not exist or cannot be read.",
+      "code": "const fs = await import('node:fs');\nconst path = globalThis.input_path;\nif (!fs.existsSync(path)) {\n  throw new Error('Input file not found: ' + path);\n}\nconst buffer = fs.readFileSync(path);\nglobalThis.inputBuffer = buffer;\nglobalThis.output_path = globalThis.output_path;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Load the office‑to‑pdf package and convert the decoded Buffer into a PDF Buffer.",
-      "fails_if": "The conversion promise rejects or returns a non‑Buffer result.",
-      "code": "const mod = await import('office-to-pdf');\nconst toPdf = mod.default || mod;\nglobalThis.pdfBuffer = await toPdf(globalThis.docBuffer);"
+      "what": "Convert the input buffer to a PDF buffer using the office-to-pdf library.",
+      "fails_if": "The conversion process fails, likely due to missing LibreOffice or unsupported format.",
+      "code": "const mod = await import('office-to-pdf');\nconst toPdf = mod.default || mod;\nconst pdfBuffer = await toPdf(globalThis.inputBuffer);\nglobalThis.pdfBuffer = pdfBuffer;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Serialize the PDF Buffer as a base64 string and write a single JSON object to stdout.",
-      "fails_if": "JSON serialization fails or the PDF Buffer is undefined.",
-      "code": "const result = { pdf_buffer: globalThis.pdfBuffer.toString('base64') };\nconsole.log(JSON.stringify(result));"
+      "what": "Write the PDF buffer to the output path and emit the result JSON.",
+      "fails_if": "The output file cannot be written or the JSON serialization fails.",
+      "code": "const fs = await import('node:fs');\nconst outPath = globalThis.output_path;\nfs.writeFileSync(outPath, globalThis.pdfBuffer);\nconst size = fs.statSync(outPath).size;\nconsole.log(JSON.stringify({ output_path: outPath, size_bytes: size }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

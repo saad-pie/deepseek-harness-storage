@@ -6,7 +6,11 @@
 const CAP_ID = "geek-time-topdf";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "url": "string"
+  "url": "string",
+  "output_path": {
+    "type": "string",
+    "optional": true
+  }
 };
 const PRODUCES = {
   "pdf_path": "string"
@@ -26,7 +30,7 @@ const OUTPUT_MAP = {
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the required URL input and set up a temporary output file path.\n  // fails_if: The input object is missing or does not contain a 'url' string.\n  { // scope for step 1\n    // BEGIN prepare\n    const { writeFileSync } = await import('node:fs');\n    if (!globalThis.input || typeof globalThis.input.url !== 'string') { throw new Error('Missing or invalid url'); }\n    globalThis.inputUrl = globalThis.input.url;\n    globalThis.outputPath = '/tmp/output.pdf';\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Invoke the geek-time-topdf package to render the given URL to a PDF file.\n  // fails_if: The PDF generation function throws or returns a rejected promise.\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('geek-time-topdf');\n    const fn = mod.default || mod;\n    await fn(globalThis.inputUrl, globalThis.outputPath);\n    globalThis.pdfPath = globalThis.outputPath;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the path to the generated PDF.\n  // fails_if: The JSON object cannot be stringified or the pdf_path field is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the input URL, set a default PDF output path, ensure its directory exists, and store them on globalThis.\n  // fails_if: Missing url input or cannot create output directory\n  { // scope for step 1\n    // BEGIN prepare\n    const { mkdirSync, existsSync } = await import('node:fs');\n    if (!globalThis.input || typeof globalThis.input.url !== 'string') { throw new Error('url input required'); }\n    globalThis.url = globalThis.input.url;\n    const outPath = globalThis.input.output_path || '/tmp/topdf_output.pdf';\n    const outDir = outPath.substring(0, outPath.lastIndexOf('/'));\n    if (!existsSync(outDir)) { mkdirSync(outDir, { recursive: true }); }\n    globalThis.outputPath = outPath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Invoke the geek-time-topdf package to render the given URL to a PDF file at the prepared path.\n  // fails_if: The package throws or fails to write the PDF\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('geek-time-topdf');\n    const fn = mod.default || mod;\n    await fn({ url: globalThis.url, outputPath: globalThis.outputPath });\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object to stdout containing the path of the generated PDF.\n  // fails_if: JSON serialization fails or pdf_path is undefined\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_path: globalThis.outputPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -50,7 +54,7 @@ export async function accept(deps, opts = {}) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"url":"https://example.com"}, deps, { session });
+  const probe = await run({"url":"https://example.com/course"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

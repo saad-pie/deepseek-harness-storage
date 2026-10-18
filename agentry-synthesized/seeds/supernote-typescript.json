@@ -8,7 +8,7 @@
     "note_path": "string"
   },
   "produces": {
-    "pdf_path": "string"
+    "pdf_bytes": "string"
   },
   "requires": {
     "npm": [
@@ -22,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Read the input .note file from disk and validate its existence.",
-      "fails_if": "The input file does not exist or cannot be read.",
-      "code": "const fs = await import('node:fs');\nconst path = globalThis.inputPath;\nif (!fs.existsSync(path)) {\n  throw new Error('Input file not found: ' + path);\n}\nconst buffer = fs.readFileSync(path);\nglobalThis.noteBuffer = buffer;"
+      "what": "Validate that the note_path input exists and read its contents into a buffer",
+      "fails_if": "note_path missing or file cannot be read",
+      "code": "const { readFileSync, existsSync } = await import('node:fs');\nconst path = globalThis.input.note_path;\nif (!path || !existsSync(path)) {\n  throw new Error('Input note_path is missing or file does not exist');\n}\nglobalThis.noteBuffer = readFileSync(path);"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Parse the Supernote note and convert it to PDF bytes using the supernote-typescript library.",
-      "fails_if": "The note file is corrupted, not a valid Supernote format, or the PDF generation fails.",
-      "code": "const mod = await import('supernote-typescript');\nconst { SupernoteX, toPdf } = mod;\nconst note = new SupernoteX(globalThis.noteBuffer);\nconst pdfBytes = await toPdf(note);\nglobalThis.pdfBytes = pdfBytes;"
+      "what": "Create a SupernoteX instance and convert it to PDF bytes",
+      "fails_if": "SupernoteX construction or toPdf fails",
+      "code": "const { SupernoteX, toPdf } = await import('supernote-typescript');\nconst note = new SupernoteX(globalThis.noteBuffer);\nconst pdfBytes = await toPdf(note);\nglobalThis.pdfBytes = pdfBytes;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write the generated PDF to a file and output the result as JSON.",
-      "fails_if": "The file write fails or the JSON output is malformed.",
-      "code": "const fs = await import('node:fs');\nconst outputPath = globalThis.inputPath.replace(/\\.note$/, '.pdf');\nfs.writeFileSync(outputPath, globalThis.pdfBytes);\nconsole.log(JSON.stringify({ pdf_path: outputPath }));"
+      "what": "Output a JSON object containing the PDF bytes as a base64 string",
+      "fails_if": "pdf_bytes undefined or not a Buffer",
+      "code": "if (!globalThis.pdfBytes) throw new Error('PDF bytes not produced');\nconsole.log(JSON.stringify({ pdf_bytes: globalThis.pdfBytes.toString('base64') }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",
