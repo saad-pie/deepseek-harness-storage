@@ -1,0 +1,47 @@
+{
+  "id": "npm_aspirio_topdf",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_aspirio_topdf",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_aspirio_topdf.mjs",
+  "accepts": {
+    "input_html": "string",
+    "output_pdf": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "@aspirio/topdf"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that the input HTML and output PDF paths are provided and that the input file exists, then store them in global state.",
+      "fails_if": "Missing INPUT_HTML or OUTPUT_PDF environment variable, or the input file cannot be accessed.",
+      "code": "const { accessSync, constants } = await import('node:fs');\nconst input = process.env.INPUT_HTML;\nconst output = process.env.OUTPUT_PDF;\nif (!input || !output) throw new Error('Missing required inputs');\ntry { accessSync(input, constants.R_OK); } catch { throw new Error('Input file not accessible'); }\nglobalThis.inputPath = input;\nglobalThis.outputPath = output;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Run the @aspirio/topdf CLI to convert the HTML file to a PDF at the specified output location.",
+      "fails_if": "The CLI process exits with a non‑zero code or cannot be started.",
+      "code": "const { execFileSync } = await import('node:child_process');\nconst { join } = await import('node:path');\nconst pkgPath = join(process.cwd(), 'node_modules', '@aspirio', 'topdf', 'index.js');\nexecFileSync('node', [pkgPath, '-i', globalThis.inputPath, '-o', globalThis.outputPath]);\nglobalThis.resultPath = globalThis.outputPath;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the path of the generated PDF.",
+      "fails_if": "The JSON cannot be stringified or the pdf_path field is undefined.",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.outputPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

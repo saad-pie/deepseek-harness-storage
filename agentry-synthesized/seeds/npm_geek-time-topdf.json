@@ -1,0 +1,46 @@
+{
+  "id": "npm_geek-time-topdf",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_geek-time-topdf",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_geek-time-topdf.mjs",
+  "accepts": {
+    "url": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "geek-time-topdf"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the required URL input and create a temporary output file path for the PDF.",
+      "fails_if": "Missing or empty 'url' input; inability to determine a temporary directory.",
+      "code": "const { writeFileSync, mkdirSync } = await import('node:fs');\nconst path = await import('node:path');\nconst os = await import('node:os');\nif (!globalThis.input || typeof globalThis.input.url !== 'string' || !globalThis.input.url) { throw new Error('Missing required input: url'); }\nglobalThis.inputUrl = globalThis.input.url;\nconst outDir = os.tmpdir();\nglobalThis.outPath = path.join(outDir, `geek_time_${Date.now()}.pdf`);\n"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Invoke the geek-time-topdf package to render the given URL to a PDF at the prepared path.",
+      "fails_if": "The package throws an error, the URL is unreachable, or PDF generation fails.",
+      "code": "const mod = await import('geek-time-topdf');\nconst fn = mod.default || mod;\nawait fn({ url: globalThis.inputUrl, outputPath: globalThis.outPath });\n"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the path to the generated PDF.",
+      "fails_if": "The output path is undefined or console.log fails.",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.outPath }));\n"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

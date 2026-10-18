@@ -1,0 +1,46 @@
+{
+  "id": "npm_stroc_pdf",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_stroc_pdf",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_stroc_pdf.mjs",
+  "accepts": {
+    "stroc_json": "string"
+  },
+  "produces": {
+    "pdf_base64": "string"
+  },
+  "requires": {
+    "npm": [
+      "@stroc/pdf"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that a STROC_JSON environment variable is present and parse it into a Stroc document object.",
+      "fails_if": "STROC_JSON is missing or not valid JSON.",
+      "code": "const { STROC_JSON } = process.env;\nif (!STROC_JSON) {\n  throw new Error('Missing STROC_JSON');\n}\ntry {\n  globalThis.strocDoc = JSON.parse(STROC_JSON);\n} catch (e) {\n  throw new Error('Invalid STROC_JSON');\n}"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Load @stroc/pdf and invoke toPdf on the parsed document, then base64‑encode the resulting PDF bytes.",
+      "fails_if": "Import fails, toPdf throws, or the result cannot be encoded.",
+      "code": "const mod = await import('@stroc/pdf');\nconst { toPdf } = mod;\nconst bytes = await toPdf(globalThis.strocDoc, { pageSize: 'A4' });\nglobalThis.pdfBase64 = Buffer.from(bytes).toString('base64');"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object containing the base64‑encoded PDF to stdout.",
+      "fails_if": "The PDF data is undefined or JSON serialization fails.",
+      "code": "console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

@@ -1,0 +1,46 @@
+{
+  "id": "npm_topdf",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_topdf",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_topdf.mjs",
+  "accepts": {
+    "html_path": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "topdf"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that the provided HTML file exists and set up the output PDF path.",
+      "fails_if": "Missing html_path input or the file does not exist.",
+      "code": "const { existsSync } = await import('node:fs');\nconst inputPath = process.env.HTML_PATH;\nif (!inputPath) { throw new Error('Missing required input html_path'); }\nif (!existsSync(inputPath)) { throw new Error('Input file does not exist: ' + inputPath); }\nglobalThis.htmlPath = inputPath;\nconst outPath = '/tmp/output.pdf';\nglobalThis.outPath = outPath;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Invoke the topdf library to convert the HTML file to a PDF at the prepared location.",
+      "fails_if": "The topdf conversion throws or does not produce the expected PDF file.",
+      "code": "const mod = await import('topdf');\nconst fn = mod.default || mod;\nawait fn(globalThis.htmlPath, globalThis.outPath);\nglobalThis.resultPath = globalThis.outPath;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the path to the generated PDF.",
+      "fails_if": "The JSON output is malformed or pdf_path is undefined.",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.resultPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

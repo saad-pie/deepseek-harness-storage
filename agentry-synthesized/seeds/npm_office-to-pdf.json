@@ -1,0 +1,46 @@
+{
+  "id": "npm_office-to-pdf",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_office-to-pdf",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_office-to-pdf.mjs",
+  "accepts": {
+    "doc_path": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "office-to-pdf"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the DOC_PATH environment variable, ensure the file exists, and compute a temporary output PDF path.",
+      "fails_if": "DOC_PATH missing, file does not exist, or filesystem errors while creating the output path.",
+      "code": "const fs = await import('node:fs'); const path = await import('node:path'); const os = await import('node:os'); const docPath = process.env.DOC_PATH; if (!docPath) { throw new Error('Missing DOC_PATH'); } if (!fs.existsSync(docPath)) { throw new Error('Document file not found'); } globalThis.docPath = docPath; const outPath = path.join(os.tmpdir(), `output-${Date.now()}.pdf`); globalThis.outPath = outPath;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Load office-to-pdf, read the input document, convert it to PDF, and write the PDF to the temporary path.",
+      "fails_if": "Loading the package fails, reading the document fails, conversion throws, or writing the PDF fails.",
+      "code": "const mod = await import('office-to-pdf'); const toPdf = mod.default || mod; const fs = await import('node:fs'); const buf = await fs.promises.readFile(globalThis.docPath); const pdfBuf = await toPdf(buf); await fs.promises.writeFile(globalThis.outPath, pdfBuf);"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a single JSON object containing the path to the generated PDF.",
+      "fails_if": "JSON serialization fails or the output path is undefined.",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.outPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

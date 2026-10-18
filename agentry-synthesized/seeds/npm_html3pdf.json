@@ -1,0 +1,51 @@
+{
+  "id": "npm_html3pdf",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_html3pdf",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_html3pdf.mjs",
+  "accepts": {
+    "html": "string",
+    "filename": {
+      "type": "string",
+      "optional": true
+    }
+  },
+  "produces": {
+    "pdf_base64": "string"
+  },
+  "requires": {
+    "npm": [
+      "html3pdf",
+      "jsdom"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the HTML input and set up a jsdom environment to simulate a browser context for html3pdf.",
+      "fails_if": "The HTML input is missing or empty, or jsdom fails to initialize the DOM.",
+      "code": "const html = globalThis.input_html;\nif (!html || typeof html !== 'string' || html.trim().length === 0) {\n  throw new Error('Input HTML is missing or empty');\n}\nconst { JSDOM } = await import('jsdom');\nconst dom = new JSDOM(html, {\n  runScripts: 'dangerously',\n  resources: 'usable',\n  pretendToBeVisual: true\n});\nglobalThis.window = dom.window;\nglobalThis.document = dom.window.document;\nglobalThis.navigator = dom.window.navigator;\nglobalThis.HTMLCanvasElement = dom.window.HTMLCanvasElement;\nglobalThis.Image = dom.window.Image;\nglobalThis.getComputedStyle = dom.window.getComputedStyle;\nglobalThis.requestAnimationFrame = dom.window.requestAnimationFrame;\nglobalThis.cancelAnimationFrame = dom.window.cancelAnimationFrame;\nglobalThis.devicePixelRatio = dom.window.devicePixelRatio || 1;\nglobalThis.input_filename = globalThis.input_filename || 'output.pdf';"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Use html3pdf to convert the HTML content into a PDF and extract the base64 data.",
+      "fails_if": "html3pdf fails to render the HTML to canvas or generate the PDF, or the output is not valid base64.",
+      "code": "const mod = await import('html3pdf');\nconst html2pdf = mod.default || mod;\nconst worker = html2pdf();\nconst pdfData = await worker\n  .set({\n    margin: 0,\n    filename: globalThis.input_filename,\n    image: { type: 'jpeg', quality: 0.98 },\n    html2canvas: { scale: 2, useCORS: true },\n    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }\n  })\n  .from(globalThis.document.body)\n  .toPdf()\n  .output('datauristring');\nif (!pdfData || typeof pdfData !== 'string' || !pdfData.startsWith('data:application/pdf;base64,')) {\n  throw new Error('Failed to generate valid PDF data');\n}\nconst base64Data = pdfData.split(',')[1];\nglobalThis.pdf_base64 = base64Data;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write the resulting PDF base64 string to stdout as a JSON object.",
+      "fails_if": "The JSON output is malformed or the pdf_base64 field is undefined.",
+      "code": "const result = {\n  pdf_base64: globalThis.pdf_base64\n};\nconsole.log(JSON.stringify(result));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

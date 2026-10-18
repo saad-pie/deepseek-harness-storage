@@ -1,0 +1,46 @@
+{
+  "id": "npm_ohah_hwpjs",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_ohah_hwpjs",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_ohah_hwpjs.mjs",
+  "accepts": {
+    "hwp_path": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "@ohah/hwpjs"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the HWP input path and set up output location.",
+      "fails_if": "Missing HWP_PATH env var or file does not exist at the given path.",
+      "code": "const { existsSync } = await import('node:fs');\nconst hwpPath = process.env.HWP_PATH;\nif (!hwpPath) throw new Error('Missing HWP_PATH');\nif (!existsSync(hwpPath)) throw new Error('HWP file not found at ' + hwpPath);\nglobalThis.hwpPath = hwpPath;\nglobalThis.outputPath = '/tmp/output.pdf';"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Load @ohah/hwpjs, convert the HWP file to PDF, and write the PDF to disk.",
+      "fails_if": "Module loading fails, toPdf function missing, conversion throws, or write fails.",
+      "code": "const { readFileSync, writeFileSync } = await import('node:fs');\nconst mod = await import('@ohah/hwpjs');\nconst toPdf = (mod.toPdf) || (mod.default && mod.default.toPdf) || (mod.default?.toPdf);\nif (!toPdf) throw new Error('toPdf function not found in @ohah/hwpjs');\nconst data = readFileSync(globalThis.hwpPath);\nconst pdfBuffer = toPdf(data, { font_dir: './fonts', embed_images: true });\nwriteFileSync(globalThis.outputPath, pdfBuffer);"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the path to the generated PDF.",
+      "fails_if": "JSON serialization fails or pdf_path is undefined.",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.outputPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

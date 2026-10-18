@@ -1,0 +1,47 @@
+{
+  "id": "npm_docx2pdf-converter",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_docx2pdf-converter",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_docx2pdf-converter.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "docx2pdf-converter"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate required env inputs, ensure output directory exists, and store paths in global state.",
+      "fails_if": "INPUT_PATH or OUTPUT_PATH env var missing, or unable to create output directory.",
+      "code": "const { mkdirSync } = await import('node:fs');\nconst path = await import('node:path');\nglobalThis.inputPath = process.env.INPUT_PATH;\nglobalThis.outputPath = process.env.OUTPUT_PATH;\nif (!globalThis.inputPath) throw new Error('Missing INPUT_PATH');\nif (!globalThis.outputPath) throw new Error('Missing OUTPUT_PATH');\nconst outDir = path.dirname(globalThis.outputPath);\nmkdirSync(outDir, { recursive: true });"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Invoke docx2pdf-converter to convert the DOCX file to PDF and record the result path.",
+      "fails_if": "Conversion throws an error or the output file is not created.",
+      "code": "const mod = await import('docx2pdf-converter');\nconst topdf = mod.default || mod;\n// The convert function is synchronous according to the package API\ntopdf.convert(globalThis.inputPath, globalThis.outputPath);\nglobalThis.pdfPath = globalThis.outputPath;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object containing the path of the generated PDF to stdout.",
+      "fails_if": "JSON serialization fails or pdf_path is undefined.",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
