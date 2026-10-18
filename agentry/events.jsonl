@@ -30902,3 +30902,75 @@
 {"kind":"trial.prepare_failed","at":1792315954667,"capability_id":"crates_topdf","session":"trial_crates_topdf_mvdmmi9d","phase":"prepare","error":"installer: post_install exited null —     Updating crates.io index\n  Installing topdf v0.1.1\n    Updating crates.io index\nwarning: package `bytemuck v1.16.1` in Cargo.lock is yanked in registry `crates-io`\n  |\n  = help: consider running w"}
 {"kind":"trial.node_retired","at":1792315954668,"capability_id":"crates_topdf","reason":"trial prepare: installer: post_install exited null —     Updating crates.io index\n  Installing topdf v0.1.1\n    Updating crates.io index\nwarning: package `bytemuck v1.16.1` in Cargo.lock is yanked in registry `crates-io`\n  |\n  = help: consider running w"}
 {"kind":"invoke.succeeded","at":1792315954668,"capability_id":"agentry.trial","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":30204}
+{"kind":"runs.rollup_completed","at":1792316108791,"capabilities":15,"runs":2519}
+{"kind":"runtime.boot.started","at":1792316108984,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792316109164,"loaded":0,"skipped":24,"files":24}
+{"kind":"runtime.boot.watches_loaded","at":1792316109165,"count":17}
+{"kind":"runtime.boot.completed","at":1792316109165,"capabilities":364,"watches":17}
+{"kind":"invoke.started","at":1792316109165,"capability_id":"bua.screenshot","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["url","width","height","session"]}
+{"kind":"invoke.started","at":1792316109166,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792316109189,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":22}
+{"kind":"invoke.started","at":1792316109189,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792316109192,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3}
+{"kind":"installer.already_prepared","at":1792316109192,"capId":"bua.screenshot","session":"topdf_v317"}
+{"kind":"invoker.session_prepared","at":1792316109192,"capability_id":"bua.screenshot","session":"topdf_v317"}
+{"kind":"invoke.started","at":1792316109192,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792316109195,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3}
+{"kind":"invoke.started","at":1792316109195,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792316109201,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":6}
+{"kind":"installer.already_prepared","at":1792316109201,"capId":"bua.screenshot","session":"topdf_v317"}
+{"kind":"invoke.started","at":1792316109201,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792316109204,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3}
+{"kind":"invoke.started","at":1792316109204,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","code","env","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792316110334,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1130}
+{"kind":"invoke.succeeded","at":1792316110335,"capability_id":"bua.screenshot","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1170}
+{"kind":"invoke.started","at":1792316110489,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id","candidate_id"]}
+{"kind":"synthesize.started","at":1792316110490,"proposal_id":"proposal_v317_1792316110335","candidate_id":"crates:topdf","gap_id":"gap:v317_topdf","candidate_kind":"rust_crate","wanted_kind":"tool","shape_verbs":["prepare","execute","emit"]}
+{"kind":"invoke.started","at":1792316110491,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792316110494,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3}
+{"kind":"invoke.started","at":1792316110494,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","code","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792316110655,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":160}
+{"kind":"synthesize.crate_read","at":1792316110655,"proposal_id":"proposal_v317_1792316110335","candidate_id":"crates:topdf","crate_name":"topdf","version":"0.1.1","readme_len":395,"error":null}
+{"kind":"invoke.started","at":1792316110656,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792316115484,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4828}
+{"kind":"synthesize.capability_id_namespaced","at":1792316115484,"original":"gap:v317_topdf","normalized":"crates_topdf","candidate_id":"crates:topdf","source_preserved":true}
+{"kind":"tool","at":1792316115513,"proposal_id":"proposal_v317_1792316110335","candidate_id":"crates:topdf","gap_id":"gap:v317_topdf","capability_id":"crates_topdf","spec_type":"plan","wanted_kind":"tool","shape_steps":3,"plan_steps":3,"handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/crates_topdf.mjs","seed_path":"/tmp/home/.dsh/agentry-synthesized/seeds/crates_topdf.json","composed_capabilities":[],"pre_invoke_count":0,"model_used":"groq/openai/gpt-oss-120b","ms":5023}
+{"kind":"invoke.succeeded","at":1792316115514,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5178}
+{"kind":"invoke.started","at":1792316115514,"capability_id":"agentry.trial","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["capability_id","handler_path","seed_path"]}
+{"kind":"trial.started","at":1792316115515,"capability_id":"crates_topdf","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/crates_topdf.mjs","session":"trial_crates_topdf_mvdmqlob"}
+{"kind":"trial.node_written","at":1792316115515,"capability_id":"crates_topdf","handler_file":"/tmp/home/.dsh/agentry-synthesized/handlers/crates_topdf.mjs"}
+{"kind":"invoke.started","at":1792316115695,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792316115700,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5}
+{"kind":"invoke.started","at":1792316115700,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792316115702,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"installer.post_install_starting","at":1792316115702,"capId":"crates_topdf","session":"trial_crates_topdf_mvdmqlob","cmd":"cargo install --locked topdf"}
+{"kind":"invoke.started","at":1792316115702,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","cmd","args","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792316115706,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4}
+{"kind":"invoke.started","at":1792316115706,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","pid","wait_ms"]}
+{"kind":"invoke.succeeded","at":1792316115808,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":102}
+{"kind":"installer.post_install_complete","at":1792316115808,"capId":"crates_topdf","session":"trial_crates_topdf_mvdmqlob"}
+{"kind":"invoke.started","at":1792316115808,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792316115811,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3}
+{"kind":"installer.prepared","at":1792316115811,"capId":"crates_topdf","session":"trial_crates_topdf_mvdmqlob","steps":[{"step":"post_install","ok":true,"cmd":"cargo install --locked topdf"}]}
+{"kind":"trial.prepared","at":1792316115811,"capability_id":"crates_topdf","session":"trial_crates_topdf_mvdmqlob","prep":{"already_prepared":false,"steps":[{"step":"post_install","ok":true,"cmd":"cargo install --locked topdf"}]}}
+{"kind":"invoke.started","at":1792316115812,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792316115817,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5}
+{"kind":"invoke.started","at":1792316115817,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792316115819,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"installer.already_prepared","at":1792316115819,"capId":"crates_topdf","session":"trial_crates_topdf_mvdmqlob"}
+{"kind":"invoke.started","at":1792316115821,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792316115822,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"invoke.started","at":1792316115822,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792316115823,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"installer.already_prepared","at":1792316115823,"capId":"crates_topdf","session":"trial_crates_topdf_mvdmqlob"}
+{"kind":"invoke.started","at":1792316115824,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792316115825,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"invoke.started","at":1792316115825,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","code","env","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792316116087,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":262}
+{"kind":"trial.accept_threw","at":1792316116088,"capability_id":"crates_topdf","session":"trial_crates_topdf_mvdmqlob","error":"crates_topdf: kernel exited 101 — Error: Os { code: 6, kind: Uncategorized, message: \"No such device or address\" }\n\nthread 'main' (13301) panicked at /tmp/home/.dsh/agentry-kernel/work/trial_crates_topdf_mvdmqlob/.agentry_scripts/script_mvdmqlwx_74us.rs:18:9:\ntopdf command failed\nnote: run with `RUST_BACKTRACE=1` environment variabl"}
+{"kind":"trial.node_retired","at":1792316116088,"capability_id":"crates_topdf","reason":"trial accept: crates_topdf: kernel exited 101 — Error: Os { code: 6, kind: Uncategorized, message: \"No such device or address\" }\n\nthread 'main' (13301) panicked at /tmp/home/.dsh/agentry-kernel/work/trial_crates_topdf_mvdmqlob/.agentry_scripts/script_mvdmqlwx_74us.rs:18:9:\ntopdf command failed\nnote: run with `RUST_BACKTRACE=1` environment variabl"}
+{"kind":"invoke.succeeded","at":1792316116088,"capability_id":"agentry.trial","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":574}
+{"kind":"runtime.boot.started","at":1792316212929,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792316213110,"loaded":0,"skipped":24,"files":24}
+{"kind":"runtime.boot.watches_loaded","at":1792316213110,"count":17}
+{"kind":"runtime.boot.completed","at":1792316213110,"capabilities":365,"watches":17}

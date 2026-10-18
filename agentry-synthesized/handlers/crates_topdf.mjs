@@ -26,9 +26,9 @@ const PRE_INVOKE = {};
 const OUTPUT_MAP = {
   "pdf_path": "pdf_path"
 };
-const RESULT_PARSE = "stdout_json";
+const RESULT_PARSE = "stdout_text";
 const KERNEL_ACTION = "rust.run";
-const KERNEL_SCRIPT = "fn main() {\n    let image_paths_env = std::env::var(\"IMAGE_PATHS\").expect(\"IMAGE_PATHS not set\");\n    let output_path = std::env::var(\"OUTPUT_PATH\").expect(\"OUTPUT_PATH not set\");\n    let image_paths: Vec<String> = image_paths_env.split(',').map(|s| s.trim().to_string()).collect();\n    if image_paths.is_empty() {\n        panic!(\"No image paths provided\");\n    }\n    \n    use std::process::Command;\n    let mut cmd = Command::new(\"topdf\");\n    cmd.arg(\"-o\").arg(&output_path);\n    for p in &image_paths {\n        cmd.arg(p);\n    }\n    let status = cmd.status().expect(\"failed to execute topdf\");\n    if !status.success() {\n        panic!(\"topdf command failed\");\n    }\n    \n    println!(\"{{\\\"pdf_path\\\":\\\"{}\\\"}}\", output_path);\n}\n";
+const KERNEL_SCRIPT = "fn main() {\n    let image_paths_str = std::env::var(\"IMAGE_PATHS\").expect(\"IMAGE_PATHS not set\");\n    let output_path = std::env::var(\"OUTPUT_PATH\").expect(\"OUTPUT_PATH not set\");\n    let image_paths: Vec<String> = image_paths_str.split(',').map(|s| s.trim().to_string()).collect();\n    for p in &image_paths {\n        if !std::path::Path::new(p).exists() {\n            panic!(\"input image not found: {}\", p);\n        }\n    }\n    \n    let status = std::process::Command::new(\"topdf\")\n        .arg(\"-o\")\n        .arg(&output_path)\n        .args(&image_paths)\n        .status()\n        .expect(\"failed to execute topdf\");\n    if !status.success() {\n        panic!(\"topdf command failed\");\n    }\n    \n    println!(\"{{\\\"pdf_path\\\":\\\"{}\\\"}}\", output_path);\n}\n";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -45,14 +45,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"sample1.png,sample2.jpg":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==","/tmp/result.pdf":"JVBERi0xLjQKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0NvdW50IDAvS2lkc1tdPj4KZW5kb2JqCnhyZWYKMCAzCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAwOSAwMDAwMCBuIAowMDAwMDAwMDUyIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSAzL1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKMTAzCiUlRU9GCg=="};
+  const FIXTURES = {"/tmp/img1.png":"","/tmp/img2.jpg":"","/tmp/img1.png,/tmp/img2.jpg":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==","/tmp/out.pdf":"JVBERi0xLjQKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0NvdW50IDAvS2lkc1tdPj4KZW5kb2JqCnhyZWYKMCAzCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAwOSAwMDAwMCBuIAowMDAwMDAwMDUyIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSAzL1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKMTAzCiUlRU9GCg=="};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"image_paths":"sample1.png,sample2.jpg","output_path":"/tmp/result.pdf"}, deps, { session });
+  const probe = await run({"image_paths":"/tmp/img1.png,/tmp/img2.jpg","output_path":"/tmp/out.pdf"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {
