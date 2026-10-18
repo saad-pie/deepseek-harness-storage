@@ -31147,3 +31147,21 @@
 {"kind":"runtime.boot.seeded","at":1792321461034,"loaded":0,"skipped":24,"files":24}
 {"kind":"runtime.boot.watches_loaded","at":1792321461035,"count":17}
 {"kind":"runtime.boot.completed","at":1792321461035,"capabilities":350,"watches":17}
+{"kind":"runs.rollup_completed","at":1792321746499,"capabilities":15,"runs":2584}
+{"kind":"runtime.boot.started","at":1792321755031,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792321755231,"loaded":0,"skipped":24,"files":24}
+{"kind":"runtime.boot.watches_loaded","at":1792321755231,"count":17}
+{"kind":"runtime.boot.completed","at":1792321755231,"capabilities":350,"watches":17}
+{"kind":"runtime.boot.started","at":1792321765118,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792321765316,"loaded":0,"skipped":24,"files":24}
+{"kind":"runtime.boot.watches_loaded","at":1792321765316,"count":17}
+{"kind":"runtime.boot.completed","at":1792321765316,"capabilities":350,"watches":17}
+{"kind":"invoke.started","at":1792321765677,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id","candidate_id"]}
+{"kind":"synthesize.started","at":1792321765678,"proposal_id":"proposal_v3110a_1792321765317","candidate_id":"crates:api2convert","gap_id":"gap:v3110_api2convert_test","candidate_kind":"rust_crate","wanted_kind":"tool","shape_verbs":["prepare","execute","emit"]}
+{"kind":"invoke.started","at":1792321765679,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792321765698,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":19}
+{"kind":"invoke.started","at":1792321765699,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","code","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792321765959,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":259}
+{"kind":"synthesize.crate_read","at":1792321765959,"proposal_id":"proposal_v3110a_1792321765317","candidate_id":"crates:api2convert","crate_name":"api2convert","version":"10.3.1","readme_len":8000,"error":"crate api2convert cannot run locally: blockers=[requires_remote_api] categories=[multimedia,api-bindings,web-programming::http-client]"}
+{"kind":"synthesize.candidate_rejected","at":1792321765959,"proposal_id":"proposal_v3110a_1792321765317","candidate_id":"crates:api2convert","reason":"requires_remote_api","blockers":["requires_remote_api"],"categories":["multimedia","api-bindings","web-programming::http-client"]}
+{"kind":"invoke.failed","at":1792321765960,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":455}
