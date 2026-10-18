@@ -6,7 +6,7 @@
 const CAP_ID = "crates_topdf";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "image_paths": "string"
+  "images": "string"
 };
 const PRODUCES = {
   "pdf_path": "string"
@@ -21,7 +21,7 @@ const REQUIRES = {
   "capability": []
 };
 const ENV_MAP = {
-  "IMAGE_PATHS": "image_paths"
+  "IMAGES": "images"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
@@ -29,7 +29,7 @@ const OUTPUT_MAP = {
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "rust.run";
-const KERNEL_SCRIPT = "#!/usr/bin/env rust-script\n//! ```cargo\n//! [dependencies]\n//! topdf = \"0.1.1\"\n//! ```\nlet image_paths_str = std::env::var(\"IMAGE_PATHS\").expect(\"IMAGE_PATHS not set\");\nlet image_paths: Vec<String> = image_paths_str.split(',').map(|s| s.trim().to_string()).collect();\nif image_paths.is_empty() {\n    panic!(\"No image paths provided\");\n}\nlet output_path = \"/tmp/output.pdf\".to_string();\n\nuse std::process::Command;\nlet mut cmd = Command::new(\"topdf\");\ncmd.arg(&output_path);\nfor p in &image_paths {\n    cmd.arg(p);\n}\nlet status = cmd.status().expect(\"failed to execute topdf\");\nif !status.success() {\n    panic!(\"topdf command failed\");\n}\n\nprintln!(\"{{\\\"pdf_path\\\":\\\"{}\\\"}}\", output_path);";
+const KERNEL_SCRIPT = "#!/usr/bin/env rust-script\n//! ```cargo\n//! [dependencies]\n//! topdf = \"0.1.1\"\n//! ```\nuse topdf;\nlet images_str = std::env::var(\"IMAGES\").expect(\"IMAGES env var missing\");\nlet images: Vec<String> = images_str.split(',').map(|s| s.trim().to_string()).collect();\nif images.is_empty() {\n    panic!(\"No images provided\");\n}\n\nlet output_path = \"/tmp/output.pdf\";\nmatch topdf::convert(&images, output_path) {\n    Ok(_) => {}\n    Err(e) => panic!(\"Conversion failed: {}\", e),\n}\n\nprintln!(\"{{\\\"pdf_path\\\":\\\"{}\\\"}}\", output_path);";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -46,14 +46,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/img1.png":"placeholder image data","/tmp/img2.jpg":"placeholder image data","/tmp/img1.png,/tmp/img2.jpg":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="};
+  const FIXTURES = {"sample1.png,sample2.jpg":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"image_paths":"/tmp/img1.png,/tmp/img2.jpg"}, deps, { session });
+  const probe = await run({"images":"sample1.png,sample2.jpg"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

@@ -6,10 +6,10 @@
 const CAP_ID = "npm_topdf";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "html_path": "string"
+  "html": "string"
 };
 const PRODUCES = {
-  "pdf_path": "string"
+  "pdf_base64": "string"
 };
 const REQUIRES = {
   "npm": [
@@ -19,16 +19,14 @@ const REQUIRES = {
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {
-  "HTML_PATH": "html_path"
-};
+const ENV_MAP = {};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "pdf_path": "pdf_path"
+  "pdf_base64": "pdf_base64"
 };
-const RESULT_PARSE = "stdout_json";
+const RESULT_PARSE = "stdout_text";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that the provided HTML file exists and set up the output PDF path.\n  // fails_if: Missing html_path input or the file does not exist.\n  { // scope for step 1\n    // BEGIN prepare\n    const { existsSync } = await import('node:fs');\n    const inputPath = process.env.HTML_PATH;\n    if (!inputPath) { throw new Error('Missing required input html_path'); }\n    if (!existsSync(inputPath)) { throw new Error('Input file does not exist: ' + inputPath); }\n    globalThis.htmlPath = inputPath;\n    const outPath = '/tmp/output.pdf';\n    globalThis.outPath = outPath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Invoke the topdf library to convert the HTML file to a PDF at the prepared location.\n  // fails_if: The topdf conversion throws or does not produce the expected PDF file.\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('topdf');\n    const fn = mod.default || mod;\n    await fn(globalThis.htmlPath, globalThis.outPath);\n    globalThis.resultPath = globalThis.outPath;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the path to the generated PDF.\n  // fails_if: The JSON output is malformed or pdf_path is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_path: globalThis.resultPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that HTML input is provided and write it to a temporary file for conversion.\n  // fails_if: Missing or non‑string html input, or failure to write the temporary file.\n  { // scope for step 1\n    // BEGIN prepare\n    const { mkdtempSync, writeFileSync } = await import('node:fs');\n    const { tmpdir } = await import('node:os');\n    const path = await import('node:path');\n    if (!globalThis.input || typeof globalThis.input.html !== 'string') { throw new Error('Missing html input'); }\n    const tmpDir = mkdtempSync(path.join(tmpdir(), 'topdf-'));\n    const inputPath = path.join(tmpDir, 'input.html');\n    writeFileSync(inputPath, globalThis.input.html);\n    globalThis.inputPath = inputPath;\n    globalThis.tmpDir = tmpDir;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Load the topdf package and invoke it to convert the temporary HTML file to PDF, capturing the result as base64.\n  // fails_if: The topdf call throws, returns a non‑buffer, or the generated PDF file cannot be read.\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('topdf');\n    const fn = mod.default || mod;\n    let result;\n    try { result = await fn(globalThis.inputPath); } catch (e) { result = null; }\n    if (result && Buffer.isBuffer(result)) {\n      globalThis.pdfBase64 = result.toString('base64');\n    } else {\n      const { readFileSync } = await import('node:fs');\n      const pdfBuffer = readFileSync(globalThis.inputPath + '.pdf');\n      globalThis.pdfBase64 = pdfBuffer.toString('base64');\n    }\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the base64‑encoded PDF to stdout.\n  // fails_if: The JSON cannot be stringified or pdf_base64 is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -45,14 +43,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/input.html":"<html><body>Test</body></html>"};
+  const FIXTURES = {};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"html_path":"/tmp/input.html"}, deps, { session });
+  const probe = await run({"html":"<h1>Test Document</h1><p>Hello, PDF!</p>"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

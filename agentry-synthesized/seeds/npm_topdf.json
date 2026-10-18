@@ -5,10 +5,10 @@
   "handler": "npm_topdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_topdf.mjs",
   "accepts": {
-    "html_path": "string"
+    "html": "string"
   },
   "produces": {
-    "pdf_path": "string"
+    "pdf_base64": "string"
   },
   "requires": {
     "npm": [
@@ -22,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that the provided HTML file exists and set up the output PDF path.",
-      "fails_if": "Missing html_path input or the file does not exist.",
-      "code": "const { existsSync } = await import('node:fs');\nconst inputPath = process.env.HTML_PATH;\nif (!inputPath) { throw new Error('Missing required input html_path'); }\nif (!existsSync(inputPath)) { throw new Error('Input file does not exist: ' + inputPath); }\nglobalThis.htmlPath = inputPath;\nconst outPath = '/tmp/output.pdf';\nglobalThis.outPath = outPath;"
+      "what": "Validate that HTML input is provided and write it to a temporary file for conversion.",
+      "fails_if": "Missing or non‑string html input, or failure to write the temporary file.",
+      "code": "const { mkdtempSync, writeFileSync } = await import('node:fs');\nconst { tmpdir } = await import('node:os');\nconst path = await import('node:path');\nif (!globalThis.input || typeof globalThis.input.html !== 'string') { throw new Error('Missing html input'); }\nconst tmpDir = mkdtempSync(path.join(tmpdir(), 'topdf-'));\nconst inputPath = path.join(tmpDir, 'input.html');\nwriteFileSync(inputPath, globalThis.input.html);\nglobalThis.inputPath = inputPath;\nglobalThis.tmpDir = tmpDir;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Invoke the topdf library to convert the HTML file to a PDF at the prepared location.",
-      "fails_if": "The topdf conversion throws or does not produce the expected PDF file.",
-      "code": "const mod = await import('topdf');\nconst fn = mod.default || mod;\nawait fn(globalThis.htmlPath, globalThis.outPath);\nglobalThis.resultPath = globalThis.outPath;"
+      "what": "Load the topdf package and invoke it to convert the temporary HTML file to PDF, capturing the result as base64.",
+      "fails_if": "The topdf call throws, returns a non‑buffer, or the generated PDF file cannot be read.",
+      "code": "const mod = await import('topdf');\nconst fn = mod.default || mod;\nlet result;\ntry { result = await fn(globalThis.inputPath); } catch (e) { result = null; }\nif (result && Buffer.isBuffer(result)) {\n  globalThis.pdfBase64 = result.toString('base64');\n} else {\n  const { readFileSync } = await import('node:fs');\n  const pdfBuffer = readFileSync(globalThis.inputPath + '.pdf');\n  globalThis.pdfBase64 = pdfBuffer.toString('base64');\n}"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a JSON object containing the path to the generated PDF.",
-      "fails_if": "The JSON output is malformed or pdf_path is undefined.",
-      "code": "console.log(JSON.stringify({ pdf_path: globalThis.resultPath }));"
+      "what": "Write a single JSON object containing the base64‑encoded PDF to stdout.",
+      "fails_if": "The JSON cannot be stringified or pdf_base64 is undefined.",
+      "code": "console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

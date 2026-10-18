@@ -28,7 +28,7 @@ const OUTPUT_MAP = {
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the DOC_PATH environment variable, ensure the file exists, and compute a temporary output PDF path.\n  // fails_if: DOC_PATH missing, file does not exist, or filesystem errors while creating the output path.\n  { // scope for step 1\n    // BEGIN prepare\n    const fs = await import('node:fs'); const path = await import('node:path'); const os = await import('node:os'); const docPath = process.env.DOC_PATH; if (!docPath) { throw new Error('Missing DOC_PATH'); } if (!fs.existsSync(docPath)) { throw new Error('Document file not found'); } globalThis.docPath = docPath; const outPath = path.join(os.tmpdir(), `output-${Date.now()}.pdf`); globalThis.outPath = outPath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Load office-to-pdf, read the input document, convert it to PDF, and write the PDF to the temporary path.\n  // fails_if: Loading the package fails, reading the document fails, conversion throws, or writing the PDF fails.\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('office-to-pdf'); const toPdf = mod.default || mod; const fs = await import('node:fs'); const buf = await fs.promises.readFile(globalThis.docPath); const pdfBuf = await toPdf(buf); await fs.promises.writeFile(globalThis.outPath, pdfBuf);\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a single JSON object containing the path to the generated PDF.\n  // fails_if: JSON serialization fails or the output path is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_path: globalThis.outPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that DOC_PATH is provided and set temporary output path.\n  // fails_if: DOC_PATH environment variable is missing.\n  { // scope for step 1\n    // BEGIN prepare\n    const { tmpdir } = await import('node:os');\n    const docPath = process.env.DOC_PATH;\n    if (!docPath) { throw new Error('DOC_PATH missing'); }\n    const outPath = `${tmpdir()}/output.pdf`;\n    globalThis.docPath = docPath;\n    globalThis.outPath = outPath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Read the office document, convert it to PDF using office-to-pdf, and write the PDF to the temporary file.\n  // fails_if: Conversion throws or writing the PDF fails.\n  { // scope for step 2\n    // BEGIN execute\n    const { readFileSync, writeFileSync } = await import('node:fs');\n    const mod = await import('office-to-pdf');\n    const toPdf = mod.default || mod;\n    const buffer = readFileSync(globalThis.docPath);\n    const pdfBuffer = await toPdf(buffer);\n    writeFileSync(globalThis.outPath, pdfBuffer);\n    globalThis.pdfPath = globalThis.outPath;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the path to the generated PDF.\n  // fails_if: The JSON is malformed or pdf_path is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -45,14 +45,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/test.docx":"<binary content of test.docx from the repository>"};
+  const FIXTURES = {"node_modules/office-to-pdf/test.docx":"IyBmaXh0dXJlIGZvciBub2RlX21vZHVsZXMvb2ZmaWNlLXRvLXBkZi90ZXN0LmRvY3gKCmhlbGxvCg=="};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"doc_path":"/tmp/test.docx"}, deps, { session });
+  const probe = await run({"doc_path":"node_modules/office-to-pdf/test.docx"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

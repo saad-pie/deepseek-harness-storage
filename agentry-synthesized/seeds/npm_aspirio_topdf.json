@@ -23,23 +23,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that the input HTML and output PDF paths are provided and that the input file exists, then store them in global state.",
-      "fails_if": "Missing INPUT_HTML or OUTPUT_PDF environment variable, or the input file cannot be accessed.",
-      "code": "const { accessSync, constants } = await import('node:fs');\nconst input = process.env.INPUT_HTML;\nconst output = process.env.OUTPUT_PDF;\nif (!input || !output) throw new Error('Missing required inputs');\ntry { accessSync(input, constants.R_OK); } catch { throw new Error('Input file not accessible'); }\nglobalThis.inputPath = input;\nglobalThis.outputPath = output;"
+      "what": "Validate required environment variables, ensure the input HTML file exists, and store paths in global state.",
+      "fails_if": "Missing INPUT_HTML or OUTPUT_PDF env var, or the input file does not exist.",
+      "code": "const { env } = await import('node:process');\nconst { existsSync } = await import('node:fs');\nconst input = env.INPUT_HTML;\nconst output = env.OUTPUT_PDF;\nif (!input) throw new Error('Missing INPUT_HTML env var');\nif (!output) throw new Error('Missing OUTPUT_PDF env var');\nif (!existsSync(input)) throw new Error('Input HTML file does not exist');\nglobalThis.inputPath = input;\nglobalThis.outputPath = output;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Run the @aspirio/topdf CLI to convert the HTML file to a PDF at the specified output location.",
-      "fails_if": "The CLI process exits with a non‑zero code or cannot be started.",
-      "code": "const { execFileSync } = await import('node:child_process');\nconst { join } = await import('node:path');\nconst pkgPath = join(process.cwd(), 'node_modules', '@aspirio', 'topdf', 'index.js');\nexecFileSync('node', [pkgPath, '-i', globalThis.inputPath, '-o', globalThis.outputPath]);\nglobalThis.resultPath = globalThis.outputPath;"
+      "what": "Invoke the @aspirio/topdf package to convert the HTML file to a PDF at the specified location.",
+      "fails_if": "The conversion function throws or returns a rejected promise.",
+      "code": "const mod = await import('@aspirio/topdf');\nconst fn = mod.default || mod;\nawait fn({ input: globalThis.inputPath, output: globalThis.outputPath });\nglobalThis.pdfPath = globalThis.outputPath;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a JSON object containing the path of the generated PDF.",
-      "fails_if": "The JSON cannot be stringified or the pdf_path field is undefined.",
-      "code": "console.log(JSON.stringify({ pdf_path: globalThis.outputPath }));"
+      "what": "Emit a single JSON object containing the path to the generated PDF.",
+      "fails_if": "The JSON is malformed or pdf_path is undefined.",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

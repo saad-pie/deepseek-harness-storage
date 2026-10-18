@@ -5,45 +5,41 @@
   "handler": "npm_html3pdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_html3pdf.mjs",
   "accepts": {
-    "html": "string",
-    "filename": {
-      "type": "string",
-      "optional": true
-    }
+    "html": "string"
   },
   "produces": {
     "pdf_base64": "string"
   },
   "requires": {
     "npm": [
-      "html3pdf",
-      "jsdom"
+      "playwright",
+      "html3pdf"
     ],
     "pip": [],
-    "post_install": null,
+    "post_install": "npx playwright install chromium",
     "capability": []
   },
   "plan": [
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate the HTML input and set up a jsdom environment to simulate a browser context for html3pdf.",
-      "fails_if": "The HTML input is missing or empty, or jsdom fails to initialize the DOM.",
-      "code": "const html = globalThis.input_html;\nif (!html || typeof html !== 'string' || html.trim().length === 0) {\n  throw new Error('Input HTML is missing or empty');\n}\nconst { JSDOM } = await import('jsdom');\nconst dom = new JSDOM(html, {\n  runScripts: 'dangerously',\n  resources: 'usable',\n  pretendToBeVisual: true\n});\nglobalThis.window = dom.window;\nglobalThis.document = dom.window.document;\nglobalThis.navigator = dom.window.navigator;\nglobalThis.HTMLCanvasElement = dom.window.HTMLCanvasElement;\nglobalThis.Image = dom.window.Image;\nglobalThis.getComputedStyle = dom.window.getComputedStyle;\nglobalThis.requestAnimationFrame = dom.window.requestAnimationFrame;\nglobalThis.cancelAnimationFrame = dom.window.cancelAnimationFrame;\nglobalThis.devicePixelRatio = dom.window.devicePixelRatio || 1;\nglobalThis.input_filename = globalThis.input_filename || 'output.pdf';"
+      "what": "Validate the HTML input and write it to a temporary file for the browser to load.",
+      "fails_if": "The required 'html' input is missing or the file cannot be written.",
+      "code": "const { writeFileSync, promises: fsPromises } = await import('node:fs');\nif (!globalThis.input || typeof globalThis.input.html !== 'string') {\n  throw new Error('Missing required input: html');\n}\nconst htmlPath = '/tmp/input.html';\nwriteFileSync(htmlPath, globalThis.input.html, 'utf8');\nglobalThis.htmlPath = htmlPath;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Use html3pdf to convert the HTML content into a PDF and extract the base64 data.",
-      "fails_if": "html3pdf fails to render the HTML to canvas or generate the PDF, or the output is not valid base64.",
-      "code": "const mod = await import('html3pdf');\nconst html2pdf = mod.default || mod;\nconst worker = html2pdf();\nconst pdfData = await worker\n  .set({\n    margin: 0,\n    filename: globalThis.input_filename,\n    image: { type: 'jpeg', quality: 0.98 },\n    html2canvas: { scale: 2, useCORS: true },\n    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }\n  })\n  .from(globalThis.document.body)\n  .toPdf()\n  .output('datauristring');\nif (!pdfData || typeof pdfData !== 'string' || !pdfData.startsWith('data:application/pdf;base64,')) {\n  throw new Error('Failed to generate valid PDF data');\n}\nconst base64Data = pdfData.split(',')[1];\nglobalThis.pdf_base64 = base64Data;"
+      "what": "Launch a headless Chromium page, load the HTML and html3pdf script, generate a PDF as a data‑uri string, and store it.",
+      "fails_if": "Playwright fails to launch, the script cannot be injected, or html3pdf throws an error while rendering.",
+      "code": "const { chromium } = await import('playwright');\nconst browser = await chromium.launch();\nconst page = await browser.newPage();\nconst { readFile } = await import('node:fs').then(m => m.promises);\nconst htmlContent = await readFile(globalThis.htmlPath, 'utf8');\nawait page.setContent(htmlContent);\nconst scriptPath = process.cwd() + '/node_modules/html3pdf/dist/html3pdf.js';\nawait page.addScriptTag({ path: scriptPath });\n// Wait for the global html2pdf function to be available\nawait page.waitForFunction(() => typeof html2pdf === 'function');\nconst dataUri = await page.evaluate(async () => {\n  // html2pdf returns a Worker; we ask it to output a PDF as a data‑uri string\n  const result = await html2pdf().outputPdf('datauristring');\n  return result;\n});\nglobalThis.pdfDataUri = dataUri;\nawait browser.close();"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write the resulting PDF base64 string to stdout as a JSON object.",
-      "fails_if": "The JSON output is malformed or the pdf_base64 field is undefined.",
-      "code": "const result = {\n  pdf_base64: globalThis.pdf_base64\n};\nconsole.log(JSON.stringify(result));"
+      "what": "Extract the base64 payload from the data‑uri and emit a single JSON object.",
+      "fails_if": "The data‑uri is missing or malformed, or console.log fails.",
+      "code": "const dataUri = globalThis.pdfDataUri;\nif (typeof dataUri !== 'string' || !dataUri.includes(',')) {\n  throw new Error('Invalid PDF data URI');\n}\nconst base64 = dataUri.split(',')[1];\nconsole.log(JSON.stringify({ pdf_base64: base64 }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

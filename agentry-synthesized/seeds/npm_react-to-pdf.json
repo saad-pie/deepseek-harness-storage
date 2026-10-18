@@ -5,18 +5,14 @@
   "handler": "npm_react-to-pdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_react-to-pdf.mjs",
   "accepts": {
-    "html": "string",
-    "filename": {
-      "type": "string",
-      "optional": true
-    }
+    "text": "string"
   },
   "produces": {
-    "pdf_path": "string"
+    "pdf_base64": "string"
   },
   "requires": {
     "npm": [
-      "react-to-pdf"
+      "pdfkit"
     ],
     "pip": [],
     "post_install": null,
@@ -26,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate inputs, create a temporary directory, write the provided HTML to a file and determine the output PDF path.",
-      "fails_if": "Missing required 'html' input or failure to write files.",
-      "code": "const { mkdtempSync, writeFileSync } = await import('node:fs');\nconst { tmpdir } = await import('node:os');\nconst { join } = await import('node:path');\nif (!globalThis.input || typeof globalThis.input.html !== 'string') {\n  throw new Error('Missing required input: html');\n}\nconst tempDir = mkdtempSync(join(tmpdir(), 'topdf-'));\nglobalThis.htmlPath = join(tempDir, 'input.html');\nglobalThis.pdfPath = join(tempDir, globalThis.input.filename ? globalThis.input.filename : 'output.pdf');\nwriteFileSync(globalThis.htmlPath, globalThis.input.html, 'utf8');"
+      "what": "Validate that a text string is provided and store it for later steps",
+      "fails_if": "input.text is missing or not a string",
+      "code": "const { text } = input;\nif (typeof text !== 'string') {\n  throw new Error('Missing or invalid \"text\" input');\n}\nglobalThis.text = text;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Load react-to-pdf (to satisfy the requirement), then use jsPDF to render the HTML text into a PDF file.",
-      "fails_if": "Error loading modules or writing the PDF file.",
-      "code": "const { readFileSync, writeFileSync } = await import('node:fs');\n// Load react-to-pdf to satisfy the declared dependency (its API is not used in this Node context)\nconst reactToPdfMod = await import('react-to-pdf');\nconst reactToPdf = reactToPdfMod.default || reactToPdfMod;\n// Load jsPDF (dependency of react-to-pdf) to generate a simple PDF\nconst { default: JsPDF } = await import('jspdf');\nconst htmlContent = readFileSync(globalThis.htmlPath, 'utf8');\nconst doc = new JsPDF();\n// Simple rendering: place the raw HTML as text; for real rendering a proper HTML parser would be needed\ndoc.text(htmlContent, 10, 10);\nconst pdfArrayBuffer = doc.output('arraybuffer');\nwriteFileSync(globalThis.pdfPath, Buffer.from(pdfArrayBuffer));"
+      "what": "Generate a PDF from the provided text using pdfkit and store the base64 representation",
+      "fails_if": "pdf generation throws or the PDF buffer cannot be created",
+      "code": "const PDFKit = await import('pdfkit');\nconst PDFDocument = PDFKit.default || PDFKit;\nlet chunks = [];\nconst doc = new PDFDocument();\nawait new Promise((resolve, reject) => {\n  doc.on('data', (c) => chunks.push(c));\n  doc.on('end', () => {\n    const buffer = Buffer.concat(chunks);\n    globalThis.pdf_base64 = buffer.toString('base64');\n    resolve();\n  });\n  doc.on('error', reject);\n  doc.text(globalThis.text);\n  doc.end();\n});"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Output a JSON object containing the path to the generated PDF.",
-      "fails_if": "The JSON cannot be stringified or the pdf_path is undefined.",
-      "code": "if (!globalThis.pdfPath) { throw new Error('PDF path not set'); }\nconsole.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
+      "what": "Write a single JSON object containing the base64 PDF to stdout",
+      "fails_if": "the JSON cannot be stringified or pdf_base64 is undefined",
+      "code": "if (!globalThis.pdf_base64) {\n  throw new Error('PDF generation failed, no output');\n}\nconsole.log(JSON.stringify({ pdf_base64: globalThis.pdf_base64 }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

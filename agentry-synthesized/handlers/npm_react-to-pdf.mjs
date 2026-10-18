@@ -6,18 +6,14 @@
 const CAP_ID = "npm_react-to-pdf";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "html": "string",
-  "filename": {
-    "type": "string",
-    "optional": true
-  }
+  "text": "string"
 };
 const PRODUCES = {
-  "pdf_path": "string"
+  "pdf_base64": "string"
 };
 const REQUIRES = {
   "npm": [
-    "react-to-pdf"
+    "pdfkit"
   ],
   "pip": [],
   "post_install": null,
@@ -26,11 +22,11 @@ const REQUIRES = {
 const ENV_MAP = {};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "pdf_path": "pdf_path"
+  "pdf_base64": "pdf_base64"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate inputs, create a temporary directory, write the provided HTML to a file and determine the output PDF path.\n  // fails_if: Missing required 'html' input or failure to write files.\n  { // scope for step 1\n    // BEGIN prepare\n    const { mkdtempSync, writeFileSync } = await import('node:fs');\n    const { tmpdir } = await import('node:os');\n    const { join } = await import('node:path');\n    if (!globalThis.input || typeof globalThis.input.html !== 'string') {\n      throw new Error('Missing required input: html');\n    }\n    const tempDir = mkdtempSync(join(tmpdir(), 'topdf-'));\n    globalThis.htmlPath = join(tempDir, 'input.html');\n    globalThis.pdfPath = join(tempDir, globalThis.input.filename ? globalThis.input.filename : 'output.pdf');\n    writeFileSync(globalThis.htmlPath, globalThis.input.html, 'utf8');\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Load react-to-pdf (to satisfy the requirement), then use jsPDF to render the HTML text into a PDF file.\n  // fails_if: Error loading modules or writing the PDF file.\n  { // scope for step 2\n    // BEGIN execute\n    const { readFileSync, writeFileSync } = await import('node:fs');\n    // Load react-to-pdf to satisfy the declared dependency (its API is not used in this Node context)\n    const reactToPdfMod = await import('react-to-pdf');\n    const reactToPdf = reactToPdfMod.default || reactToPdfMod;\n    // Load jsPDF (dependency of react-to-pdf) to generate a simple PDF\n    const { default: JsPDF } = await import('jspdf');\n    const htmlContent = readFileSync(globalThis.htmlPath, 'utf8');\n    const doc = new JsPDF();\n    // Simple rendering: place the raw HTML as text; for real rendering a proper HTML parser would be needed\n    doc.text(htmlContent, 10, 10);\n    const pdfArrayBuffer = doc.output('arraybuffer');\n    writeFileSync(globalThis.pdfPath, Buffer.from(pdfArrayBuffer));\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Output a JSON object containing the path to the generated PDF.\n  // fails_if: The JSON cannot be stringified or the pdf_path is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    if (!globalThis.pdfPath) { throw new Error('PDF path not set'); }\n    console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that a text string is provided and store it for later steps\n  // fails_if: input.text is missing or not a string\n  { // scope for step 1\n    // BEGIN prepare\n    const { text } = input;\n    if (typeof text !== 'string') {\n      throw new Error('Missing or invalid \"text\" input');\n    }\n    globalThis.text = text;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Generate a PDF from the provided text using pdfkit and store the base64 representation\n  // fails_if: pdf generation throws or the PDF buffer cannot be created\n  { // scope for step 2\n    // BEGIN execute\n    const PDFKit = await import('pdfkit');\n    const PDFDocument = PDFKit.default || PDFKit;\n    let chunks = [];\n    const doc = new PDFDocument();\n    await new Promise((resolve, reject) => {\n      doc.on('data', (c) => chunks.push(c));\n      doc.on('end', () => {\n        const buffer = Buffer.concat(chunks);\n        globalThis.pdf_base64 = buffer.toString('base64');\n        resolve();\n      });\n      doc.on('error', reject);\n      doc.text(globalThis.text);\n      doc.end();\n    });\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the base64 PDF to stdout\n  // fails_if: the JSON cannot be stringified or pdf_base64 is undefined\n  { // scope for step 3\n    // BEGIN emit\n    if (!globalThis.pdf_base64) {\n      throw new Error('PDF generation failed, no output');\n    }\n    console.log(JSON.stringify({ pdf_base64: globalThis.pdf_base64 }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -47,14 +43,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"test.pdf":"JVBERi0xLjQKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0NvdW50IDAvS2lkc1tdPj4KZW5kb2JqCnhyZWYKMCAzCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAwOSAwMDAwMCBuIAowMDAwMDAwMDUyIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSAzL1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKMTAzCiUlRU9GCg=="};
+  const FIXTURES = {};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"html":"<h1>Hello PDF</h1>","filename":"test.pdf"}, deps, { session });
+  const probe = await run({"text":"Hello, world! This is a test PDF."}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

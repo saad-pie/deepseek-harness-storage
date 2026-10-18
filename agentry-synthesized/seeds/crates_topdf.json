@@ -5,7 +5,7 @@
   "handler": "crates_topdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/crates_topdf.mjs",
   "accepts": {
-    "image_paths": "string"
+    "images": "string"
   },
   "produces": {
     "pdf_path": "string"
@@ -23,22 +23,22 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Read IMAGE_PATHS env var, split into a list, validate non‑empty, and set the output PDF path.",
-      "fails_if": "IMAGE_PATHS not set, empty list, or any required env var missing.",
-      "code": "let image_paths_str = std::env::var(\"IMAGE_PATHS\").expect(\"IMAGE_PATHS not set\");\nlet image_paths: Vec<String> = image_paths_str.split(',').map(|s| s.trim().to_string()).collect();\nif image_paths.is_empty() {\n    panic!(\"No image paths provided\");\n}\nlet output_path = \"/tmp/output.pdf\".to_string();"
+      "what": "Read the IMAGES environment variable, split it into a list of file paths, and validate that at least one image is provided.",
+      "fails_if": "The IMAGES env var is missing or the list is empty.",
+      "code": "use topdf;\nlet images_str = std::env::var(\"IMAGES\").expect(\"IMAGES env var missing\");\nlet images: Vec<String> = images_str.split(',').map(|s| s.trim().to_string()).collect();\nif images.is_empty() {\n    panic!(\"No images provided\");\n}"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Invoke the installed `topdf` binary with the output path and all image files.",
-      "fails_if": "The `topdf` command exits with a non‑zero status or cannot be started.",
-      "code": "use std::process::Command;\nlet mut cmd = Command::new(\"topdf\");\ncmd.arg(&output_path);\nfor p in &image_paths {\n    cmd.arg(p);\n}\nlet status = cmd.status().expect(\"failed to execute topdf\");\nif !status.success() {\n    panic!(\"topdf command failed\");\n}"
+      "what": "Invoke the topdf crate to convert the collected images into a single PDF saved at a temporary location.",
+      "fails_if": "The topdf conversion function returns an error.",
+      "code": "let output_path = \"/tmp/output.pdf\";\nmatch topdf::convert(&images, output_path) {\n    Ok(_) => {}\n    Err(e) => panic!(\"Conversion failed: {}\", e),\n}"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Print a single JSON object containing the path of the generated PDF.",
-      "fails_if": "JSON construction fails or output_path is undefined.",
+      "what": "Print a JSON object containing the path to the generated PDF.",
+      "fails_if": "Printing the JSON fails or the output_path variable is undefined.",
       "code": "println!(\"{{\\\"pdf_path\\\":\\\"{}\\\"}}\", output_path);"
     }
   ],

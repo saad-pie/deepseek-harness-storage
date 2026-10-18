@@ -6,7 +6,11 @@
 const CAP_ID = "npm_geek-time-topdf";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "url": "string"
+  "url": "string",
+  "output_path": {
+    "type": "string",
+    "optional": true
+  }
 };
 const PRODUCES = {
   "pdf_path": "string"
@@ -26,7 +30,7 @@ const OUTPUT_MAP = {
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the required URL input and create a temporary output file path for the PDF.\n  // fails_if: Missing or empty 'url' input; inability to determine a temporary directory.\n  { // scope for step 1\n    // BEGIN prepare\n    const { writeFileSync, mkdirSync } = await import('node:fs');\n    const path = await import('node:path');\n    const os = await import('node:os');\n    if (!globalThis.input || typeof globalThis.input.url !== 'string' || !globalThis.input.url) { throw new Error('Missing required input: url'); }\n    globalThis.inputUrl = globalThis.input.url;\n    const outDir = os.tmpdir();\n    globalThis.outPath = path.join(outDir, `geek_time_${Date.now()}.pdf`);\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Invoke the geek-time-topdf package to render the given URL to a PDF at the prepared path.\n  // fails_if: The package throws an error, the URL is unreachable, or PDF generation fails.\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('geek-time-topdf');\n    const fn = mod.default || mod;\n    await fn({ url: globalThis.inputUrl, outputPath: globalThis.outPath });\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the path to the generated PDF.\n  // fails_if: The output path is undefined or console.log fails.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_path: globalThis.outPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the required url input and determine a temporary output file path for the PDF.\n  // fails_if: url input missing or filesystem error when creating temporary directory\n  { // scope for step 1\n    // BEGIN prepare\n    const { writeFileSync, mkdirSync } = await import('node:fs');\n    const { join } = await import('node:path');\n    const os = await import('node:os');\n    const input = globalThis.input;\n    if (!input || typeof input.url !== 'string') { throw new Error('Missing required input: url'); }\n    const outPath = input.output_path || join(os.tmpdir(), `geektopdf-${Date.now()}.pdf`);\n    const dir = join(outPath, '..');\n    try { mkdirSync(dir, { recursive: true }); } catch (_) {}\n    globalThis.outputPath = outPath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Invoke the geek-time-topdf package to render the given URL into a PDF file at the prepared path.\n  // fails_if: the package throws or fails to write the PDF\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('geek-time-topdf');\n    const fn = mod.default || mod;\n    await fn({ url: globalThis.input.url, outputPath: globalThis.outputPath });\n    globalThis.result = { pdf_path: globalThis.outputPath };\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the PDF file path to stdout.\n  // fails_if: JSON serialization fails or the pdf_path field is undefined\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_path: globalThis.outputPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -50,7 +54,7 @@ export async function accept(deps, opts = {}) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"url":"https://example.com"}, deps, { session });
+  const probe = await run({"url":"https://example.com/course"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

@@ -22,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate the DOC_PATH environment variable, ensure the file exists, and compute a temporary output PDF path.",
-      "fails_if": "DOC_PATH missing, file does not exist, or filesystem errors while creating the output path.",
-      "code": "const fs = await import('node:fs'); const path = await import('node:path'); const os = await import('node:os'); const docPath = process.env.DOC_PATH; if (!docPath) { throw new Error('Missing DOC_PATH'); } if (!fs.existsSync(docPath)) { throw new Error('Document file not found'); } globalThis.docPath = docPath; const outPath = path.join(os.tmpdir(), `output-${Date.now()}.pdf`); globalThis.outPath = outPath;"
+      "what": "Validate that DOC_PATH is provided and set temporary output path.",
+      "fails_if": "DOC_PATH environment variable is missing.",
+      "code": "const { tmpdir } = await import('node:os');\nconst docPath = process.env.DOC_PATH;\nif (!docPath) { throw new Error('DOC_PATH missing'); }\nconst outPath = `${tmpdir()}/output.pdf`;\nglobalThis.docPath = docPath;\nglobalThis.outPath = outPath;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Load office-to-pdf, read the input document, convert it to PDF, and write the PDF to the temporary path.",
-      "fails_if": "Loading the package fails, reading the document fails, conversion throws, or writing the PDF fails.",
-      "code": "const mod = await import('office-to-pdf'); const toPdf = mod.default || mod; const fs = await import('node:fs'); const buf = await fs.promises.readFile(globalThis.docPath); const pdfBuf = await toPdf(buf); await fs.promises.writeFile(globalThis.outPath, pdfBuf);"
+      "what": "Read the office document, convert it to PDF using office-to-pdf, and write the PDF to the temporary file.",
+      "fails_if": "Conversion throws or writing the PDF fails.",
+      "code": "const { readFileSync, writeFileSync } = await import('node:fs');\nconst mod = await import('office-to-pdf');\nconst toPdf = mod.default || mod;\nconst buffer = readFileSync(globalThis.docPath);\nconst pdfBuffer = await toPdf(buffer);\nwriteFileSync(globalThis.outPath, pdfBuffer);\nglobalThis.pdfPath = globalThis.outPath;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a single JSON object containing the path to the generated PDF.",
-      "fails_if": "JSON serialization fails or the output path is undefined.",
-      "code": "console.log(JSON.stringify({ pdf_path: globalThis.outPath }));"
+      "what": "Emit a JSON object containing the path to the generated PDF.",
+      "fails_if": "The JSON is malformed or pdf_path is undefined.",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

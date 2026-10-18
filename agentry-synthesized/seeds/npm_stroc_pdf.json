@@ -5,7 +5,7 @@
   "handler": "npm_stroc_pdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_stroc_pdf.mjs",
   "accepts": {
-    "stroc_json": "string"
+    "stroc_doc": "string"
   },
   "produces": {
     "pdf_base64": "string"
@@ -22,22 +22,22 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that a STROC_JSON environment variable is present and parse it into a Stroc document object.",
-      "fails_if": "STROC_JSON is missing or not valid JSON.",
-      "code": "const { STROC_JSON } = process.env;\nif (!STROC_JSON) {\n  throw new Error('Missing STROC_JSON');\n}\ntry {\n  globalThis.strocDoc = JSON.parse(STROC_JSON);\n} catch (e) {\n  throw new Error('Invalid STROC_JSON');\n}"
+      "what": "Validate the input Stroc document, load the @stroc/pdf module and store the toPdf function for later use",
+      "fails_if": "Missing stroc_doc input, invalid JSON, or failure to import the module",
+      "code": "const { toPdf } = await import('@stroc/pdf');\nif (!globalThis.input || typeof globalThis.input.stroc_doc !== 'string') {\n  throw new Error('Missing stroc_doc');\n}\nglobalThis.toPdf = toPdf;\ntry {\n  globalThis.doc = JSON.parse(globalThis.input.stroc_doc);\n} catch {\n  throw new Error('stroc_doc must be valid JSON');\n}"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Load @stroc/pdf and invoke toPdf on the parsed document, then base64‑encode the resulting PDF bytes.",
-      "fails_if": "Import fails, toPdf throws, or the result cannot be encoded.",
-      "code": "const mod = await import('@stroc/pdf');\nconst { toPdf } = mod;\nconst bytes = await toPdf(globalThis.strocDoc, { pageSize: 'A4' });\nglobalThis.pdfBase64 = Buffer.from(bytes).toString('base64');"
+      "what": "Generate PDF bytes from the Stroc document and encode them as base64",
+      "fails_if": "toPdf throws, returns non‑buffer data, or base64 conversion fails",
+      "code": "const bytes = await globalThis.toPdf(globalThis.doc, { pageSize: 'A4' });\nglobalThis.pdfBase64 = Buffer.from(bytes).toString('base64');"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write a single JSON object containing the base64‑encoded PDF to stdout.",
-      "fails_if": "The PDF data is undefined or JSON serialization fails.",
+      "what": "Write a single JSON object containing the base64‑encoded PDF to stdout",
+      "fails_if": "The JSON cannot be stringified or pdf_base64 is undefined",
       "code": "console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));"
     }
   ],

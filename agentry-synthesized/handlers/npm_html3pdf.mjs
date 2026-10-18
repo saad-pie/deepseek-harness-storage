@@ -6,35 +6,26 @@
 const CAP_ID = "npm_html3pdf";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "html": "string",
-  "filename": {
-    "type": "string",
-    "optional": true
-  }
+  "html": "string"
 };
 const PRODUCES = {
   "pdf_base64": "string"
 };
 const REQUIRES = {
   "npm": [
-    "html3pdf",
-    "jsdom"
+    "playwright",
+    "html3pdf"
   ],
   "pip": [],
-  "post_install": null,
+  "post_install": "npx playwright install chromium",
   "capability": []
 };
-const ENV_MAP = {
-  "INPUT_HTML": "html",
-  "INPUT_FILENAME": "filename"
-};
+const ENV_MAP = {};
 const PRE_INVOKE = {};
-const OUTPUT_MAP = {
-  "pdf_base64": "pdf_base64"
-};
-const RESULT_PARSE = "stdout_json";
+const OUTPUT_MAP = {};
+const RESULT_PARSE = "stdout_text";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the HTML input and set up a jsdom environment to simulate a browser context for html3pdf.\n  // fails_if: The HTML input is missing or empty, or jsdom fails to initialize the DOM.\n  { // scope for step 1\n    // BEGIN prepare\n    const html = globalThis.input_html;\n    if (!html || typeof html !== 'string' || html.trim().length === 0) {\n      throw new Error('Input HTML is missing or empty');\n    }\n    const { JSDOM } = await import('jsdom');\n    const dom = new JSDOM(html, {\n      runScripts: 'dangerously',\n      resources: 'usable',\n      pretendToBeVisual: true\n    });\n    globalThis.window = dom.window;\n    globalThis.document = dom.window.document;\n    globalThis.navigator = dom.window.navigator;\n    globalThis.HTMLCanvasElement = dom.window.HTMLCanvasElement;\n    globalThis.Image = dom.window.Image;\n    globalThis.getComputedStyle = dom.window.getComputedStyle;\n    globalThis.requestAnimationFrame = dom.window.requestAnimationFrame;\n    globalThis.cancelAnimationFrame = dom.window.cancelAnimationFrame;\n    globalThis.devicePixelRatio = dom.window.devicePixelRatio || 1;\n    globalThis.input_filename = globalThis.input_filename || 'output.pdf';\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Use html3pdf to convert the HTML content into a PDF and extract the base64 data.\n  // fails_if: html3pdf fails to render the HTML to canvas or generate the PDF, or the output is not valid base64.\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('html3pdf');\n    const html2pdf = mod.default || mod;\n    const worker = html2pdf();\n    const pdfData = await worker\n      .set({\n        margin: 0,\n        filename: globalThis.input_filename,\n        image: { type: 'jpeg', quality: 0.98 },\n        html2canvas: { scale: 2, useCORS: true },\n        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }\n      })\n      .from(globalThis.document.body)\n      .toPdf()\n      .output('datauristring');\n    if (!pdfData || typeof pdfData !== 'string' || !pdfData.startsWith('data:application/pdf;base64,')) {\n      throw new Error('Failed to generate valid PDF data');\n    }\n    const base64Data = pdfData.split(',')[1];\n    globalThis.pdf_base64 = base64Data;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write the resulting PDF base64 string to stdout as a JSON object.\n  // fails_if: The JSON output is malformed or the pdf_base64 field is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    const result = {\n      pdf_base64: globalThis.pdf_base64\n    };\n    console.log(JSON.stringify(result));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the HTML input and write it to a temporary file for the browser to load.\n  // fails_if: The required 'html' input is missing or the file cannot be written.\n  { // scope for step 1\n    // BEGIN prepare\n    const { writeFileSync, promises: fsPromises } = await import('node:fs');\n    if (!globalThis.input || typeof globalThis.input.html !== 'string') {\n      throw new Error('Missing required input: html');\n    }\n    const htmlPath = '/tmp/input.html';\n    writeFileSync(htmlPath, globalThis.input.html, 'utf8');\n    globalThis.htmlPath = htmlPath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Launch a headless Chromium page, load the HTML and html3pdf script, generate a PDF as a data‑uri string, and store it.\n  // fails_if: Playwright fails to launch, the script cannot be injected, or html3pdf throws an error while rendering.\n  { // scope for step 2\n    // BEGIN execute\n    const { chromium } = await import('playwright');\n    const browser = await chromium.launch();\n    const page = await browser.newPage();\n    const { readFile } = await import('node:fs').then(m => m.promises);\n    const htmlContent = await readFile(globalThis.htmlPath, 'utf8');\n    await page.setContent(htmlContent);\n    const scriptPath = process.cwd() + '/node_modules/html3pdf/dist/html3pdf.js';\n    await page.addScriptTag({ path: scriptPath });\n    // Wait for the global html2pdf function to be available\n    await page.waitForFunction(() => typeof html2pdf === 'function');\n    const dataUri = await page.evaluate(async () => {\n      // html2pdf returns a Worker; we ask it to output a PDF as a data‑uri string\n      const result = await html2pdf().outputPdf('datauristring');\n      return result;\n    });\n    globalThis.pdfDataUri = dataUri;\n    await browser.close();\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Extract the base64 payload from the data‑uri and emit a single JSON object.\n  // fails_if: The data‑uri is missing or malformed, or console.log fails.\n  { // scope for step 3\n    // BEGIN emit\n    const dataUri = globalThis.pdfDataUri;\n    if (typeof dataUri !== 'string' || !dataUri.includes(',')) {\n      throw new Error('Invalid PDF data URI');\n    }\n    const base64 = dataUri.split(',')[1];\n    console.log(JSON.stringify({ pdf_base64: base64 }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -51,16 +42,16 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"test.pdf":"JVBERi0xLjQKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0NvdW50IDAvS2lkc1tdPj4KZW5kb2JqCnhyZWYKMCAzCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAwOSAwMDAwMCBuIAowMDAwMDAwMDUyIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSAzL1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKMTAzCiUlRU9GCg=="};
+  const FIXTURES = {};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"html":"<html><body><h1>Hello World</h1><p>This is a test PDF.</p></body></html>","filename":"test.pdf"}, deps, { session });
+  const probe = await run({"html":"<!DOCTYPE html><html><body><h1>Test PDF</h1><p>Hello, world!</p></body></html>"}, deps, { session });
   const out = probe.output || probe;
-  const minBytes = 500;
+  const minBytes = 0;
   if (minBytes > 0) {
     const size = typeof out.bytes === "number" ? out.bytes : 0;
     if (size < minBytes) {

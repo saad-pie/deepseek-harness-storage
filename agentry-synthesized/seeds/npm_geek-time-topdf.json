@@ -5,7 +5,11 @@
   "handler": "npm_geek-time-topdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_geek-time-topdf.mjs",
   "accepts": {
-    "url": "string"
+    "url": "string",
+    "output_path": {
+      "type": "string",
+      "optional": true
+    }
   },
   "produces": {
     "pdf_path": "string"
@@ -22,23 +26,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate the required URL input and create a temporary output file path for the PDF.",
-      "fails_if": "Missing or empty 'url' input; inability to determine a temporary directory.",
-      "code": "const { writeFileSync, mkdirSync } = await import('node:fs');\nconst path = await import('node:path');\nconst os = await import('node:os');\nif (!globalThis.input || typeof globalThis.input.url !== 'string' || !globalThis.input.url) { throw new Error('Missing required input: url'); }\nglobalThis.inputUrl = globalThis.input.url;\nconst outDir = os.tmpdir();\nglobalThis.outPath = path.join(outDir, `geek_time_${Date.now()}.pdf`);\n"
+      "what": "Validate the required url input and determine a temporary output file path for the PDF.",
+      "fails_if": "url input missing or filesystem error when creating temporary directory",
+      "code": "const { writeFileSync, mkdirSync } = await import('node:fs');\nconst { join } = await import('node:path');\nconst os = await import('node:os');\nconst input = globalThis.input;\nif (!input || typeof input.url !== 'string') { throw new Error('Missing required input: url'); }\nconst outPath = input.output_path || join(os.tmpdir(), `geektopdf-${Date.now()}.pdf`);\nconst dir = join(outPath, '..');\ntry { mkdirSync(dir, { recursive: true }); } catch (_) {}\nglobalThis.outputPath = outPath;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Invoke the geek-time-topdf package to render the given URL to a PDF at the prepared path.",
-      "fails_if": "The package throws an error, the URL is unreachable, or PDF generation fails.",
-      "code": "const mod = await import('geek-time-topdf');\nconst fn = mod.default || mod;\nawait fn({ url: globalThis.inputUrl, outputPath: globalThis.outPath });\n"
+      "what": "Invoke the geek-time-topdf package to render the given URL into a PDF file at the prepared path.",
+      "fails_if": "the package throws or fails to write the PDF",
+      "code": "const mod = await import('geek-time-topdf');\nconst fn = mod.default || mod;\nawait fn({ url: globalThis.input.url, outputPath: globalThis.outputPath });\nglobalThis.result = { pdf_path: globalThis.outputPath };"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a JSON object containing the path to the generated PDF.",
-      "fails_if": "The output path is undefined or console.log fails.",
-      "code": "console.log(JSON.stringify({ pdf_path: globalThis.outPath }));\n"
+      "what": "Write a single JSON object containing the PDF file path to stdout.",
+      "fails_if": "JSON serialization fails or the pdf_path field is undefined",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.outputPath }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",
