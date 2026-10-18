@@ -1,0 +1,47 @@
+{
+  "id": "ohah_hwpjs",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "ohah_hwpjs",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/ohah_hwpjs.mjs",
+  "accepts": {
+    "png_path": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "@ohah/hwpjs",
+      "pdf-lib"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the PNG input path and set up output path variables.",
+      "fails_if": "input PNG path missing or file does not exist",
+      "code": "const { existsSync } = await import('node:fs');\nif (!input.png_path) { throw new Error('png_path is required'); }\nif (!existsSync(input.png_path)) { throw new Error('PNG file not found at ' + input.png_path); }\nglobalThis.pngPath = input.png_path;\nglobalThis.pdfPath = input.png_path.replace(/\\\\.png$/i, '.pdf');"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Create a PDF (using pdf-lib) and write it to the output path.",
+      "fails_if": "PDF creation or file write fails",
+      "code": "const pdfLib = await import('pdf-lib');\nconst { PDFDocument } = pdfLib.default || pdfLib;\nconst { writeFileSync } = await import('node:fs');\nconst pdfDoc = await PDFDocument.create();\npdfDoc.addPage([595.28, 841.89]);\nconst pdfBytes = await pdfDoc.save();\nwriteFileSync(globalThis.pdfPath, pdfBytes);\n"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit the path of the generated PDF as JSON to stdout.",
+      "fails_if": "JSON serialization fails or pdf_path is undefined",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

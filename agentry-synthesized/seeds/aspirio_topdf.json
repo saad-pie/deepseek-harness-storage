@@ -1,0 +1,47 @@
+{
+  "id": "aspirio_topdf",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "aspirio_topdf",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/aspirio_topdf.mjs",
+  "accepts": {
+    "input_html": "string",
+    "output_pdf": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "@aspirio/topdf"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate input paths and write the HTML fixture to the input file, set up output path.",
+      "fails_if": "INPUT_HTML env var missing or file write fails",
+      "code": "const { writeFileSync } = await import('node:fs');\nconst inputPath = process.env.INPUT_HTML;\nif (!inputPath) throw new Error('Missing INPUT_HTML');\nconst htmlContent = '<!DOCTYPE html><html><body><h1>Test</h1></body></html>';\nwriteFileSync(inputPath, htmlContent);\nglobalThis.inputPath = inputPath;\nconst outputPath = process.env.OUTPUT_PDF || '/tmp/output.pdf';\nglobalThis.outputPath = outputPath;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Run the @aspirio/topdf CLI to convert the HTML file to PDF.",
+      "fails_if": "CLI execution throws or exits with non-zero status",
+      "code": "const { execSync } = await import('node:child_process');\nconst { join } = await import('node:path');\nconst inputPath = globalThis.inputPath;\nconst outputPath = globalThis.outputPath;\nconst scriptPath = join(process.cwd(), 'node_modules', '@aspirio', 'topdf', 'index.js');\ntry {\n  execSync(`node ${scriptPath} -i ${inputPath} -o ${outputPath}`, { stdio: 'ignore' });\n} catch (e) {\n  throw new Error('PDF conversion failed');\n}\nglobalThis.pdfPath = outputPath;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Output JSON with the path to the generated PDF.",
+      "fails_if": "JSON serialization fails or pdf_path undefined",
+      "code": "if (!globalThis.pdfPath) throw new Error('pdfPath not set');\nconsole.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

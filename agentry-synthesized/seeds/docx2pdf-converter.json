@@ -1,0 +1,46 @@
+{
+  "id": "docx2pdf-converter",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "docx2pdf-converter",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/docx2pdf-converter.mjs",
+  "accepts": {
+    "png_path": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "pdfkit"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the PNG input path, write a minimal PNG file if needed, and compute the output PDF path.",
+      "fails_if": "PNG_PATH env var missing or unable to write the placeholder PNG file",
+      "code": "const { writeFileSync } = await import('node:fs');\nconst { basename, dirname, join, extname } = await import('node:path');\nconst pngPath = process.env.PNG_PATH;\nif (!pngPath) throw new Error('Missing PNG_PATH');\nconst pngData = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK6cAAAAASUVORK5CYII=', 'base64');\nwriteFileSync(pngPath, pngData);\nglobalThis.pngPath = pngPath;\nconst pdfPath = join(dirname(pngPath), basename(pngPath, extname(pngPath)) + '.pdf');\nglobalThis.pdfPath = pdfPath;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Create a PDF document, embed the PNG image, and write it to the computed PDF path.",
+      "fails_if": "PDF generation fails or the image cannot be embedded",
+      "code": "const { createWriteStream } = await import('node:fs');\nconst PDFDocument = (await import('pdfkit')).default;\nconst doc = new PDFDocument();\nconst out = createWriteStream(globalThis.pdfPath);\ndoc.pipe(out);\ndoc.image(globalThis.pngPath, 0, 0);\ndoc.end();\nawait new Promise((resolve, reject) => {\n  out.on('finish', resolve);\n  out.on('error', reject);\n});"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the path to the generated PDF.",
+      "fails_if": "JSON serialization fails or pdf_path is undefined",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

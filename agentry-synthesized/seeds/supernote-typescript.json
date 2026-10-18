@@ -1,0 +1,46 @@
+{
+  "id": "supernote-typescript",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "supernote-typescript",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/supernote-typescript.mjs",
+  "accepts": {
+    "note_path": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "supernote-typescript"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Read the input .note file from disk and validate its existence.",
+      "fails_if": "The input file does not exist or cannot be read.",
+      "code": "const fs = await import('node:fs');\nconst path = globalThis.inputPath;\nif (!fs.existsSync(path)) {\n  throw new Error('Input file not found: ' + path);\n}\nconst buffer = fs.readFileSync(path);\nglobalThis.noteBuffer = buffer;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Parse the Supernote note and convert it to PDF bytes using the supernote-typescript library.",
+      "fails_if": "The note file is corrupted, not a valid Supernote format, or the PDF generation fails.",
+      "code": "const mod = await import('supernote-typescript');\nconst { SupernoteX, toPdf } = mod;\nconst note = new SupernoteX(globalThis.noteBuffer);\nconst pdfBytes = await toPdf(note);\nglobalThis.pdfBytes = pdfBytes;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write the generated PDF to a file and output the result as JSON.",
+      "fails_if": "The file write fails or the JSON output is malformed.",
+      "code": "const fs = await import('node:fs');\nconst outputPath = globalThis.inputPath.replace(/\\.note$/, '.pdf');\nfs.writeFileSync(outputPath, globalThis.pdfBytes);\nconsole.log(JSON.stringify({ pdf_path: outputPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
