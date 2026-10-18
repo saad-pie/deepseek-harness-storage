@@ -30790,3 +30790,51 @@
 {"kind":"trial.accept_threw","at":1792314919562,"capability_id":"crates_topdf","session":"trial_crates_topdf_mvdm0yez","error":"crates_topdf: kernel exited 1 — warning: unused doc comment\n  --> script_mvdm0ykw_51cy.rs:3:6\n   |\n 3 |        {//! ```cargo\n   |  ______-^\n   | | ______|\n 4 | || //! [dependencies]\n 5 | || //! topdf = \"0.1.1\"\n 6 | || //! ```\n   | ||_______^\n...  |\n23 | |  println!(\"{{\\\"pdf_path\\\":\\\"{}\\\"}}\", output_path);}\n   | |__________________"}
 {"kind":"trial.node_retired","at":1792314919562,"capability_id":"crates_topdf","reason":"trial accept: crates_topdf: kernel exited 1 — warning: unused doc comment\n  --> script_mvdm0ykw_51cy.rs:3:6\n   |\n 3 |        {//! ```cargo\n   |  ______-^\n   | | ______|\n 4 | || //! [dependencies]\n 5 | || //! topdf = \"0.1.1\"\n 6 | || //! ```\n   | ||_______^\n...  |\n23 | |  println!(\"{{\\\"pdf_path\\\":\\\"{}\\\"}}\", output_path);}\n   | |__________________"}
 {"kind":"invoke.succeeded","at":1792314919562,"capability_id":"agentry.trial","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":592}
+{"kind":"runtime.boot.started","at":1792315196097,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792315196399,"loaded":0,"skipped":24,"files":24}
+{"kind":"runtime.boot.watches_loaded","at":1792315196400,"count":17}
+{"kind":"runtime.boot.completed","at":1792315196400,"capabilities":360,"watches":17}
+{"kind":"runtime.boot.started","at":1792315205256,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792315205462,"loaded":0,"skipped":24,"files":24}
+{"kind":"runtime.boot.watches_loaded","at":1792315205462,"count":17}
+{"kind":"runtime.boot.completed","at":1792315205462,"capabilities":360,"watches":17}
+{"kind":"invoke.started","at":1792315205799,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["proposal_id","candidate_id"]}
+{"kind":"synthesize.started","at":1792315205800,"proposal_id":"proposal_v315_1792315205463","candidate_id":"crates:topdf","gap_id":"gap:v315_test","candidate_kind":"rust_crate","wanted_kind":"tool","shape_verbs":["prepare","execute","emit"]}
+{"kind":"invoke.started","at":1792315205801,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792315205824,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":22}
+{"kind":"invoke.started","at":1792315205824,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","code","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792315206018,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":194}
+{"kind":"synthesize.crate_read","at":1792315206018,"proposal_id":"proposal_v315_1792315205463","candidate_id":"crates:topdf","crate_name":"topdf","version":"0.1.1","readme_len":395,"error":null}
+{"kind":"invoke.started","at":1792315206019,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792315210265,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4245}
+{"kind":"synthesize.capability_id_namespaced","at":1792315210265,"original":"gap:v315_test","normalized":"crates_topdf","candidate_id":"crates:topdf","source_preserved":true}
+{"kind":"tool","at":1792315210299,"proposal_id":"proposal_v315_1792315205463","candidate_id":"crates:topdf","gap_id":"gap:v315_test","capability_id":"crates_topdf","spec_type":"plan","wanted_kind":"tool","shape_steps":3,"plan_steps":3,"handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/crates_topdf.mjs","seed_path":"/tmp/home/.dsh/agentry-synthesized/seeds/crates_topdf.json","composed_capabilities":[],"pre_invoke_count":0,"model_used":"groq/openai/gpt-oss-120b","ms":4499}
+{"kind":"invoke.succeeded","at":1792315210300,"capability_id":"agentry.synthesize","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4658}
+{"kind":"invoke.started","at":1792315210302,"capability_id":"agentry.trial","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["capability_id","handler_path","seed_path"]}
+{"kind":"trial.started","at":1792315210302,"capability_id":"crates_topdf","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/crates_topdf.mjs","session":"trial_crates_topdf_mvdm777i"}
+{"kind":"trial.node_written","at":1792315210302,"capability_id":"crates_topdf","handler_file":"/tmp/home/.dsh/agentry-synthesized/handlers/crates_topdf.mjs"}
+{"kind":"invoke.started","at":1792315210477,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792315210481,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4}
+{"kind":"invoke.started","at":1792315210481,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792315210493,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":12}
+{"kind":"invoke.started","at":1792315210493,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792315210496,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3}
+{"kind":"installer.prepared","at":1792315210496,"capId":"crates_topdf","session":"trial_crates_topdf_mvdm777i","steps":[]}
+{"kind":"trial.prepared","at":1792315210496,"capability_id":"crates_topdf","session":"trial_crates_topdf_mvdm777i","prep":{"already_prepared":false,"steps":[]}}
+{"kind":"invoke.started","at":1792315210497,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792315210499,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"invoke.started","at":1792315210499,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792315210500,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"installer.already_prepared","at":1792315210501,"capId":"crates_topdf","session":"trial_crates_topdf_mvdm777i"}
+{"kind":"invoke.started","at":1792315210501,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792315210504,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3}
+{"kind":"invoke.started","at":1792315210504,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792315210506,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"installer.already_prepared","at":1792315210506,"capId":"crates_topdf","session":"trial_crates_topdf_mvdm777i"}
+{"kind":"invoke.started","at":1792315210506,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792315210507,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"invoke.started","at":1792315210507,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","code","env","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792315211264,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":757}
+{"kind":"trial.accept_threw","at":1792315211264,"capability_id":"crates_topdf","session":"trial_crates_topdf_mvdm777i","error":"crates_topdf: kernel exited 101 — \nthread 'main' (10088) panicked at /tmp/home/.dsh/agentry-kernel/work/trial_crates_topdf_mvdm777i/.agentry_scripts/script_mvdm77d8_c6uf.rs:18:10:\nfailed to execute topdf: Os { code: 2, kind: NotFound, message: \"No such file or directory\" }\nnote: run with `RUST_BACKTRACE=1` environment variable to di"}
+{"kind":"trial.node_retired","at":1792315211264,"capability_id":"crates_topdf","reason":"trial accept: crates_topdf: kernel exited 101 — \nthread 'main' (10088) panicked at /tmp/home/.dsh/agentry-kernel/work/trial_crates_topdf_mvdm777i/.agentry_scripts/script_mvdm77d8_c6uf.rs:18:10:\nfailed to execute topdf: Os { code: 2, kind: NotFound, message: \"No such file or directory\" }\nnote: run with `RUST_BACKTRACE=1` environment variable to di"}
+{"kind":"invoke.succeeded","at":1792315211264,"capability_id":"agentry.trial","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":962}

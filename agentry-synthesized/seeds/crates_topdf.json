@@ -5,8 +5,7 @@
   "handler": "crates_topdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/crates_topdf.mjs",
   "accepts": {
-    "image_path": "string",
-    "output_path": "string"
+    "image_path": "string"
   },
   "produces": {
     "pdf_path": "string"
@@ -14,32 +13,32 @@
   "requires": {
     "npm": [],
     "pip": [],
+    "post_install": null,
+    "capability": [],
     "rust_crates": [
       "topdf@0.1.1"
-    ],
-    "post_install": null,
-    "capability": []
+    ]
   },
   "plan": [
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that the input image file exists and the output path is writable.",
-      "fails_if": "Input file does not exist or output directory is not writable.",
-      "code": "let input_path = std::env::args().nth(1).unwrap_or_else(|| panic!(\"Missing input path\"));\nlet output_path = std::env::args().nth(2).unwrap_or_else(|| panic!(\"Missing output path\"));\nif !std::path::Path::new(&input_path).exists() {\n    panic!(\"Input file does not exist: {}\", input_path);\n}\nlet out_dir = std::path::Path::new(&output_path).parent().unwrap_or_else(|| std::path::Path::new(\".\"));\nif !out_dir.exists() {\n    panic!(\"Output directory does not exist: {}\", out_dir.display());\n}"
+      "what": "Validate that the provided image file exists and define the output PDF path.",
+      "fails_if": "IMAGE_PATH env var missing, file does not exist, or cannot determine output path.",
+      "code": "let image_path = std::env::var(\"IMAGE_PATH\").expect(\"IMAGE_PATH not set\");\nif !std::path::Path::new(&image_path).exists() {\n    panic!(\"Input image not found\");\n}\nlet output_path = \"/tmp/output.pdf\".to_string();"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Convert the input image to a PDF file at the specified output path.",
-      "fails_if": "The conversion process fails or produces an invalid PDF.",
-      "code": "let result = topdf::convert(&input_path, &output_path);\nmatch result {\n    Ok(_) => {},\n    Err(e) => panic!(\"Conversion failed: {}\", e)\n}"
+      "what": "Invoke the `topdf` CLI to convert the image to a PDF at the designated output path.",
+      "fails_if": "The `topdf` command fails to start or returns a non‑zero exit status.",
+      "code": "use std::process::Command;\nlet status = Command::new(\"topdf\")\n    .arg(&image_path)\n    .arg(&output_path)\n    .status()\n    .expect(\"failed to execute topdf\");\nif !status.success() {\n    panic!(\"topdf conversion failed\");\n}"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit the path to the generated PDF file as JSON.",
-      "fails_if": "The output path is not a valid string.",
+      "what": "Print a single JSON object containing the path to the generated PDF.",
+      "fails_if": "JSON is malformed or the pdf_path variable is undefined.",
       "code": "println!(\"{{\\\"pdf_path\\\":\\\"{}\\\"}}\", output_path);"
     }
   ],
