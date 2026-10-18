@@ -1,0 +1,46 @@
+{
+  "id": "apt_imagemagick",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "apt_imagemagick",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/apt_imagemagick.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that input_path and output_path are provided and that the input file exists, then store them in global state.",
+      "fails_if": "input_path or output_path missing, or the input file cannot be read.",
+      "code": "const { accessSync, constants } = await import('node:fs');\nconst input_path = process.env.INPUT_PATH;\nconst output_path = process.env.OUTPUT_PATH;\nif (!input_path) { throw new Error('Missing input_path'); }\nif (!output_path) { throw new Error('Missing output_path'); }\ntry { accessSync(input_path, constants.R_OK); } catch { throw new Error('Input file not accessible'); }\nglobalThis.inputPath = input_path;\nglobalThis.outputPath = output_path;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Run ImageMagick's convert command to transform the input file into the desired output file.",
+      "fails_if": "The convert command exits with an error or times out.",
+      "code": "const { execSync } = await import('node:child_process');\nconst input = globalThis.inputPath;\nconst output = globalThis.outputPath;\ntry { execSync(`convert ${input} ${output}`); } catch (e) { throw new Error('ImageMagick conversion failed: ' + e.message); }\nglobalThis.resultPath = output;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the path of the generated output file.",
+      "fails_if": "JSON serialization fails or resultPath is undefined.",
+      "code": "console.log(JSON.stringify({ output_path: globalThis.resultPath }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
