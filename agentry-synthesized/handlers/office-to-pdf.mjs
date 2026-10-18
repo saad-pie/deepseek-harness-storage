@@ -6,12 +6,10 @@
 const CAP_ID = "office-to-pdf";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "input_path": "string",
-  "output_path": "string"
+  "doc_path": "string"
 };
 const PRODUCES = {
-  "output_path": "string",
-  "size_bytes": "number"
+  "pdf_base64": "string"
 };
 const REQUIRES = {
   "npm": [
@@ -21,18 +19,14 @@ const REQUIRES = {
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {
-  "INPUT_PATH": "input_path",
-  "OUTPUT_PATH": "output_path"
-};
+const ENV_MAP = {};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "output_path": "output_path",
-  "size_bytes": "size_bytes"
+  "pdf_base64": "pdf_base64"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that the input file exists and read its contents into a buffer.\n  // fails_if: The input file does not exist or cannot be read.\n  { // scope for step 1\n    // BEGIN prepare\n    const fs = await import('node:fs');\n    const path = globalThis.input_path;\n    if (!fs.existsSync(path)) {\n      throw new Error('Input file not found: ' + path);\n    }\n    const buffer = fs.readFileSync(path);\n    globalThis.inputBuffer = buffer;\n    globalThis.output_path = globalThis.output_path;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Convert the input buffer to a PDF buffer using the office-to-pdf library.\n  // fails_if: The conversion process fails, likely due to missing LibreOffice or unsupported format.\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('office-to-pdf');\n    const toPdf = mod.default || mod;\n    const pdfBuffer = await toPdf(globalThis.inputBuffer);\n    globalThis.pdfBuffer = pdfBuffer;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write the PDF buffer to the output path and emit the result JSON.\n  // fails_if: The output file cannot be written or the JSON serialization fails.\n  { // scope for step 3\n    // BEGIN emit\n    const fs = await import('node:fs');\n    const outPath = globalThis.output_path;\n    fs.writeFileSync(outPath, globalThis.pdfBuffer);\n    const size = fs.statSync(outPath).size;\n    console.log(JSON.stringify({ output_path: outPath, size_bytes: size }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the doc_path input, ensure the file exists, and read it into a Buffer stored on globalThis.\n  // fails_if: doc_path missing, file does not exist, or read fails\n  { // scope for step 1\n    // BEGIN prepare\n    const { readFileSync, existsSync } = await import('node:fs');\n    if (!globalThis.input || !globalThis.input.doc_path) {\n      throw new Error('Missing doc_path input');\n    }\n    if (!existsSync(globalThis.input.doc_path)) {\n      throw new Error('Input file does not exist');\n    }\n    globalThis.docBuffer = readFileSync(globalThis.input.doc_path);\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Load the office-to-pdf package and convert the input Buffer to a PDF Buffer, storing it on globalThis.\n  // fails_if: The conversion promise rejects or returns an invalid result\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('office-to-pdf');\n    const toPdf = mod.default || mod;\n    globalThis.pdfBuffer = await toPdf(globalThis.docBuffer);\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Encode the PDF Buffer as base64 and write a single JSON object to stdout.\n  // fails_if: pdfBuffer is undefined or JSON serialization fails\n  { // scope for step 3\n    // BEGIN emit\n    if (!globalThis.pdfBuffer) {\n      throw new Error('PDF conversion failed');\n    }\n    const result = { pdf_base64: globalThis.pdfBuffer.toString('base64') };\n    console.log(JSON.stringify(result));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -49,16 +43,16 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/test.docx":"dummy docx content","/tmp/test.pdf":"JVBERi0xLjQKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0NvdW50IDAvS2lkc1tdPj4KZW5kb2JqCnhyZWYKMCAzCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAwOSAwMDAwMCBuIAowMDAwMDAwMDUyIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSAzL1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKMTAzCiUlRU9GCg=="};
+  const FIXTURES = {"/tmp/input.docx":"Dummy office document content"};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"input_path":"/tmp/test.docx","output_path":"/tmp/test.pdf"}, deps, { session });
+  const probe = await run({"doc_path":"/tmp/input.docx"}, deps, { session });
   const out = probe.output || probe;
-  const minBytes = 0;
+  const minBytes = 500;
   if (minBytes > 0) {
     const size = typeof out.bytes === "number" ? out.bytes : 0;
     if (size < minBytes) {

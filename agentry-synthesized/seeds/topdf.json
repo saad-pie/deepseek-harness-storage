@@ -5,11 +5,10 @@
   "handler": "topdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/topdf.mjs",
   "accepts": {
-    "html": "string",
-    "output_path": "string"
+    "html": "string"
   },
   "produces": {
-    "pdf_path": "string"
+    "pdf_base64": "string"
   },
   "requires": {
     "npm": [
@@ -23,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate inputs and write the provided HTML to a temporary file, storing paths for later steps.",
-      "fails_if": "Missing html or output_path input, or file write fails.",
-      "code": "const { writeFileSync } = await import('node:fs');\nif (!globalThis.input || typeof globalThis.input.html !== 'string' || typeof globalThis.input.output_path !== 'string') {\n  throw new Error('Required inputs \"html\" and \"output_path\" are missing or not strings');\n}\nconst htmlPath = '/tmp/input.html';\nwriteFileSync(htmlPath, globalThis.input.html);\nglobalThis.htmlPath = htmlPath;\nglobalThis.pdfPath = globalThis.input.output_path;"
+      "what": "Validate that HTML input is provided and write it to a temporary file for conversion.",
+      "fails_if": "input.html is missing or file write fails",
+      "code": "const { writeFileSync } = await import('node:fs');\nif (!input.html) { throw new Error('Missing html input'); }\nconst tmpPath = '/tmp/input.html';\nwriteFileSync(tmpPath, input.html, 'utf8');\nglobalThis.inputPath = tmpPath;\nglobalThis.html = input.html;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Load the topdf package and invoke it to convert the HTML file into a PDF at the requested location.",
-      "fails_if": "topdf module cannot be loaded, its API is unexpected, or the conversion throws an error.",
-      "code": "const mod = await import('topdf');\nconst topdf = mod.default || mod;\nif (typeof topdf === 'function') {\n  // Assume signature (htmlPath, pdfPath) returns a Promise or uses callback\n  const result = topdf(globalThis.htmlPath, globalThis.pdfPath);\n  if (result && typeof result.then === 'function') await result;\n} else if (typeof topdf.convert === 'function') {\n  const result = topdf.convert(globalThis.htmlPath, globalThis.pdfPath);\n  if (result && typeof result.then === 'function') await result;\n} else {\n  throw new Error('Unsupported topdf API: no callable function found');\n}"
+      "what": "Load the topdf package and convert the HTML file to a PDF buffer, then encode it as base64.",
+      "fails_if": "topdf import fails, conversion throws, or result is not a Buffer",
+      "code": "const mod = await import('topdf');\nconst topdf = mod.default || mod;\nlet pdfBuffer;\nif (typeof topdf === 'function') {\n  const maybePromise = topdf(globalThis.html);\n  pdfBuffer = maybePromise instanceof Promise ? await maybePromise : maybePromise;\n} else if (topdf.convert) {\n  const maybePromise = topdf.convert(globalThis.inputPath);\n  pdfBuffer = maybePromise instanceof Promise ? await maybePromise : maybePromise;\n} else {\n  throw new Error('Unsupported topdf API');\n}\nif (!pdfBuffer || typeof pdfBuffer.toString !== 'function') { throw new Error('Conversion did not return a Buffer'); }\nglobalThis.pdfBase64 = pdfBuffer.toString('base64');"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a JSON object containing the path to the generated PDF.",
-      "fails_if": "The PDF path is undefined or JSON serialization fails.",
-      "code": "if (!globalThis.pdfPath) {\n  throw new Error('PDF path not set');\n}\nconsole.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
+      "what": "Write a single JSON object containing the base64‑encoded PDF to stdout.",
+      "fails_if": "pdfBase64 is undefined or JSON.stringify fails",
+      "code": "console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",
