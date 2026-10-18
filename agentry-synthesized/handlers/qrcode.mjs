@@ -65,6 +65,7 @@ export async function accept(deps, opts = {}) {
 }
 
 async function run(input, ctx, opts = {}) {
+  throw new Error('SYNTHETIC_REPAIR_TEST');
   const session = opts.session || input.session || (CAP_ID + "-default");
   const timeout_ms = input.timeout_ms || DEFAULT_TIMEOUT_MS;
 
