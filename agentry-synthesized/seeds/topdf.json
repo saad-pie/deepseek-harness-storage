@@ -1,0 +1,46 @@
+{
+  "id": "topdf",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "topdf",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/topdf.mjs",
+  "accepts": {
+    "png_path": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "topdf"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the provided PNG path, ensure it is readable, and set global paths for input and output files.",
+      "fails_if": "png_path missing, file not accessible, or cannot write to the temporary output location",
+      "code": "const { accessSync, constants, writeFileSync } = await import('node:fs');\nif (!globalThis.input || typeof globalThis.input.png_path !== 'string') {\n  throw new Error('Missing required input png_path');\n}\nconst pngPath = globalThis.input.png_path;\ntry { accessSync(pngPath, constants.R_OK); } catch (e) { throw new Error('PNG file not readable: ' + e.message); }\nglobalThis.pngPath = pngPath;\nglobalThis.pdfPath = '/tmp/out.pdf';"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Invoke the topdf npm package to convert the PNG file at pngPath into a PDF file at pdfPath.",
+      "fails_if": "the topdf conversion function throws or returns a rejected promise",
+      "code": "const mod = await import('topdf');\nconst convert = mod.default || mod;\nawait convert(globalThis.pngPath, globalThis.pdfPath);"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the path to the generated PDF.",
+      "fails_if": "stdout is not valid JSON or pdf_path is undefined",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

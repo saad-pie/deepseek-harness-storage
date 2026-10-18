@@ -1,0 +1,51 @@
+{
+  "id": "react-to-pdf",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "react-to-pdf",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/react-to-pdf.mjs",
+  "accepts": {
+    "png_path": "string",
+    "output_path": {
+      "type": "string",
+      "optional": true
+    }
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "react-to-pdf",
+      "jspdf"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the PNG input path, read the file and store its base64 data and determine the output PDF path.",
+      "fails_if": "The PNG file does not exist or cannot be read.",
+      "code": "const { existsSync, readFileSync } = await import('node:fs');\nconst pngPath = process.env.PNG_PATH;\nif (!pngPath) { throw new Error('Missing PNG_PATH env var'); }\nif (!existsSync(pngPath)) { throw new Error(`PNG file not found at ${pngPath}`); }\nconst data = readFileSync(pngPath);\nglobalThis.pngBase64 = data.toString('base64');\nconst outEnv = process.env.OUTPUT_PATH;\nglobalThis.outputPath = outEnv || pngPath.replace(/\\\\.png$/i, '.pdf');"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Create a PDF with the PNG image using jsPDF and write it to the output path.",
+      "fails_if": "jsPDF fails to generate the PDF or the file cannot be written.",
+      "code": "const { jsPDF } = await import('jspdf');\nconst pdf = new jsPDF();\n// Add the image at full page size (A4 default 210x297 mm). Adjust as needed.\npdf.addImage(globalThis.pngBase64, 'PNG', 0, 0);\nconst arrayBuf = pdf.output('arraybuffer');\nconst { writeFileSync } = await import('node:fs');\nwriteFileSync(globalThis.outputPath, Buffer.from(arrayBuf));"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the path of the generated PDF.",
+      "fails_if": "The JSON cannot be stringified or the pdf_path is undefined.",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.outputPath }));"
+    }
+  ],
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
