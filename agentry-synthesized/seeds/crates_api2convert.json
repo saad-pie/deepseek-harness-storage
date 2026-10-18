@@ -1,0 +1,49 @@
+{
+  "id": "crates_api2convert",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "crates_api2convert",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/crates_api2convert.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_format": "string"
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [],
+    "pip": [],
+    "post_install": null,
+    "capability": [],
+    "rust_crates": [
+      "api2convert@10.3.1"
+    ]
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate inputs, ensure the input file exists, and compute the desired output file name.",
+      "fails_if": "Missing INPUT_PATH or OUTPUT_FORMAT environment variable, or the input file does not exist.",
+      "code": "use std::env;\nuse std::path::Path;\n\nlet input_path = env::var(\"INPUT_PATH\").expect(\"INPUT_PATH not set\");\nlet output_format = env::var(\"OUTPUT_FORMAT\").expect(\"OUTPUT_FORMAT not set\");\nif !Path::new(&input_path).exists() {\n    panic!(\"Input file does not exist\");\n}\nlet computed_output_path = {\n    let p = Path::new(&input_path);\n    let stem = p.file_stem().unwrap().to_string_lossy();\n    format!(\"{}.{}\", stem, output_format)\n};"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Call the API2Convert SDK to convert the file to the target format and download the result.",
+      "fails_if": "The SDK call fails, conversion fails, or saving the downloaded file fails.",
+      "code": "use api2convert::Api2Convert;\nlet client = Api2Convert::from_env().expect(\"Failed to create client\");\nlet result = client.convert(&input_path, &output_format).expect(\"Conversion failed\");\nlet saved_path = result.save(\".\", None).expect(\"Saving result failed\");\nlet output_path = saved_path.to_string_lossy().to_string();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Print a single JSON object containing the path of the converted output file.",
+      "fails_if": "Printing the JSON fails or the output_path variable is undefined.",
+      "code": "println!(\"{{\\\"output_path\\\":\\\"{}\\\"}}\", output_path);"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
