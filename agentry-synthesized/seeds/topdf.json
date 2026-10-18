@@ -22,22 +22,22 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that HTML input is provided and write it to a temporary file for conversion.",
-      "fails_if": "input.html is missing or file write fails",
-      "code": "const { writeFileSync } = await import('node:fs');\nif (!input.html) { throw new Error('Missing html input'); }\nconst tmpPath = '/tmp/input.html';\nwriteFileSync(tmpPath, input.html, 'utf8');\nglobalThis.inputPath = tmpPath;\nglobalThis.html = input.html;"
+      "what": "Validate that HTML input is provided via env var and store it for later steps.",
+      "fails_if": "HTML_INPUT environment variable is missing or empty.",
+      "code": "const { env } = await import('node:process');\nif (!env.HTML_INPUT) { throw new Error('Missing HTML_INPUT'); }\nglobalThis.html = env.HTML_INPUT;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Load the topdf package and convert the HTML file to a PDF buffer, then encode it as base64.",
-      "fails_if": "topdf import fails, conversion throws, or result is not a Buffer",
-      "code": "const mod = await import('topdf');\nconst topdf = mod.default || mod;\nlet pdfBuffer;\nif (typeof topdf === 'function') {\n  const maybePromise = topdf(globalThis.html);\n  pdfBuffer = maybePromise instanceof Promise ? await maybePromise : maybePromise;\n} else if (topdf.convert) {\n  const maybePromise = topdf.convert(globalThis.inputPath);\n  pdfBuffer = maybePromise instanceof Promise ? await maybePromise : maybePromise;\n} else {\n  throw new Error('Unsupported topdf API');\n}\nif (!pdfBuffer || typeof pdfBuffer.toString !== 'function') { throw new Error('Conversion did not return a Buffer'); }\nglobalThis.pdfBase64 = pdfBuffer.toString('base64');"
+      "what": "Load the topdf package, convert the HTML string to a PDF buffer, and encode it as base64.",
+      "fails_if": "The topdf module does not export a callable function, or conversion fails, or the result is not a Buffer.",
+      "code": "const mod = await import('topdf');\nconst fn = mod.default || mod;\nif (typeof fn !== 'function') { throw new Error('topdf export is not a function'); }\nconst pdfBuffer = fn(globalThis.html);\nif (!pdfBuffer || typeof pdfBuffer.toString !== 'function') { throw new Error('Invalid PDF buffer'); }\nglobalThis.pdfBase64 = pdfBuffer.toString('base64');"
     },
     {
       "step": 3,
       "verb": "emit",
       "what": "Write a single JSON object containing the base64‑encoded PDF to stdout.",
-      "fails_if": "pdfBase64 is undefined or JSON.stringify fails",
+      "fails_if": "The JSON cannot be stringified or the pdf_base64 field is undefined.",
       "code": "console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));"
     }
   ],

@@ -5,7 +5,8 @@
   "handler": "office-to-pdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/office-to-pdf.mjs",
   "accepts": {
-    "doc_path": "string"
+    "doc_base64": "string",
+    "doc_name": "string"
   },
   "produces": {
     "pdf_base64": "string"
@@ -22,23 +23,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate the doc_path input, ensure the file exists, and read it into a Buffer stored on globalThis.",
-      "fails_if": "doc_path missing, file does not exist, or read fails",
-      "code": "const { readFileSync, existsSync } = await import('node:fs');\nif (!globalThis.input || !globalThis.input.doc_path) {\n  throw new Error('Missing doc_path input');\n}\nif (!existsSync(globalThis.input.doc_path)) {\n  throw new Error('Input file does not exist');\n}\nglobalThis.docBuffer = readFileSync(globalThis.input.doc_path);"
+      "what": "Write the provided office document buffer to a temporary file for conversion.",
+      "fails_if": "DOC_BASE64 or DOC_NAME environment variable missing, or file write fails",
+      "code": "const { writeFileSync } = await import('node:fs');\nconst docBase64 = process.env.DOC_BASE64;\nconst docName = process.env.DOC_NAME;\nif (!docBase64 || !docName) { throw new Error('Missing required input'); }\nconst filePath = `./${docName}`;\nwriteFileSync(filePath, Buffer.from(docBase64, 'base64'));\nglobalThis.inputPath = filePath;\n"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Load the office-to-pdf package and convert the input Buffer to a PDF Buffer, storing it on globalThis.",
-      "fails_if": "The conversion promise rejects or returns an invalid result",
-      "code": "const mod = await import('office-to-pdf');\nconst toPdf = mod.default || mod;\nglobalThis.pdfBuffer = await toPdf(globalThis.docBuffer);"
+      "what": "Load office-to-pdf, read the temporary file, convert it to PDF, and store the result as base64.",
+      "fails_if": "office-to-pdf module fails to load, file read fails, conversion throws, or result is not a Buffer",
+      "code": "const { readFile } = await import('node:fs');\nconst mod = await import('office-to-pdf');\nconst toPdf = mod.default || mod;\nconst buf = await readFile(globalThis.inputPath);\nconst pdfBuf = await toPdf(buf);\nif (!pdfBuf || typeof pdfBuf.toString !== 'function') { throw new Error('Conversion did not return a Buffer'); }\nglobalThis.pdfBase64 = pdfBuf.toString('base64');\n"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Encode the PDF Buffer as base64 and write a single JSON object to stdout.",
-      "fails_if": "pdfBuffer is undefined or JSON serialization fails",
-      "code": "if (!globalThis.pdfBuffer) {\n  throw new Error('PDF conversion failed');\n}\nconst result = { pdf_base64: globalThis.pdfBuffer.toString('base64') };\nconsole.log(JSON.stringify(result));"
+      "what": "Emit a single JSON object containing the base64‑encoded PDF.",
+      "fails_if": "The JSON cannot be stringified or pdfBase64 is undefined",
+      "code": "console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));\n"
     }
   ],
   "source": "synthesized:agentry.synthesize",

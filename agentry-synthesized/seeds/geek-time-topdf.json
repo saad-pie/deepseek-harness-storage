@@ -26,23 +26,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate the input URL, set a default PDF output path, ensure its directory exists, and store them on globalThis.",
-      "fails_if": "Missing url input or cannot create output directory",
-      "code": "const { mkdirSync, existsSync } = await import('node:fs');\nif (!globalThis.input || typeof globalThis.input.url !== 'string') { throw new Error('url input required'); }\nglobalThis.url = globalThis.input.url;\nconst outPath = globalThis.input.output_path || '/tmp/topdf_output.pdf';\nconst outDir = outPath.substring(0, outPath.lastIndexOf('/'));\nif (!existsSync(outDir)) { mkdirSync(outDir, { recursive: true }); }\nglobalThis.outputPath = outPath;"
+      "what": "Validate required inputs and set default output path, storing them on globalThis for later steps.",
+      "fails_if": "input.url is missing or not a string",
+      "code": "const { writeFileSync, mkdirSync } = await import('node:fs');\\nconst path = await import('node:path');\\nif (!input || typeof input.url !== 'string') { throw new Error('Missing required input: url'); }\\nglobalThis.url = input.url;\\nglobalThis.outputPath = input.output_path || '/tmp/output.pdf';"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Invoke the geek-time-topdf package to render the given URL to a PDF file at the prepared path.",
-      "fails_if": "The package throws or fails to write the PDF",
-      "code": "const mod = await import('geek-time-topdf');\nconst fn = mod.default || mod;\nawait fn({ url: globalThis.url, outputPath: globalThis.outputPath });"
+      "what": "Load the geek-time-topdf package and invoke it to render the given URL to a PDF file at the prepared path.",
+      "fails_if": "the PDF generation function throws or returns a rejected promise",
+      "code": "const mod = await import('geek-time-topdf');\\nconst fn = mod.default || mod;\\nawait fn(globalThis.url, globalThis.outputPath);"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write a single JSON object to stdout containing the path of the generated PDF.",
-      "fails_if": "JSON serialization fails or pdf_path is undefined",
-      "code": "console.log(JSON.stringify({ pdf_path: globalThis.outputPath }));"
+      "what": "Emit a JSON object containing the path to the generated PDF.",
+      "fails_if": "globalThis.outputPath is undefined when emitting",
+      "code": "if (!globalThis.outputPath) { throw new Error('No output path to emit'); }\\nconsole.log(JSON.stringify({ pdf_path: globalThis.outputPath }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

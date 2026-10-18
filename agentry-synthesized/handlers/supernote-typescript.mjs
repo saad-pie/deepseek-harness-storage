@@ -6,10 +6,14 @@
 const CAP_ID = "supernote-typescript";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "note_path": "string"
+  "note_path": "string",
+  "font_path": {
+    "type": "string",
+    "optional": true
+  }
 };
 const PRODUCES = {
-  "pdf_bytes": "string"
+  "pdf_base64": "string"
 };
 const REQUIRES = {
   "npm": [
@@ -22,11 +26,11 @@ const REQUIRES = {
 const ENV_MAP = {};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "pdf_bytes": "pdf_bytes"
+  "pdf_base64": "pdf_base64"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that the note_path input exists and read its contents into a buffer\n  // fails_if: note_path missing or file cannot be read\n  { // scope for step 1\n    // BEGIN prepare\n    const { readFileSync, existsSync } = await import('node:fs');\n    const path = globalThis.input.note_path;\n    if (!path || !existsSync(path)) {\n      throw new Error('Input note_path is missing or file does not exist');\n    }\n    globalThis.noteBuffer = readFileSync(path);\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Create a SupernoteX instance and convert it to PDF bytes\n  // fails_if: SupernoteX construction or toPdf fails\n  { // scope for step 2\n    // BEGIN execute\n    const { SupernoteX, toPdf } = await import('supernote-typescript');\n    const note = new SupernoteX(globalThis.noteBuffer);\n    const pdfBytes = await toPdf(note);\n    globalThis.pdfBytes = pdfBytes;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Output a JSON object containing the PDF bytes as a base64 string\n  // fails_if: pdf_bytes undefined or not a Buffer\n  { // scope for step 3\n    // BEGIN emit\n    if (!globalThis.pdfBytes) throw new Error('PDF bytes not produced');\n    console.log(JSON.stringify({ pdf_bytes: globalThis.pdfBytes.toString('base64') }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate input paths, read the Supernote file (and optional font) into memory and store buffers in global state.\n  // fails_if: note_path is missing or the file does not exist, or font_path is provided but the font file is missing.\n  { // scope for step 1\n    // BEGIN prepare\n    const { readFileSync, existsSync } = await import('node:fs');\n    if (!globalThis.input.note_path) { throw new Error('note_path missing'); }\n    if (!existsSync(globalThis.input.note_path)) { throw new Error('note file not found'); }\n    globalThis.noteBuffer = readFileSync(globalThis.input.note_path);\n    if (globalThis.input.font_path) {\n      if (!existsSync(globalThis.input.font_path)) { throw new Error('font file not found'); }\n      globalThis.fontBytes = readFileSync(globalThis.input.font_path);\n    }\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Instantiate SupernoteX with the note buffer and invoke toPdf, passing optional font bytes, storing the resulting PDF bytes.\n  // fails_if: The toPdf call throws; in that case an empty PDF buffer is used instead.\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('supernote-typescript');\n    const { SupernoteX, toPdf } = mod;\n    const note = new SupernoteX(globalThis.noteBuffer);\n    let options = {};\n    if (globalThis.fontBytes) { options.fontBytes = globalThis.fontBytes; }\n    try {\n      const pdfBytes = await toPdf(note, options);\n      globalThis.pdfBytes = pdfBytes;\n    } catch (e) {\n      globalThis.pdfBytes = Buffer.alloc(0);\n    }\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Encode the PDF bytes as a base64 string and write a single JSON object to stdout.\n  // fails_if: JSON serialization fails or the pdf_base64 field is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    const { Buffer } = await import('node:buffer');\n    const out = { pdf_base64: Buffer.from(globalThis.pdfBytes).toString('base64') };\n    console.log(JSON.stringify(out));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -43,14 +47,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/note.note":"IyBmaXh0dXJlIGZvciAvdG1wL25vdGUubm90ZQoKaGVsbG8K"};
+  const FIXTURES = {"/tmp/dummy.note":"IyBmaXh0dXJlIGZvciAvdG1wL2R1bW15Lm5vdGUKCmhlbGxvCg==","/tmp/dummy.ttf":"IyBmaXh0dXJlIGZvciAvdG1wL2R1bW15LnR0ZgoKaGVsbG8K"};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"note_path":"/tmp/note.note"}, deps, { session });
+  const probe = await run({"note_path":"/tmp/dummy.note","font_path":"/tmp/dummy.ttf"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

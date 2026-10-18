@@ -5,8 +5,8 @@
   "handler": "aspirio_topdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/aspirio_topdf.mjs",
   "accepts": {
-    "input": "string",
-    "output": "string"
+    "input_path": "string",
+    "output_path": "string"
   },
   "produces": {
     "pdf_path": "string"
@@ -23,22 +23,22 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate required INPUT_PATH and OUTPUT_PATH env vars, ensure the input HTML file exists, and store paths in global state.",
-      "fails_if": "Missing env vars or input file does not exist.",
-      "code": "const { accessSync } = await import('node:fs');\nconst inputPath = process.env.INPUT_PATH;\nconst outputPath = process.env.OUTPUT_PATH;\nif (!inputPath) throw new Error('Missing INPUT_PATH');\nif (!outputPath) throw new Error('Missing OUTPUT_PATH');\ntry { accessSync(inputPath); } catch { throw new Error('Input file not found'); }\nglobalThis.inputPath = inputPath;\nglobalThis.outputPath = outputPath;"
+      "what": "Validate required input and output paths, ensure input file exists, create output directory, and store paths in global state.",
+      "fails_if": "Missing inputs, input file not found, or filesystem errors while creating directories.",
+      "code": "const { existsSync, mkdirSync } = await import('node:fs');\nconst { dirname } = await import('node:path');\nconst inputPath = process.env.INPUT_PATH;\nconst outputPath = process.env.OUTPUT_PATH;\nif (!inputPath) { throw new Error('Missing input_path'); }\nif (!outputPath) { throw new Error('Missing output_path'); }\nif (!existsSync(inputPath)) { throw new Error('Input file not found'); }\nmkdirSync(dirname(outputPath), { recursive: true });\nglobalThis.inputPath = inputPath;\nglobalThis.outputPath = outputPath;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Invoke the @aspirio/topdf CLI to convert the HTML file to PDF using the stored paths.",
-      "fails_if": "The CLI process exits with an error or times out.",
-      "code": "const { execFile } = await import('node:child_process');\nconst { join } = await import('node:path');\nconst scriptPath = join(process.cwd(), 'node_modules', '@aspirio/topdf', 'index.js');\nawait new Promise((resolve, reject) => {\n  execFile('node', [scriptPath, '-i', globalThis.inputPath, '-o', globalThis.outputPath], (error, stdout, stderr) => {\n    if (error) reject(error);\n    else resolve();\n  });\n});\nglobalThis.pdfPath = globalThis.outputPath;"
+      "what": "Invoke the @aspirio/topdf CLI to convert the HTML file to PDF using the prepared paths.",
+      "fails_if": "The CLI exits with an error or fails to produce the PDF file.",
+      "code": "const { join } = await import('node:path');\nconst { execFile } = await import('node:child_process');\nconst pkgEntry = join(process.cwd(), 'node_modules', '@aspirio', 'topdf', 'index.js');\nawait new Promise((resolve, reject) => {\n  execFile('node', [pkgEntry, '-i', globalThis.inputPath, '-o', globalThis.outputPath], (error, stdout, stderr) => {\n    if (error) reject(error);\n    else resolve();\n  });\n});\nglobalThis.pdfPath = globalThis.outputPath;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write a single JSON object to stdout containing the path of the generated PDF.",
-      "fails_if": "JSON serialization fails or pdf_path is undefined.",
+      "what": "Write a single JSON object containing the path to the generated PDF to stdout.",
+      "fails_if": "JSON serialization fails or the pdf_path field is undefined.",
       "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
     }
   ],

@@ -19,14 +19,16 @@ const REQUIRES = {
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {};
+const ENV_MAP = {
+  "HTML_INPUT": "html"
+};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
   "pdf_base64": "pdf_base64"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that HTML input is provided and write it to a temporary file for conversion.\n  // fails_if: input.html is missing or file write fails\n  { // scope for step 1\n    // BEGIN prepare\n    const { writeFileSync } = await import('node:fs');\n    if (!input.html) { throw new Error('Missing html input'); }\n    const tmpPath = '/tmp/input.html';\n    writeFileSync(tmpPath, input.html, 'utf8');\n    globalThis.inputPath = tmpPath;\n    globalThis.html = input.html;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Load the topdf package and convert the HTML file to a PDF buffer, then encode it as base64.\n  // fails_if: topdf import fails, conversion throws, or result is not a Buffer\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('topdf');\n    const topdf = mod.default || mod;\n    let pdfBuffer;\n    if (typeof topdf === 'function') {\n      const maybePromise = topdf(globalThis.html);\n      pdfBuffer = maybePromise instanceof Promise ? await maybePromise : maybePromise;\n    } else if (topdf.convert) {\n      const maybePromise = topdf.convert(globalThis.inputPath);\n      pdfBuffer = maybePromise instanceof Promise ? await maybePromise : maybePromise;\n    } else {\n      throw new Error('Unsupported topdf API');\n    }\n    if (!pdfBuffer || typeof pdfBuffer.toString !== 'function') { throw new Error('Conversion did not return a Buffer'); }\n    globalThis.pdfBase64 = pdfBuffer.toString('base64');\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the base64‑encoded PDF to stdout.\n  // fails_if: pdfBase64 is undefined or JSON.stringify fails\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that HTML input is provided via env var and store it for later steps.\n  // fails_if: HTML_INPUT environment variable is missing or empty.\n  { // scope for step 1\n    // BEGIN prepare\n    const { env } = await import('node:process');\n    if (!env.HTML_INPUT) { throw new Error('Missing HTML_INPUT'); }\n    globalThis.html = env.HTML_INPUT;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Load the topdf package, convert the HTML string to a PDF buffer, and encode it as base64.\n  // fails_if: The topdf module does not export a callable function, or conversion fails, or the result is not a Buffer.\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('topdf');\n    const fn = mod.default || mod;\n    if (typeof fn !== 'function') { throw new Error('topdf export is not a function'); }\n    const pdfBuffer = fn(globalThis.html);\n    if (!pdfBuffer || typeof pdfBuffer.toString !== 'function') { throw new Error('Invalid PDF buffer'); }\n    globalThis.pdfBase64 = pdfBuffer.toString('base64');\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the base64‑encoded PDF to stdout.\n  // fails_if: The JSON cannot be stringified or the pdf_base64 field is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -50,7 +52,7 @@ export async function accept(deps, opts = {}) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"html":"<html><body><h1>Test PDF</h1></body></html>"}, deps, { session });
+  const probe = await run({"html":"<h1>Test PDF</h1><p>Hello, world!</p>"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

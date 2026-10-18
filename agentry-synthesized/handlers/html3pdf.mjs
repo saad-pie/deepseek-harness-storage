@@ -6,30 +6,27 @@
 const CAP_ID = "html3pdf";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "html": "string"
+  "html_path": "string"
 };
 const PRODUCES = {
   "pdf_base64": "string"
 };
 const REQUIRES = {
   "npm": [
-    "html3pdf",
-    "puppeteer"
+    "html3pdf"
   ],
   "pip": [],
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {
-  "HTML_INPUT": "html"
-};
+const ENV_MAP = {};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
   "pdf_base64": "pdf_base64"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that HTML input is provided and write it to a temporary file for the browser to load.\n  // fails_if: HTML_INPUT environment variable is missing or empty, or file write fails.\n  { // scope for step 1\n    // BEGIN prepare\n    const { writeFileSync } = await import('node:fs');\n    const html = process.env.HTML_INPUT;\n    if (!html) throw new Error('Missing HTML input');\n    const path = '/tmp/input.html';\n    writeFileSync(path, html);\n    globalThis.htmlPath = path;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Launch a headless Chromium instance, load the HTML file, inject html3pdf, generate a PDF and capture it as a base64 string.\n  // fails_if: Puppeteer launch fails, page navigation fails, html3pdf script fails to load, or PDF generation throws.\n  { // scope for step 2\n    // BEGIN execute\n    const puppeteerMod = await import('puppeteer');\n    const puppeteer = puppeteerMod.default || puppeteerMod;\n    const { createRequire } = await import('node:module');\n    const require = createRequire(import.meta.url);\n    const html3pdfPath = require.resolve('html3pdf/dist/html3pdf.bundle.min.js');\n    const browser = await puppeteer.launch();\n    const page = await browser.newPage();\n    await page.goto('file://' + globalThis.htmlPath);\n    await page.addScriptTag({ path: html3pdfPath });\n    const base64 = await page.evaluate(() => {\n      return new Promise((resolve, reject) => {\n        const element = document.body;\n        // html2pdf is attached to window by the bundle\n        window.html2pdf().from(element).outputPdf('datauristring')\n          .then(data => {\n            const parts = data.split(',');\n            resolve(parts[1] || '');\n          })\n          .catch(reject);\n      });\n    });\n    await browser.close();\n    globalThis.pdfBase64 = base64;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the base64‑encoded PDF to stdout.\n  // fails_if: The pdf_base64 value is undefined or console.log fails.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Set the path to the input HTML file.\n  // fails_if: input.html_path is missing\n  { // scope for step 1\n    // BEGIN prepare\n    globalThis.htmlPath = input.html_path;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Read the HTML, generate a PDF via html3pdf, and store the base64 string.\n  // fails_if: html3pdf fails or PDF generation errors\n  { // scope for step 2\n    // BEGIN execute\n    const { readFileSync } = await import('node:fs');\n    const mod = await import('html3pdf');\n    const html2pdf = mod.default || mod;\n    const htmlString = readFileSync(globalThis.htmlPath, 'utf8');\n    const worker = html2pdf();\n    const pdfBase64 = await worker.from(htmlString).toPdf().outputPdf('datauristring');\n    globalThis.pdfBase64 = pdfBase64;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Output the PDF base64 string as JSON.\n  // fails_if: JSON serialization fails\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -46,14 +43,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {};
+  const FIXTURES = {"/tmp/in.html":"<html><body><h1>Hello</h1></body></html>"};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"html":"<!DOCTYPE html><html><body><h1>Test PDF</h1></body></html>"}, deps, { session });
+  const probe = await run({"html_path":"/tmp/in.html"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

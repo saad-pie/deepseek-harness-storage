@@ -12,7 +12,8 @@
     }
   },
   "produces": {
-    "pdf_path": "string"
+    "pdf_base64": "string",
+    "size_bytes": "number"
   },
   "requires": {
     "npm": [
@@ -26,23 +27,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate inputs, set environment variables and define paths for the HWP input and PDF output.",
-      "fails_if": "Missing HWP_PATH env var or inability to write the output path.",
-      "code": "const { writeFileSync, mkdirSync } = await import('node:fs');\nconst path = await import('node:path');\nif (!process.env.HWP_PATH) { throw new Error('HWP_PATH env var is required'); }\nglobalThis.hwpPath = process.env.HWP_PATH;\nglobalThis.fontDir = process.env.FONT_DIR || path.join(process.cwd(), 'node_modules/@ohah/hwpjs/fonts');\nglobalThis.pdfPath = '/tmp/output.pdf';\n"
+      "what": "Read the HWP file from disk and validate that the input path exists and is readable.",
+      "fails_if": "The file at hwp_path does not exist or cannot be read.",
+      "code": "const fs = await import('node:fs');\nconst path = globalThis.input.hwp_path;\nif (!fs.existsSync(path)) {\n  throw new Error('HWP file not found: ' + path);\n}\nconst buffer = fs.readFileSync(path);\nif (buffer.length === 0) {\n  throw new Error('HWP file is empty');\n}\nglobalThis.hwpBuffer = buffer;\nglobalThis.fontDir = globalThis.input.font_dir || null;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Load the hwpjs library and convert the HWP file to a PDF (fallback to a dummy PDF on error).",
-      "fails_if": "Failure to read the HWP file or write the PDF file.",
-      "code": "const { readFileSync, writeFileSync } = await import('node:fs');\nconst mod = await import('@ohah/hwpjs');\nconst toPdf = (mod.toPdf || (mod.default && mod.default.toPdf));\nconst data = readFileSync(globalThis.hwpPath);\nlet pdfBuffer;\ntry {\n  if (toPdf) {\n    pdfBuffer = toPdf(data, { font_dir: globalThis.fontDir, embed_images: true });\n  } else {\n    pdfBuffer = Buffer.from('%PDF-1.4\\n%âãÏÓ\\n');\n  }\n} catch (e) {\n  pdfBuffer = Buffer.from('%PDF-1.4\\n%âãÏÓ\\n');\n}\nwriteFileSync(globalThis.pdfPath, pdfBuffer);\n"
+      "what": "Convert the HWP buffer to a PDF buffer using the @ohah/hwpjs library.",
+      "fails_if": "The conversion process throws an error, such as missing fonts or invalid HWP structure.",
+      "code": "const mod = await import('@ohah/hwpjs');\nconst toPdf = mod.toPdf || (mod.default && mod.default.toPdf);\nif (!toPdf) {\n  throw new Error('toPdf function not found in @ohah/hwpjs');\n}\nconst options = {};\nif (globalThis.fontDir) {\n  options.font_dir = globalThis.fontDir;\n}\nconst pdfBuffer = toPdf(globalThis.hwpBuffer, options);\nglobalThis.pdfBuffer = pdfBuffer;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a JSON object containing the path to the generated PDF.",
-      "fails_if": "JSON serialization fails or pdf_path is undefined.",
-      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));\n"
+      "what": "Serialize the PDF buffer to base64 and emit the result as JSON to stdout.",
+      "fails_if": "The JSON serialization fails or the output is malformed.",
+      "code": "const result = {\n  pdf_base64: globalThis.pdfBuffer.toString('base64'),\n  size_bytes: globalThis.pdfBuffer.length\n};\nconsole.log(JSON.stringify(result));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

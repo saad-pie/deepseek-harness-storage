@@ -5,15 +5,14 @@
   "handler": "html3pdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/html3pdf.mjs",
   "accepts": {
-    "html": "string"
+    "html_path": "string"
   },
   "produces": {
     "pdf_base64": "string"
   },
   "requires": {
     "npm": [
-      "html3pdf",
-      "puppeteer"
+      "html3pdf"
     ],
     "pip": [],
     "post_install": null,
@@ -23,22 +22,22 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that HTML input is provided and write it to a temporary file for the browser to load.",
-      "fails_if": "HTML_INPUT environment variable is missing or empty, or file write fails.",
-      "code": "const { writeFileSync } = await import('node:fs');\nconst html = process.env.HTML_INPUT;\nif (!html) throw new Error('Missing HTML input');\nconst path = '/tmp/input.html';\nwriteFileSync(path, html);\nglobalThis.htmlPath = path;"
+      "what": "Set the path to the input HTML file.",
+      "fails_if": "input.html_path is missing",
+      "code": "globalThis.htmlPath = input.html_path;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Launch a headless Chromium instance, load the HTML file, inject html3pdf, generate a PDF and capture it as a base64 string.",
-      "fails_if": "Puppeteer launch fails, page navigation fails, html3pdf script fails to load, or PDF generation throws.",
-      "code": "const puppeteerMod = await import('puppeteer');\nconst puppeteer = puppeteerMod.default || puppeteerMod;\nconst { createRequire } = await import('node:module');\nconst require = createRequire(import.meta.url);\nconst html3pdfPath = require.resolve('html3pdf/dist/html3pdf.bundle.min.js');\nconst browser = await puppeteer.launch();\nconst page = await browser.newPage();\nawait page.goto('file://' + globalThis.htmlPath);\nawait page.addScriptTag({ path: html3pdfPath });\nconst base64 = await page.evaluate(() => {\n  return new Promise((resolve, reject) => {\n    const element = document.body;\n    // html2pdf is attached to window by the bundle\n    window.html2pdf().from(element).outputPdf('datauristring')\n      .then(data => {\n        const parts = data.split(',');\n        resolve(parts[1] || '');\n      })\n      .catch(reject);\n  });\n});\nawait browser.close();\nglobalThis.pdfBase64 = base64;"
+      "what": "Read the HTML, generate a PDF via html3pdf, and store the base64 string.",
+      "fails_if": "html3pdf fails or PDF generation errors",
+      "code": "const { readFileSync } = await import('node:fs');\nconst mod = await import('html3pdf');\nconst html2pdf = mod.default || mod;\nconst htmlString = readFileSync(globalThis.htmlPath, 'utf8');\nconst worker = html2pdf();\nconst pdfBase64 = await worker.from(htmlString).toPdf().outputPdf('datauristring');\nglobalThis.pdfBase64 = pdfBase64;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write a single JSON object containing the base64‑encoded PDF to stdout.",
-      "fails_if": "The pdf_base64 value is undefined or console.log fails.",
+      "what": "Output the PDF base64 string as JSON.",
+      "fails_if": "JSON serialization fails",
       "code": "console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));"
     }
   ],

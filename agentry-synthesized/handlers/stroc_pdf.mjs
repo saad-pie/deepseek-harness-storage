@@ -6,7 +6,7 @@
 const CAP_ID = "stroc_pdf";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "stroc": "string"
+  "stroc_doc": "string"
 };
 const PRODUCES = {
   "pdf_base64": "string"
@@ -19,14 +19,16 @@ const REQUIRES = {
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {};
+const ENV_MAP = {
+  "STROC_DOC": "stroc_doc"
+};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
   "pdf_base64": "pdf_base64"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that a Stroc document string is provided and parse it into an object.\n  // fails_if: Missing input key \"stroc\" or the string is not valid JSON.\n  { // scope for step 1\n    // BEGIN prepare\n    const { exit } = await import('node:process');\n    if (!globalThis.input || typeof globalThis.input.stroc !== 'string') {\n      console.error('Missing required input \"stroc\"');\n      exit(1);\n    }\n    try {\n      globalThis.strocDoc = JSON.parse(globalThis.input.stroc);\n    } catch (e) {\n      console.error('Invalid JSON for \"stroc\"');\n      exit(1);\n    }\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Load @stroc/pdf and generate a PDF byte array from the parsed Stroc document.\n  // fails_if: The toPdf function throws or returns non‑bytes.\n  { // scope for step 2\n    // BEGIN execute\n    const { toPdf } = await import('@stroc/pdf');\n    const doc = globalThis.strocDoc;\n    const options = { pageSize: 'A4' };\n    const bytes = await toPdf(doc, options);\n    globalThis.pdfBase64 = Buffer.from(bytes).toString('base64');\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the base64‑encoded PDF to stdout.\n  // fails_if: The JSON object is malformed or the field is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Read the Stroc document from an environment variable and store it for later steps.\n  // fails_if: The STROC_DOC environment variable is missing or empty.\n  { // scope for step 1\n    // BEGIN prepare\n    const { env } = await import('node:process');\n    const doc = env.STROC_DOC;\n    if (!doc) { throw new Error('Missing STROC_DOC'); }\n    globalThis.strocDoc = doc;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Import @stroc/pdf, convert the parsed Stroc document to PDF bytes, and encode them as base64.\n  // fails_if: Import fails, JSON parsing fails, toPdf throws, or PDF generation fails.\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('@stroc/pdf');\n    const { toPdf } = mod;\n    const doc = JSON.parse(globalThis.strocDoc);\n    const pdfBytes = await toPdf(doc, { pageSize: 'A4' });\n    globalThis.pdfBase64 = Buffer.from(pdfBytes).toString('base64');\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the base64‑encoded PDF to stdout.\n  // fails_if: The base64 string is undefined or empty.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -50,7 +52,7 @@ export async function accept(deps, opts = {}) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"stroc":"{\"type\":\"doc\",\"content\":[]}"}, deps, { session });
+  const probe = await run({"stroc_doc":"{\"type\":\"doc\",\"content\":[]}"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 500;
   if (minBytes > 0) {

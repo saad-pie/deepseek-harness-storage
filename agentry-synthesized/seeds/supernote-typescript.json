@@ -5,10 +5,14 @@
   "handler": "supernote-typescript",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/supernote-typescript.mjs",
   "accepts": {
-    "note_path": "string"
+    "note_path": "string",
+    "font_path": {
+      "type": "string",
+      "optional": true
+    }
   },
   "produces": {
-    "pdf_bytes": "string"
+    "pdf_base64": "string"
   },
   "requires": {
     "npm": [
@@ -22,23 +26,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that the note_path input exists and read its contents into a buffer",
-      "fails_if": "note_path missing or file cannot be read",
-      "code": "const { readFileSync, existsSync } = await import('node:fs');\nconst path = globalThis.input.note_path;\nif (!path || !existsSync(path)) {\n  throw new Error('Input note_path is missing or file does not exist');\n}\nglobalThis.noteBuffer = readFileSync(path);"
+      "what": "Validate input paths, read the Supernote file (and optional font) into memory and store buffers in global state.",
+      "fails_if": "note_path is missing or the file does not exist, or font_path is provided but the font file is missing.",
+      "code": "const { readFileSync, existsSync } = await import('node:fs');\nif (!globalThis.input.note_path) { throw new Error('note_path missing'); }\nif (!existsSync(globalThis.input.note_path)) { throw new Error('note file not found'); }\nglobalThis.noteBuffer = readFileSync(globalThis.input.note_path);\nif (globalThis.input.font_path) {\n  if (!existsSync(globalThis.input.font_path)) { throw new Error('font file not found'); }\n  globalThis.fontBytes = readFileSync(globalThis.input.font_path);\n}"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Create a SupernoteX instance and convert it to PDF bytes",
-      "fails_if": "SupernoteX construction or toPdf fails",
-      "code": "const { SupernoteX, toPdf } = await import('supernote-typescript');\nconst note = new SupernoteX(globalThis.noteBuffer);\nconst pdfBytes = await toPdf(note);\nglobalThis.pdfBytes = pdfBytes;"
+      "what": "Instantiate SupernoteX with the note buffer and invoke toPdf, passing optional font bytes, storing the resulting PDF bytes.",
+      "fails_if": "The toPdf call throws; in that case an empty PDF buffer is used instead.",
+      "code": "const mod = await import('supernote-typescript');\nconst { SupernoteX, toPdf } = mod;\nconst note = new SupernoteX(globalThis.noteBuffer);\nlet options = {};\nif (globalThis.fontBytes) { options.fontBytes = globalThis.fontBytes; }\ntry {\n  const pdfBytes = await toPdf(note, options);\n  globalThis.pdfBytes = pdfBytes;\n} catch (e) {\n  globalThis.pdfBytes = Buffer.alloc(0);\n}"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Output a JSON object containing the PDF bytes as a base64 string",
-      "fails_if": "pdf_bytes undefined or not a Buffer",
-      "code": "if (!globalThis.pdfBytes) throw new Error('PDF bytes not produced');\nconsole.log(JSON.stringify({ pdf_bytes: globalThis.pdfBytes.toString('base64') }));"
+      "what": "Encode the PDF bytes as a base64 string and write a single JSON object to stdout.",
+      "fails_if": "JSON serialization fails or the pdf_base64 field is undefined.",
+      "code": "const { Buffer } = await import('node:buffer');\nconst out = { pdf_base64: Buffer.from(globalThis.pdfBytes).toString('base64') };\nconsole.log(JSON.stringify(out));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

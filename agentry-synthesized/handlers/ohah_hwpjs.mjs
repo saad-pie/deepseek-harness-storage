@@ -13,7 +13,8 @@ const ACCEPTS = {
   }
 };
 const PRODUCES = {
-  "pdf_path": "string"
+  "pdf_base64": "string",
+  "size_bytes": "number"
 };
 const REQUIRES = {
   "npm": [
@@ -29,11 +30,12 @@ const ENV_MAP = {
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "pdf_path": "pdf_path"
+  "pdf_base64": "pdf_base64",
+  "size_bytes": "size_bytes"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate inputs, set environment variables and define paths for the HWP input and PDF output.\n  // fails_if: Missing HWP_PATH env var or inability to write the output path.\n  { // scope for step 1\n    // BEGIN prepare\n    const { writeFileSync, mkdirSync } = await import('node:fs');\n    const path = await import('node:path');\n    if (!process.env.HWP_PATH) { throw new Error('HWP_PATH env var is required'); }\n    globalThis.hwpPath = process.env.HWP_PATH;\n    globalThis.fontDir = process.env.FONT_DIR || path.join(process.cwd(), 'node_modules/@ohah/hwpjs/fonts');\n    globalThis.pdfPath = '/tmp/output.pdf';\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Load the hwpjs library and convert the HWP file to a PDF (fallback to a dummy PDF on error).\n  // fails_if: Failure to read the HWP file or write the PDF file.\n  { // scope for step 2\n    // BEGIN execute\n    const { readFileSync, writeFileSync } = await import('node:fs');\n    const mod = await import('@ohah/hwpjs');\n    const toPdf = (mod.toPdf || (mod.default && mod.default.toPdf));\n    const data = readFileSync(globalThis.hwpPath);\n    let pdfBuffer;\n    try {\n      if (toPdf) {\n        pdfBuffer = toPdf(data, { font_dir: globalThis.fontDir, embed_images: true });\n      } else {\n        pdfBuffer = Buffer.from('%PDF-1.4\\n%âãÏÓ\\n');\n      }\n    } catch (e) {\n      pdfBuffer = Buffer.from('%PDF-1.4\\n%âãÏÓ\\n');\n    }\n    writeFileSync(globalThis.pdfPath, pdfBuffer);\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the path to the generated PDF.\n  // fails_if: JSON serialization fails or pdf_path is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Read the HWP file from disk and validate that the input path exists and is readable.\n  // fails_if: The file at hwp_path does not exist or cannot be read.\n  { // scope for step 1\n    // BEGIN prepare\n    const fs = await import('node:fs');\n    const path = globalThis.input.hwp_path;\n    if (!fs.existsSync(path)) {\n      throw new Error('HWP file not found: ' + path);\n    }\n    const buffer = fs.readFileSync(path);\n    if (buffer.length === 0) {\n      throw new Error('HWP file is empty');\n    }\n    globalThis.hwpBuffer = buffer;\n    globalThis.fontDir = globalThis.input.font_dir || null;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Convert the HWP buffer to a PDF buffer using the @ohah/hwpjs library.\n  // fails_if: The conversion process throws an error, such as missing fonts or invalid HWP structure.\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('@ohah/hwpjs');\n    const toPdf = mod.toPdf || (mod.default && mod.default.toPdf);\n    if (!toPdf) {\n      throw new Error('toPdf function not found in @ohah/hwpjs');\n    }\n    const options = {};\n    if (globalThis.fontDir) {\n      options.font_dir = globalThis.fontDir;\n    }\n    const pdfBuffer = toPdf(globalThis.hwpBuffer, options);\n    globalThis.pdfBuffer = pdfBuffer;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Serialize the PDF buffer to base64 and emit the result as JSON to stdout.\n  // fails_if: The JSON serialization fails or the output is malformed.\n  { // scope for step 3\n    // BEGIN emit\n    const result = {\n      pdf_base64: globalThis.pdfBuffer.toString('base64'),\n      size_bytes: globalThis.pdfBuffer.length\n    };\n    console.log(JSON.stringify(result));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -50,14 +52,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/input.hwp":"IyBmaXh0dXJlIGZvciAvdG1wL2lucHV0Lmh3cAoKaGVsbG8K"};
+  const FIXTURES = {"/tmp/test.hwp":"dummy_hwp_content_for_testing"};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"hwp_path":"/tmp/input.hwp","font_dir":"/tmp/fonts"}, deps, { session });
+  const probe = await run({"hwp_path":"/tmp/test.hwp","font_dir":null}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {
