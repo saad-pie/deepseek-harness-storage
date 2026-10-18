@@ -31009,3 +31009,38 @@
 {"kind":"runtime.boot.seeded","at":1792320690984,"loaded":0,"skipped":24,"files":24}
 {"kind":"runtime.boot.watches_loaded","at":1792320690984,"count":17}
 {"kind":"runtime.boot.completed","at":1792320690984,"capabilities":365,"watches":17}
+{"kind":"runs.rollup_completed","at":1792320909763,"capabilities":15,"runs":2542}
+{"kind":"runtime.boot.started","at":1792321046087,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792321046285,"loaded":0,"skipped":24,"files":24}
+{"kind":"runtime.boot.watches_loaded","at":1792321046285,"count":17}
+{"kind":"runtime.boot.completed","at":1792321046285,"capabilities":365,"watches":17}
+{"kind":"runtime.boot.started","at":1792321142543,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792321142747,"loaded":0,"skipped":24,"files":24}
+{"kind":"runtime.boot.watches_loaded","at":1792321142748,"count":17}
+{"kind":"runtime.boot.completed","at":1792321142748,"capabilities":347,"watches":17}
+{"kind":"runtime.boot.started","at":1792321148514,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792321148717,"loaded":0,"skipped":24,"files":24}
+{"kind":"runtime.boot.watches_loaded","at":1792321148717,"count":17}
+{"kind":"runtime.boot.completed","at":1792321148717,"capabilities":347,"watches":17}
+{"kind":"invoke.started","at":1792321148718,"capability_id":"agentry.reason.deep","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["intent","failure"]}
+{"kind":"invoke.started","at":1792321148728,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792321149224,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":495}
+{"kind":"invoke.started","at":1792321149224,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","sources","limit"]}
+{"kind":"discover.started","at":1792321149225,"query":"convert PNG image to PDF file","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":10}
+{"kind":"invoke.started","at":1792321149245,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792321157255,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":8009}
+{"kind":"invoke.started","at":1792321159242,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792321159244,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792321159499,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":255}
+{"kind":"invoke.succeeded","at":1792321159943,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":701}
+{"kind":"discover.completed","at":1792321159943,"query":"convert PNG image to PDF file","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":10,"clawhub":0,"crates":10,"dsh_plugins":4,"gomod":8,"hermes_atlas":10,"huggingface":0,"local":10,"maven":0,"npm":10,"nuget":10,"pypi":0,"github":10,"web":0},"errors":{"maven":"The operation was aborted due to timeout"}}
+{"kind":"invoke.succeeded","at":1792321159944,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":10720}
+{"kind":"agentry.reason.deep.tool_called","at":1792321159944,"tool":"discover_capability","url":null,"query":"convert PNG image to PDF file","error":null,"result_size":26039}
+{"kind":"invoke.started","at":1792321159944,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792321160258,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":314}
+{"kind":"agentry.reason.deep.tool_called","at":1792321160258,"tool":"web_search","url":null,"query":"Rust crate convert PNG image to PDF","error":null,"result_size":60}
+{"kind":"invoke.started","at":1792321160258,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.failed","at":1792321160364,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":106}
+{"kind":"agentry.reason.deep.llm_failed","at":1792321160365,"provider":"groq","model":"qwen/qwen3.8-27b","turn":1,"code":"invoker_failed","message":"invoker invoker.in_process_js failed: llm: HTTP 413 — {\"error\":{\"message\":\"Request too large for model `qwen/qwen3.8-27b` in organization `org_01m0yzf2gseg1vsay6refc9zhr` service tier `on_demand` on input tokens per minute (ITPM): Limit 7000, Requested 7728, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at h"}
+{"kind":"agentry.reason.deep.model_switched","at":1792321160365,"from":{"provider":"groq","model":"qwen/qwen3.8-27b"},"to":{"provider":"google","model":"gemini-2.5-flash"},"reason":"llm_failed","turn":1,"error_code":"invoker_failed","error_message":"invoker invoker.in_process_js failed: llm: HTTP 413 — {\"error\":{\"message\":\"Request too large for model `qwen/qwen3.8-27b` in organization `org_01m0yzf2gseg1vsay6refc9zhr` service tier `on_demand` on input tokens per minute (ITPM): Limit 7000, Requested 7728, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at h"}
+{"kind":"invoke.started","at":1792321160365,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
