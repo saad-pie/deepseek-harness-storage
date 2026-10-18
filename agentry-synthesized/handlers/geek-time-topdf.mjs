@@ -6,11 +6,7 @@
 const CAP_ID = "geek-time-topdf";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "png_path": "string",
-  "pdf_path": {
-    "type": "string",
-    "optional": true
-  }
+  "url": "string"
 };
 const PRODUCES = {
   "pdf_path": "string"
@@ -23,17 +19,14 @@ const REQUIRES = {
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {
-  "PNG_PATH": "png_path",
-  "PDF_PATH": "pdf_path"
-};
+const ENV_MAP = {};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
   "pdf_path": "pdf_path"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate input paths, ensure PNG is readable, and determine output PDF path.\n  // fails_if: png_path missing, unreadable, or cannot compute pdf_path\n  { // scope for step 1\n    // BEGIN prepare\n    const { accessSync, constants } = await import('node:fs');\n    globalThis.png_path = process.env.PNG_PATH;\n    if (!globalThis.png_path) throw new Error('missing png_path');\n    try { accessSync(globalThis.png_path, constants.R_OK); } catch { throw new Error('png file not accessible'); }\n    globalThis.pdf_path = process.env.PDF_PATH || globalThis.png_path.replace(/\\.png$/i, '.pdf');\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Invoke the geek-time-topdf package to convert the PNG file to a PDF file.\n  // fails_if: the conversion function throws or does not produce the expected PDF file\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('geek-time-topdf');\n    const fn = mod.default || mod;\n    await fn(globalThis.png_path, globalThis.pdf_path);\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the path to the generated PDF.\n  // fails_if: JSON serialization fails or pdf_path is undefined\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_path: globalThis.pdf_path }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the required URL input and set up a temporary output file path.\n  // fails_if: The input object is missing or does not contain a 'url' string.\n  { // scope for step 1\n    // BEGIN prepare\n    const { writeFileSync } = await import('node:fs');\n    if (!globalThis.input || typeof globalThis.input.url !== 'string') { throw new Error('Missing or invalid url'); }\n    globalThis.inputUrl = globalThis.input.url;\n    globalThis.outputPath = '/tmp/output.pdf';\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Invoke the geek-time-topdf package to render the given URL to a PDF file.\n  // fails_if: The PDF generation function throws or returns a rejected promise.\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('geek-time-topdf');\n    const fn = mod.default || mod;\n    await fn(globalThis.inputUrl, globalThis.outputPath);\n    globalThis.pdfPath = globalThis.outputPath;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the path to the generated PDF.\n  // fails_if: The JSON object cannot be stringified or the pdf_path field is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -50,14 +43,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/input.png":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==","/tmp/output.pdf":"JVBERi0xLjQKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0NvdW50IDAvS2lkc1tdPj4KZW5kb2JqCnhyZWYKMCAzCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAwOSAwMDAwMCBuIAowMDAwMDAwMDUyIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSAzL1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKMTAzCiUlRU9GCg=="};
+  const FIXTURES = {};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"png_path":"/tmp/input.png","pdf_path":"/tmp/output.pdf"}, deps, { session });
+  const probe = await run({"url":"https://example.com"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

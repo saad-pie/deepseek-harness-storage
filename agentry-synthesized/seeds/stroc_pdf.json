@@ -5,7 +5,7 @@
   "handler": "stroc_pdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/stroc_pdf.mjs",
   "accepts": {
-    "stroc_doc": "string"
+    "document": "string"
   },
   "produces": {
     "pdf_base64": "string"
@@ -22,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate the STROC_DOC environment variable, parse it as JSON, and store the document for later steps",
-      "fails_if": "STROC_DOC is missing or cannot be parsed as JSON",
-      "code": "const { env } = await import('node:process');\nconst raw = env['STROC_DOC'];\nif (!raw) throw new Error('Missing STROC_DOC env var');\ntry { globalThis.doc = JSON.parse(raw); } catch (e) { throw new Error('Invalid JSON in STROC_DOC'); }"
+      "what": "Validate that a Stroc document JSON string is provided via env var and parse it into an object",
+      "fails_if": "DOC_JSON env var missing or not valid JSON",
+      "code": "const { env } = await import('node:process');\nif (!env.DOC_JSON) { throw new Error('Missing DOC_JSON'); }\nlet doc;\ntry { doc = JSON.parse(env.DOC_JSON); } catch (e) { throw new Error('Invalid JSON in DOC_JSON'); }\nglobalThis.doc = doc;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Generate a PDF from the Stroc document and encode it as base64",
-      "fails_if": "toPdf throws an error or returns undefined",
-      "code": "const { toPdf } = await import('@stroc/pdf');\nconst bytes = await toPdf(globalThis.doc, { pageSize: 'A4' });\nif (!bytes) throw new Error('toPdf returned no data');\nconst { Buffer } = await import('node:buffer');\nglobalThis.pdfBase64 = Buffer.from(bytes).toString('base64');"
+      "what": "Generate a PDF from the Stroc document using @stroc/pdf and store base64",
+      "fails_if": "Import fails or toPdf throws",
+      "code": "const mod = await import('@stroc/pdf');\nconst { toPdf } = mod;\nconst bytes = await toPdf(globalThis.doc, { pageSize: 'A4' });\nconst { Buffer } = await import('node:buffer');\nglobalThis.pdfBase64 = Buffer.from(bytes).toString('base64');"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write a single JSON object containing the base64‑encoded PDF to stdout",
-      "fails_if": "pdfBase64 is undefined or empty",
-      "code": "if (!globalThis.pdfBase64) throw new Error('PDF generation failed');\nconsole.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));"
+      "what": "Write a single JSON object with the base64 PDF to stdout",
+      "fails_if": "pdfBase64 is undefined",
+      "code": "if (!globalThis.pdfBase64) { throw new Error('No PDF generated'); }\nconsole.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

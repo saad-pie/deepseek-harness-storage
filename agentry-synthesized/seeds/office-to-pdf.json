@@ -5,10 +5,10 @@
   "handler": "office-to-pdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/office-to-pdf.mjs",
   "accepts": {
-    "png_path": "string"
+    "doc_buffer": "string"
   },
   "produces": {
-    "pdf_path": "string"
+    "pdf_buffer": "string"
   },
   "requires": {
     "npm": [
@@ -22,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that the PNG file exists and set up paths for input and output.",
-      "fails_if": "PNG_PATH env var missing or file not readable.",
-      "code": "const { accessSync, constants } = await import('node:fs');\nconst pngPath = process.env.PNG_PATH;\nif (!pngPath) throw new Error('Missing PNG_PATH env var');\naccessSync(pngPath, constants.R_OK);\nglobalThis.pngPath = pngPath;\nglobalThis.pdfPath = '/tmp/output.pdf';"
+      "what": "Validate that a base64‑encoded office document is provided and decode it into a Buffer stored on globalThis.",
+      "fails_if": "The environment variable DOC_BUFFER is missing or empty.",
+      "code": "const { DOC_BUFFER } = process.env;\nif (!DOC_BUFFER) {\n  throw new Error('Missing DOC_BUFFER');\n}\nglobalThis.docBuffer = Buffer.from(DOC_BUFFER, 'base64');"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Read the PNG buffer, convert it to PDF using office-to-pdf, and write the PDF to a temp file.",
-      "fails_if": "Conversion promise rejects or writing the PDF fails.",
-      "code": "const { readFileSync, writeFileSync } = await import('node:fs');\nconst mod = await import('office-to-pdf');\nconst fn = mod.default || mod;\nconst buf = readFileSync(globalThis.pngPath);\nconst pdfBuf = await fn(buf);\nwriteFileSync(globalThis.pdfPath, pdfBuf);"
+      "what": "Load the office‑to‑pdf package and convert the decoded Buffer into a PDF Buffer.",
+      "fails_if": "The conversion promise rejects or returns a non‑Buffer result.",
+      "code": "const mod = await import('office-to-pdf');\nconst toPdf = mod.default || mod;\nglobalThis.pdfBuffer = await toPdf(globalThis.docBuffer);"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a JSON object containing the path to the generated PDF.",
-      "fails_if": "JSON serialization fails or pdf_path is undefined.",
-      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
+      "what": "Serialize the PDF Buffer as a base64 string and write a single JSON object to stdout.",
+      "fails_if": "JSON serialization fails or the PDF Buffer is undefined.",
+      "code": "const result = { pdf_buffer: globalThis.pdfBuffer.toString('base64') };\nconsole.log(JSON.stringify(result));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

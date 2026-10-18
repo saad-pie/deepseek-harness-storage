@@ -5,19 +5,19 @@
   "handler": "react-to-pdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/react-to-pdf.mjs",
   "accepts": {
-    "png_path": "string",
-    "output_path": {
+    "html": "string",
+    "filename": {
       "type": "string",
       "optional": true
     }
   },
   "produces": {
-    "pdf_path": "string"
+    "pdf_base64": "string"
   },
   "requires": {
     "npm": [
       "react-to-pdf",
-      "jspdf"
+      "jsdom"
     ],
     "pip": [],
     "post_install": null,
@@ -27,23 +27,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate the PNG input path, read the file and store its base64 data and determine the output PDF path.",
-      "fails_if": "The PNG file does not exist or cannot be read.",
-      "code": "const { existsSync, readFileSync } = await import('node:fs');\nconst pngPath = process.env.PNG_PATH;\nif (!pngPath) { throw new Error('Missing PNG_PATH env var'); }\nif (!existsSync(pngPath)) { throw new Error(`PNG file not found at ${pngPath}`); }\nconst data = readFileSync(pngPath);\nglobalThis.pngBase64 = data.toString('base64');\nconst outEnv = process.env.OUTPUT_PATH;\nglobalThis.outputPath = outEnv || pngPath.replace(/\\\\.png$/i, '.pdf');"
+      "what": "Validate inputs, create a DOM element from the provided HTML and store it for later use.",
+      "fails_if": "HTML_INPUT env var missing or DOM creation fails",
+      "code": "const { JSDOM } = await import('jsdom');\nconst html = process.env.HTML_INPUT;\nif (!html) { throw new Error('Missing required input: HTML_INPUT'); }\nconst dom = new JSDOM(`<div id=\\\"root\\\">${html}</div>`);\nglobalThis.targetElement = dom.window.document.getElementById('root');\nglobalThis.filename = process.env.FILENAME_INPUT || 'output.pdf';"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Create a PDF with the PNG image using jsPDF and write it to the output path.",
-      "fails_if": "jsPDF fails to generate the PDF or the file cannot be written.",
-      "code": "const { jsPDF } = await import('jspdf');\nconst pdf = new jsPDF();\n// Add the image at full page size (A4 default 210x297 mm). Adjust as needed.\npdf.addImage(globalThis.pngBase64, 'PNG', 0, 0);\nconst arrayBuf = pdf.output('arraybuffer');\nconst { writeFileSync } = await import('node:fs');\nwriteFileSync(globalThis.outputPath, Buffer.from(arrayBuf));"
+      "what": "Load react-to-pdf, generate a PDF from the stored element, and extract a base64 string.",
+      "fails_if": "PDF generation throws or the returned object does not provide output",
+      "code": "const mod = await import('react-to-pdf');\nconst generatePDF = mod.default || mod;\nconst element = globalThis.targetElement;\nconst options = { filename: globalThis.filename };\nconst pdfInstance = await generatePDF(element, options);\nif (!pdfInstance || typeof pdfInstance.output !== 'function') { throw new Error('Unexpected PDF instance'); }\nconst dataUri = pdfInstance.output('datauristring');\nconst base64 = dataUri.split(',')[1];\nglobalThis.pdfBase64 = base64;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a JSON object containing the path of the generated PDF.",
-      "fails_if": "The JSON cannot be stringified or the pdf_path is undefined.",
-      "code": "console.log(JSON.stringify({ pdf_path: globalThis.outputPath }));"
+      "what": "Write a single JSON object containing the base64 PDF to stdout.",
+      "fails_if": "pdf_base64 is undefined or JSON serialization fails",
+      "code": "if (!globalThis.pdfBase64) { throw new Error('PDF generation did not produce output'); }\nconsole.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",

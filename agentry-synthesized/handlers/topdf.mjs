@@ -6,7 +6,8 @@
 const CAP_ID = "topdf";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "png_path": "string"
+  "html": "string",
+  "output_path": "string"
 };
 const PRODUCES = {
   "pdf_path": "string"
@@ -19,14 +20,17 @@ const REQUIRES = {
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {};
+const ENV_MAP = {
+  "HTML": "html",
+  "OUTPUT_PATH": "output_path"
+};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
   "pdf_path": "pdf_path"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the provided PNG path, ensure it is readable, and set global paths for input and output files.\n  // fails_if: png_path missing, file not accessible, or cannot write to the temporary output location\n  { // scope for step 1\n    // BEGIN prepare\n    const { accessSync, constants, writeFileSync } = await import('node:fs');\n    if (!globalThis.input || typeof globalThis.input.png_path !== 'string') {\n      throw new Error('Missing required input png_path');\n    }\n    const pngPath = globalThis.input.png_path;\n    try { accessSync(pngPath, constants.R_OK); } catch (e) { throw new Error('PNG file not readable: ' + e.message); }\n    globalThis.pngPath = pngPath;\n    globalThis.pdfPath = '/tmp/out.pdf';\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Invoke the topdf npm package to convert the PNG file at pngPath into a PDF file at pdfPath.\n  // fails_if: the topdf conversion function throws or returns a rejected promise\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('topdf');\n    const convert = mod.default || mod;\n    await convert(globalThis.pngPath, globalThis.pdfPath);\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the path to the generated PDF.\n  // fails_if: stdout is not valid JSON or pdf_path is undefined\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate inputs and write the provided HTML to a temporary file for conversion.\n  // fails_if: Missing HTML or output_path environment variable.\n  { // scope for step 1\n    // BEGIN prepare\n    const { writeFileSync } = await import('node:fs');\n    const html = process.env.HTML;\n    const outPath = process.env.OUTPUT_PATH;\n    if (!html) throw new Error('Missing HTML input');\n    if (!outPath) throw new Error('Missing output_path');\n    const inputPath = '/tmp/input.html';\n    writeFileSync(inputPath, html);\n    globalThis.inputPath = inputPath;\n    globalThis.outputPath = outPath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Invoke the topdf library to convert the temporary HTML file into a PDF at the requested location.\n  // fails_if: topdf conversion throws an error or fails to produce the PDF file.\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('topdf');\n    const fn = mod.default || mod;\n    await fn(globalThis.inputPath, globalThis.outputPath);\n    globalThis.resultPath = globalThis.outputPath;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a single JSON object containing the path to the generated PDF.\n  // fails_if: The resultPath is undefined or JSON serialization fails.\n  { // scope for step 3\n    // BEGIN emit\n    if (!globalThis.resultPath) throw new Error('No result PDF path');\n    console.log(JSON.stringify({ pdf_path: globalThis.resultPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -43,14 +47,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/in.png":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+X9WcAAAAASUVORK5CYII="};
+  const FIXTURES = {"/tmp/output.pdf":"JVBERi0xLjQKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0NvdW50IDAvS2lkc1tdPj4KZW5kb2JqCnhyZWYKMCAzCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAwOSAwMDAwMCBuIAowMDAwMDAwMDUyIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSAzL1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKMTAzCiUlRU9GCg=="};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"png_path":"/tmp/in.png"}, deps, { session });
+  const probe = await run({"html":"<h1>Test Document</h1><p>Hello, world!</p>","output_path":"/tmp/output.pdf"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

@@ -6,35 +6,35 @@
 const CAP_ID = "react-to-pdf";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "png_path": "string",
-  "output_path": {
+  "html": "string",
+  "filename": {
     "type": "string",
     "optional": true
   }
 };
 const PRODUCES = {
-  "pdf_path": "string"
+  "pdf_base64": "string"
 };
 const REQUIRES = {
   "npm": [
     "react-to-pdf",
-    "jspdf"
+    "jsdom"
   ],
   "pip": [],
   "post_install": null,
   "capability": []
 };
 const ENV_MAP = {
-  "PNG_PATH": "png_path",
-  "OUTPUT_PATH": "output_path"
+  "HTML_INPUT": "html",
+  "FILENAME_INPUT": "filename"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "pdf_path": "pdf_path"
+  "pdf_base64": "pdf_base64"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the PNG input path, read the file and store its base64 data and determine the output PDF path.\n  // fails_if: The PNG file does not exist or cannot be read.\n  { // scope for step 1\n    // BEGIN prepare\n    const { existsSync, readFileSync } = await import('node:fs');\n    const pngPath = process.env.PNG_PATH;\n    if (!pngPath) { throw new Error('Missing PNG_PATH env var'); }\n    if (!existsSync(pngPath)) { throw new Error(`PNG file not found at ${pngPath}`); }\n    const data = readFileSync(pngPath);\n    globalThis.pngBase64 = data.toString('base64');\n    const outEnv = process.env.OUTPUT_PATH;\n    globalThis.outputPath = outEnv || pngPath.replace(/\\\\.png$/i, '.pdf');\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Create a PDF with the PNG image using jsPDF and write it to the output path.\n  // fails_if: jsPDF fails to generate the PDF or the file cannot be written.\n  { // scope for step 2\n    // BEGIN execute\n    const { jsPDF } = await import('jspdf');\n    const pdf = new jsPDF();\n    // Add the image at full page size (A4 default 210x297 mm). Adjust as needed.\n    pdf.addImage(globalThis.pngBase64, 'PNG', 0, 0);\n    const arrayBuf = pdf.output('arraybuffer');\n    const { writeFileSync } = await import('node:fs');\n    writeFileSync(globalThis.outputPath, Buffer.from(arrayBuf));\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the path of the generated PDF.\n  // fails_if: The JSON cannot be stringified or the pdf_path is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ pdf_path: globalThis.outputPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate inputs, create a DOM element from the provided HTML and store it for later use.\n  // fails_if: HTML_INPUT env var missing or DOM creation fails\n  { // scope for step 1\n    // BEGIN prepare\n    const { JSDOM } = await import('jsdom');\n    const html = process.env.HTML_INPUT;\n    if (!html) { throw new Error('Missing required input: HTML_INPUT'); }\n    const dom = new JSDOM(`<div id=\\\"root\\\">${html}</div>`);\n    globalThis.targetElement = dom.window.document.getElementById('root');\n    globalThis.filename = process.env.FILENAME_INPUT || 'output.pdf';\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Load react-to-pdf, generate a PDF from the stored element, and extract a base64 string.\n  // fails_if: PDF generation throws or the returned object does not provide output\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('react-to-pdf');\n    const generatePDF = mod.default || mod;\n    const element = globalThis.targetElement;\n    const options = { filename: globalThis.filename };\n    const pdfInstance = await generatePDF(element, options);\n    if (!pdfInstance || typeof pdfInstance.output !== 'function') { throw new Error('Unexpected PDF instance'); }\n    const dataUri = pdfInstance.output('datauristring');\n    const base64 = dataUri.split(',')[1];\n    globalThis.pdfBase64 = base64;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the base64 PDF to stdout.\n  // fails_if: pdf_base64 is undefined or JSON serialization fails\n  { // scope for step 3\n    // BEGIN emit\n    if (!globalThis.pdfBase64) { throw new Error('PDF generation did not produce output'); }\n    console.log(JSON.stringify({ pdf_base64: globalThis.pdfBase64 }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -51,14 +51,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/input.png":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+X9WcAAAAASUVORK5CYII=","/tmp/output.pdf":"JVBERi0xLjQKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0NvdW50IDAvS2lkc1tdPj4KZW5kb2JqCnhyZWYKMCAzCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAwOSAwMDAwMCBuIAowMDAwMDAwMDUyIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSAzL1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKMTAzCiUlRU9GCg=="};
+  const FIXTURES = {"test.pdf":"JVBERi0xLjQKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0NvdW50IDAvS2lkc1tdPj4KZW5kb2JqCnhyZWYKMCAzCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAwOSAwMDAwMCBuIAowMDAwMDAwMDUyIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSAzL1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKMTAzCiUlRU9GCg=="};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"png_path":"/tmp/input.png","output_path":"/tmp/output.pdf"}, deps, { session });
+  const probe = await run({"html":"<h1>Hello, PDF!</h1>","filename":"test.pdf"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

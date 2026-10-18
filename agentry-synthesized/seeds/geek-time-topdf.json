@@ -5,11 +5,7 @@
   "handler": "geek-time-topdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/geek-time-topdf.mjs",
   "accepts": {
-    "png_path": "string",
-    "pdf_path": {
-      "type": "string",
-      "optional": true
-    }
+    "url": "string"
   },
   "produces": {
     "pdf_path": "string"
@@ -26,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate input paths, ensure PNG is readable, and determine output PDF path.",
-      "fails_if": "png_path missing, unreadable, or cannot compute pdf_path",
-      "code": "const { accessSync, constants } = await import('node:fs');\nglobalThis.png_path = process.env.PNG_PATH;\nif (!globalThis.png_path) throw new Error('missing png_path');\ntry { accessSync(globalThis.png_path, constants.R_OK); } catch { throw new Error('png file not accessible'); }\nglobalThis.pdf_path = process.env.PDF_PATH || globalThis.png_path.replace(/\\.png$/i, '.pdf');"
+      "what": "Validate the required URL input and set up a temporary output file path.",
+      "fails_if": "The input object is missing or does not contain a 'url' string.",
+      "code": "const { writeFileSync } = await import('node:fs');\nif (!globalThis.input || typeof globalThis.input.url !== 'string') { throw new Error('Missing or invalid url'); }\nglobalThis.inputUrl = globalThis.input.url;\nglobalThis.outputPath = '/tmp/output.pdf';"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Invoke the geek-time-topdf package to convert the PNG file to a PDF file.",
-      "fails_if": "the conversion function throws or does not produce the expected PDF file",
-      "code": "const mod = await import('geek-time-topdf');\nconst fn = mod.default || mod;\nawait fn(globalThis.png_path, globalThis.pdf_path);"
+      "what": "Invoke the geek-time-topdf package to render the given URL to a PDF file.",
+      "fails_if": "The PDF generation function throws or returns a rejected promise.",
+      "code": "const mod = await import('geek-time-topdf');\nconst fn = mod.default || mod;\nawait fn(globalThis.inputUrl, globalThis.outputPath);\nglobalThis.pdfPath = globalThis.outputPath;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a JSON object containing the path to the generated PDF.",
-      "fails_if": "JSON serialization fails or pdf_path is undefined",
-      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdf_path }));"
+      "what": "Write a single JSON object containing the path to the generated PDF.",
+      "fails_if": "The JSON object cannot be stringified or the pdf_path field is undefined.",
+      "code": "console.log(JSON.stringify({ pdf_path: globalThis.pdfPath }));"
     }
   ],
   "source": "synthesized:agentry.synthesize",
