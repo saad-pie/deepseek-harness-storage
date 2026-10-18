@@ -1,0 +1,47 @@
+{
+  "id": "npm_pipedream_api2convert",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_pipedream_api2convert",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_pipedream_api2convert.mjs",
+  "accepts": {
+    "spec": "string"
+  },
+  "produces": {
+    "result": "string"
+  },
+  "requires": {
+    "npm": [
+      "@pipedream/api2convert"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that a spec string is provided and store it for later steps",
+      "fails_if": "input.spec is missing or falsy",
+      "code": "if (!input.spec) { throw new Error('Missing required input: spec'); }\\nglobalThis.spec = input.spec;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Load the @pipedream/api2convert package and invoke its conversion function with the spec",
+      "fails_if": "module fails to load or the conversion function throws",
+      "code": "const mod = await import('@pipedream/api2convert');\\nconst fn = mod.default || mod;\\nconst res = await fn(globalThis.spec);\\nglobalThis.result = res;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object containing the conversion result to stdout",
+      "fails_if": "result is undefined or JSON.stringify fails",
+      "code": "console.log(JSON.stringify({ result: globalThis.result }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

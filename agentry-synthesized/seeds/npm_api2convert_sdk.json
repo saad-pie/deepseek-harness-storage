@@ -1,0 +1,49 @@
+{
+  "id": "npm_api2convert_sdk",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_api2convert_sdk",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_api2convert_sdk.mjs",
+  "accepts": {
+    "api_key": "string",
+    "input_path": "string",
+    "target": "string"
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "@api2convert/sdk"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate required environment variables and ensure the input file exists, then store values in global state.",
+      "fails_if": "Missing API_KEY, INPUT_PATH, TARGET env vars or input file does not exist.",
+      "code": "const { existsSync } = await import('node:fs');\nif (!process.env.API_KEY) throw new Error('Missing API_KEY');\nif (!process.env.INPUT_PATH) throw new Error('Missing INPUT_PATH');\nif (!process.env.TARGET) throw new Error('Missing TARGET');\nif (!existsSync(process.env.INPUT_PATH)) throw new Error('Input file not found');\nglobalThis.apiKey = process.env.API_KEY;\nglobalThis.inputPath = process.env.INPUT_PATH;\nglobalThis.target = process.env.TARGET;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Use the API2Convert SDK to convert the input file to the target format and save the result locally.",
+      "fails_if": "SDK throws an error during conversion or saving the output.",
+      "code": "const { Api2Convert } = await import('@api2convert/sdk');\nconst path = await import('node:path');\nconst outDir = path.dirname(globalThis.inputPath);\nconst ext = '.' + globalThis.target;\nconst outputPath = path.join(outDir, path.basename(globalThis.inputPath, path.extname(globalThis.inputPath)) + ext);\nconst client = new Api2Convert(globalThis.apiKey);\nconst result = await client.convert(globalThis.inputPath, globalThis.target);\nawait result.save(outputPath);\nglobalThis.outputPath = outputPath;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a single JSON object containing the path of the converted output file.",
+      "fails_if": "The output_path variable is undefined or JSON serialization fails.",
+      "code": "console.log(JSON.stringify({output_path: globalThis.outputPath}));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
