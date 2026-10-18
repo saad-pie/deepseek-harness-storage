@@ -5,7 +5,8 @@
   "handler": "crates_topdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/crates_topdf.mjs",
   "accepts": {
-    "image_path": "string"
+    "image_paths": "string",
+    "output_path": "string"
   },
   "produces": {
     "pdf_path": "string"
@@ -13,35 +14,33 @@
   "requires": {
     "npm": [],
     "pip": [],
-    "post_install": null,
-    "capability": [],
-    "rust_crates": [
-      "topdf@0.1.1"
-    ]
+    "post_install": "cargo install --locked topdf",
+    "capability": []
   },
   "plan": [
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that the provided image file exists and define the output PDF path.",
-      "fails_if": "IMAGE_PATH env var missing, file does not exist, or cannot determine output path.",
-      "code": "let image_path = std::env::var(\"IMAGE_PATH\").expect(\"IMAGE_PATH not set\");\nif !std::path::Path::new(&image_path).exists() {\n    panic!(\"Input image not found\");\n}\nlet output_path = \"/tmp/output.pdf\".to_string();"
+      "what": "Read and validate IMAGE_PATHS and OUTPUT_PATH environment variables and split the image list.",
+      "fails_if": "Missing env var or image list empty",
+      "code": "let image_paths_env = std::env::var(\"IMAGE_PATHS\").expect(\"IMAGE_PATHS not set\");\nlet output_path = std::env::var(\"OUTPUT_PATH\").expect(\"OUTPUT_PATH not set\");\nlet image_paths: Vec<String> = image_paths_env.split(',').map(|s| s.trim().to_string()).collect();\nif image_paths.is_empty() {\n    panic!(\"No image paths provided\");\n}"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Invoke the `topdf` CLI to convert the image to a PDF at the designated output path.",
-      "fails_if": "The `topdf` command fails to start or returns a non‑zero exit status.",
-      "code": "use std::process::Command;\nlet status = Command::new(\"topdf\")\n    .arg(&image_path)\n    .arg(&output_path)\n    .status()\n    .expect(\"failed to execute topdf\");\nif !status.success() {\n    panic!(\"topdf conversion failed\");\n}"
+      "what": "Invoke the installed `topdf` binary to convert the images into a single PDF.",
+      "fails_if": "The `topdf` command exits with a non‑zero status or cannot be started",
+      "code": "use std::process::Command;\nlet mut cmd = Command::new(\"topdf\");\ncmd.arg(\"-o\").arg(&output_path);\nfor p in &image_paths {\n    cmd.arg(p);\n}\nlet status = cmd.status().expect(\"failed to execute topdf\");\nif !status.success() {\n    panic!(\"topdf command failed\");\n}"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Print a single JSON object containing the path to the generated PDF.",
-      "fails_if": "JSON is malformed or the pdf_path variable is undefined.",
+      "what": "Write a JSON object containing the path of the generated PDF to stdout.",
+      "fails_if": "JSON output cannot be produced",
       "code": "println!(\"{{\\\"pdf_path\\\":\\\"{}\\\"}}\", output_path);"
     }
   ],
+  "invoke_timeout_ms": 90000,
   "source": "synthesized:agentry.synthesize",
   "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
 }
