@@ -5,7 +5,8 @@
   "handler": "crates_topdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/crates_topdf.mjs",
   "accepts": {
-    "images": "string"
+    "image_path": "string",
+    "output_path": "string"
   },
   "produces": {
     "pdf_path": "string"
@@ -23,22 +24,22 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Read the IMAGES environment variable, split it into a list of file paths, and validate that at least one image is provided.",
-      "fails_if": "The IMAGES env var is missing or the list is empty.",
-      "code": "use topdf;\nlet images_str = std::env::var(\"IMAGES\").expect(\"IMAGES env var missing\");\nlet images: Vec<String> = images_str.split(',').map(|s| s.trim().to_string()).collect();\nif images.is_empty() {\n    panic!(\"No images provided\");\n}"
+      "what": "Validate that the input image file exists and the output path is writable.",
+      "fails_if": "Input file does not exist or output directory is not writable.",
+      "code": "let input_path = std::env::args().nth(1).unwrap_or_else(|| panic!(\"Missing input path\"));\nlet output_path = std::env::args().nth(2).unwrap_or_else(|| panic!(\"Missing output path\"));\nif !std::path::Path::new(&input_path).exists() {\n    panic!(\"Input file does not exist: {}\", input_path);\n}\nlet out_dir = std::path::Path::new(&output_path).parent().unwrap_or_else(|| std::path::Path::new(\".\"));\nif !out_dir.exists() {\n    panic!(\"Output directory does not exist: {}\", out_dir.display());\n}"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Invoke the topdf crate to convert the collected images into a single PDF saved at a temporary location.",
-      "fails_if": "The topdf conversion function returns an error.",
-      "code": "let output_path = \"/tmp/output.pdf\";\nmatch topdf::convert(&images, output_path) {\n    Ok(_) => {}\n    Err(e) => panic!(\"Conversion failed: {}\", e),\n}"
+      "what": "Convert the input image to a PDF file at the specified output path.",
+      "fails_if": "The conversion process fails or produces an invalid PDF.",
+      "code": "let result = topdf::convert(&input_path, &output_path);\nmatch result {\n    Ok(_) => {},\n    Err(e) => panic!(\"Conversion failed: {}\", e)\n}"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Print a JSON object containing the path to the generated PDF.",
-      "fails_if": "Printing the JSON fails or the output_path variable is undefined.",
+      "what": "Emit the path to the generated PDF file as JSON.",
+      "fails_if": "The output path is not a valid string.",
       "code": "println!(\"{{\\\"pdf_path\\\":\\\"{}\\\"}}\", output_path);"
     }
   ],

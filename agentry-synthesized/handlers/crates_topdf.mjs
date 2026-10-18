@@ -6,7 +6,8 @@
 const CAP_ID = "crates_topdf";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "images": "string"
+  "image_path": "string",
+  "output_path": "string"
 };
 const PRODUCES = {
   "pdf_path": "string"
@@ -21,7 +22,8 @@ const REQUIRES = {
   "capability": []
 };
 const ENV_MAP = {
-  "IMAGES": "images"
+  "INPUT_PATH": "image_path",
+  "OUTPUT_PATH": "output_path"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
@@ -29,7 +31,7 @@ const OUTPUT_MAP = {
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "rust.run";
-const KERNEL_SCRIPT = "#!/usr/bin/env rust-script\n//! ```cargo\n//! [dependencies]\n//! topdf = \"0.1.1\"\n//! ```\nuse topdf;\nlet images_str = std::env::var(\"IMAGES\").expect(\"IMAGES env var missing\");\nlet images: Vec<String> = images_str.split(',').map(|s| s.trim().to_string()).collect();\nif images.is_empty() {\n    panic!(\"No images provided\");\n}\n\nlet output_path = \"/tmp/output.pdf\";\nmatch topdf::convert(&images, output_path) {\n    Ok(_) => {}\n    Err(e) => panic!(\"Conversion failed: {}\", e),\n}\n\nprintln!(\"{{\\\"pdf_path\\\":\\\"{}\\\"}}\", output_path);";
+const KERNEL_SCRIPT = "#!/usr/bin/env rust-script\n//! ```cargo\n//! [dependencies]\n//! topdf = \"0.1.1\"\n//! ```\nlet input_path = std::env::args().nth(1).unwrap_or_else(|| panic!(\"Missing input path\"));\nlet output_path = std::env::args().nth(2).unwrap_or_else(|| panic!(\"Missing output path\"));\nif !std::path::Path::new(&input_path).exists() {\n    panic!(\"Input file does not exist: {}\", input_path);\n}\nlet out_dir = std::path::Path::new(&output_path).parent().unwrap_or_else(|| std::path::Path::new(\".\"));\nif !out_dir.exists() {\n    panic!(\"Output directory does not exist: {}\", out_dir.display());\n}\n\nlet result = topdf::convert(&input_path, &output_path);\nmatch result {\n    Ok(_) => {},\n    Err(e) => panic!(\"Conversion failed: {}\", e)\n}\n\nprintln!(\"{{\\\"pdf_path\\\":\\\"{}\\\"}}\", output_path);";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -46,16 +48,16 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"sample1.png,sample2.jpg":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="};
+  const FIXTURES = {"/tmp/test.png":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==","/tmp/out.pdf":"JVBERi0xLjQKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0NvdW50IDAvS2lkc1tdPj4KZW5kb2JqCnhyZWYKMCAzCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAwOSAwMDAwMCBuIAowMDAwMDAwMDUyIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSAzL1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKMTAzCiUlRU9GCg=="};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"images":"sample1.png,sample2.jpg"}, deps, { session });
+  const probe = await run({"image_path":"/tmp/test.png","output_path":"/tmp/out.pdf"}, deps, { session });
   const out = probe.output || probe;
-  const minBytes = 0;
+  const minBytes = 500;
   if (minBytes > 0) {
     const size = typeof out.bytes === "number" ? out.bytes : 0;
     if (size < minBytes) {
