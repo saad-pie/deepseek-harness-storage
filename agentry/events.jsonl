@@ -71372,3 +71372,26 @@
 {"kind":"invoke.started","at":1792512975421,"capability_id":"agentry.agent.plan","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["intent","agent_id","max_steps","execute"]}
 {"kind":"agent.plan.started","at":1792512975422,"intent":"Prior conversation:\nuser: Write a tiny Node script called hello.js that prints 'hi from chat' and run it.\n\nCurrent request: Write a tiny Node script called hello.js that prints 'hi from chat' and run ","agent_id":null,"capabilities_considered":34,"max_steps":8,"execute":false}
 {"kind":"invoke.started","at":1792512975422,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792512976610,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1187}
+{"kind":"agent.plan.completed","at":1792512976610,"intent":"Prior conversation:\nuser: Write a tiny Node script called hello.js that prints 'hi from chat' and run it.\n\nCurrent request: Write a tiny Node script called hello.js that prints 'hi from chat' and run ","steps":1,"model_used":"openai/gpt-oss-120b","ms":1188}
+{"kind":"invoke.succeeded","at":1792512976610,"capability_id":"agentry.agent.plan","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1189}
+{"kind":"chat.plan_ready","at":1792512976610,"conversation_id":"conv_mvgvxz3y_d0f8","steps":1,"capabilities":["agentry.agent.dsh"]}
+{"kind":"chat.assistant_turn","at":1792512976610,"conversation_id":"conv_mvgvxz3y_d0f8","agent_id":null,"message":"Cannot execute: no agent could be booted. Try again or pass agent_id explicitly."}
+{"kind":"invoke.succeeded","at":1792512976611,"capability_id":"agentry.chat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3540}
+{"kind":"discovery.tick_summary","at":1792512982596,"gaps":11,"uncovered":0,"watched":27,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792513012768,"gaps":11,"uncovered":0,"watched":27,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792513042752,"gaps":11,"uncovered":0,"watched":27,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792513072700,"gaps":11,"uncovered":0,"watched":27,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792513102942,"gaps":11,"uncovered":0,"watched":27,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792513132537,"gaps":11,"uncovered":0,"watched":27,"created":0,"proposals":0,"adopted":0}
+{"kind":"runs.rollup_completed","at":1792513179064,"capabilities":15,"runs":216}
+{"kind":"discovery.tick_summary","at":1792513180470,"gaps":11,"uncovered":0,"watched":27,"created":0,"proposals":0,"adopted":0}
+{"kind":"runs.rollup_completed","at":1792513180694,"capabilities":15,"runs":216}
+{"kind":"discovery.stale_proposal_rejected","at":1792513210779,"proposal_id":"proposal_mvgvpqka_grbbo1","gap_id":"gap:v319_imagemagick","age_min":10}
+{"kind":"discovery.tick_summary","at":1792513212160,"gaps":11,"uncovered":0,"watched":27,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.stale_proposal_rejected","at":1792513240541,"proposal_id":"proposal_mvgvqqoi_rqzfp1","gap_id":"gap:capability.that.does.not.exist.mvf6rg0i","age_min":10}
+{"kind":"discovery.stale_proposal_rejected","at":1792513241654,"proposal_id":"proposal_mvgvqgz5_5fntzx","gap_id":"gap:test.nonexistent.mvf67l23","age_min":10}
+{"kind":"discovery.stale_proposal_rejected","at":1792513242996,"proposal_id":"proposal_mvgvqk44_ked2sf","gap_id":"gap:pdf-lib-table","age_min":10}
+{"kind":"discovery.stale_proposal_rejected","at":1792513244174,"proposal_id":"proposal_mvgvqnid_37mhjd","gap_id":"gap:qrcode","age_min":10}
+{"kind":"discovery.tick_summary","at":1792513245355,"gaps":11,"uncovered":0,"watched":27,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792513270402,"gaps":11,"uncovered":0,"watched":27,"created":0,"proposals":0,"adopted":0}
