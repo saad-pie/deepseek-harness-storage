@@ -75217,3 +75217,245 @@
 {"kind":"runs.rollup_completed","at":1792517243974,"capabilities":19,"runs":1442}
 {"kind":"discovery.tick_summary","at":1792517263706,"gaps":14,"uncovered":0,"watched":30,"created":0,"proposals":0,"adopted":0}
 {"kind":"discovery.tick_summary","at":1792517293340,"gaps":14,"uncovered":0,"watched":30,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.boot.started","at":1792517313020,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792517313943,"loaded":0,"skipped":31,"files":31}
+{"kind":"runtime.boot.watches_loaded","at":1792517313943,"count":30}
+{"kind":"runtime.boot.completed","at":1792517313944,"capabilities":654,"watches":30}
+{"kind":"invoke.started","at":1792517313946,"capability_id":"invoker.in_process_js","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["capability_id","input","session"]}
+{"kind":"invoke.failed","at":1792517313948,"capability_id":"invoker.in_process_js","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":1}
+{"kind":"capability_gap.recorded","at":1792517313949,"key":"gap:invoker.in_process_js","wanted_kind":"invoker","wanted_id":"invoker.in_process_js","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517314836,"capability_id":"bua.screenshot","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["url","session"]}
+{"kind":"invoke.started","at":1792517314838,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792517314861,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":23}
+{"kind":"invoke.started","at":1792517314861,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792517314866,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4}
+{"kind":"installer.npm_starting","at":1792517314866,"capId":"bua.screenshot","session":"audit_bua_screenshot","packages":["playwright"]}
+{"kind":"invoke.started","at":1792517314866,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","packages"]}
+{"kind":"invoke.succeeded","at":1792517316908,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2041}
+{"kind":"installer.npm_complete","at":1792517316908,"capId":"bua.screenshot","session":"audit_bua_screenshot","packages":["playwright"]}
+{"kind":"installer.post_install_starting","at":1792517316908,"capId":"bua.screenshot","session":"audit_bua_screenshot","cmd":"npx playwright install chromium"}
+{"kind":"invoke.started","at":1792517316908,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","cmd","args","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792517316913,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4}
+{"kind":"invoke.started","at":1792517316913,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792517316915,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"invoke.started","at":1792517316915,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792517316919,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4}
+{"kind":"invoke.started","at":1792517316919,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792517316925,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5}
+{"kind":"invoke.started","at":1792517316925,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","cmd","args","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792517316937,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":11}
+{"kind":"invoke.started","at":1792517316937,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","pid","wait_ms"]}
+{"kind":"invoke.started","at":1792517323285,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517323285,"watch_id":"watch_mvgyj6l1_z6kuev","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:invoker.in_process_js::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517323285,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792517323285,"gap_id":"gap:invoker.in_process_js","wanted_kind":"invoker","watch_id":"watch_mvgyj6l1_z6kuev","source":"agentry.discover"}
+{"kind":"discovery.tick_summary","at":1792517324157,"gaps":15,"uncovered":1,"watched":30,"created":1,"proposals":0,"adopted":0}
+{"kind":"invoke.succeeded","at":1792517328930,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":11993}
+{"kind":"installer.post_install_complete","at":1792517328930,"capId":"bua.screenshot","session":"audit_bua_screenshot"}
+{"kind":"invoke.started","at":1792517328930,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792517328937,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":6}
+{"kind":"installer.prepared","at":1792517328937,"capId":"bua.screenshot","session":"audit_bua_screenshot","steps":[{"step":"node.install","ok":true,"packages":["playwright"]},{"step":"post_install","ok":true,"cmd":"npx playwright install chromium"}]}
+{"kind":"invoker.session_prepared","at":1792517328937,"capability_id":"bua.screenshot","session":"audit_bua_screenshot"}
+{"kind":"invoke.started","at":1792517328937,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792517328942,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5}
+{"kind":"invoke.started","at":1792517328942,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792517328945,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3}
+{"kind":"installer.already_prepared","at":1792517328946,"capId":"bua.screenshot","session":"audit_bua_screenshot"}
+{"kind":"invoke.started","at":1792517328946,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792517328948,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"invoke.started","at":1792517328948,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","code","env","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792517329958,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1009}
+{"kind":"invoke.failed","at":1792517329958,"capability_id":"bua.screenshot","invoker":"invoker.in_process_js","task_id":null,"code":"invoker_failed","ms":16009}
+{"kind":"capability_gap.recorded","at":1792517329958,"key":"gap:bua.screenshot","wanted_kind":"bua","wanted_id":"bua.screenshot","wanted_description":null,"reason":"invoke_failed: invoker_failed: invoker invoker.in_process_js failed: bua.screenshot: kernel exited 1 — node:internal/modules/run_main:123\n    triggerUncaughtException(\n    ^\n\npage.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"test\", waiting until \"","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517330720,"capability_id":"qr-scanner","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["data","session"]}
+{"kind":"invoker.lazy_loaded_handler","at":1792517330721,"capability_id":"qr-scanner","handler_id":"qr-scanner","handler_file":"/tmp/home/.dsh/agentry-synthesized/handlers/qr-scanner.mjs"}
+{"kind":"invoke.started","at":1792517330721,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792517330739,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":18}
+{"kind":"invoke.started","at":1792517330739,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792517330747,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":7}
+{"kind":"installer.npm_starting","at":1792517330747,"capId":"qr-scanner","session":"audit_qr_scanner","packages":["qr-scanner"]}
+{"kind":"invoke.started","at":1792517330747,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","packages"]}
+{"kind":"invoke.succeeded","at":1792517331392,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":645}
+{"kind":"installer.npm_complete","at":1792517331392,"capId":"qr-scanner","session":"audit_qr_scanner","packages":["qr-scanner"]}
+{"kind":"invoke.started","at":1792517331392,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792517331394,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"installer.prepared","at":1792517331394,"capId":"qr-scanner","session":"audit_qr_scanner","steps":[{"step":"node.install","ok":true,"packages":["qr-scanner"]}]}
+{"kind":"invoker.session_prepared","at":1792517331394,"capability_id":"qr-scanner","session":"audit_qr_scanner"}
+{"kind":"invoke.started","at":1792517331395,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792517331396,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"invoke.started","at":1792517331396,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792517331397,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"installer.already_prepared","at":1792517331397,"capId":"qr-scanner","session":"audit_qr_scanner"}
+{"kind":"invoke.started","at":1792517331397,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792517331398,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"invoke.started","at":1792517331398,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","code","env","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792517331459,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":61}
+{"kind":"invoke.succeeded","at":1792517331460,"capability_id":"qr-scanner","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1500}
+{"kind":"invoke.started","at":1792517331460,"capability_id":"agentskills_BangerSoul_Aivance_skills-pack_original_public-apis-reference_SKILL.","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["api_spec","target_format","session"]}
+{"kind":"invoker.lazy_loaded_handler","at":1792517331464,"capability_id":"agentskills_BangerSoul_Aivance_skills-pack_original_public-apis-reference_SKILL.","handler_id":"agentskills_BangerSoul_Aivance_skills-pack_original_public-apis-reference_SKILL.","handler_file":"/tmp/home/.dsh/agentry-synthesized/handlers/agentskills_BangerSoul_Aivance_skills-pack_original_public-apis-reference_SKILL..mjs"}
+{"kind":"invoke.started","at":1792517331465,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792517331469,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4}
+{"kind":"invoke.started","at":1792517331469,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792517331471,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"invoke.started","at":1792517331471,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792517331473,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"installer.prepared","at":1792517331473,"capId":"agentskills_BangerSoul_Aivance_skills-pack_original_public-apis-reference_SKILL.","session":"audit_agentskills_BangerSoul_Aivance","steps":[]}
+{"kind":"invoke.started","at":1792517331474,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792517331476,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2}
+{"kind":"invoke.started","at":1792517331477,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792517332082,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":604}
+{"kind":"invoke.succeeded","at":1792517332082,"capability_id":"agentskills_BangerSoul_Aivance_skills-pack_original_public-apis-reference_SKILL.","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":622}
+{"kind":"invoke.started","at":1792517332082,"capability_id":"test-agent_mvf5lj7f_b0319f","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517332082,"capability_id":"test-agent_mvf5lj7f_b0319f","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":0}
+{"kind":"capability_gap.recorded","at":1792517332083,"key":"gap:test-agent_mvf5lj7f_b0319f","wanted_kind":null,"wanted_id":"test-agent_mvf5lj7f_b0319f","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517332801,"capability_id":"worker-a_mvf5q5s2_aaf954","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517332801,"capability_id":"worker-a_mvf5q5s2_aaf954","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":718}
+{"kind":"capability_gap.recorded","at":1792517332801,"key":"gap:worker-a_mvf5q5s2_aaf954","wanted_kind":null,"wanted_id":"worker-a_mvf5q5s2_aaf954","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517333620,"capability_id":"planner-test_mvf6wp9e_5fb886","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517333620,"capability_id":"planner-test_mvf6wp9e_5fb886","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":819}
+{"kind":"capability_gap.recorded","at":1792517333621,"key":"gap:planner-test_mvf6wp9e_5fb886","wanted_kind":null,"wanted_id":"planner-test_mvf6wp9e_5fb886","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517334314,"capability_id":"dsh-worker_mvgsb48t_d1c057","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517334315,"capability_id":"dsh-worker_mvgsb48t_d1c057","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":694}
+{"kind":"capability_gap.recorded","at":1792517334315,"key":"gap:dsh-worker_mvgsb48t_d1c057","wanted_kind":null,"wanted_id":"dsh-worker_mvgsb48t_d1c057","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517335103,"capability_id":"chat_conv_mvgutcwe_lbwl_mvgutd1n_5abf36","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517335103,"capability_id":"chat_conv_mvgutcwe_lbwl_mvgutd1n_5abf36","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":788}
+{"kind":"capability_gap.recorded","at":1792517335103,"key":"gap:chat_conv_mvgutcwe_lbwl_mvgutd1n_5abf36","wanted_kind":null,"wanted_id":"chat_conv_mvgutcwe_lbwl_mvgutd1n_5abf36","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517335853,"capability_id":"chat_conv_mvgutko1_gzqt_mvgutksk_bf6a39","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517335854,"capability_id":"chat_conv_mvgutko1_gzqt_mvgutksk_bf6a39","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":750}
+{"kind":"capability_gap.recorded","at":1792517335854,"key":"gap:chat_conv_mvgutko1_gzqt_mvgutksk_bf6a39","wanted_kind":null,"wanted_id":"chat_conv_mvgutko1_gzqt_mvgutksk_bf6a39","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517336590,"capability_id":"chat_conv_mvgv3j6e_zxbd_mvgv3jbl_95b0aa","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517336591,"capability_id":"chat_conv_mvgv3j6e_zxbd_mvgv3jbl_95b0aa","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":737}
+{"kind":"capability_gap.recorded","at":1792517336591,"key":"gap:chat_conv_mvgv3j6e_zxbd_mvgv3jbl_95b0aa","wanted_kind":null,"wanted_id":"chat_conv_mvgv3j6e_zxbd_mvgv3jbl_95b0aa","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517337297,"capability_id":"chat_conv_mvgv3sh8_izlm_mvgv3smd_b447f4","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517337297,"capability_id":"chat_conv_mvgv3sh8_izlm_mvgv3smd_b447f4","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":705}
+{"kind":"capability_gap.recorded","at":1792517337297,"key":"gap:chat_conv_mvgv3sh8_izlm_mvgv3smd_b447f4","wanted_kind":null,"wanted_id":"chat_conv_mvgv3sh8_izlm_mvgv3smd_b447f4","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517338110,"capability_id":"chat_conv_mvgvwwp9_b5os_mvgvwxww_b201af","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517338111,"capability_id":"chat_conv_mvgvwwp9_b5os_mvgvwxww_b201af","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":813}
+{"kind":"capability_gap.recorded","at":1792517338111,"key":"gap:chat_conv_mvgvwwp9_b5os_mvgvwxww_b201af","wanted_kind":null,"wanted_id":"chat_conv_mvgvwwp9_b5os_mvgvwxww_b201af","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517338813,"capability_id":"chat_conv_mvgw715m_gg8r_mvgw71he_abff55","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517338813,"capability_id":"chat_conv_mvgw715m_gg8r_mvgw71he_abff55","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":702}
+{"kind":"capability_gap.recorded","at":1792517338813,"key":"gap:chat_conv_mvgw715m_gg8r_mvgw71he_abff55","wanted_kind":null,"wanted_id":"chat_conv_mvgw715m_gg8r_mvgw71he_abff55","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517339575,"capability_id":"chat_conv_mvgw7mso_h1qa_mvgw7n37_d85e5a","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517339575,"capability_id":"chat_conv_mvgw7mso_h1qa_mvgw7n37_d85e5a","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":761}
+{"kind":"capability_gap.recorded","at":1792517339575,"key":"gap:chat_conv_mvgw7mso_h1qa_mvgw7n37_d85e5a","wanted_kind":null,"wanted_id":"chat_conv_mvgw7mso_h1qa_mvgw7n37_d85e5a","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517340284,"capability_id":"chat_conv_mvgwkc0a_tos1_mvgwkc84_0bef9d","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517340284,"capability_id":"chat_conv_mvgwkc0a_tos1_mvgwkc84_0bef9d","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":709}
+{"kind":"capability_gap.recorded","at":1792517340284,"key":"gap:chat_conv_mvgwkc0a_tos1_mvgwkc84_0bef9d","wanted_kind":null,"wanted_id":"chat_conv_mvgwkc0a_tos1_mvgwkc84_0bef9d","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517341009,"capability_id":"chat_conv_mvgwqsgb_yudx_mvgwqsp1_1f5c68","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517341010,"capability_id":"chat_conv_mvgwqsgb_yudx_mvgwqsp1_1f5c68","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":724}
+{"kind":"capability_gap.recorded","at":1792517341010,"key":"gap:chat_conv_mvgwqsgb_yudx_mvgwqsp1_1f5c68","wanted_kind":null,"wanted_id":"chat_conv_mvgwqsgb_yudx_mvgwqsp1_1f5c68","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517341738,"capability_id":"chat_conv_mvgwtmov_kumi_mvgwtmxn_33b76c","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517341739,"capability_id":"chat_conv_mvgwtmov_kumi_mvgwtmxn_33b76c","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":729}
+{"kind":"capability_gap.recorded","at":1792517341739,"key":"gap:chat_conv_mvgwtmov_kumi_mvgwtmxn_33b76c","wanted_kind":null,"wanted_id":"chat_conv_mvgwtmov_kumi_mvgwtmxn_33b76c","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517342457,"capability_id":"chat_conv_mvgwvcww_2oj2_mvgwvd9z_26a823","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517342458,"capability_id":"chat_conv_mvgwvcww_2oj2_mvgwvd9z_26a823","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":719}
+{"kind":"capability_gap.recorded","at":1792517342458,"key":"gap:chat_conv_mvgwvcww_2oj2_mvgwvd9z_26a823","wanted_kind":null,"wanted_id":"chat_conv_mvgwvcww_2oj2_mvgwvd9z_26a823","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517343165,"capability_id":"chat_conv_mvgwxnnv_534y_mvgwxnx5_cb8c84","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517343166,"capability_id":"chat_conv_mvgwxnnv_534y_mvgwxnx5_cb8c84","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":708}
+{"kind":"capability_gap.recorded","at":1792517343166,"key":"gap:chat_conv_mvgwxnnv_534y_mvgwxnx5_cb8c84","wanted_kind":null,"wanted_id":"chat_conv_mvgwxnnv_534y_mvgwxnx5_cb8c84","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517343890,"capability_id":"chat_conv_mvgxd8ue_fzyj_mvgxd91r_8e662a","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517343891,"capability_id":"chat_conv_mvgxd8ue_fzyj_mvgxd91r_8e662a","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":724}
+{"kind":"capability_gap.recorded","at":1792517343891,"key":"gap:chat_conv_mvgxd8ue_fzyj_mvgxd91r_8e662a","wanted_kind":null,"wanted_id":"chat_conv_mvgxd8ue_fzyj_mvgxd91r_8e662a","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517344641,"capability_id":"chat_conv_mvgxmub9_ld9m_mvgxmuko_29de34","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517344641,"capability_id":"chat_conv_mvgxmub9_ld9m_mvgxmuko_29de34","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":750}
+{"kind":"capability_gap.recorded","at":1792517344642,"key":"gap:chat_conv_mvgxmub9_ld9m_mvgxmuko_29de34","wanted_kind":null,"wanted_id":"chat_conv_mvgxmub9_ld9m_mvgxmuko_29de34","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517345357,"capability_id":"chat_conv_mvgxq8f4_jx7u_mvgxq8np_ffc7a7","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517345357,"capability_id":"chat_conv_mvgxq8f4_jx7u_mvgxq8np_ffc7a7","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":715}
+{"kind":"capability_gap.recorded","at":1792517345357,"key":"gap:chat_conv_mvgxq8f4_jx7u_mvgxq8np_ffc7a7","wanted_kind":null,"wanted_id":"chat_conv_mvgxq8f4_jx7u_mvgxq8np_ffc7a7","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517346171,"capability_id":"chat_conv_mvgxriat_c701_mvgxriqe_bdf092","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["task_id","plan","intent","session"]}
+{"kind":"invoke.failed","at":1792517346171,"capability_id":"chat_conv_mvgxriat_c701_mvgxriqe_bdf092","invoker":"invoker.in_process_js","task_id":null,"code":"invalid_spec","ms":813}
+{"kind":"capability_gap.recorded","at":1792517346171,"key":"gap:chat_conv_mvgxriat_c701_mvgxriqe_bdf092","wanted_kind":null,"wanted_id":"chat_conv_mvgxriat_c701_mvgxriqe_bdf092","wanted_description":null,"reason":"capability exists but has no handler","hits":1,"example_task_id":null}
+{"kind":"invoke.started","at":1792517353134,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517353134,"watch_id":"watch_mvgyjtm6_e2lk3q","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:chat_conv_mvgxriat_c701_mvgxriqe_bdf092::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517353135,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"discovery.watch_created","at":1792517353135,"gap_id":"gap:chat_conv_mvgxriat_c701_mvgxriqe_bdf092","wanted_kind":null,"watch_id":"watch_mvgyjtm6_e2lk3q","source":"agentry.discover"}
+{"kind":"invoke.started","at":1792517353888,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517353888,"watch_id":"watch_mvgyju74_xlenig","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:chat_conv_mvgxq8f4_jx7u_mvgxq8np_ffc7a7::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517353888,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792517353888,"gap_id":"gap:chat_conv_mvgxq8f4_jx7u_mvgxq8np_ffc7a7","wanted_kind":null,"watch_id":"watch_mvgyju74_xlenig","source":"agentry.discover"}
+{"kind":"invoke.started","at":1792517354613,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517354613,"watch_id":"watch_mvgyjur9_v0glmp","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:chat_conv_mvgxmub9_ld9m_mvgxmuko_29de34::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517354613,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792517354613,"gap_id":"gap:chat_conv_mvgxmub9_ld9m_mvgxmuko_29de34","wanted_kind":null,"watch_id":"watch_mvgyjur9_v0glmp","source":"agentry.discover"}
+{"kind":"invoke.started","at":1792517355347,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517355347,"watch_id":"watch_mvgyjvbn_y9ybut","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:chat_conv_mvgxd8ue_fzyj_mvgxd91r_8e662a::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517355347,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792517355347,"gap_id":"gap:chat_conv_mvgxd8ue_fzyj_mvgxd91r_8e662a","wanted_kind":null,"watch_id":"watch_mvgyjvbn_y9ybut","source":"agentry.discover"}
+{"kind":"invoke.started","at":1792517356001,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517356001,"watch_id":"watch_mvgyjvtt_e6oq57","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:chat_conv_mvgwxnnv_534y_mvgwxnx5_cb8c84::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517356001,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792517356001,"gap_id":"gap:chat_conv_mvgwxnnv_534y_mvgwxnx5_cb8c84","wanted_kind":null,"watch_id":"watch_mvgyjvtt_e6oq57","source":"agentry.discover"}
+{"kind":"invoke.started","at":1792517356802,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517356802,"watch_id":"watch_mvgyjwg2_5ig1m0","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:chat_conv_mvgwvcww_2oj2_mvgwvd9z_26a823::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517356802,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792517356802,"gap_id":"gap:chat_conv_mvgwvcww_2oj2_mvgwvd9z_26a823","wanted_kind":null,"watch_id":"watch_mvgyjwg2_5ig1m0","source":"agentry.discover"}
+{"kind":"discovery.tick_summary","at":1792517357537,"gaps":36,"uncovered":21,"watched":31,"created":6,"proposals":0,"adopted":0}
+{"kind":"invoke.started","at":1792517383110,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517383110,"watch_id":"watch_mvgykgqu_xollmj","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:chat_conv_mvgwtmov_kumi_mvgwtmxn_33b76c::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517383111,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792517383111,"gap_id":"gap:chat_conv_mvgwtmov_kumi_mvgwtmxn_33b76c","wanted_kind":null,"watch_id":"watch_mvgykgqu_xollmj","source":"agentry.discover"}
+{"kind":"invoke.started","at":1792517383812,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517383813,"watch_id":"watch_mvgykhad_ngvaut","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:chat_conv_mvgwqsgb_yudx_mvgwqsp1_1f5c68::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517383813,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"discovery.watch_created","at":1792517383813,"gap_id":"gap:chat_conv_mvgwqsgb_yudx_mvgwqsp1_1f5c68","wanted_kind":null,"watch_id":"watch_mvgykhad_ngvaut","source":"agentry.discover"}
+{"kind":"invoke.started","at":1792517384574,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517384575,"watch_id":"watch_mvgykhvi_nbtpdp","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:chat_conv_mvgwkc0a_tos1_mvgwkc84_0bef9d::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517384575,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"discovery.watch_created","at":1792517384575,"gap_id":"gap:chat_conv_mvgwkc0a_tos1_mvgwkc84_0bef9d","wanted_kind":null,"watch_id":"watch_mvgykhvi_nbtpdp","source":"agentry.discover"}
+{"kind":"invoke.started","at":1792517385278,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517385278,"watch_id":"watch_mvgykif2_irodd0","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:chat_conv_mvgw7mso_h1qa_mvgw7n37_d85e5a::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517385278,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792517385278,"gap_id":"gap:chat_conv_mvgw7mso_h1qa_mvgw7n37_d85e5a","wanted_kind":null,"watch_id":"watch_mvgykif2_irodd0","source":"agentry.discover"}
+{"kind":"invoke.started","at":1792517386036,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517386037,"watch_id":"watch_mvgykj05_fvuky9","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:chat_conv_mvgw715m_gg8r_mvgw71he_abff55::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517386037,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"discovery.watch_created","at":1792517386037,"gap_id":"gap:chat_conv_mvgw715m_gg8r_mvgw71he_abff55","wanted_kind":null,"watch_id":"watch_mvgykj05_fvuky9","source":"agentry.discover"}
+{"kind":"invoke.started","at":1792517386782,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517386782,"watch_id":"watch_mvgykjku_38jbx7","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:chat_conv_mvgvwwp9_b5os_mvgvwxww_b201af::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517386782,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792517386782,"gap_id":"gap:chat_conv_mvgvwwp9_b5os_mvgvwxww_b201af","wanted_kind":null,"watch_id":"watch_mvgykjku_38jbx7","source":"agentry.discover"}
+{"kind":"discovery.tick_summary","at":1792517387512,"gaps":36,"uncovered":15,"watched":37,"created":6,"proposals":0,"adopted":0}
+{"kind":"invoke.started","at":1792517413178,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517413179,"watch_id":"watch_mvgyl3y3_0ji06k","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:chat_conv_mvgv3sh8_izlm_mvgv3smd_b447f4::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517413179,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"discovery.watch_created","at":1792517413179,"gap_id":"gap:chat_conv_mvgv3sh8_izlm_mvgv3smd_b447f4","wanted_kind":null,"watch_id":"watch_mvgyl3y3_0ji06k","source":"agentry.discover"}
+{"kind":"invoke.started","at":1792517413989,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517413989,"watch_id":"watch_mvgyl4kl_vf2ohd","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:chat_conv_mvgv3j6e_zxbd_mvgv3jbl_95b0aa::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517413990,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"discovery.watch_created","at":1792517413990,"gap_id":"gap:chat_conv_mvgv3j6e_zxbd_mvgv3jbl_95b0aa","wanted_kind":null,"watch_id":"watch_mvgyl4kl_vf2ohd","source":"agentry.discover"}
+{"kind":"invoke.started","at":1792517414738,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517414738,"watch_id":"watch_mvgyl55e_kxenbz","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:chat_conv_mvgutko1_gzqt_mvgutksk_bf6a39::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517414738,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792517414738,"gap_id":"gap:chat_conv_mvgutko1_gzqt_mvgutksk_bf6a39","wanted_kind":null,"watch_id":"watch_mvgyl55e_kxenbz","source":"agentry.discover"}
+{"kind":"invoke.started","at":1792517415527,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517415527,"watch_id":"watch_mvgyl5rb_ecc16c","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:chat_conv_mvgutcwe_lbwl_mvgutd1n_5abf36::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517415527,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792517415527,"gap_id":"gap:chat_conv_mvgutcwe_lbwl_mvgutd1n_5abf36","wanted_kind":null,"watch_id":"watch_mvgyl5rb_ecc16c","source":"agentry.discover"}
+{"kind":"invoke.started","at":1792517416344,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517416344,"watch_id":"watch_mvgyl6e0_1b8efp","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:dsh-worker_mvgsb48t_d1c057::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517416345,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792517416345,"gap_id":"gap:dsh-worker_mvgsb48t_d1c057","wanted_kind":null,"watch_id":"watch_mvgyl6e0_1b8efp","source":"agentry.discover"}
+{"kind":"invoke.started","at":1792517417190,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517417191,"watch_id":"watch_mvgyl71j_lexpw3","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:planner-test_mvf6wp9e_5fb886::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517417191,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1}
+{"kind":"discovery.watch_created","at":1792517417191,"gap_id":"gap:planner-test_mvf6wp9e_5fb886","wanted_kind":null,"watch_id":"watch_mvgyl71j_lexpw3","source":"agentry.discover"}
+{"kind":"discovery.tick_summary","at":1792517417971,"gaps":36,"uncovered":9,"watched":43,"created":6,"proposals":0,"adopted":0}
+{"kind":"invoke.started","at":1792517443111,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517443111,"watch_id":"watch_mvgylr1j_eyiacj","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:worker-a_mvf5q5s2_aaf954::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517443111,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792517443111,"gap_id":"gap:worker-a_mvf5q5s2_aaf954","wanted_kind":null,"watch_id":"watch_mvgylr1j_eyiacj","source":"agentry.discover"}
+{"kind":"invoke.started","at":1792517443958,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517443958,"watch_id":"watch_mvgylrp2_e6q1nn","source":"agentry.discover","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:test-agent_mvf5lj7f_b0319f::agentry.discover","task_id":null}
+{"kind":"invoke.succeeded","at":1792517443958,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792517443958,"gap_id":"gap:test-agent_mvf5lj7f_b0319f","wanted_kind":null,"watch_id":"watch_mvgylrp2_e6q1nn","source":"agentry.discover"}
+{"kind":"invoke.started","at":1792517444679,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["source","query","interval_ms","dedupe_key","on_new","reason"]}
+{"kind":"watch.created","at":1792517444679,"watch_id":"watch_mvgyls93_lsb4k9","source":"discovery.github_search","on_new":"notify.email.gmail","interval_ms":60000,"reason":"gap:bua.screenshot::discovery.github_search","task_id":null}
+{"kind":"invoke.succeeded","at":1792517444679,"capability_id":"watcher.polling","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":0}
+{"kind":"discovery.watch_created","at":1792517444679,"gap_id":"gap:bua.screenshot","wanted_kind":"bua","watch_id":"watch_mvgyls93_lsb4k9","source":"discovery.github_search"}
+{"kind":"discovery.tick_summary","at":1792517445446,"gaps":36,"uncovered":3,"watched":49,"created":3,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792517473274,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792517503237,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"runs.rollup_completed","at":1792517545415,"capabilities":43,"runs":1515}
+{"kind":"discovery.tick_summary","at":1792517546487,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"runs.rollup_completed","at":1792517564747,"capabilities":43,"runs":1515}
+{"kind":"discovery.tick_summary","at":1792517576496,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
