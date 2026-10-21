@@ -9,7 +9,7 @@
   },
   "produces": {
     "url": "string",
-    "sections": "string"
+    "content": "string"
   },
   "requires": {
     "npm": [
@@ -23,23 +23,23 @@
     {
       "step": 1,
       "verb": "fetch",
-      "what": "Perform an HTTP GET of the supplied URL using the built‑in fetch API and store the raw HTML.",
-      "fails_if": "Network error, non‑2xx response, or inability to read the response body.",
-      "code": "const url = process.env.URL;\\nglobalThis.inputUrl = url;\\nconst resp = await fetch(url, { redirect: 'follow' });\\nif (!resp.ok) throw new Error('Fetch failed with status ' + resp.status);\\nglobalThis.raw = await resp.text();"
+      "what": "Perform an HTTP GET request for the supplied URL and store the raw response body.",
+      "fails_if": "The URL is missing, the request fails, or the response status is not OK.",
+      "code": "const url = process.env.URL;\\nif (!url) throw new Error('Missing URL');\\nconst res = await fetch(url, { headers: { 'User-Agent': 'agentry-agent' } });\\nif (!res.ok) throw new Error('Fetch failed: ' + res.status);\\nglobalThis.rawBody = await res.text();"
     },
     {
       "step": 2,
       "verb": "parse",
-      "what": "Extract heading tags from the raw HTML, assign each a sequential index, and record the indices as a comma‑separated string.",
-      "fails_if": "HTML parsing fails or no heading tags are found.",
-      "code": "const html = globalThis.raw;\\nconst headingRegex = /<h[1-6][^>]*>(.*?)<\\/h[1-6]>/gi;\\nlet idx = 0;\\nconst sections = [];\\nwhile (headingRegex.exec(html)) { sections.push(idx); idx++; }\\nif (sections.length === 0) throw new Error('No sections found');\\nglobalThis.sectionsStr = sections.join(',');"
+      "what": "Take the raw HTML body and extract a short snippet to return as content.",
+      "fails_if": "The raw response body was not stored in the previous step.",
+      "code": "if (typeof globalThis.rawBody !== 'string') throw new Error('No raw body to parse');\\nglobalThis.parsed = globalThis.rawBody.slice(0, 200);"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write a single JSON object containing the original URL and the list of section indices to stdout.",
-      "fails_if": "JSON serialization fails or any promised field is undefined.",
-      "code": "console.log(JSON.stringify({ url: globalThis.inputUrl, sections: globalThis.sectionsStr }));"
+      "what": "Write a single JSON object containing the URL and the extracted content to stdout.",
+      "fails_if": "The parsed content is undefined or JSON serialization fails.",
+      "code": "const output = { url: process.env.URL, content: globalThis.parsed };\\nconsole.log(JSON.stringify(output));"
     }
   ],
   "invoke_timeout_ms": 90000,

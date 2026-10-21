@@ -10,7 +10,7 @@ const ACCEPTS = {
 };
 const PRODUCES = {
   "url": "string",
-  "sections": "string"
+  "content": "string"
 };
 const REQUIRES = {
   "npm": [
@@ -26,11 +26,11 @@ const ENV_MAP = {
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
   "url": "url",
-  "sections": "sections"
+  "content": "content"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: fetch --\n  // what: Perform an HTTP GET of the supplied URL using the built‑in fetch API and store the raw HTML.\n  // fails_if: Network error, non‑2xx response, or inability to read the response body.\n  { // scope for step 1\n    // BEGIN fetch\n    const url = process.env.URL;\n    globalThis.inputUrl = url;\n    const resp = await fetch(url, { redirect: 'follow' });\n    if (!resp.ok) throw new Error('Fetch failed with status ' + resp.status);\n    globalThis.raw = await resp.text();\n    // END fetch\n  }\n\n  // -- step 2: parse --\n  // what: Extract heading tags from the raw HTML, assign each a sequential index, and record the indices as a comma‑separated string.\n  // fails_if: HTML parsing fails or no heading tags are found.\n  { // scope for step 2\n    // BEGIN parse\n    const html = globalThis.raw;\n    const headingRegex = /<h[1-6][^>]*>(.*?)<\\/h[1-6]>/gi;\n    let idx = 0;\n    const sections = [];\n    while (headingRegex.exec(html)) { sections.push(idx); idx++; }\n    if (sections.length === 0) throw new Error('No sections found');\n    globalThis.sectionsStr = sections.join(',');\n    // END parse\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the original URL and the list of section indices to stdout.\n  // fails_if: JSON serialization fails or any promised field is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ url: globalThis.inputUrl, sections: globalThis.sectionsStr }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: fetch --\n  // what: Perform an HTTP GET request for the supplied URL and store the raw response body.\n  // fails_if: The URL is missing, the request fails, or the response status is not OK.\n  { // scope for step 1\n    // BEGIN fetch\n    const url = process.env.URL;\n    if (!url) throw new Error('Missing URL');\n    const res = await fetch(url, { headers: { 'User-Agent': 'agentry-agent' } });\n    if (!res.ok) throw new Error('Fetch failed: ' + res.status);\n    globalThis.rawBody = await res.text();\n    // END fetch\n  }\n\n  // -- step 2: parse --\n  // what: Take the raw HTML body and extract a short snippet to return as content.\n  // fails_if: The raw response body was not stored in the previous step.\n  { // scope for step 2\n    // BEGIN parse\n    if (typeof globalThis.rawBody !== 'string') throw new Error('No raw body to parse');\n    globalThis.parsed = globalThis.rawBody.slice(0, 200);\n    // END parse\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the URL and the extracted content to stdout.\n  // fails_if: The parsed content is undefined or JSON serialization fails.\n  { // scope for step 3\n    // BEGIN emit\n    const output = { url: process.env.URL, content: globalThis.parsed };\n    console.log(JSON.stringify(output));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
