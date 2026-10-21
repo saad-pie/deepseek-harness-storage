@@ -9,6 +9,7 @@ const ACCEPTS = {
   "url": "string"
 };
 const PRODUCES = {
+  "status": "number",
   "body": "string"
 };
 const REQUIRES = {
@@ -19,14 +20,17 @@ const REQUIRES = {
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {};
+const ENV_MAP = {
+  "URL": "url"
+};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
+  "status": "status",
   "body": "body"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: fetch --\n  // what: Perform an HTTP GET request to the provided URL using the web-fetch package and store the raw response text.\n  // fails_if: Network error, non‑2xx status code, or fetch throws an exception.\n  { // scope for step 1\n    // BEGIN fetch\n    const mod = await import('@remix-run/web-fetch');\n    const fetchFn = mod.default || mod.fetch || mod;\n    const response = await fetchFn(globalThis.input.url);\n    if (!response.ok) { throw new Error('Fetch failed with status ' + response.status); }\n    const text = await response.text();\n    globalThis.rawBody = text;\n    // END fetch\n  }\n\n  // -- step 2: parse --\n  // what: Treat the raw response body as plain text and assign it to the parsed state.\n  // fails_if: Parsing logic throws (not applicable for plain text).\n  { // scope for step 2\n    // BEGIN parse\n    globalThis.parsed = globalThis.rawBody;\n    // END parse\n  }\n\n  // -- step 3: emit --\n  // what: Emit a single JSON object containing the fetched body to stdout.\n  // fails_if: JSON serialization fails or the body field is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ body: globalThis.parsed }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: fetch --\n  // what: Perform an HTTP GET request to the provided URL using @remix-run/web-fetch and store the response object.\n  // fails_if: The URL is missing, the fetch call throws, or the network request fails.\n  { // scope for step 1\n    // BEGIN fetch\n    const mod = await import('@remix-run/web-fetch');\n    const fetchFn = mod.default || mod.fetch || mod;\n    const url = process.env.URL;\n    if (!url) throw new Error('URL not provided');\n    globalThis.response = await fetchFn(url);\n    // END fetch\n  }\n\n  // -- step 2: parse --\n  // what: Extract the HTTP status code and response body text from the stored response.\n  // fails_if: No response object is present or reading the body fails.\n  { // scope for step 2\n    // BEGIN parse\n    const resp = globalThis.response;\n    if (!resp) throw new Error('No response from fetch step');\n    globalThis.status = resp.status;\n    globalThis.body = await resp.text();\n    // END parse\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing status and body to stdout.\n  // fails_if: Either status or body is undefined, or JSON serialization fails.\n  { // scope for step 3\n    // BEGIN emit\n    if (globalThis.status === undefined || globalThis.body === undefined) throw new Error('Missing data for emit');\n    console.log(JSON.stringify({status: globalThis.status, body: globalThis.body}));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 

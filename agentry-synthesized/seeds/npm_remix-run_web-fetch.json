@@ -8,6 +8,7 @@
     "url": "string"
   },
   "produces": {
+    "status": "number",
     "body": "string"
   },
   "requires": {
@@ -22,23 +23,23 @@
     {
       "step": 1,
       "verb": "fetch",
-      "what": "Perform an HTTP GET request to the provided URL using the web-fetch package and store the raw response text.",
-      "fails_if": "Network error, non‑2xx status code, or fetch throws an exception.",
-      "code": "const mod = await import('@remix-run/web-fetch');\nconst fetchFn = mod.default || mod.fetch || mod;\nconst response = await fetchFn(globalThis.input.url);\nif (!response.ok) { throw new Error('Fetch failed with status ' + response.status); }\nconst text = await response.text();\nglobalThis.rawBody = text;"
+      "what": "Perform an HTTP GET request to the provided URL using @remix-run/web-fetch and store the response object.",
+      "fails_if": "The URL is missing, the fetch call throws, or the network request fails.",
+      "code": "const mod = await import('@remix-run/web-fetch');\nconst fetchFn = mod.default || mod.fetch || mod;\nconst url = process.env.URL;\nif (!url) throw new Error('URL not provided');\nglobalThis.response = await fetchFn(url);"
     },
     {
       "step": 2,
       "verb": "parse",
-      "what": "Treat the raw response body as plain text and assign it to the parsed state.",
-      "fails_if": "Parsing logic throws (not applicable for plain text).",
-      "code": "globalThis.parsed = globalThis.rawBody;"
+      "what": "Extract the HTTP status code and response body text from the stored response.",
+      "fails_if": "No response object is present or reading the body fails.",
+      "code": "const resp = globalThis.response;\nif (!resp) throw new Error('No response from fetch step');\nglobalThis.status = resp.status;\nglobalThis.body = await resp.text();"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a single JSON object containing the fetched body to stdout.",
-      "fails_if": "JSON serialization fails or the body field is undefined.",
-      "code": "console.log(JSON.stringify({ body: globalThis.parsed }));"
+      "what": "Write a single JSON object containing status and body to stdout.",
+      "fails_if": "Either status or body is undefined, or JSON serialization fails.",
+      "code": "if (globalThis.status === undefined || globalThis.body === undefined) throw new Error('Missing data for emit');\nconsole.log(JSON.stringify({status: globalThis.status, body: globalThis.body}));"
     }
   ],
   "invoke_timeout_ms": 90000,

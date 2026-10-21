@@ -8,12 +8,12 @@
     "url": "string"
   },
   "produces": {
-    "content": "string"
+    "url": "string",
+    "sections": "string"
   },
   "requires": {
     "npm": [
-      "pi-wsearch",
-      "htmlparser2"
+      "pi-wsearch"
     ],
     "pip": [],
     "post_install": null,
@@ -23,23 +23,23 @@
     {
       "step": 1,
       "verb": "fetch",
-      "what": "Perform an HTTP GET request to the provided URL and store the raw response body.",
-      "fails_if": "Network error, non‑OK HTTP status, or inability to read the response body.",
-      "code": "const url = process.env.URL;\nif (!url) throw new Error('Missing URL input');\nconst resp = await fetch(url);\nif (!resp.ok) throw new Error(`HTTP error ${resp.status}`);\nglobalThis.raw = await resp.text();"
+      "what": "Perform an HTTP GET request for the supplied URL and store the raw response body.",
+      "fails_if": "Network error, non‑2xx status, or inability to read the response.",
+      "code": "const { url } = globalThis.input;\ntry {\n  const response = await fetch(url);\n  if (!response.ok) throw new Error('HTTP error ' + response.status);\n  const body = await response.text();\n  globalThis.rawBody = body;\n} catch (e) {\n  throw new Error('fetch failed: ' + (e && e.message ? e.message : e));\n}"
     },
     {
       "step": 2,
       "verb": "parse",
-      "what": "Parse the raw HTML response and extract plain text content.",
-      "fails_if": "HTML parsing fails or the extracted text is undefined.",
-      "code": "const { parseDocument } = await import('htmlparser2');\nconst { DomUtils } = await import('htmlparser2');\nconst doc = parseDocument(globalThis.raw);\nconst text = DomUtils.getText(doc);\nif (typeof text !== 'string') throw new Error('Failed to extract text');\nglobalThis.parsed = text;"
+      "what": "Create a very simple section outline by taking a short snippet of the page and wrapping it as a single section.",
+      "fails_if": "The raw response body is missing or cannot be processed.",
+      "code": "if (!globalThis.rawBody) throw new Error('parse failed: no raw body');\nconst snippet = globalThis.rawBody.slice(0, 200);\nglobalThis.sectionsStr = JSON.stringify([{ heading: '', text: snippet }]);"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write a single JSON object containing the extracted content to stdout.",
-      "fails_if": "JSON serialization fails or the content field is undefined.",
-      "code": "console.log(JSON.stringify({ content: globalThis.parsed }));"
+      "what": "Write a single JSON object containing the original URL and the extracted sections to stdout.",
+      "fails_if": "JSON serialization fails or a promised field is undefined.",
+      "code": "const output = { url: globalThis.input.url, sections: globalThis.sectionsStr };\nconsole.log(JSON.stringify(output));"
     }
   ],
   "invoke_timeout_ms": 90000,

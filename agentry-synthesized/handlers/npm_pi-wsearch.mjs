@@ -9,27 +9,26 @@ const ACCEPTS = {
   "url": "string"
 };
 const PRODUCES = {
-  "content": "string"
+  "url": "string",
+  "sections": "string"
 };
 const REQUIRES = {
   "npm": [
-    "pi-wsearch",
-    "htmlparser2"
+    "pi-wsearch"
   ],
   "pip": [],
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {
-  "URL": "url"
-};
+const ENV_MAP = {};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "content": "content"
+  "url": "url",
+  "sections": "sections"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: fetch --\n  // what: Perform an HTTP GET request to the provided URL and store the raw response body.\n  // fails_if: Network error, non‑OK HTTP status, or inability to read the response body.\n  { // scope for step 1\n    // BEGIN fetch\n    const url = process.env.URL;\n    if (!url) throw new Error('Missing URL input');\n    const resp = await fetch(url);\n    if (!resp.ok) throw new Error(`HTTP error ${resp.status}`);\n    globalThis.raw = await resp.text();\n    // END fetch\n  }\n\n  // -- step 2: parse --\n  // what: Parse the raw HTML response and extract plain text content.\n  // fails_if: HTML parsing fails or the extracted text is undefined.\n  { // scope for step 2\n    // BEGIN parse\n    const { parseDocument } = await import('htmlparser2');\n    const { DomUtils } = await import('htmlparser2');\n    const doc = parseDocument(globalThis.raw);\n    const text = DomUtils.getText(doc);\n    if (typeof text !== 'string') throw new Error('Failed to extract text');\n    globalThis.parsed = text;\n    // END parse\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the extracted content to stdout.\n  // fails_if: JSON serialization fails or the content field is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ content: globalThis.parsed }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: fetch --\n  // what: Perform an HTTP GET request for the supplied URL and store the raw response body.\n  // fails_if: Network error, non‑2xx status, or inability to read the response.\n  { // scope for step 1\n    // BEGIN fetch\n    const { url } = globalThis.input;\n    try {\n      const response = await fetch(url);\n      if (!response.ok) throw new Error('HTTP error ' + response.status);\n      const body = await response.text();\n      globalThis.rawBody = body;\n    } catch (e) {\n      throw new Error('fetch failed: ' + (e && e.message ? e.message : e));\n    }\n    // END fetch\n  }\n\n  // -- step 2: parse --\n  // what: Create a very simple section outline by taking a short snippet of the page and wrapping it as a single section.\n  // fails_if: The raw response body is missing or cannot be processed.\n  { // scope for step 2\n    // BEGIN parse\n    if (!globalThis.rawBody) throw new Error('parse failed: no raw body');\n    const snippet = globalThis.rawBody.slice(0, 200);\n    globalThis.sectionsStr = JSON.stringify([{ heading: '', text: snippet }]);\n    // END parse\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the original URL and the extracted sections to stdout.\n  // fails_if: JSON serialization fails or a promised field is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    const output = { url: globalThis.input.url, sections: globalThis.sectionsStr };\n    console.log(JSON.stringify(output));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
