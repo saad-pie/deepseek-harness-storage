@@ -88401,3 +88401,345 @@
 {"kind":"chat.completed","at":1792591243704,"conversation_id":"conv_mvi6ivqw_ad3l","agent_id":"chat_conv_mvi6ivqw_ad3l_mvi6iw6w_855273","task_id":"task_mvi6j0ka_sep2h9","ok":true,"steps":2,"artifacts":3,"ms":31360}
 {"kind":"invoke.succeeded","at":1792591243705,"capability_id":"agentry.chat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":31362}
 {"kind":"runs.rollup_completed","at":1792591263150,"capabilities":23,"runs":4787}
+{"kind":"runs.rollup_completed","at":1792591272485,"capabilities":23,"runs":4799}
+{"kind":"discovery.stale_proposal_rejected","at":1792591274425,"proposal_id":"proposal_mvi65r2c_znjrjv","gap_id":"gap:v315_test","age_min":11}
+{"kind":"discovery.stale_proposal_rejected","at":1792591276392,"proposal_id":"proposal_mvi65w5m_yufo8e","gap_id":"gap:v314b_isolated","age_min":11}
+{"kind":"discovery.tick_summary","at":1792591278712,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792591304293,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792591334573,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792591364662,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.boot.started","at":1792591402055,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.started","at":1792591414024,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792591436928,"loaded":0,"skipped":33,"files":33}
+{"kind":"runtime.boot.watches_loaded","at":1792591439349,"count":59}
+{"kind":"runtime.boot.completed","at":1792591439350,"capabilities":932,"watches":59}
+{"kind":"runtime.boot.seeded","at":1792591448513,"loaded":0,"skipped":33,"files":33}
+{"kind":"runtime.boot.watches_loaded","at":1792591450372,"count":59}
+{"kind":"runtime.boot.completed","at":1792591450374,"capabilities":932,"watches":59}
+{"kind":"runtime.started","at":1792591450377,"tick_ms":30000}
+{"kind":"approval.server_started","at":1792591450387,"host":"127.0.0.1","port":7862}
+{"kind":"discovery.tick_summary","at":1792591452168,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792591452170,"n":1}
+{"kind":"invoke.started","at":1792591452172,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591452205,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792591452206,"query":"convert PNG to PDF via imagemagick CLI","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792591452206,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792591452206,"query":"convert PNG screenshot to PDF file","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792591452206,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792591452207,"query":"convert PNG to PDF via topdf crate","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792591452207,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792591452207,"query":"convert PNG to PDF via topdf crate","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792591452208,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591452211,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591452213,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591452215,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591452216,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591452217,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591452255,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792591452586,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":371}
+{"kind":"invoke.succeeded","at":1792591452595,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":379}
+{"kind":"invoke.succeeded","at":1792591452900,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":692}
+{"kind":"invoke.succeeded","at":1792591453048,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":793}
+{"kind":"invoke.succeeded","at":1792591453088,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":873}
+{"kind":"discover.completed","at":1792591453089,"query":"convert PNG to PDF via topdf crate","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"github":0,"web":0},"errors":{}}
+{"kind":"invoke.succeeded","at":1792591453089,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":883}
+{"kind":"watch.polled","at":1792591453091,"watch_id":"watch_mvdwm3ub_e1zy84","source":"agentry.discover","candidates":0,"fresh":0,"error":null,"ms":885}
+{"kind":"invoke.succeeded","at":1792591453092,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":881}
+{"kind":"discover.completed","at":1792591453092,"query":"convert PNG screenshot to PDF file","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"github":3,"web":0},"errors":{}}
+{"kind":"invoke.succeeded","at":1792591453092,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":886}
+{"kind":"watch.polled","at":1792591454991,"watch_id":"watch_mvdwm3pu_uo6p2a","source":"agentry.discover","candidates":3,"fresh":0,"error":null,"ms":2785}
+{"kind":"invoke.succeeded","at":1792591454994,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2776}
+{"kind":"discover.completed","at":1792591454995,"query":"convert PNG to PDF via topdf crate","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"github":0,"web":0},"errors":{}}
+{"kind":"invoke.succeeded","at":1792591454995,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2788}
+{"kind":"watch.polled","at":1792591456796,"watch_id":"watch_mvdwm3z5_oep7fq","source":"agentry.discover","candidates":0,"fresh":0,"error":null,"ms":4589}
+{"kind":"invoke.started","at":1792591458675,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591458676,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792591458689,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":6517}
+{"kind":"watch.polled","at":1792591458690,"watch_id":"watch_mvdkxbxh_o08eyg","source":"discovery.github_search","candidates":30,"fresh":0,"error":null,"ms":6518}
+{"kind":"invoke.succeeded","at":1792591458703,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":27}
+{"kind":"invoke.succeeded","at":1792591458954,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2119}
+{"kind":"discover.completed","at":1792591458954,"query":"convert PNG to PDF via imagemagick CLI","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":30,"clawhub":0,"crates":4,"dsh_plugins":11,"gomod":1,"hermes_atlas":30,"huggingface":0,"local":30,"maven":0,"npm":30,"nuget":0,"pypi":0,"github":0,"web":0},"errors":{}}
+{"kind":"invoke.succeeded","at":1792591458954,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":6749}
+{"kind":"watch.polled","at":1792591460823,"watch_id":"watch_mvdwm3kk_b0wp34","source":"agentry.discover","candidates":136,"fresh":0,"error":null,"ms":8618}
+{"kind":"runtime.tick.watches_polled","at":1792591460824,"count":5,"summary":[{"watch_id":"watch_mvdkxbxh_o08eyg","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvdwm3kk_b0wp34","ok":true,"polled":true,"candidates":136,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvdwm3pu_uo6p2a","ok":true,"polled":true,"candidates":3,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvdwm3ub_e1zy84","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvdwm3z5_oep7fq","ok":true,"polled":true,"candidates":0,"fresh":0,"notified":0,"error":null}]}
+{"kind":"runtime.boot.started","at":1792591475461,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"discovery.tick_summary","at":1792591484306,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792591490841,"n":2}
+{"kind":"invoke.started","at":1792591490841,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792591490842,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792591490844,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792591490844,"query":"invoke_failed: invoker_failed: invoker invoker.in_process_js failed: pdf-lib-table__v85: kernel exited 1 — Error: IMAGE_PATH env var not set at fi","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792591490844,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792591490844,"query":"test capability that should not exist","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792591490844,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792591490844,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792591490844,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792591490844,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792591490881,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591490901,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591490929,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591490943,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591490971,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792591491331,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":360}
+{"kind":"invoke.succeeded","at":1792591491333,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":390}
+{"kind":"invoke.succeeded","at":1792591491334,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":453}
+{"kind":"invoke.succeeded","at":1792591491335,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":405}
+{"kind":"invoke.succeeded","at":1792591491335,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":434}
+{"kind":"invoke.started","at":1792591493350,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591493351,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792591493367,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":16}
+{"kind":"invoke.started","at":1792591493416,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591493417,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591493417,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591493418,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591493420,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591493420,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792591493442,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":20}
+{"kind":"invoke.succeeded","at":1792591493445,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":28}
+{"kind":"invoke.succeeded","at":1792591493449,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":28}
+{"kind":"invoke.succeeded","at":1792591493707,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":356}
+{"kind":"discover.completed","at":1792591493709,"query":"test capability that should not exist","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":30,"clawhub":0,"crates":30,"dsh_plugins":30,"gomod":6,"hermes_atlas":30,"huggingface":0,"local":30,"maven":0,"npm":30,"nuget":0,"pypi":0,"github":2,"web":0},"errors":{}}
+{"kind":"invoke.succeeded","at":1792591493710,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2866}
+{"kind":"watch.polled","at":1792591493712,"watch_id":"watch_mvf685y9_76orie","source":"agentry.discover","candidates":188,"fresh":0,"error":null,"ms":2868}
+{"kind":"invoke.succeeded","at":1792591493722,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":306}
+{"kind":"discover.completed","at":1792591493722,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":30,"clawhub":0,"crates":30,"dsh_plugins":29,"gomod":1,"hermes_atlas":16,"huggingface":0,"local":30,"maven":0,"npm":30,"nuget":0,"pypi":0,"github":1,"web":0},"errors":{}}
+{"kind":"invoke.succeeded","at":1792591493722,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2881}
+{"kind":"watch.polled","at":1792591495995,"watch_id":"watch_mvdzx5he_uywu8p","source":"agentry.discover","candidates":167,"fresh":0,"error":null,"ms":5154}
+{"kind":"invoke.succeeded","at":1792591496024,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2607}
+{"kind":"discover.completed","at":1792591496024,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":30,"clawhub":0,"crates":30,"dsh_plugins":29,"gomod":1,"hermes_atlas":16,"huggingface":0,"local":30,"maven":0,"npm":30,"nuget":0,"pypi":0,"github":1,"web":0},"errors":{}}
+{"kind":"invoke.succeeded","at":1792591496025,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5181}
+{"kind":"watch.polled","at":1792591498001,"watch_id":"watch_mvf6vp96_urkluh","source":"agentry.discover","candidates":167,"fresh":0,"error":null,"ms":7157}
+{"kind":"invoke.started","at":1792591500357,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591500358,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792591500359,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":6938}
+{"kind":"discover.completed","at":1792591500359,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":30,"clawhub":0,"crates":30,"dsh_plugins":29,"gomod":1,"hermes_atlas":16,"huggingface":0,"local":30,"maven":0,"npm":30,"nuget":0,"pypi":0,"github":1,"web":0},"errors":{}}
+{"kind":"invoke.succeeded","at":1792591500359,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":9515}
+{"kind":"watch.polled","at":1792591500360,"watch_id":"watch_mvf6voz0_aox385","source":"agentry.discover","candidates":167,"fresh":0,"error":null,"ms":9516}
+{"kind":"invoke.succeeded","at":1792591500423,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":65}
+{"kind":"invoke.succeeded","at":1792591500693,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2641}
+{"kind":"discover.completed","at":1792591500693,"query":"invoke_failed: invoker_failed: invoker invoker.in_process_js failed: pdf-lib-table__v85: kernel exited 1 — Error: IMAGE_PATH env var not set at fi","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":0,"clawhub":0,"crates":0,"dsh_plugins":0,"gomod":1,"hermes_atlas":30,"huggingface":0,"local":30,"maven":0,"npm":0,"nuget":0,"pypi":0,"github":0,"web":0},"errors":{"dsh_plugins":"HTTP 400 from https://registry.npmjs.org/-/v1/search?text=%40deepseek-ai%20invoke_failed%3A%20invoker_failed%3A%20invoker%20invoker.in_process_js%20failed%3A%20pdf-lib-table__v85%3A%20kernel%20exited%201%20%E2%80%94%20Error%3A%20IMAGE_PATH%20env%20var%20not%20set%20at%20fi&size=30","maven":"HTTP 400 from https://search.maven.org/solrsearch/select?q=invoke_failed%3A%20invoker_failed%3A%20invoker%20invoker.in_process_js%20failed%3A%20pdf-lib-table__v85%3A%20kernel%20exited%201%20%E2%80%94%20Error%3A%20IMAGE_PATH%20env%20var%20not%20set%20at%20fi&rows=30&wt=json","npm":"HTTP 400 from https://registry.npmjs.org/-/v1/search?text=invoke_failed%3A%20invoker_failed%3A%20invoker%20invoker.in_process_js%20failed%3A%20pdf-lib-table__v85%3A%20kernel%20exited%201%20%E2%80%94%20Error%3A%20IMAGE_PATH%20env%20var%20not%20set%20at%20fi&size=30"}}
+{"kind":"invoke.succeeded","at":1792591500693,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":9849}
+{"kind":"watch.polled","at":1792591503455,"watch_id":"watch_mvf5329b_owiskp","source":"agentry.discover","candidates":61,"fresh":0,"error":null,"ms":12611}
+{"kind":"runtime.tick.watches_polled","at":1792591503455,"count":5,"summary":[{"watch_id":"watch_mvdzx5he_uywu8p","ok":true,"polled":true,"candidates":167,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvf5329b_owiskp","ok":true,"polled":true,"candidates":61,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvf685y9_76orie","ok":true,"polled":true,"candidates":188,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvf6voz0_aox385","ok":true,"polled":true,"candidates":167,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvf6vp96_urkluh","ok":true,"polled":true,"candidates":167,"fresh":0,"notified":0,"error":null}]}
+{"kind":"runtime.boot.seeded","at":1792591505260,"loaded":0,"skipped":33,"files":33}
+{"kind":"runtime.boot.watches_loaded","at":1792591506974,"count":59}
+{"kind":"runtime.boot.completed","at":1792591506975,"capabilities":932,"watches":59}
+{"kind":"invoke.started","at":1792591506978,"capability_id":"agentry.agent.boot","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["name"]}
+{"kind":"invoke.started","at":1792591506980,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792591507053,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":73}
+{"kind":"invoke.started","at":1792591507053,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792591507061,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":8}
+{"kind":"agent.boot.created","at":1792591507062,"agent_id":"rawdiag-1792591506978_mvi6p737_c4f9ec","name":"rawdiag-1792591506978","home_session":"agent_rawdiag-1792591506978_mvi6p737_c4f9ec_home","parent_agent_id":null,"skills_count":0}
+{"kind":"invoke.succeeded","at":1792591507062,"capability_id":"agentry.agent.boot","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":84}
+{"kind":"invoke.started","at":1792591508914,"capability_id":"agentry.agent.dsh","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["prompt","timeout_ms"]}
+{"kind":"agent.dsh.started","at":1792591508916,"ksess":"dsh_mvi6p8l0_l3mt","prompt_len":112,"timeout_ms":120000}
+{"kind":"invoke.started","at":1792591508916,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792591508938,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":22}
+{"kind":"invoke.started","at":1792591508938,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792591508948,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":9}
+{"kind":"agent.dsh.session_ready","at":1792591508948,"ksess":"dsh_mvi6p8l0_l3mt","verified":true}
+{"kind":"invoke.started","at":1792591508948,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792591508960,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":11}
+{"kind":"invoke.started","at":1792591508960,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792591508965,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4}
+{"kind":"agent.dsh.env_set","at":1792591508965,"ksess":"dsh_mvi6p8l0_l3mt","atria_key_present":true}
+{"kind":"agent.dsh.spawn_started","at":1792591508965,"ksess":"dsh_mvi6p8l0_l3mt","prompt_len":112,"cmd_len":294}
+{"kind":"invoke.started","at":1792591508965,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","cmd","args","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792591508974,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":9}
+{"kind":"invoke.started","at":1792591508974,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session","pid","wait_ms"]}
+{"kind":"discovery.tick_summary","at":1792591514048,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
+{"kind":"invoke.succeeded","at":1792591514313,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5338}
+{"kind":"agent.dsh.completed","at":1792591514314,"ksess":"dsh_mvi6p8l0_l3mt","ok":false,"exit_code":1,"tool_calls":0,"messages":0,"tokens":0,"ms":5399}
+{"kind":"agent.dsh.files_discovered","at":1792591514315,"ksess":"dsh_mvi6p8l0_l3mt","count":0,"paths":[]}
+{"kind":"invoke.succeeded","at":1792591514315,"capability_id":"agentry.agent.dsh","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":7253}
+{"kind":"invoke.started","at":1792591514317,"capability_id":"agentry.chat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["message"]}
+{"kind":"invoke.started","at":1792591514853,"capability_id":"agentry.agent.boot","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["name"]}
+{"kind":"invoke.started","at":1792591514853,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792591514872,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":19}
+{"kind":"invoke.started","at":1792591514872,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792591514880,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":7}
+{"kind":"agent.boot.created","at":1792591514880,"agent_id":"chat_conv_mvi6pcr1_18e5_mvi6pd5x_7ac7f2","name":"chat_conv_mvi6pcr1_18e5","home_session":"agent_chat_conv_mvi6pcr1_18e5_mvi6pd5x_7ac7f2_home","parent_agent_id":null,"skills_count":0}
+{"kind":"invoke.succeeded","at":1792591514880,"capability_id":"agentry.agent.boot","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":27}
+{"kind":"chat.user_turn","at":1792591514880,"conversation_id":"conv_mvi6pcr1_18e5","agent_id":"chat_conv_mvi6pcr1_18e5_mvi6pd5x_7ac7f2","message":"generate a QR code for 'rawdiag-1792591514316' and save it as a PDF"}
+{"kind":"invoke.started","at":1792591517022,"capability_id":"agentry.agent.plan","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["intent","agent_id","max_steps","execute"]}
+{"kind":"agent.plan.started","at":1792591517042,"intent":"Prior conversation:\nuser: generate a QR code for 'rawdiag-1792591514316' and save it as a PDF\n\nCurrent request: generate a QR code for 'rawdiag-1792591514316' and save it as a PDF","agent_id":"chat_conv_mvi6pcr1_18e5_mvi6pd5x_7ac7f2","capabilities_considered":7,"max_steps":8,"execute":false}
+{"kind":"invoke.started","at":1792591517042,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792591518474,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1432}
+{"kind":"agent.plan.completed","at":1792591518474,"intent":"Prior conversation:\nuser: generate a QR code for 'rawdiag-1792591514316' and save it as a PDF\n\nCurrent request: generate a QR code for 'rawdiag-1792591514316' and save it as a PDF","steps":2,"exact_matches":2,"canonicalized":0,"invented":0,"model_used":"openai/gpt-oss-120b","ms":1451}
+{"kind":"invoke.succeeded","at":1792591518475,"capability_id":"agentry.agent.plan","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3110}
+{"kind":"chat.plan_ready","at":1792591518475,"conversation_id":"conv_mvi6pcr1_18e5","agent_id":"chat_conv_mvi6pcr1_18e5_mvi6pd5x_7ac7f2","steps":2,"capabilities":["modbender_skill-library-mcp_data_generate-qr-code_SKILL","pdf-lib-table"]}
+{"kind":"invoke.started","at":1792591518475,"capability_id":"agentry.agent.task","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["agent_id","intent","plan"]}
+{"kind":"invoke.started","at":1792591518475,"capability_id":"agentry.task.run","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["intent","plan","task_id","budget","session_id"]}
+{"kind":"task.created","at":1792591518476,"task_id":"task_mvi6pfyk_bcl67f","plan_steps":2,"intent":"generate a QR code for 'rawdiag-1792591514316' and save it as a PDF"}
+{"kind":"task.running","at":1792591520435,"task_id":"task_mvi6pfyk_bcl67f","from_step":0,"resume":false}
+{"kind":"invoke.started","at":1792591522468,"capability_id":"modbender_skill-library-mcp_data_generate-qr-code_SKILL","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["text","size","color","save_path","session"]}
+{"kind":"invoker.lazy_loaded_handler","at":1792591522471,"capability_id":"modbender_skill-library-mcp_data_generate-qr-code_SKILL","handler_id":"modbender_skill-library-mcp_data_generate-qr-code_SKILL","handler_file":"/tmp/home/.dsh/agentry-synthesized/handlers/modbender_skill-library-mcp_data_generate-qr-code_SKILL.mjs"}
+{"kind":"invoke.started","at":1792591522472,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792591522477,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":5}
+{"kind":"invoke.started","at":1792591522477,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792591522486,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":9}
+{"kind":"invoke.started","at":1792591522486,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792591522491,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":4}
+{"kind":"installer.prepared","at":1792591522491,"capId":"modbender_skill-library-mcp_data_generate-qr-code_SKILL","session":"agent_chat_conv_mvi6pcr1_18e5_mvi6pd5x_7ac7f2_home","steps":[]}
+{"kind":"invoke.started","at":1792591522491,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792591522494,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":3}
+{"kind":"invoke.started","at":1792591522494,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792591523042,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":548}
+{"kind":"invoke.started","at":1792591523043,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["action","session","cmd","args","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792591523051,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":8}
+{"kind":"invoke.started","at":1792591523051,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["action","session","pid","wait_ms"]}
+{"kind":"invoke.succeeded","at":1792591523212,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":161}
+{"kind":"invoke.started","at":1792591523212,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792591524452,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":1240}
+{"kind":"invoke.started","at":1792591524452,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["action","session","code","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792591524712,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":259}
+{"kind":"invoke.started","at":1792591524712,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["provider","model","messages","tools","temperature","max_tokens"]}
+{"kind":"invoke.succeeded","at":1792591525099,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":386}
+{"kind":"invoke.succeeded","at":1792591525099,"capability_id":"modbender_skill-library-mcp_data_generate-qr-code_SKILL","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":4664}
+{"kind":"task.step","at":1792591525101,"task_id":"task_mvi6pfyk_bcl67f","step":0,"capability_id":"modbender_skill-library-mcp_data_generate-qr-code_SKILL","ok":true,"ms":4664,"artifacts":1}
+{"kind":"invoke.started","at":1792591526775,"capability_id":"pdf-lib-table","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["image_path","session"]}
+{"kind":"invoker.lazy_loaded_handler","at":1792591526776,"capability_id":"pdf-lib-table","handler_id":"pdf-lib-table__v85","handler_file":"/tmp/home/.dsh/agentry-synthesized/handlers/pdf-lib-table__v85.mjs"}
+{"kind":"invoke.started","at":1792591526776,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792591526794,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":18}
+{"kind":"invoke.started","at":1792591526794,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792591526799,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":4}
+{"kind":"installer.npm_starting","at":1792591526799,"capId":"pdf-lib-table","session":"agent_chat_conv_mvi6pcr1_18e5_mvi6pd5x_7ac7f2_home","packages":["pdf-lib","pdf-lib-table"]}
+{"kind":"invoke.started","at":1792591526799,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["action","session","packages"]}
+{"kind":"invoke.succeeded","at":1792591530167,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":3368}
+{"kind":"installer.npm_complete","at":1792591530167,"capId":"pdf-lib-table","session":"agent_chat_conv_mvi6pcr1_18e5_mvi6pd5x_7ac7f2_home","packages":["pdf-lib","pdf-lib-table"]}
+{"kind":"invoke.started","at":1792591530167,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792591530175,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":7}
+{"kind":"installer.prepared","at":1792591530175,"capId":"pdf-lib-table","session":"agent_chat_conv_mvi6pcr1_18e5_mvi6pd5x_7ac7f2_home","steps":[{"step":"node.install","ok":true,"packages":["pdf-lib","pdf-lib-table"]}]}
+{"kind":"invoker.session_prepared","at":1792591530175,"capability_id":"pdf-lib-table","session":"agent_chat_conv_mvi6pcr1_18e5_mvi6pd5x_7ac7f2_home"}
+{"kind":"invoke.started","at":1792591530175,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792591530179,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":4}
+{"kind":"invoke.started","at":1792591530179,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792591530185,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":6}
+{"kind":"installer.npm_starting","at":1792591530185,"capId":"pdf-lib-table__v85","session":"agent_chat_conv_mvi6pcr1_18e5_mvi6pd5x_7ac7f2_home","packages":["pdf-lib","pdf-lib-table"]}
+{"kind":"invoke.started","at":1792591530185,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["action","session","packages"]}
+{"kind":"invoke.succeeded","at":1792591531216,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":1031}
+{"kind":"installer.npm_complete","at":1792591531216,"capId":"pdf-lib-table__v85","session":"agent_chat_conv_mvi6pcr1_18e5_mvi6pd5x_7ac7f2_home","packages":["pdf-lib","pdf-lib-table"]}
+{"kind":"invoke.started","at":1792591531216,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792591531222,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":5}
+{"kind":"installer.prepared","at":1792591531222,"capId":"pdf-lib-table__v85","session":"agent_chat_conv_mvi6pcr1_18e5_mvi6pd5x_7ac7f2_home","steps":[{"step":"node.install","ok":true,"packages":["pdf-lib","pdf-lib-table"]}]}
+{"kind":"invoke.started","at":1792591531222,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792591531226,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":4}
+{"kind":"invoke.started","at":1792591531226,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","tenant":"local","input_keys":["action","session","code","env","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792591532074,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":847}
+{"kind":"invoke.succeeded","at":1792591532075,"capability_id":"pdf-lib-table","invoker":"invoker.in_process_js","task_id":"task_mvi6pfyk_bcl67f","code":null,"ms":6974}
+{"kind":"task.step","at":1792591532076,"task_id":"task_mvi6pfyk_bcl67f","step":1,"capability_id":"pdf-lib-table","ok":true,"ms":6974,"artifacts":2}
+{"kind":"runtime.tick","at":1792591533456,"n":3}
+{"kind":"invoke.started","at":1792591533456,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591533465,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792591533466,"query":"convert PNG to PDF via imagemagick CLI","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792591533466,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792591533466,"query":"convert PNG screenshot to PDF file","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792591533466,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792591533466,"query":"convert PNG to PDF via topdf crate","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792591533466,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792591533466,"query":"convert PNG to PDF via topdf crate","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792591533495,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591533510,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591533544,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591533556,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792591533727,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":232}
+{"kind":"invoke.succeeded","at":1792591533730,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":173}
+{"kind":"invoke.succeeded","at":1792591533734,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":189}
+{"kind":"invoke.succeeded","at":1792591533736,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":226}
+{"kind":"task.done","at":1792591534291,"task_id":"task_mvi6pfyk_bcl67f","steps":2,"artifacts":3,"ms":15815}
+{"kind":"invoke.succeeded","at":1792591534292,"capability_id":"agentry.task.run","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":15816}
+{"kind":"invoke.succeeded","at":1792591535698,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2242}
+{"kind":"watch.polled","at":1792591535700,"watch_id":"watch_mvdkxbxh_o08eyg","source":"discovery.github_search","candidates":30,"fresh":0,"error":null,"ms":2244}
+{"kind":"invoke.started","at":1792591537991,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591537992,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591538019,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591538019,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591538020,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591538021,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591538021,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591538022,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792591538033,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":41}
+{"kind":"invoke.succeeded","at":1792591538046,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":27}
+{"kind":"invoke.succeeded","at":1792591538049,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":28}
+{"kind":"invoke.succeeded","at":1792591538050,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":27}
+{"kind":"invoke.succeeded","at":1792591538217,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2488}
+{"kind":"discover.completed","at":1792591538217,"query":"convert PNG to PDF via imagemagick CLI","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":30,"clawhub":0,"crates":4,"dsh_plugins":11,"gomod":1,"hermes_atlas":30,"huggingface":0,"local":30,"maven":0,"npm":30,"nuget":0,"pypi":0,"github":0,"web":0},"errors":{}}
+{"kind":"invoke.succeeded","at":1792591538217,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4752}
+{"kind":"watch.polled","at":1792591538218,"watch_id":"watch_mvdwm3kk_b0wp34","source":"agentry.discover","candidates":136,"fresh":0,"error":null,"ms":4753}
+{"kind":"invoke.succeeded","at":1792591538363,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":342}
+{"kind":"discover.completed","at":1792591538364,"query":"convert PNG to PDF via topdf crate","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":2,"clawhub":0,"crates":0,"dsh_plugins":13,"gomod":1,"hermes_atlas":11,"huggingface":0,"local":30,"maven":0,"npm":30,"nuget":0,"pypi":0,"github":0,"web":0},"errors":{}}
+{"kind":"invoke.succeeded","at":1792591538364,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4898}
+{"kind":"agent.task.completed","at":1792591538572,"agent_id":"chat_conv_mvi6pcr1_18e5_mvi6pd5x_7ac7f2","task_id":"task_mvi6pfyk_bcl67f","state":"done","ok":true,"steps":2,"artifacts":3,"ms":20097}
+{"kind":"invoke.succeeded","at":1792591538572,"capability_id":"agentry.agent.task","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":20097}
+{"kind":"chat.assistant_turn","at":1792591538573,"conversation_id":"conv_mvi6pcr1_18e5","agent_id":"chat_conv_mvi6pcr1_18e5_mvi6pd5x_7ac7f2","message":"Completed 2/2 step(s). Returned: pdf_base64, bytes, status, captured_at. Produced 3 artifact(s): /tmp/agentry-scratch/qr.png, pdf_base64, /tmp/agentry-scratch/qr.png","task_id":"task_mvi6pfyk_bcl67f","state":"done"}
+{"kind":"chat.completed","at":1792591538573,"conversation_id":"conv_mvi6pcr1_18e5","agent_id":"chat_conv_mvi6pcr1_18e5_mvi6pd5x_7ac7f2","task_id":"task_mvi6pfyk_bcl67f","ok":true,"steps":2,"artifacts":3,"ms":24256}
+{"kind":"invoke.succeeded","at":1792591538573,"capability_id":"agentry.chat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":24256}
+{"kind":"watch.polled","at":1792591540178,"watch_id":"watch_mvdwm3ub_e1zy84","source":"agentry.discover","candidates":87,"fresh":0,"error":null,"ms":6712}
+{"kind":"invoke.succeeded","at":1792591540209,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2189}
+{"kind":"discover.completed","at":1792591540209,"query":"convert PNG to PDF via topdf crate","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":2,"clawhub":0,"crates":0,"dsh_plugins":13,"gomod":1,"hermes_atlas":11,"huggingface":0,"local":30,"maven":0,"npm":30,"nuget":0,"pypi":0,"github":0,"web":0},"errors":{}}
+{"kind":"invoke.succeeded","at":1792591540209,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":6743}
+{"kind":"watch.polled","at":1792591541823,"watch_id":"watch_mvdwm3z5_oep7fq","source":"agentry.discover","candidates":87,"fresh":0,"error":null,"ms":8357}
+{"kind":"invoke.succeeded","at":1792591541832,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3811}
+{"kind":"discover.completed","at":1792591541832,"query":"convert PNG screenshot to PDF file","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":30,"clawhub":0,"crates":30,"dsh_plugins":14,"gomod":1,"hermes_atlas":11,"huggingface":0,"local":30,"maven":0,"npm":30,"nuget":1,"pypi":0,"github":3,"web":0},"errors":{}}
+{"kind":"invoke.succeeded","at":1792591541832,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":8366}
+{"kind":"watch.polled","at":1792591543472,"watch_id":"watch_mvdwm3pu_uo6p2a","source":"agentry.discover","candidates":150,"fresh":0,"error":null,"ms":10006}
+{"kind":"runtime.tick.watches_polled","at":1792591543472,"count":5,"summary":[{"watch_id":"watch_mvdkxbxh_o08eyg","ok":true,"polled":true,"candidates":30,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvdwm3kk_b0wp34","ok":true,"polled":true,"candidates":136,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvdwm3pu_uo6p2a","ok":true,"polled":true,"candidates":150,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvdwm3ub_e1zy84","ok":true,"polled":true,"candidates":87,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvdwm3z5_oep7fq","ok":true,"polled":true,"candidates":87,"fresh":0,"notified":0,"error":null}]}
+{"kind":"discovery.tick_summary","at":1792591545161,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.tick","at":1792591573475,"n":4}
+{"kind":"invoke.started","at":1792591573476,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792591573476,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792591573476,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792591573476,"query":"invoke_failed: invoker_failed: invoker invoker.in_process_js failed: pdf-lib-table__v85: kernel exited 1 — Error: IMAGE_PATH env var not set at fi","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792591573476,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792591573476,"query":"test capability that should not exist","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792591573476,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792591573476,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792591573476,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discover.started","at":1792591573477,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"limit":30}
+{"kind":"invoke.started","at":1792591573495,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591573503,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591573510,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591573518,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591573533,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"discovery.tick_summary","at":1792591574944,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
+{"kind":"invoke.succeeded","at":1792591574948,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1452}
+{"kind":"invoke.succeeded","at":1792591574948,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1445}
+{"kind":"invoke.succeeded","at":1792591574948,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1438}
+{"kind":"invoke.succeeded","at":1792591574949,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1431}
+{"kind":"invoke.succeeded","at":1792591574949,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1416}
+{"kind":"invoke.started","at":1792591577335,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591577336,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792591577348,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":11}
+{"kind":"invoke.started","at":1792591577380,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591577380,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591577386,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591577387,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591577391,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591577394,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792591577406,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":26}
+{"kind":"invoke.succeeded","at":1792591577412,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":18}
+{"kind":"invoke.succeeded","at":1792591577414,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":26}
+{"kind":"invoke.started","at":1792591577502,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.started","at":1792591577503,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["query","limit"]}
+{"kind":"invoke.succeeded","at":1792591577514,"capability_id":"discovery.web_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":11}
+{"kind":"invoke.succeeded","at":1792591577714,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":323}
+{"kind":"discover.completed","at":1792591577714,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":30,"clawhub":0,"crates":30,"dsh_plugins":29,"gomod":1,"hermes_atlas":16,"huggingface":0,"local":30,"maven":0,"npm":30,"nuget":0,"pypi":0,"github":1,"web":0},"errors":{}}
+{"kind":"invoke.succeeded","at":1792591577715,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4238}
+{"kind":"watch.polled","at":1792591577716,"watch_id":"watch_mvf6voz0_aox385","source":"agentry.discover","candidates":167,"fresh":0,"error":null,"ms":4240}
+{"kind":"invoke.succeeded","at":1792591577746,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":360}
+{"kind":"discover.completed","at":1792591577746,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":30,"clawhub":0,"crates":30,"dsh_plugins":29,"gomod":1,"hermes_atlas":16,"huggingface":0,"local":30,"maven":0,"npm":30,"nuget":0,"pypi":0,"github":1,"web":0},"errors":{}}
+{"kind":"invoke.succeeded","at":1792591577747,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":4270}
+{"kind":"watch.polled","at":1792591579073,"watch_id":"watch_mvdzx5he_uywu8p","source":"agentry.discover","candidates":167,"fresh":0,"error":null,"ms":5597}
+{"kind":"invoke.succeeded","at":1792591579081,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1579}
+{"kind":"discover.completed","at":1792591579081,"query":"invoke_failed: invoker_failed: invoker invoker.in_process_js failed: pdf-lib-table__v85: kernel exited 1 — Error: IMAGE_PATH env var not set at fi","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":0,"clawhub":0,"crates":0,"dsh_plugins":0,"gomod":1,"hermes_atlas":30,"huggingface":0,"local":30,"maven":0,"npm":0,"nuget":0,"pypi":0,"github":0,"web":0},"errors":{"dsh_plugins":"HTTP 400 from https://registry.npmjs.org/-/v1/search?text=%40deepseek-ai%20invoke_failed%3A%20invoker_failed%3A%20invoker%20invoker.in_process_js%20failed%3A%20pdf-lib-table__v85%3A%20kernel%20exited%201%20%E2%80%94%20Error%3A%20IMAGE_PATH%20env%20var%20not%20set%20at%20fi&size=30","maven":"HTTP 400 from https://search.maven.org/solrsearch/select?q=invoke_failed%3A%20invoker_failed%3A%20invoker%20invoker.in_process_js%20failed%3A%20pdf-lib-table__v85%3A%20kernel%20exited%201%20%E2%80%94%20Error%3A%20IMAGE_PATH%20env%20var%20not%20set%20at%20fi&rows=30&wt=json","npm":"HTTP 400 from https://registry.npmjs.org/-/v1/search?text=invoke_failed%3A%20invoker_failed%3A%20invoker%20invoker.in_process_js%20failed%3A%20pdf-lib-table__v85%3A%20kernel%20exited%201%20%E2%80%94%20Error%3A%20IMAGE_PATH%20env%20var%20not%20set%20at%20fi&size=30"}}
+{"kind":"invoke.succeeded","at":1792591579081,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5605}
+{"kind":"watch.polled","at":1792591580853,"watch_id":"watch_mvf5329b_owiskp","source":"agentry.discover","candidates":61,"fresh":0,"error":null,"ms":7377}
+{"kind":"invoke.succeeded","at":1792591580865,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3484}
+{"kind":"discover.completed","at":1792591580865,"query":"capability does not exist in graph","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":30,"clawhub":0,"crates":30,"dsh_plugins":29,"gomod":1,"hermes_atlas":16,"huggingface":0,"local":30,"maven":0,"npm":30,"nuget":0,"pypi":0,"github":1,"web":0},"errors":{}}
+{"kind":"invoke.succeeded","at":1792591580866,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":7389}
+{"kind":"watch.polled","at":1792591582483,"watch_id":"watch_mvf6vp96_urkluh","source":"agentry.discover","candidates":167,"fresh":0,"error":null,"ms":9007}
+{"kind":"invoke.succeeded","at":1792591582491,"capability_id":"discovery.github_search","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":5156}
+{"kind":"discover.completed","at":1792591582491,"query":"test capability that should not exist","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":30,"clawhub":0,"crates":30,"dsh_plugins":30,"gomod":6,"hermes_atlas":30,"huggingface":0,"local":30,"maven":0,"npm":30,"nuget":0,"pypi":0,"github":2,"web":0},"errors":{}}
+{"kind":"invoke.succeeded","at":1792591582491,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":9015}
+{"kind":"watch.polled","at":1792591584321,"watch_id":"watch_mvf685y9_76orie","source":"agentry.discover","candidates":188,"fresh":0,"error":null,"ms":10845}
+{"kind":"runtime.tick.watches_polled","at":1792591584321,"count":5,"summary":[{"watch_id":"watch_mvdzx5he_uywu8p","ok":true,"polled":true,"candidates":167,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvf5329b_owiskp","ok":true,"polled":true,"candidates":61,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvf685y9_76orie","ok":true,"polled":true,"candidates":188,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvf6voz0_aox385","ok":true,"polled":true,"candidates":167,"fresh":0,"notified":0,"error":null},{"watch_id":"watch_mvf6vp96_urkluh","ok":true,"polled":true,"candidates":167,"fresh":0,"notified":0,"error":null}]}
