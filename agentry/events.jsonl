@@ -97716,3 +97716,74 @@
 {"kind":"discovery.tick_summary","at":1792600541813,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
 {"kind":"discovery.tick_summary","at":1792600571739,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
 {"kind":"runs.rollup_completed","at":1792600618317,"capabilities":23,"runs":7863}
+{"kind":"runs.rollup_completed","at":1792600631414,"capabilities":23,"runs":7863}
+{"kind":"discovery.tick_summary","at":1792600632944,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792600662644,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792600692886,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792600722871,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792600752745,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792600782758,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.boot.started","at":1792600808772,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"discovery.tick_summary","at":1792600813293,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.boot.seeded","at":1792600832876,"loaded":0,"skipped":33,"files":33}
+{"kind":"runtime.boot.watches_loaded","at":1792600834143,"count":59}
+{"kind":"runtime.boot.completed","at":1792600834144,"capabilities":1034,"watches":59}
+{"kind":"invoke.started","at":1792600834146,"capability_id":"agentry.agent.plan","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["intent","max_steps"]}
+{"kind":"agent.plan.started","at":1792600834156,"intent":"compute the sha256 hash of the text 'helloworld' and tell me the hex digest","agent_id":null,"capabilities_considered":7,"max_steps":3,"execute":false}
+{"kind":"invoke.started","at":1792600834156,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792600835307,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1150}
+{"kind":"agent.plan.completed","at":1792600835307,"intent":"compute the sha256 hash of the text 'helloworld' and tell me the hex digest","steps":1,"exact_matches":1,"canonicalized":0,"invented":0,"model_used":"openai/gpt-oss-120b","ms":1161}
+{"kind":"invoke.succeeded","at":1792600835308,"capability_id":"agentry.agent.plan","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1162}
+{"kind":"invoke.started","at":1792600835309,"capability_id":"agentry.chat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["message"]}
+{"kind":"invoke.started","at":1792600835727,"capability_id":"agentry.agent.boot","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["name"]}
+{"kind":"invoke.started","at":1792600835728,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792600835736,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":8}
+{"kind":"invoke.started","at":1792600835736,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792600835740,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3}
+{"kind":"agent.boot.created","at":1792600835740,"agent_id":"chat_conv_mvic94vh_huvy_mvic9574_666675","name":"chat_conv_mvic94vh_huvy","home_session":"agent_chat_conv_mvic94vh_huvy_mvic9574_666675_home","parent_agent_id":null,"skills_count":0}
+{"kind":"invoke.succeeded","at":1792600835740,"capability_id":"agentry.agent.boot","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":13}
+{"kind":"chat.user_turn","at":1792600835740,"conversation_id":"conv_mvic94vh_huvy","agent_id":"chat_conv_mvic94vh_huvy_mvic9574_666675","message":"compute the sha256 hash of the text 'helloworld' and tell me the hex digest"}
+{"kind":"invoke.started","at":1792600837468,"capability_id":"agentry.agent.plan","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["intent","agent_id","max_steps","execute"]}
+{"kind":"agent.plan.started","at":1792600837468,"intent":"Prior conversation:\nuser: compute the sha256 hash of the text 'helloworld' and tell me the hex digest\n\nCurrent request: compute the sha256 hash of the text 'helloworld' and tell me the hex digest","agent_id":"chat_conv_mvic94vh_huvy_mvic9574_666675","capabilities_considered":7,"max_steps":8,"execute":false}
+{"kind":"invoke.started","at":1792600837468,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792600838395,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":926}
+{"kind":"agent.plan.completed","at":1792600838396,"intent":"Prior conversation:\nuser: compute the sha256 hash of the text 'helloworld' and tell me the hex digest\n\nCurrent request: compute the sha256 hash of the text 'helloworld' and tell me the hex digest","steps":1,"exact_matches":1,"canonicalized":0,"invented":0,"model_used":"openai/gpt-oss-120b","ms":928}
+{"kind":"invoke.succeeded","at":1792600838396,"capability_id":"agentry.agent.plan","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2285}
+{"kind":"chat.plan_ready","at":1792600838396,"conversation_id":"conv_mvic94vh_huvy","agent_id":"chat_conv_mvic94vh_huvy_mvic9574_666675","steps":1,"capabilities":["agentry.agent.dsh"]}
+{"kind":"invoke.started","at":1792600838396,"capability_id":"agentry.agent.task","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["agent_id","intent","plan"]}
+{"kind":"invoke.started","at":1792600838397,"capability_id":"agentry.task.run","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["intent","plan","task_id","budget","session_id"]}
+{"kind":"task.created","at":1792600838398,"task_id":"task_mvic979a_iits61","plan_steps":1,"intent":"compute the sha256 hash of the text 'helloworld' and tell me the hex digest"}
+{"kind":"task.running","at":1792600839834,"task_id":"task_mvic979a_iits61","from_step":0,"resume":false}
+{"kind":"invoke.started","at":1792600841230,"capability_id":"agentry.agent.dsh","invoker":"invoker.in_process_js","task_id":"task_mvic979a_iits61","tenant":"local","input_keys":["prompt","session"]}
+{"kind":"agent.dsh.started","at":1792600841230,"ksess":"dsh_mvic99fy_he15","prompt_len":75,"timeout_ms":180000}
+{"kind":"invoke.started","at":1792600841230,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvic979a_iits61","tenant":"local","input_keys":["action","id"]}
+{"kind":"invoke.succeeded","at":1792600841237,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvic979a_iits61","code":null,"ms":6}
+{"kind":"invoke.started","at":1792600841237,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvic979a_iits61","tenant":"local","input_keys":["action","session"]}
+{"kind":"invoke.succeeded","at":1792600841240,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvic979a_iits61","code":null,"ms":3}
+{"kind":"agent.dsh.session_ready","at":1792600841240,"ksess":"dsh_mvic99fy_he15","verified":true}
+{"kind":"invoke.started","at":1792600841240,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvic979a_iits61","tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792600841244,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvic979a_iits61","code":null,"ms":4}
+{"kind":"invoke.started","at":1792600841244,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvic979a_iits61","tenant":"local","input_keys":["action","session","key","value"]}
+{"kind":"invoke.succeeded","at":1792600841246,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvic979a_iits61","code":null,"ms":2}
+{"kind":"agent.dsh.env_set","at":1792600841246,"ksess":"dsh_mvic99fy_he15","atria_key_present":true}
+{"kind":"agent.dsh.spawn_started","at":1792600841247,"ksess":"dsh_mvic99fy_he15","prompt_len":75,"cmd_len":402}
+{"kind":"invoke.started","at":1792600841247,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvic979a_iits61","tenant":"local","input_keys":["action","session","cmd","args","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792600841253,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvic979a_iits61","code":null,"ms":6}
+{"kind":"invoke.started","at":1792600841254,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvic979a_iits61","tenant":"local","input_keys":["action","session","pid","wait_ms"]}
+{"kind":"discovery.tick_summary","at":1792600843227,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
+{"kind":"invoke.succeeded","at":1792600848589,"capability_id":"agentry.os","invoker":"invoker.in_process_js","task_id":"task_mvic979a_iits61","code":null,"ms":7335}
+{"kind":"agent.dsh.completed","at":1792600848590,"ksess":"dsh_mvic99fy_he15","ok":true,"exit_code":0,"tool_calls":1,"messages":3,"tokens":13177,"ms":7360}
+{"kind":"agent.dsh.files_discovered","at":1792600848591,"ksess":"dsh_mvic99fy_he15","count":0,"paths":[]}
+{"kind":"invoke.succeeded","at":1792600848592,"capability_id":"agentry.agent.dsh","invoker":"invoker.in_process_js","task_id":"task_mvic979a_iits61","code":null,"ms":8757}
+{"kind":"task.step","at":1792600848594,"task_id":"task_mvic979a_iits61","step":0,"capability_id":"agentry.agent.dsh","ok":true,"ms":8758,"artifacts":0}
+{"kind":"task.done","at":1792600849893,"task_id":"task_mvic979a_iits61","steps":1,"artifacts":0,"ms":11495}
+{"kind":"invoke.succeeded","at":1792600849893,"capability_id":"agentry.task.run","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":11496}
+{"kind":"agent.task.completed","at":1792600852317,"agent_id":"chat_conv_mvic94vh_huvy_mvic9574_666675","task_id":"task_mvic979a_iits61","state":"done","ok":true,"steps":1,"artifacts":0,"ms":13920}
+{"kind":"invoke.succeeded","at":1792600852317,"capability_id":"agentry.agent.task","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":13921}
+{"kind":"chat.assistant_turn","at":1792600852317,"conversation_id":"conv_mvic94vh_huvy","agent_id":"chat_conv_mvic94vh_huvy_mvic9574_666675","message":"Completed 1/1 step(s). Returned: ok, exit_code, duration_ms, discovered_files, session_id, cwd, final, messages, tool_calls, events_raw, usage, turn_count, step_count, stderr, errors.","task_id":"task_mvic979a_iits61","state":"done"}
+{"kind":"chat.completed","at":1792600852318,"conversation_id":"conv_mvic94vh_huvy","agent_id":"chat_conv_mvic94vh_huvy_mvic9574_666675","task_id":"task_mvic979a_iits61","ok":true,"steps":1,"artifacts":0,"ms":17009}
+{"kind":"invoke.succeeded","at":1792600852318,"capability_id":"agentry.chat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":17009}
+{"kind":"discovery.tick_summary","at":1792600873139,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
+{"kind":"runs.rollup_completed","at":1792600917124,"capabilities":23,"runs":7880}
+{"kind":"runs.rollup_completed","at":1792600933074,"capabilities":23,"runs":7880}
+{"kind":"discovery.tick_summary","at":1792600934415,"gaps":43,"uncovered":0,"watched":59,"created":0,"proposals":0,"adopted":0}
