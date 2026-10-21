@@ -84385,3 +84385,29 @@
 {"kind":"discovery.tick_summary","at":1792587145755,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
 {"kind":"discovery.tick_summary","at":1792587175696,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
 {"kind":"discovery.tick_summary","at":1792587205909,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792587235699,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.boot.started","at":1792587266132,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"discovery.tick_summary","at":1792587266340,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.boot.seeded","at":1792587291618,"loaded":0,"skipped":33,"files":33}
+{"kind":"runtime.boot.watches_loaded","at":1792587293443,"count":52}
+{"kind":"runtime.boot.completed","at":1792587293444,"capabilities":775,"watches":52}
+{"kind":"discovery.tick_summary","at":1792587296652,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792587325836,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.boot.started","at":1792587350509,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"discovery.tick_summary","at":1792587355975,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.boot.seeded","at":1792587374135,"loaded":0,"skipped":33,"files":33}
+{"kind":"runtime.boot.watches_loaded","at":1792587375903,"count":52}
+{"kind":"runtime.boot.completed","at":1792587375904,"capabilities":773,"watches":52}
+{"kind":"invoke.started","at":1792587375905,"capability_id":"agentry.agent.plan","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["intent"]}
+{"kind":"agent.plan.started","at":1792587375926,"intent":"write a node script that prints 1 to 5, run it, and report the output","agent_id":null,"capabilities_considered":6,"max_steps":8,"execute":false}
+{"kind":"invoke.started","at":1792587375927,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","timeout_ms"]}
+{"kind":"invoke.succeeded","at":1792587377837,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1906}
+{"kind":"agent.plan.invented","at":1792587377842,"count":1,"steps":[{"capability_id":"tool.run_node_script","wanted_description":"execute node script and capture output","justification":"None of the available capabilities can create or execute code; QR, PDF, and API conversion tools are unrelated, so a tool to run Node is required."}]}
+{"kind":"agent.plan.completed","at":1792587377842,"intent":"write a node script that prints 1 to 5, run it, and report the output","steps":1,"exact_matches":0,"canonicalized":0,"invented":1,"model_used":"openai/gpt-oss-120b","ms":1936}
+{"kind":"invoke.succeeded","at":1792587377845,"capability_id":"agentry.agent.plan","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1937}
+{"kind":"runs.rollup_completed","at":1792587405798,"capabilities":23,"runs":3582}
+{"kind":"runs.rollup_completed","at":1792587414716,"capabilities":23,"runs":3582}
+{"kind":"discovery.tick_summary","at":1792587415993,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792587446575,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792587476649,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792587506188,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
