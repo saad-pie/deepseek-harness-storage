@@ -22,23 +22,23 @@
     {
       "step": 1,
       "verb": "fetch",
-      "what": "Fetch the URL using the web-fetch package and store the raw response body",
-      "fails_if": "Network error, non‑2xx status, or the web-fetch call throws",
-      "code": "const mod = await import('web-fetch');\nconst webFetch = mod.default || mod;\nconst response = await webFetch(globalThis.input.url);\nglobalThis.rawBody = response;"
+      "what": "Fetch the URL using the web-fetch library",
+      "fails_if": "network error, missing URL env var, or request throws",
+      "code": "const mod = await import('web-fetch');\nconst fetchFn = mod.default || mod;\nconst url = process.env.URL;\nif (!url) { throw new Error('URL not provided'); }\nglobalThis.rawBody = await fetchFn(url);\n"
     },
     {
       "step": 2,
       "verb": "parse",
-      "what": "Parse the raw response; if it is JSON, parse into an object, otherwise keep as string",
-      "fails_if": "JSON parsing throws when the response looks like JSON but is malformed",
-      "code": "let parsed;\ntry { parsed = JSON.parse(globalThis.rawBody); } catch { parsed = globalThis.rawBody; }\nglobalThis.parsed = parsed;"
+      "what": "Treat the fetched response as a plain string (no transformation)",
+      "fails_if": "rawBody is undefined",
+      "code": "if (globalThis.rawBody === undefined) { throw new Error('No response body to parse'); }\nglobalThis.parsed = String(globalThis.rawBody);\n"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a single JSON object with the body field to stdout",
-      "fails_if": "The body field is undefined or cannot be stringified",
-      "code": "const out = { body: typeof globalThis.parsed === 'object' ? JSON.stringify(globalThis.parsed) : String(globalThis.parsed) };\nconsole.log(JSON.stringify(out));"
+      "what": "Emit a single JSON object containing the body field",
+      "fails_if": "parsed body is undefined or cannot be stringified",
+      "code": "if (globalThis.parsed === undefined) { throw new Error('No parsed data'); }\nconsole.log(JSON.stringify({ body: globalThis.parsed }));\n"
     }
   ],
   "invoke_timeout_ms": 90000,

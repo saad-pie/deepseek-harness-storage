@@ -1,0 +1,47 @@
+{
+  "id": "npm_remix-run_web-fetch",
+  "kind": "web",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_remix-run_web-fetch",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_remix-run_web-fetch.mjs",
+  "accepts": {
+    "url": "string"
+  },
+  "produces": {
+    "body": "string"
+  },
+  "requires": {
+    "npm": [
+      "@remix-run/web-fetch"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "fetch",
+      "what": "Perform an HTTP GET request to the provided URL using the web-fetch package and store the raw response text.",
+      "fails_if": "Network error, non‑2xx status code, or fetch throws an exception.",
+      "code": "const mod = await import('@remix-run/web-fetch');\nconst fetchFn = mod.default || mod.fetch || mod;\nconst response = await fetchFn(globalThis.input.url);\nif (!response.ok) { throw new Error('Fetch failed with status ' + response.status); }\nconst text = await response.text();\nglobalThis.rawBody = text;"
+    },
+    {
+      "step": 2,
+      "verb": "parse",
+      "what": "Treat the raw response body as plain text and assign it to the parsed state.",
+      "fails_if": "Parsing logic throws (not applicable for plain text).",
+      "code": "globalThis.parsed = globalThis.rawBody;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a single JSON object containing the fetched body to stdout.",
+      "fails_if": "JSON serialization fails or the body field is undefined.",
+      "code": "console.log(JSON.stringify({ body: globalThis.parsed }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

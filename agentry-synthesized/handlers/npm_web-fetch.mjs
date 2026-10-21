@@ -19,14 +19,16 @@ const REQUIRES = {
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {};
+const ENV_MAP = {
+  "URL": "url"
+};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
   "body": "body"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: fetch --\n  // what: Fetch the URL using the web-fetch package and store the raw response body\n  // fails_if: Network error, non‑2xx status, or the web-fetch call throws\n  { // scope for step 1\n    // BEGIN fetch\n    const mod = await import('web-fetch');\n    const webFetch = mod.default || mod;\n    const response = await webFetch(globalThis.input.url);\n    globalThis.rawBody = response;\n    // END fetch\n  }\n\n  // -- step 2: parse --\n  // what: Parse the raw response; if it is JSON, parse into an object, otherwise keep as string\n  // fails_if: JSON parsing throws when the response looks like JSON but is malformed\n  { // scope for step 2\n    // BEGIN parse\n    let parsed;\n    try { parsed = JSON.parse(globalThis.rawBody); } catch { parsed = globalThis.rawBody; }\n    globalThis.parsed = parsed;\n    // END parse\n  }\n\n  // -- step 3: emit --\n  // what: Emit a single JSON object with the body field to stdout\n  // fails_if: The body field is undefined or cannot be stringified\n  { // scope for step 3\n    // BEGIN emit\n    const out = { body: typeof globalThis.parsed === 'object' ? JSON.stringify(globalThis.parsed) : String(globalThis.parsed) };\n    console.log(JSON.stringify(out));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: fetch --\n  // what: Fetch the URL using the web-fetch library\n  // fails_if: network error, missing URL env var, or request throws\n  { // scope for step 1\n    // BEGIN fetch\n    const mod = await import('web-fetch');\n    const fetchFn = mod.default || mod;\n    const url = process.env.URL;\n    if (!url) { throw new Error('URL not provided'); }\n    globalThis.rawBody = await fetchFn(url);\n    // END fetch\n  }\n\n  // -- step 2: parse --\n  // what: Treat the fetched response as a plain string (no transformation)\n  // fails_if: rawBody is undefined\n  { // scope for step 2\n    // BEGIN parse\n    if (globalThis.rawBody === undefined) { throw new Error('No response body to parse'); }\n    globalThis.parsed = String(globalThis.rawBody);\n    // END parse\n  }\n\n  // -- step 3: emit --\n  // what: Emit a single JSON object containing the body field\n  // fails_if: parsed body is undefined or cannot be stringified\n  { // scope for step 3\n    // BEGIN emit\n    if (globalThis.parsed === undefined) { throw new Error('No parsed data'); }\n    console.log(JSON.stringify({ body: globalThis.parsed }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
