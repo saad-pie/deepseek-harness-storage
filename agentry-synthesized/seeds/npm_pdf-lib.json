@@ -22,30 +22,30 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate the PDF path input and ensure the file is readable, storing the path in global state.",
-      "fails_if": "Missing PDF_PATH env var or the file cannot be accessed for reading.",
-      "code": "const { PDF_PATH } = process.env;\nif (!PDF_PATH) throw new Error('Missing PDF_PATH');\nglobalThis.pdfPath = PDF_PATH;\nconst { accessSync, constants } = await import('node:fs');\ntry { accessSync(globalThis.pdfPath, constants.R_OK); } catch (e) { throw new Error('PDF file not accessible'); }"
+      "what": "Validate the provided pdf_path and load the file into memory",
+      "fails_if": "pdf_path is missing, the file does not exist, or cannot be read",
+      "code": "const { readFileSync, existsSync } = await import('node:fs');\nif (!input.pdf_path || !existsSync(input.pdf_path)) {\n  throw new Error('PDF file not found at provided path');\n}\nglobalThis.pdfBytes = readFileSync(input.pdf_path);\n"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Load the PDF with pdf-lib and extract its document title as the heading.",
-      "fails_if": "Failed to read the file, load the PDF, or the title extraction throws.",
-      "code": "const { readFileSync } = await import('node:fs');\nconst pdfBytes = readFileSync(globalThis.pdfPath);\nconst mod = await import('pdf-lib');\nconst PDFDoc = mod.default || mod;\nconst pdfDoc = await PDFDoc.load(pdfBytes);\nlet title = '';\nif (typeof pdfDoc.getTitle === 'function') { title = pdfDoc.getTitle(); }\nglobalThis.heading = title || '';"
+      "what": "Load the PDF with pdf-lib and extract its title as the heading",
+      "fails_if": "pdf-lib fails to load the PDF or title extraction throws",
+      "code": "const mod = await import('pdf-lib');\nconst PDFDocument = mod.PDFDocument || mod.default?.PDFDocument || mod.default;\nconst pdfDoc = await PDFDocument.load(globalThis.pdfBytes);\nlet title = '';\nif (typeof pdfDoc.getTitle === 'function') {\n  title = pdfDoc.getTitle() || '';\n}\nglobalThis.heading = title;\n"
     },
     {
       "step": 3,
       "verb": "post",
-      "what": "Ensure the extracted heading is a string and normalize it.",
-      "fails_if": "The heading cannot be coerced to a string.",
-      "code": "if (typeof globalThis.heading !== 'string') { globalThis.heading = String(globalThis.heading); }"
+      "what": "Trim the extracted heading and guarantee it is a string",
+      "fails_if": "heading is not a string after processing",
+      "code": "if (typeof globalThis.heading !== 'string') {\n  globalThis.heading = '';\n}\nglobalThis.heading = globalThis.heading.trim();\n"
     },
     {
       "step": 4,
       "verb": "emit",
-      "what": "Output a JSON object containing the heading to stdout.",
-      "fails_if": "JSON serialization fails or heading is undefined.",
-      "code": "console.log(JSON.stringify({ heading: globalThis.heading }));"
+      "what": "Write a single JSON object containing the heading to stdout",
+      "fails_if": "heading is undefined when emitting",
+      "code": "if (globalThis.heading === undefined) {\n  throw new Error('Heading extraction resulted in undefined');\n}\nconsole.log(JSON.stringify({ heading: globalThis.heading }));\n"
     }
   ],
   "invoke_timeout_ms": 90000,
