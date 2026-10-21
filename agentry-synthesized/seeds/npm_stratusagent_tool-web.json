@@ -1,0 +1,47 @@
+{
+  "id": "npm_stratusagent_tool-web",
+  "kind": "web",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_stratusagent_tool-web",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_stratusagent_tool-web.mjs",
+  "accepts": {
+    "url": "string"
+  },
+  "produces": {
+    "content": "string"
+  },
+  "requires": {
+    "npm": [
+      "@stratusagent/tool-web"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "fetch",
+      "what": "Call the @stratusagent/tool-web package to retrieve the URL and store the raw result.",
+      "fails_if": "The fetch call throws or returns no result.",
+      "code": "const mod = await import('@stratusagent/tool-web');\nconst fn = mod.default || mod;\nglobalThis.raw = await fn({ url: input.url });"
+    },
+    {
+      "step": 2,
+      "verb": "parse",
+      "what": "Extract the readable text from the raw result and store it as parsed content.",
+      "fails_if": "The raw result is missing or does not contain a text field.",
+      "code": "if (!globalThis.raw) throw new Error('Fetch produced no result');\nconst txt = globalThis.raw.content ?? globalThis.raw.text ?? '';\nglobalThis.parsed = { content: txt };"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object with the content field to stdout.",
+      "fails_if": "The parsed content is undefined or not a string.",
+      "code": "if (!globalThis.parsed || typeof globalThis.parsed.content !== 'string') throw new Error('Parsed content missing');\nconsole.log(JSON.stringify({ content: globalThis.parsed.content }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

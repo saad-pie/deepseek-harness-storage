@@ -5,11 +5,14 @@
   "handler": "npm_remix-run_web-fetch",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_remix-run_web-fetch.mjs",
   "accepts": {
-    "url": "string"
+    "url": "string",
+    "userAgent": {
+      "type": "string",
+      "optional": true
+    }
   },
   "produces": {
-    "status": "number",
-    "body": "string"
+    "content": "string"
   },
   "requires": {
     "npm": [
@@ -23,23 +26,23 @@
     {
       "step": 1,
       "verb": "fetch",
-      "what": "Perform an HTTP GET request to the provided URL using @remix-run/web-fetch and store the response object.",
-      "fails_if": "The URL is missing, the fetch call throws, or the network request fails.",
-      "code": "const mod = await import('@remix-run/web-fetch');\nconst fetchFn = mod.default || mod.fetch || mod;\nconst url = process.env.URL;\nif (!url) throw new Error('URL not provided');\nglobalThis.response = await fetchFn(url);"
+      "what": "Perform an HTTP GET request to the provided URL using @remix-run/web-fetch, applying an optional User-Agent header, and store the raw response body in globalThis.rawBody.",
+      "fails_if": "Network error, non‑2xx response, or fetch throws an exception.",
+      "code": "const mod = await import('@remix-run/web-fetch');\nconst fetchFn = mod.default || mod.fetch || mod;\nconst url = process.env.URL;\nconst headers = {};\nif (process.env.USER_AGENT) headers['User-Agent'] = process.env.USER_AGENT;\nconst response = await fetchFn(url, { headers });\nif (!response.ok) throw new Error(`HTTP ${response.status}`);\nglobalThis.rawBody = await response.text();"
     },
     {
       "step": 2,
       "verb": "parse",
-      "what": "Extract the HTTP status code and response body text from the stored response.",
-      "fails_if": "No response object is present or reading the body fails.",
-      "code": "const resp = globalThis.response;\nif (!resp) throw new Error('No response from fetch step');\nglobalThis.status = resp.status;\nglobalThis.body = await resp.text();"
+      "what": "Treat the fetched raw body as plain text and store it in globalThis.parsed for downstream emission.",
+      "fails_if": "Parsing fails because rawBody is undefined or not a string.",
+      "code": "if (typeof globalThis.rawBody !== 'string') throw new Error('rawBody missing or not a string');\nglobalThis.parsed = globalThis.rawBody;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write a single JSON object containing status and body to stdout.",
-      "fails_if": "Either status or body is undefined, or JSON serialization fails.",
-      "code": "if (globalThis.status === undefined || globalThis.body === undefined) throw new Error('Missing data for emit');\nconsole.log(JSON.stringify({status: globalThis.status, body: globalThis.body}));"
+      "what": "Write a single JSON object to stdout containing the field \"content\" with the parsed text.",
+      "fails_if": "globalThis.parsed is undefined or JSON.stringify throws.",
+      "code": "if (typeof globalThis.parsed !== 'string') throw new Error('Parsed content missing');\nconsole.log(JSON.stringify({ content: globalThis.parsed }));"
     }
   ],
   "invoke_timeout_ms": 90000,

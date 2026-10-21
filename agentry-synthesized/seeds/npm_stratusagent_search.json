@@ -1,0 +1,47 @@
+{
+  "id": "npm_stratusagent_search",
+  "kind": "web",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_stratusagent_search",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_stratusagent_search.mjs",
+  "accepts": {
+    "url": "string"
+  },
+  "produces": {
+    "body": "string"
+  },
+  "requires": {
+    "npm": [
+      "@stratusagent/search"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "fetch",
+      "what": "Perform an HTTP GET request to the supplied URL and store the raw response text.",
+      "fails_if": "Missing URL env var, network error, or non‑2xx HTTP status.",
+      "code": "const url = process.env.URL;\\nif (!url) throw new Error('Missing URL');\\nconst response = await fetch(url);\\nif (!response.ok) throw new Error(`Fetch failed with status ${response.status}`);\\nglobalThis.rawBody = await response.text();"
+    },
+    {
+      "step": 2,
+      "verb": "parse",
+      "what": "Treat the fetched text as the final content (no transformation) and store it for emission.",
+      "fails_if": "rawBody is not a string or is missing.",
+      "code": "if (typeof globalThis.rawBody !== 'string') throw new Error('No raw body to parse');\\nglobalThis.parsed = globalThis.rawBody;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object containing the body field to stdout.",
+      "fails_if": "parsed content missing or JSON serialization fails.",
+      "code": "if (typeof globalThis.parsed !== 'string') throw new Error('No parsed content');\\nconsole.log(JSON.stringify({ body: globalThis.parsed }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

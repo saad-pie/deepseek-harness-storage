@@ -20,7 +20,9 @@ const REQUIRES = {
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {};
+const ENV_MAP = {
+  "URL": "url"
+};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
   "url": "url",
@@ -28,7 +30,7 @@ const OUTPUT_MAP = {
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: fetch --\n  // what: Perform an HTTP GET request for the supplied URL and store the raw response body.\n  // fails_if: Network error, non‑2xx status, or inability to read the response.\n  { // scope for step 1\n    // BEGIN fetch\n    const { url } = globalThis.input;\n    try {\n      const response = await fetch(url);\n      if (!response.ok) throw new Error('HTTP error ' + response.status);\n      const body = await response.text();\n      globalThis.rawBody = body;\n    } catch (e) {\n      throw new Error('fetch failed: ' + (e && e.message ? e.message : e));\n    }\n    // END fetch\n  }\n\n  // -- step 2: parse --\n  // what: Create a very simple section outline by taking a short snippet of the page and wrapping it as a single section.\n  // fails_if: The raw response body is missing or cannot be processed.\n  { // scope for step 2\n    // BEGIN parse\n    if (!globalThis.rawBody) throw new Error('parse failed: no raw body');\n    const snippet = globalThis.rawBody.slice(0, 200);\n    globalThis.sectionsStr = JSON.stringify([{ heading: '', text: snippet }]);\n    // END parse\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the original URL and the extracted sections to stdout.\n  // fails_if: JSON serialization fails or a promised field is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    const output = { url: globalThis.input.url, sections: globalThis.sectionsStr };\n    console.log(JSON.stringify(output));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: fetch --\n  // what: Perform an HTTP GET request for the provided URL and store the raw response body.\n  // fails_if: Network error, non‑2xx status, or missing URL environment variable.\n  { // scope for step 1\n    // BEGIN fetch\n    const url = process.env.URL;\n    if (!url) throw new Error('Missing URL');\n    try {\n      const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });\n      if (!res.ok) throw new Error('Fetch failed with status ' + res.status);\n      const text = await res.text();\n      globalThis.rawBody = text;\n      globalThis.fetchedUrl = url;\n    } catch (e) {\n      throw new Error('fetch error: ' + e.message);\n    }\n    // END fetch\n  }\n\n  // -- step 2: parse --\n  // what: Create a minimal section list from the raw HTML, taking a short snippet as the first section.\n  // fails_if: The raw response body is not available or parsing logic throws.\n  { // scope for step 2\n    // BEGIN parse\n    const raw = globalThis.rawBody;\n    if (typeof raw !== 'string') throw new Error('No raw body to parse');\n    const snippet = raw.slice(0, 200);\n    const sections = [{ index: 0, heading: '', text: snippet }];\n    globalThis.sectionsJson = JSON.stringify(sections);\n    // END parse\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the URL and the extracted sections to stdout.\n  // fails_if: JSON serialization fails or required fields are undefined.\n  { // scope for step 3\n    // BEGIN emit\n    const out = {\n      url: globalThis.fetchedUrl,\n      sections: JSON.parse(globalThis.sectionsJson)\n    };\n    console.log(JSON.stringify(out));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 

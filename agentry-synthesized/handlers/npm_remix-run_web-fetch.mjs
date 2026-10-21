@@ -6,11 +6,14 @@
 const CAP_ID = "npm_remix-run_web-fetch";
 const CAP_KIND = "web";
 const ACCEPTS = {
-  "url": "string"
+  "url": "string",
+  "userAgent": {
+    "type": "string",
+    "optional": true
+  }
 };
 const PRODUCES = {
-  "status": "number",
-  "body": "string"
+  "content": "string"
 };
 const REQUIRES = {
   "npm": [
@@ -21,16 +24,16 @@ const REQUIRES = {
   "capability": []
 };
 const ENV_MAP = {
-  "URL": "url"
+  "URL": "url",
+  "USER_AGENT": "userAgent"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "status": "status",
-  "body": "body"
+  "content": "content"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: fetch --\n  // what: Perform an HTTP GET request to the provided URL using @remix-run/web-fetch and store the response object.\n  // fails_if: The URL is missing, the fetch call throws, or the network request fails.\n  { // scope for step 1\n    // BEGIN fetch\n    const mod = await import('@remix-run/web-fetch');\n    const fetchFn = mod.default || mod.fetch || mod;\n    const url = process.env.URL;\n    if (!url) throw new Error('URL not provided');\n    globalThis.response = await fetchFn(url);\n    // END fetch\n  }\n\n  // -- step 2: parse --\n  // what: Extract the HTTP status code and response body text from the stored response.\n  // fails_if: No response object is present or reading the body fails.\n  { // scope for step 2\n    // BEGIN parse\n    const resp = globalThis.response;\n    if (!resp) throw new Error('No response from fetch step');\n    globalThis.status = resp.status;\n    globalThis.body = await resp.text();\n    // END parse\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing status and body to stdout.\n  // fails_if: Either status or body is undefined, or JSON serialization fails.\n  { // scope for step 3\n    // BEGIN emit\n    if (globalThis.status === undefined || globalThis.body === undefined) throw new Error('Missing data for emit');\n    console.log(JSON.stringify({status: globalThis.status, body: globalThis.body}));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: fetch --\n  // what: Perform an HTTP GET request to the provided URL using @remix-run/web-fetch, applying an optional User-Agent header, and store the raw response body in globalThis.rawBody.\n  // fails_if: Network error, non‑2xx response, or fetch throws an exception.\n  { // scope for step 1\n    // BEGIN fetch\n    const mod = await import('@remix-run/web-fetch');\n    const fetchFn = mod.default || mod.fetch || mod;\n    const url = process.env.URL;\n    const headers = {};\n    if (process.env.USER_AGENT) headers['User-Agent'] = process.env.USER_AGENT;\n    const response = await fetchFn(url, { headers });\n    if (!response.ok) throw new Error(`HTTP ${response.status}`);\n    globalThis.rawBody = await response.text();\n    // END fetch\n  }\n\n  // -- step 2: parse --\n  // what: Treat the fetched raw body as plain text and store it in globalThis.parsed for downstream emission.\n  // fails_if: Parsing fails because rawBody is undefined or not a string.\n  { // scope for step 2\n    // BEGIN parse\n    if (typeof globalThis.rawBody !== 'string') throw new Error('rawBody missing or not a string');\n    globalThis.parsed = globalThis.rawBody;\n    // END parse\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object to stdout containing the field \"content\" with the parsed text.\n  // fails_if: globalThis.parsed is undefined or JSON.stringify throws.\n  { // scope for step 3\n    // BEGIN emit\n    if (typeof globalThis.parsed !== 'string') throw new Error('Parsed content missing');\n    console.log(JSON.stringify({ content: globalThis.parsed }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -54,7 +57,7 @@ export async function accept(deps, opts = {}) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"url":"https://example.com"}, deps, { session });
+  const probe = await run({"url":"https://example.com/data.json","userAgent":"agentry-bot/1.0"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

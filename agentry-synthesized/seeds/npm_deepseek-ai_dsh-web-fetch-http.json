@@ -1,0 +1,48 @@
+{
+  "id": "npm_deepseek-ai_dsh-web-fetch-http",
+  "kind": "web",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_deepseek-ai_dsh-web-fetch-http",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_deepseek-ai_dsh-web-fetch-http.mjs",
+  "accepts": {
+    "url": "string"
+  },
+  "produces": {
+    "status": "number",
+    "content": "string"
+  },
+  "requires": {
+    "npm": [
+      "@deepseek-ai/dsh-web-fetch-http"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "fetch",
+      "what": "Perform an HTTP GET request to the supplied URL and store the status code and raw body.",
+      "fails_if": "The request throws (network error, timeout, invalid URL) or the URL environment variable is missing.",
+      "code": "const { URL } = process.env;\nif (!URL) throw new Error('Missing URL');\nconst controller = new AbortController();\nconst timeout = setTimeout(() => controller.abort(), 30000);\nlet resp;\ntry {\n  resp = await fetch(URL, { signal: controller.signal });\n} finally { clearTimeout(timeout); }\nglobalThis.status = resp.status;\nglobalThis.body = await resp.text();"
+    },
+    {
+      "step": 2,
+      "verb": "parse",
+      "what": "Treat the fetched body as plain text and store it for emission.",
+      "fails_if": "No body was fetched in the previous step.",
+      "code": "if (globalThis.body === undefined) throw new Error('No body to parse');\nglobalThis.parsed = globalThis.body;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object containing status and content to stdout.",
+      "fails_if": "JSON serialization fails or any promised field is undefined.",
+      "code": "console.log(JSON.stringify({ status: globalThis.status, content: globalThis.parsed }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
