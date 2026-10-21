@@ -19,16 +19,14 @@ const REQUIRES = {
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {
-  "URL": "url"
-};
+const ENV_MAP = {};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
   "body": "body"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: fetch --\n  // what: Perform an HTTP request to the provided URL using the web-fetch library.\n  // fails_if: The request fails, the URL is unreachable, or the library throws an error.\n  { // scope for step 1\n    // BEGIN fetch\n    const mod = await import('web-fetch');\n    const fetchFn = mod.default || mod;\n    globalThis.rawBody = await fetchFn(process.env.URL);\n    // END fetch\n  }\n\n  // -- step 2: parse --\n  // what: Attempt to parse the fetched response as JSON; if parsing fails, keep the raw text.\n  // fails_if: Parsing logic throws an unexpected error beyond JSON parse failure.\n  { // scope for step 2\n    // BEGIN parse\n    let parsed;\n    try { parsed = JSON.parse(globalThis.rawBody); }\n    catch { parsed = globalThis.rawBody; }\n    globalThis.parsed = parsed;\n    // END parse\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the body field to stdout.\n  // fails_if: JSON.stringify throws or console.log fails.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({body: globalThis.parsed}));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: fetch --\n  // what: Perform an HTTP GET of the provided URL using the web-fetch package and store the raw response body.\n  // fails_if: Network error, non‑2xx status, or the web-fetch call throws an exception.\n  { // scope for step 1\n    // BEGIN fetch\n    const mod = await import('web-fetch');\n    const fetchFn = mod.default || mod;\n    const response = await fetchFn(globalThis.url);\n    globalThis.rawBody = response;\n    // END fetch\n  }\n\n  // -- step 2: parse --\n  // what: Attempt to parse the raw response as JSON; if that fails, keep it as a plain string, and store the result.\n  // fails_if: Parsing logic throws an unexpected error (e.g., malformed JSON causing a crash).\n  { // scope for step 2\n    // BEGIN parse\n    let parsed;\n    try { parsed = JSON.parse(globalThis.rawBody); } catch { parsed = globalThis.rawBody; }\n    globalThis.parsed = parsed;\n    // END parse\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object to stdout containing the field \"body\" with the parsed content as a string.\n  // fails_if: JSON.stringify throws or the output is not a valid JSON object with the required field.\n  { // scope for step 3\n    // BEGIN emit\n    const out = typeof globalThis.parsed === 'object' ? JSON.stringify(globalThis.parsed) : globalThis.parsed;\n    console.log(JSON.stringify({ body: out }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 

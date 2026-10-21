@@ -1,0 +1,54 @@
+{
+  "id": "npm_pdf-lib_upng",
+  "kind": "unknown",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_pdf-lib_upng",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_pdf-lib_upng.mjs",
+  "accepts": {
+    "pdf_path": "string"
+  },
+  "produces": {
+    "heading": "string"
+  },
+  "requires": {
+    "npm": [
+      "@pdf-lib/upng"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Verify the PDF file exists and load its bytes into memory.",
+      "fails_if": "The file at pdf_path does not exist or cannot be read.",
+      "code": "const { readFileSync, existsSync } = await import('node:fs');\nconst pdfPath = process.env['PDF_PATH'];\nif (!pdfPath || !existsSync(pdfPath)) {\n  throw new Error('PDF file not found at path: ' + pdfPath);\n}\nglobalThis.pdfBuffer = readFileSync(pdfPath);\n"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Naively extract a title string from the PDF raw content using a simple regex.",
+      "fails_if": "Regex execution fails (should never happen) or no title is found, resulting in empty heading.",
+      "code": "const buffer = globalThis.pdfBuffer;\nconst text = buffer.toString('utf8');\nconst match = text.match(/\\/Title\\s*\\(([^)]+)\\)/);\nglobalThis.heading = match ? match[1] : '';\n"
+    },
+    {
+      "step": 3,
+      "verb": "post",
+      "what": "Trim whitespace from the extracted heading.",
+      "fails_if": "globalThis.heading is undefined (should be set in execute).",
+      "code": "globalThis.heading = (globalThis.heading || '').trim();\n"
+    },
+    {
+      "step": 4,
+      "verb": "emit",
+      "what": "Write the heading as a JSON object to stdout.",
+      "fails_if": "The heading value is undefined when stringified.",
+      "code": "console.log(JSON.stringify({ heading: globalThis.heading }));\n"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

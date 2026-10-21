@@ -1,0 +1,54 @@
+{
+  "id": "npm_html5-qrcode",
+  "kind": "unknown",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_html5-qrcode",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_html5-qrcode.mjs",
+  "accepts": {
+    "image_path": "string"
+  },
+  "produces": {
+    "qr_text": "string"
+  },
+  "requires": {
+    "npm": [
+      "html5-qrcode"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the input image path and store it for later steps",
+      "fails_if": "IMAGE_PATH env var missing or file not accessible",
+      "code": "const { accessSync } = await import('node:fs');\nconst path = process.env['IMAGE_PATH'];\nif (!path) throw new Error('Missing IMAGE_PATH env var');\ntry { accessSync(path); } catch { throw new Error('File not accessible: '+path); }\nglobalThis.imagePath = path;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Use html5-qrcode to scan the QR code from the provided image file",
+      "fails_if": "Library fails to load, class not found, or scanFile throws",
+      "code": "const mod = await import('html5-qrcode');\nconst Html5Qrcode = mod.Html5Qrcode || mod.default?.Html5Qrcode || mod.default;\nif (!Html5Qrcode) throw new Error('Html5Qrcode class not found');\nconst qrCode = new Html5Qrcode('reader');\nconst result = await qrCode.scanFile(globalThis.imagePath, true);\nglobalThis.qrResult = result;"
+    },
+    {
+      "step": 3,
+      "verb": "post",
+      "what": "Verify the scan result and expose it as the final output",
+      "fails_if": "qrResult is undefined or not a string",
+      "code": "if (globalThis.qrResult === undefined) throw new Error('No QR result');\nglobalThis.finalResult = String(globalThis.qrResult);"
+    },
+    {
+      "step": 4,
+      "verb": "emit",
+      "what": "Write the QR text as JSON to stdout",
+      "fails_if": "finalResult is undefined or JSON.stringify fails",
+      "code": "console.log(JSON.stringify({qr_text: globalThis.finalResult}));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

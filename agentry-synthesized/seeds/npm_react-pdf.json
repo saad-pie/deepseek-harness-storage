@@ -1,0 +1,55 @@
+{
+  "id": "npm_react-pdf",
+  "kind": "unknown",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_react-pdf",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_react-pdf.mjs",
+  "accepts": {
+    "pdf_path": "string"
+  },
+  "produces": {
+    "headings": "string"
+  },
+  "requires": {
+    "npm": [
+      "react-pdf",
+      "pdfjs-dist"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Load the PDF file into a Uint8Array and configure the PDF.js worker.",
+      "fails_if": "The PDF file does not exist or the worker configuration fails.",
+      "code": "const fs = await import('node:fs');\nconst path = await import('node:path');\nconst pdfjs = await import('pdfjs-dist');\nconst workerPath = path.join(process.cwd(), 'node_modules', 'pdfjs-dist', 'build', 'pdf.worker.min.mjs');\npdfjs.GlobalWorkerOptions.workerSrc = workerPath;\nconst data = fs.readFileSync(globalThis.pdf_path);\nglobalThis.pdfData = new Uint8Array(data);"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Load the PDF document and extract text content from all pages.",
+      "fails_if": "The PDF is corrupted, password protected, or text extraction fails.",
+      "code": "const loadingTask = pdfjs.getDocument({ data: globalThis.pdfData });\nconst pdf = await loadingTask.promise;\nconst allText = [];\nfor (let i = 1; i <= pdf.numPages; i++) {\n  const page = await pdf.getPage(i);\n  const textContent = await page.getTextContent();\n  const pageText = textContent.items.map(item => item.str).join(' ');\n  allText.push(pageText);\n}\nglobalThis.allText = allText;"
+    },
+    {
+      "step": 3,
+      "verb": "post",
+      "what": "Process the extracted text to identify and format headings.",
+      "fails_if": "Text processing fails or no headings are found.",
+      "code": "const lines = globalThis.allText.join('\\n').split('\\n');\nconst headings = [];\nfor (const line of lines) {\n  const trimmed = line.trim();\n  if (trimmed.length > 0 && trimmed.length < 100) {\n    if (/^[A-Z][a-z]+ [A-Z][a-z]+/.test(trimmed) || /^[A-Z]{2,}$/.test(trimmed)) {\n      headings.push(trimmed);\n    }\n  }\n}\nglobalThis.headings = headings;"
+    },
+    {
+      "step": 4,
+      "verb": "emit",
+      "what": "Write the extracted headings as a JSON object to stdout.",
+      "fails_if": "JSON serialization fails or the output is malformed.",
+      "code": "console.log(JSON.stringify({ headings: globalThis.headings.join('\\n') }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

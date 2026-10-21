@@ -22,23 +22,23 @@
     {
       "step": 1,
       "verb": "fetch",
-      "what": "Perform an HTTP request to the provided URL using the web-fetch library.",
-      "fails_if": "The request fails, the URL is unreachable, or the library throws an error.",
-      "code": "const mod = await import('web-fetch');\nconst fetchFn = mod.default || mod;\nglobalThis.rawBody = await fetchFn(process.env.URL);"
+      "what": "Perform an HTTP GET of the provided URL using the web-fetch package and store the raw response body.",
+      "fails_if": "Network error, non‑2xx status, or the web-fetch call throws an exception.",
+      "code": "const mod = await import('web-fetch');\nconst fetchFn = mod.default || mod;\nconst response = await fetchFn(globalThis.url);\nglobalThis.rawBody = response;"
     },
     {
       "step": 2,
       "verb": "parse",
-      "what": "Attempt to parse the fetched response as JSON; if parsing fails, keep the raw text.",
-      "fails_if": "Parsing logic throws an unexpected error beyond JSON parse failure.",
-      "code": "let parsed;\ntry { parsed = JSON.parse(globalThis.rawBody); }\ncatch { parsed = globalThis.rawBody; }\nglobalThis.parsed = parsed;"
+      "what": "Attempt to parse the raw response as JSON; if that fails, keep it as a plain string, and store the result.",
+      "fails_if": "Parsing logic throws an unexpected error (e.g., malformed JSON causing a crash).",
+      "code": "let parsed;\ntry { parsed = JSON.parse(globalThis.rawBody); } catch { parsed = globalThis.rawBody; }\nglobalThis.parsed = parsed;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write a single JSON object containing the body field to stdout.",
-      "fails_if": "JSON.stringify throws or console.log fails.",
-      "code": "console.log(JSON.stringify({body: globalThis.parsed}));"
+      "what": "Write a single JSON object to stdout containing the field \"body\" with the parsed content as a string.",
+      "fails_if": "JSON.stringify throws or the output is not a valid JSON object with the required field.",
+      "code": "const out = typeof globalThis.parsed === 'object' ? JSON.stringify(globalThis.parsed) : globalThis.parsed;\nconsole.log(JSON.stringify({ body: out }));"
     }
   ],
   "invoke_timeout_ms": 90000,

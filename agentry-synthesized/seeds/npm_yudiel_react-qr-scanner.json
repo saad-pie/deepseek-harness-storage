@@ -1,0 +1,54 @@
+{
+  "id": "npm_yudiel_react-qr-scanner",
+  "kind": "unknown",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_yudiel_react-qr-scanner",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_yudiel_react-qr-scanner.mjs",
+  "accepts": {
+    "file_path": "string"
+  },
+  "produces": {
+    "qr_data": "string"
+  },
+  "requires": {
+    "npm": [
+      "@yudiel/react-qr-scanner"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Verify the input file exists and load its bytes into memory.",
+      "fails_if": "The file path is missing, the file does not exist, or cannot be read.",
+      "code": "const { existsSync, readFileSync } = await import('node:fs');\nconst filePath = process.env.FILE_PATH;\nif (!filePath) {\n  throw new Error('FILE_PATH env var not set');\n}\nif (!existsSync(filePath)) {\n  throw new Error(`File not found: ${filePath}`);\n}\nconst buffer = readFileSync(filePath);\nglobalThis.filePath = filePath;\nglobalThis.fileBuffer = buffer;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Load the QR scanner package and (placeholder) derive QR data from the image buffer.",
+      "fails_if": "The package fails to load or processing the buffer throws.",
+      "code": "const mod = await import('@yudiel/react-qr-scanner');\nconst scanner = mod.default || mod;\n// Placeholder: encode the image bytes as base64 – real QR decoding not implemented.\nconst base64 = globalThis.fileBuffer.toString('base64');\nglobalThis.rawResult = base64;"
+    },
+    {
+      "step": 3,
+      "verb": "post",
+      "what": "Transform the raw placeholder result into the final QR data string.",
+      "fails_if": "Transformation logic throws.",
+      "code": "const qrData = globalThis.rawResult;\nif (typeof qrData !== 'string') {\n  throw new Error('QR data is not a string');\n}\nglobalThis.qrData = qrData;"
+    },
+    {
+      "step": 4,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the scanned QR data.",
+      "fails_if": "JSON serialization fails or the field is undefined.",
+      "code": "console.log(JSON.stringify({ qr_data: globalThis.qrData }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

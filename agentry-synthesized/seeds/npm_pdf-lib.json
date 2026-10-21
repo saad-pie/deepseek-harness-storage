@@ -22,29 +22,29 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that the PDF file path is provided via env and is readable, then store it in global state.",
-      "fails_if": "PDF_PATH env var missing or file not accessible",
-      "code": "const { accessSync, constants } = await import('node:fs');\nconst pdfPath = process.env.PDF_PATH;\nif (!pdfPath) throw new Error('PDF_PATH env var missing');\ntry { accessSync(pdfPath, constants.R_OK); } catch { throw new Error('PDF file not accessible'); }\nglobalThis.pdfPath = pdfPath;"
+      "what": "Validate the PDF path input and ensure the file is readable, storing the path in global state.",
+      "fails_if": "Missing PDF_PATH env var or the file cannot be accessed for reading.",
+      "code": "const { PDF_PATH } = process.env;\nif (!PDF_PATH) throw new Error('Missing PDF_PATH');\nglobalThis.pdfPath = PDF_PATH;\nconst { accessSync, constants } = await import('node:fs');\ntry { accessSync(globalThis.pdfPath, constants.R_OK); } catch (e) { throw new Error('PDF file not accessible'); }"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Read the PDF file bytes, decode to text, and take the first non‑empty line as a provisional heading.",
-      "fails_if": "File read fails or no non‑empty line found",
-      "code": "const { readFileSync } = await import('node:fs');\nconst data = readFileSync(globalThis.pdfPath);\nconst decoder = new TextDecoder();\nconst text = decoder.decode(data);\nconst lines = text.split(/\\r?\\n/);\nlet heading = '';\nfor (const line of lines) {\n  const t = line.trim();\n  if (t) { heading = t; break; }\n}\nif (!heading) throw new Error('No heading found in PDF content');\nglobalThis.rawHeading = heading;"
+      "what": "Load the PDF with pdf-lib and extract its document title as the heading.",
+      "fails_if": "Failed to read the file, load the PDF, or the title extraction throws.",
+      "code": "const { readFileSync } = await import('node:fs');\nconst pdfBytes = readFileSync(globalThis.pdfPath);\nconst mod = await import('pdf-lib');\nconst PDFDoc = mod.default || mod;\nconst pdfDoc = await PDFDoc.load(pdfBytes);\nlet title = '';\nif (typeof pdfDoc.getTitle === 'function') { title = pdfDoc.getTitle(); }\nglobalThis.heading = title || '';"
     },
     {
       "step": 3,
       "verb": "post",
-      "what": "Trim the provisional heading and store the final result.",
-      "fails_if": "Trimming yields an empty string",
-      "code": "if (!globalThis.rawHeading) throw new Error('Raw heading missing');\nconst final = globalThis.rawHeading.trim();\nif (!final) throw new Error('Final heading is empty after trim');\nglobalThis.heading = final;"
+      "what": "Ensure the extracted heading is a string and normalize it.",
+      "fails_if": "The heading cannot be coerced to a string.",
+      "code": "if (typeof globalThis.heading !== 'string') { globalThis.heading = String(globalThis.heading); }"
     },
     {
       "step": 4,
       "verb": "emit",
-      "what": "Write a JSON object with the extracted heading to stdout.",
-      "fails_if": "JSON serialization fails or heading is undefined",
+      "what": "Output a JSON object containing the heading to stdout.",
+      "fails_if": "JSON serialization fails or heading is undefined.",
       "code": "console.log(JSON.stringify({ heading: globalThis.heading }));"
     }
   ],

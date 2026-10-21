@@ -1,0 +1,47 @@
+{
+  "id": "npm_pi-wsearch",
+  "kind": "web",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_pi-wsearch",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_pi-wsearch.mjs",
+  "accepts": {
+    "url": "string"
+  },
+  "produces": {
+    "content": "string"
+  },
+  "requires": {
+    "npm": [
+      "pi-wsearch"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "fetch",
+      "what": "Perform an HTTP GET to the provided URL using pi-wsearch and store the raw response body.",
+      "fails_if": "Network error, non‑2xx status, or the fetch function throws.",
+      "code": "const mod = await import('pi-wsearch'); const fn = mod.default || mod; const url = process.env.URL; const resp = await fn(url); globalThis.raw = resp;"
+    },
+    {
+      "step": 2,
+      "verb": "parse",
+      "what": "Treat the raw response as a string (or JSON) and store it for emission.",
+      "fails_if": "Parsing fails when expecting JSON but response is not valid JSON.",
+      "code": "let data = globalThis.raw; try { data = JSON.parse(data); } catch (_) {} globalThis.parsed = data;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object with a \"content\" field to stdout.",
+      "fails_if": "The parsed content is undefined or JSON.stringify throws.",
+      "code": "if (globalThis.parsed === undefined) throw new Error('No content to emit'); console.log(JSON.stringify({content: globalThis.parsed}));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
