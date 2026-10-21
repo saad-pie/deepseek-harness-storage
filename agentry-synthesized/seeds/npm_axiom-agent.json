@@ -1,0 +1,47 @@
+{
+  "id": "npm_axiom-agent",
+  "kind": "web",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_axiom-agent",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_axiom-agent.mjs",
+  "accepts": {
+    "url": "string"
+  },
+  "produces": {
+    "content": "string"
+  },
+  "requires": {
+    "npm": [
+      "axiom-agent"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "fetch",
+      "what": "Perform an HTTP GET request to the provided URL and store the raw response body and content type.",
+      "fails_if": "Network error, non‑2xx status, or fetch throws an exception",
+      "code": "const response = await fetch(input.url);\nif (!response.ok) throw new Error(`HTTP error ${response.status}`);\nglobalThis.rawBody = await response.text();\nglobalThis._contentType = response.headers.get('content-type') || '';"
+    },
+    {
+      "step": 2,
+      "verb": "parse",
+      "what": "If the response is JSON, parse it; otherwise treat the body as plain text and store the result.",
+      "fails_if": "Content‑type indicates JSON but the body cannot be parsed as JSON",
+      "code": "let parsed;\nif (globalThis._contentType.includes('application/json')) {\n  try {\n    parsed = JSON.parse(globalThis.rawBody);\n  } catch (e) {\n    throw new Error('Failed to parse JSON response');\n  }\n} else {\n  parsed = globalThis.rawBody;\n}\nglobalThis.parsed = parsed;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object to stdout containing the extracted content field.",
+      "fails_if": "Parsed content is undefined or JSON.stringify throws",
+      "code": "if (globalThis.parsed === undefined) throw new Error('No parsed content to emit');\nconsole.log(JSON.stringify({ content: globalThis.parsed }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

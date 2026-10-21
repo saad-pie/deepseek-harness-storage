@@ -1,0 +1,47 @@
+{
+  "id": "npm_pi-web-fetch",
+  "kind": "web",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_pi-web-fetch",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_pi-web-fetch.mjs",
+  "accepts": {
+    "url": "string"
+  },
+  "produces": {
+    "content": "string"
+  },
+  "requires": {
+    "npm": [
+      "pi-web-fetch"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "fetch",
+      "what": "Perform an HTTP GET of the provided URL and store the raw response body.",
+      "fails_if": "The URL is missing, the network request fails, or the response status is not OK (2xx).",
+      "code": "const url = process.env.URL;\nif (!url) throw new Error('Missing URL input');\nconst res = await fetch(url);\nif (!res.ok) throw new Error(`Fetch failed with status ${res.status}`);\nglobalThis.rawBody = await res.text();"
+    },
+    {
+      "step": 2,
+      "verb": "parse",
+      "what": "Treat the fetched body as the content to be returned (no transformation).",
+      "fails_if": "The fetch step did not produce a rawBody.",
+      "code": "if (globalThis.rawBody === undefined) throw new Error('No raw body to parse');\nglobalThis.content = globalThis.rawBody;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object containing the content to stdout.",
+      "fails_if": "The content field is undefined when emitting.",
+      "code": "if (globalThis.content === undefined) throw new Error('No content to emit');\nconsole.log(JSON.stringify({ content: globalThis.content }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
