@@ -82366,3 +82366,85 @@
 {"kind":"discover.completed","at":1792582264534,"query":"invoke_failed: invoker_failed: invoker invoker.in_process_js failed: pdf-lib-table__v85: kernel exited 1 — Error: IMAGE_PATH env var not set at fi","sources":["local","npm","pypi","crates","maven","nuget","gomod","huggingface","clawhub","hermes_atlas","agentskills_code","dsh_plugins","github","web"],"counts":{"agentskills_code":0,"clawhub":0,"crates":0,"dsh_plugins":0,"gomod":1,"hermes_atlas":30,"huggingface":0,"local":30,"maven":0,"npm":0,"nuget":0,"pypi":10,"github":0,"web":0},"errors":{"dsh_plugins":"HTTP 400 from https://registry.npmjs.org/-/v1/search?text=%40deepseek-ai%20invoke_failed%3A%20invoker_failed%3A%20invoker%20invoker.in_process_js%20failed%3A%20pdf-lib-table__v85%3A%20kernel%20exited%201%20%E2%80%94%20Error%3A%20IMAGE_PATH%20env%20var%20not%20set%20at%20fi&size=30","maven":"HTTP 400 from https://search.maven.org/solrsearch/select?q=invoke_failed%3A%20invoker_failed%3A%20invoker%20invoker.in_process_js%20failed%3A%20pdf-lib-table__v85%3A%20kernel%20exited%201%20%E2%80%94%20Error%3A%20IMAGE_PATH%20env%20var%20not%20set%20at%20fi&rows=30&wt=json","npm":"HTTP 400 from https://registry.npmjs.org/-/v1/search?text=invoke_failed%3A%20invoker_failed%3A%20invoker%20invoker.in_process_js%20failed%3A%20pdf-lib-table__v85%3A%20kernel%20exited%201%20%E2%80%94%20Error%3A%20IMAGE_PATH%20env%20var%20not%20set%20at%20fi&size=30"}}
 {"kind":"invoke.succeeded","at":1792582264534,"capability_id":"agentry.discover","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":19210}
 {"kind":"watch.polled","at":1792582264535,"watch_id":"watch_mvf5329b_owiskp","source":"agentry.discover","candidates":71,"fresh":2,"error":null,"ms":19211}
+{"kind":"watch.result_recorded","at":1792582267695,"watch_result_id":"watch_result:watch_mvf5329b_owiskp:1792582264535","watch_id":"watch_mvf5329b_owiskp","gap_id":"gap:pdf-lib-table","source":"agentry.discover","candidates":2}
+{"kind":"invoke.started","at":1792582269295,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority","candidate_count","candidate_ids"]}
+{"kind":"notify.email.gmail.sent","at":1792582269391,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] 5 new from agentry.discover","message_id":"01a15e3a-b98c-7a34-a015-becdde4be6d5","ms":12119}
+{"kind":"invoke.succeeded","at":1792582269391,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":13084}
+{"kind":"watch.notified","at":1792582269391,"watch_id":"watch_mvf6vp96_urkluh","source":"agentry.discover","candidate_count":5}
+{"kind":"notify.email.gmail.sent","at":1792582269392,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] 4 new from agentry.discover","message_id":"01a15e3a-b997-7c34-8d87-fe1ea2482fbb","ms":6061}
+{"kind":"invoke.succeeded","at":1792582269392,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":7253}
+{"kind":"watch.notified","at":1792582269392,"watch_id":"watch_mvf6voz0_aox385","source":"agentry.discover","candidate_count":4}
+{"kind":"notify.email.gmail.sent","at":1792582269393,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] 3 new from agentry.discover","message_id":"01a15e3a-b991-78da-b439-b533bbcb4833","ms":9239}
+{"kind":"invoke.succeeded","at":1792582269393,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":10323}
+{"kind":"watch.notified","at":1792582269393,"watch_id":"watch_mvdzx5he_uywu8p","source":"agentry.discover","candidate_count":3}
+{"kind":"notify.email.gmail.sent","at":1792582269396,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] 2 new from agentry.discover","message_id":"01a15e3a-b9a0-70a4-8286-6690d3826d91","ms":101}
+{"kind":"invoke.succeeded","at":1792582269396,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1701}
+{"kind":"watch.notified","at":1792582269396,"watch_id":"watch_mvf5329b_owiskp","source":"agentry.discover","candidate_count":2}
+{"kind":"invoke.succeeded","at":1792582271413,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":6883}
+{"kind":"proposal.created","at":1792582272222,"proposal_id":"proposal_mvi178vp_1zb9v8","gap_id":"gap:capability.that.does.not.exist.mvf6rg0i","candidates":5,"model_used":"openai/gpt-oss-120b","provider_used":"groq","recommended_id":null,"auto_approved":false}
+{"kind":"invoke.started","at":1792582273140,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","primary","fallback"]}
+{"kind":"invoke.started","at":1792582273141,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792582273217,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] proposal: 5 candidates for capability","message_id":"01a15e3a-c885-7277-b3fa-a543484891ee","ms":76}
+{"kind":"invoke.succeeded","at":1792582273217,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":76}
+{"kind":"notify.fallback.primary_ok","at":1792582273217,"primary":"notify.email.gmail","subject":"[agentry] proposal: 5 candidates for capability"}
+{"kind":"invoke.succeeded","at":1792582273217,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":994}
+{"kind":"proposal.notified","at":1792582273217,"proposal_id":"proposal_mvi178vp_1zb9v8","channel":"notify.email.gmail","primary_ok":true,"fallback_used":false,"message_id":"01a15e3a-c885-7277-b3fa-a543484891ee"}
+{"kind":"invoke.succeeded","at":1792582273218,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":8689}
+{"kind":"discovery.proposal_created","at":1792582273218,"watch_result_id":"watch_result:watch_mvf6vp96_urkluh:1792582254313","gap_id":"gap:capability.that.does.not.exist.mvf6rg0i","source":"agentry.discover","proposal_id":"proposal_mvi178vp_1zb9v8"}
+{"kind":"invoke.started","at":1792582274141,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["gap","candidates","notify"]}
+{"kind":"invoke.started","at":1792582274141,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","accept_from"]}
+{"kind":"llm.key_rotated","at":1792582274183,"provider":"groq","model":"openai/gpt-oss-120b","attempt":1,"max_attempts":4,"retry_after_ms":13000}
+{"kind":"invoke.succeeded","at":1792582275827,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1686}
+{"kind":"proposal.created","at":1792582276863,"proposal_id":"proposal_mvi17cab_qr4fz1","gap_id":"gap:qrcode","candidates":3,"model_used":"openai/gpt-oss-120b","provider_used":"groq","recommended_id":null,"auto_approved":false}
+{"kind":"invoke.started","at":1792582278002,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","primary","fallback"]}
+{"kind":"invoke.started","at":1792582278002,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792582278066,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] proposal: 3 candidates for gap:qrcode","message_id":"01a15e3a-db85-7aa6-a65d-659260dd04c6","ms":64}
+{"kind":"invoke.succeeded","at":1792582278067,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":64}
+{"kind":"notify.fallback.primary_ok","at":1792582278067,"primary":"notify.email.gmail","subject":"[agentry] proposal: 3 candidates for gap:qrcode"}
+{"kind":"invoke.succeeded","at":1792582278067,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1203}
+{"kind":"proposal.notified","at":1792582278067,"proposal_id":"proposal_mvi17cab_qr4fz1","channel":"notify.email.gmail","primary_ok":true,"fallback_used":false,"message_id":"01a15e3a-db85-7aa6-a65d-659260dd04c6"}
+{"kind":"invoke.succeeded","at":1792582278067,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3927}
+{"kind":"discovery.proposal_created","at":1792582278067,"watch_result_id":"watch_result:watch_mvdzx5he_uywu8p:1792582257286","gap_id":"gap:qrcode","source":"agentry.discover","proposal_id":"proposal_mvi17cab_qr4fz1"}
+{"kind":"invoke.started","at":1792582279391,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["gap","candidates","notify"]}
+{"kind":"invoke.started","at":1792582279392,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","accept_from"]}
+{"kind":"invoke.succeeded","at":1792582280615,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1222}
+{"kind":"proposal.created","at":1792582281815,"proposal_id":"proposal_mvi17fzb_oq7dnv","gap_id":"gap:capability.that.does.not.exist.mvf6rogc","candidates":4,"model_used":"openai/gpt-oss-120b","provider_used":"groq","recommended_id":null,"auto_approved":false}
+{"kind":"invoke.started","at":1792582283089,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","primary","fallback"]}
+{"kind":"invoke.started","at":1792582283090,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792582283167,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] proposal: 4 candidates for capability","message_id":"01a15e3a-ef6a-7179-bb57-f26dbc88f404","ms":77}
+{"kind":"invoke.succeeded","at":1792582283168,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":77}
+{"kind":"notify.fallback.primary_ok","at":1792582283168,"primary":"notify.email.gmail","subject":"[agentry] proposal: 4 candidates for capability"}
+{"kind":"invoke.succeeded","at":1792582283168,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1353}
+{"kind":"proposal.notified","at":1792582283168,"proposal_id":"proposal_mvi17fzb_oq7dnv","channel":"notify.email.gmail","primary_ok":true,"fallback_used":false,"message_id":"01a15e3a-ef6a-7179-bb57-f26dbc88f404"}
+{"kind":"invoke.succeeded","at":1792582283168,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3777}
+{"kind":"discovery.proposal_created","at":1792582283168,"watch_result_id":"watch_result:watch_mvf6voz0_aox385:1792582260157","gap_id":"gap:capability.that.does.not.exist.mvf6rogc","source":"agentry.discover","proposal_id":"proposal_mvi17fzb_oq7dnv"}
+{"kind":"discovery.tick_summary","at":1792582284308,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":3,"adopted":0}
+{"kind":"invoke.started","at":1792582294541,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["gap","candidates","notify"]}
+{"kind":"invoke.started","at":1792582294542,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["provider","model","messages","temperature","max_tokens","accept_from"]}
+{"kind":"invoke.succeeded","at":1792582295949,"capability_id":"llm.openai_compat","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1407}
+{"kind":"proposal.created","at":1792582297005,"proposal_id":"proposal_mvi17rt9_awtbgk","gap_id":"gap:pdf-lib-table","candidates":2,"model_used":"openai/gpt-oss-120b","provider_used":"groq","recommended_id":"pypi:tabula-py","auto_approved":false}
+{"kind":"invoke.started","at":1792582298071,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","primary","fallback"]}
+{"kind":"invoke.started","at":1792582298071,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
+{"kind":"notify.email.gmail.sent","at":1792582298156,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] proposal: pypi:tabula-py for gap:pdf-lib-table","message_id":"01a15e3b-29f6-7512-959c-6bd97c185b71","ms":85}
+{"kind":"invoke.succeeded","at":1792582298156,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":85}
+{"kind":"notify.fallback.primary_ok","at":1792582298156,"primary":"notify.email.gmail","subject":"[agentry] proposal: pypi:tabula-py for gap:pdf-lib-table"}
+{"kind":"invoke.succeeded","at":1792582298156,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":1151}
+{"kind":"proposal.notified","at":1792582298156,"proposal_id":"proposal_mvi17rt9_awtbgk","channel":"notify.email.gmail","primary_ok":true,"fallback_used":false,"message_id":"01a15e3b-29f6-7512-959c-6bd97c185b71"}
+{"kind":"invoke.succeeded","at":1792582298156,"capability_id":"agentry.proposal","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3615}
+{"kind":"discovery.proposal_created","at":1792582298156,"watch_result_id":"watch_result:watch_mvf5329b_owiskp:1792582264535","gap_id":"gap:pdf-lib-table","source":"agentry.discover","proposal_id":"proposal_mvi17rt9_awtbgk"}
+{"kind":"discovery.tick_summary","at":1792582299319,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":1,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792582325579,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792582356252,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792582386164,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792582415897,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792582445867,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"discovery.tick_summary","at":1792582475954,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"runs.rollup_completed","at":1792582520013,"capabilities":23,"runs":2988}
+{"kind":"runs.rollup_completed","at":1792582525844,"capabilities":23,"runs":2988}
+{"kind":"discovery.tick_summary","at":1792582526997,"gaps":36,"uncovered":0,"watched":52,"created":0,"proposals":0,"adopted":0}
+{"kind":"runtime.boot.started","at":1792582550298,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.started","at":1792582556106,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.started","at":1792582562592,"dir":"/tmp/home/.dsh/agentry"}
+{"kind":"runtime.boot.seeded","at":1792582576204,"loaded":0,"skipped":33,"files":33}
+{"kind":"runtime.boot.watches_loaded","at":1792582578678,"count":52}
+{"kind":"runtime.boot.completed","at":1792582578679,"capabilities":763,"watches":52}
