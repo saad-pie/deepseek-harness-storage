@@ -1,11 +1,11 @@
 {
   "id": "npm_dependency-graph",
-  "kind": "capability",
+  "kind": "tool",
   "invoked_via": "invoker.in_process_js",
   "handler": "npm_dependency-graph",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_dependency-graph.mjs",
   "accepts": {
-    "definition": "string"
+    "graphSpec": "string"
   },
   "produces": {
     "order": "string"
@@ -22,30 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Parse the JSON definition from an environment variable and store it for later steps",
-      "fails_if": "GRAPH_DEF env var missing or JSON malformed or required fields absent",
-      "code": "const { env } = await import('node:process');\nconst defStr = env.GRAPH_DEF;\nif (!defStr) throw new Error('Missing GRAPH_DEF');\nlet def;\ntry { def = JSON.parse(defStr); } catch (e) { throw new Error('Invalid JSON for definition'); }\nif (!Array.isArray(def.nodes) || !Array.isArray(def.deps)) throw new Error('Definition must have nodes and deps arrays');\nglobalThis.graphDef = def;"
+      "what": "Validate the input graphSpec string and parse it into a graph description object.",
+      "fails_if": "graphSpec is missing, not a string, or cannot be parsed as JSON with required fields",
+      "code": "if (!input || typeof input.graphSpec !== 'string') { throw new Error('Missing or invalid graphSpec'); }\\nlet parsed;\\ntry { parsed = JSON.parse(input.graphSpec); } catch (e) { throw new Error('Invalid JSON for graphSpec'); }\\nif (!Array.isArray(parsed.nodes) || !Array.isArray(parsed.edges)) { throw new Error('graphSpec must have nodes and edges arrays'); }\\nglobalThis.graph = parsed;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Build a DepGraph from the parsed definition and compute the overall processing order",
-      "fails_if": "Dependency graph construction fails or a dependency references a missing node",
-      "code": "const { DepGraph } = await import('dependency-graph');\nconst graph = new DepGraph();\nfor (const n of globalThis.graphDef.nodes) { graph.addNode(n); }\nfor (const d of globalThis.graphDef.deps) { graph.addDependency(d.from, d.to); }\nglobalThis.order = graph.overallOrder();"
+      "what": "Create a DepGraph, add nodes and dependencies, compute overall processing order.",
+      "fails_if": "dependency-graph module fails to load or graph operations throw an error",
+      "code": "const mod = await import('dependency-graph');\\nconst DepGraph = mod.DepGraph || mod.default?.DepGraph || mod.default;\\nconst dg = new DepGraph();\\nglobalThis.graph.nodes.forEach(n => dg.addNode(n));\\nglobalThis.graph.edges.forEach(e => dg.addDependency(e[0], e[1]));\\nglobalThis.order = dg.overallOrder().join(',');"
     },
     {
       "step": 3,
-      "verb": "post",
-      "what": "Validate the computed order and serialize it to a JSON string",
-      "fails_if": "No order was produced or serialization fails",
-      "code": "if (!globalThis.order) throw new Error('No order computed');\nglobalThis.orderStr = JSON.stringify(globalThis.order);"
-    },
-    {
-      "step": 4,
       "verb": "emit",
-      "what": "Write a single JSON object containing the order string to stdout",
-      "fails_if": "JSON.stringify fails or console.log is unavailable",
-      "code": "console.log(JSON.stringify({ order: globalThis.orderStr }));"
+      "what": "Write a single JSON object containing the computed order to stdout.",
+      "fails_if": "order is undefined or JSON.stringify fails",
+      "code": "console.log(JSON.stringify({order: globalThis.order}));"
     }
   ],
   "invoke_timeout_ms": 90000,
