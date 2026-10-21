@@ -1,0 +1,61 @@
+{
+  "id": "browser-use_browser-use",
+  "kind": "bua",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "browser-use_browser-use",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/browser-use_browser-use.mjs",
+  "accepts": {
+    "url": "string"
+  },
+  "produces": {
+    "screenshot": "string"
+  },
+  "requires": {
+    "npm": [
+      "playwright"
+    ],
+    "pip": [],
+    "post_install": "npx playwright install chromium",
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "launch",
+      "what": "Start a headless Chromium browser via Playwright and create a new page.",
+      "fails_if": "Playwright fails to launch the browser (binary missing or sandbox blocks launch).",
+      "code": "const { chromium } = await import('playwright');\nglobalThis.browser = await chromium.launch({ headless: true });\nglobalThis.page = await globalThis.browser.newPage();"
+    },
+    {
+      "step": 2,
+      "verb": "navigate",
+      "what": "Navigate the page to the provided URL and wait until network is idle.",
+      "fails_if": "page.goto throws because the URL is invalid or navigation times out.",
+      "code": "const url = process.env.URL;\nawait globalThis.page.goto(url, { waitUntil: 'networkidle' });"
+    },
+    {
+      "step": 3,
+      "verb": "act",
+      "what": "Wait for the page load state to ensure the page is fully loaded.",
+      "fails_if": "Page never reaches the load state within the timeout.",
+      "code": "await globalThis.page.waitForLoadState('load');"
+    },
+    {
+      "step": 4,
+      "verb": "capture",
+      "what": "Take a full‑page screenshot and store it as a base64 string.",
+      "fails_if": "Screenshot capture fails or returns an empty buffer.",
+      "code": "const buffer = await globalThis.page.screenshot({ fullPage: true });\nglobalThis.screenshotBase64 = buffer.toString('base64');"
+    },
+    {
+      "step": 5,
+      "verb": "emit",
+      "what": "Write a single JSON object to stdout containing the base64 screenshot.",
+      "fails_if": "JSON serialization fails or the screenshot data is undefined.",
+      "code": "console.log(JSON.stringify({ screenshot: globalThis.screenshotBase64 }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
