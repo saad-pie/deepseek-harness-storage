@@ -9,7 +9,8 @@ const ACCEPTS = {
   "url": "string"
 };
 const PRODUCES = {
-  "content": "string"
+  "url": "string",
+  "sections": "string"
 };
 const REQUIRES = {
   "npm": [
@@ -24,11 +25,12 @@ const ENV_MAP = {
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "content": "content"
+  "url": "url",
+  "sections": "sections"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: fetch --\n  // what: Perform an HTTP GET to the provided URL using pi-wsearch and store the raw response body.\n  // fails_if: Network error, non‑2xx status, or the fetch function throws.\n  { // scope for step 1\n    // BEGIN fetch\n    const mod = await import('pi-wsearch'); const fn = mod.default || mod; const url = process.env.URL; const resp = await fn(url); globalThis.raw = resp;\n    // END fetch\n  }\n\n  // -- step 2: parse --\n  // what: Treat the raw response as a string (or JSON) and store it for emission.\n  // fails_if: Parsing fails when expecting JSON but response is not valid JSON.\n  { // scope for step 2\n    // BEGIN parse\n    let data = globalThis.raw; try { data = JSON.parse(data); } catch (_) {} globalThis.parsed = data;\n    // END parse\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object with a \"content\" field to stdout.\n  // fails_if: The parsed content is undefined or JSON.stringify throws.\n  { // scope for step 3\n    // BEGIN emit\n    if (globalThis.parsed === undefined) throw new Error('No content to emit'); console.log(JSON.stringify({content: globalThis.parsed}));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: fetch --\n  // what: Perform an HTTP GET of the supplied URL using the built‑in fetch API and store the raw HTML.\n  // fails_if: Network error, non‑2xx response, or inability to read the response body.\n  { // scope for step 1\n    // BEGIN fetch\n    const url = process.env.URL;\n    globalThis.inputUrl = url;\n    const resp = await fetch(url, { redirect: 'follow' });\n    if (!resp.ok) throw new Error('Fetch failed with status ' + resp.status);\n    globalThis.raw = await resp.text();\n    // END fetch\n  }\n\n  // -- step 2: parse --\n  // what: Extract heading tags from the raw HTML, assign each a sequential index, and record the indices as a comma‑separated string.\n  // fails_if: HTML parsing fails or no heading tags are found.\n  { // scope for step 2\n    // BEGIN parse\n    const html = globalThis.raw;\n    const headingRegex = /<h[1-6][^>]*>(.*?)<\\/h[1-6]>/gi;\n    let idx = 0;\n    const sections = [];\n    while (headingRegex.exec(html)) { sections.push(idx); idx++; }\n    if (sections.length === 0) throw new Error('No sections found');\n    globalThis.sectionsStr = sections.join(',');\n    // END parse\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the original URL and the list of section indices to stdout.\n  // fails_if: JSON serialization fails or any promised field is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ url: globalThis.inputUrl, sections: globalThis.sectionsStr }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
