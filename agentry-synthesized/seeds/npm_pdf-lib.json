@@ -1,0 +1,54 @@
+{
+  "id": "npm_pdf-lib",
+  "kind": "unknown",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_pdf-lib",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_pdf-lib.mjs",
+  "accepts": {
+    "pdf_path": "string"
+  },
+  "produces": {
+    "heading": "string"
+  },
+  "requires": {
+    "npm": [
+      "pdf-lib"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that the PDF file path is provided via env and is readable, then store it in global state.",
+      "fails_if": "PDF_PATH env var missing or file not accessible",
+      "code": "const { accessSync, constants } = await import('node:fs');\nconst pdfPath = process.env.PDF_PATH;\nif (!pdfPath) throw new Error('PDF_PATH env var missing');\ntry { accessSync(pdfPath, constants.R_OK); } catch { throw new Error('PDF file not accessible'); }\nglobalThis.pdfPath = pdfPath;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Read the PDF file bytes, decode to text, and take the first non‑empty line as a provisional heading.",
+      "fails_if": "File read fails or no non‑empty line found",
+      "code": "const { readFileSync } = await import('node:fs');\nconst data = readFileSync(globalThis.pdfPath);\nconst decoder = new TextDecoder();\nconst text = decoder.decode(data);\nconst lines = text.split(/\\r?\\n/);\nlet heading = '';\nfor (const line of lines) {\n  const t = line.trim();\n  if (t) { heading = t; break; }\n}\nif (!heading) throw new Error('No heading found in PDF content');\nglobalThis.rawHeading = heading;"
+    },
+    {
+      "step": 3,
+      "verb": "post",
+      "what": "Trim the provisional heading and store the final result.",
+      "fails_if": "Trimming yields an empty string",
+      "code": "if (!globalThis.rawHeading) throw new Error('Raw heading missing');\nconst final = globalThis.rawHeading.trim();\nif (!final) throw new Error('Final heading is empty after trim');\nglobalThis.heading = final;"
+    },
+    {
+      "step": 4,
+      "verb": "emit",
+      "what": "Write a JSON object with the extracted heading to stdout.",
+      "fails_if": "JSON serialization fails or heading is undefined",
+      "code": "console.log(JSON.stringify({ heading: globalThis.heading }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

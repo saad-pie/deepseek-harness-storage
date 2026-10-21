@@ -1,0 +1,54 @@
+{
+  "id": "npm_pdf-parse",
+  "kind": "unknown",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_pdf-parse",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_pdf-parse.mjs",
+  "accepts": {
+    "pdf_path": "string"
+  },
+  "produces": {
+    "heading": "string"
+  },
+  "requires": {
+    "npm": [
+      "pdf-parse"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Verify the PDF file exists and load it into memory",
+      "fails_if": "The PDF path is missing or the file does not exist",
+      "code": "const { existsSync, readFileSync } = await import('node:fs');\nconst pdfPath = process.env.PDF_PATH;\nif (!pdfPath || !existsSync(pdfPath)) {\n  throw new Error('PDF file not found at path: ' + pdfPath);\n}\nglobalThis.pdfBuffer = readFileSync(pdfPath);"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Parse the PDF text and take the first non‑empty line as the heading",
+      "fails_if": "pdf‑parse fails or no text lines are returned",
+      "code": "const mod = await import('pdf-parse');\nconst PDFParse = mod.PDFParse || mod.default?.PDFParse || mod.default;\nif (!PDFParse) throw new Error('PDFParse class not found');\nconst parser = new PDFParse({ data: globalThis.pdfBuffer });\nconst result = await parser.getText();\nawait parser.destroy();\nglobalThis.fullText = result.text;\nconst lines = globalThis.fullText.split(/\\r?\\n/).filter(l => l.trim().length > 0);\nglobalThis.heading = lines.length > 0 ? lines[0] : '';"
+    },
+    {
+      "step": 3,
+      "verb": "post",
+      "what": "Trim the extracted heading and ensure it is non‑empty",
+      "fails_if": "The heading string is empty after trimming",
+      "code": "if (!globalThis.heading) {\n  throw new Error('No heading extracted');\n}\nglobalThis.finalHeading = globalThis.heading.trim();"
+    },
+    {
+      "step": 4,
+      "verb": "emit",
+      "what": "Output a JSON object containing the heading",
+      "fails_if": "The heading value is undefined or JSON serialization fails",
+      "code": "console.log(JSON.stringify({ heading: globalThis.finalHeading }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

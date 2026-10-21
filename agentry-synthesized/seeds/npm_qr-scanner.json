@@ -1,0 +1,57 @@
+{
+  "id": "npm_qr-scanner",
+  "kind": "unknown",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_qr-scanner",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_qr-scanner.mjs",
+  "accepts": {
+    "file_path": {
+      "type": "string"
+    }
+  },
+  "produces": {
+    "result": "string"
+  },
+  "requires": {
+    "npm": [
+      "qr-scanner",
+      "playwright"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the provided file path and load the image file into memory",
+      "fails_if": "The input path is missing, the file does not exist, or cannot be read",
+      "code": "const { existsSync, readFileSync } = await import('node:fs');\nconst inputPath = process.env['FILE_PATH'];\nif (!inputPath || !existsSync(inputPath)) {\n  throw new Error('Input file missing or unreadable');\n}\nglobalThis.fileBuffer = readFileSync(inputPath);\n"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Launch a headless browser, load qr-scanner, feed the image data and obtain the decoded QR string",
+      "fails_if": "Playwright fails to launch, the script cannot be injected, or QrScanner.scanImage throws",
+      "code": "const { chromium } = await import('playwright');\nconst browser = await chromium.launch();\nconst context = await browser.newContext();\nconst page = await context.newPage();\nconst path = await import('node:path');\nconst scriptPath = path.join(process.cwd(), 'node_modules', 'qr-scanner', 'qr-scanner.min.js');\nawait page.addScriptTag({ path: scriptPath });\nconst base64 = globalThis.fileBuffer.toString('base64');\nawait page.exposeFunction('getImageBase64', () => base64);\nconst result = await page.evaluate(async () => {\n  const b64 = await window.getImageBase64();\n  const binary = Uint8Array.from(atob(b64), c => c.charCodeAt(0));\n  const blob = new Blob([binary.buffer], { type: 'image/png' });\n  // QrScanner is available as a global after the script tag\n  const decoded = await QrScanner.scanImage(blob);\n  return decoded;\n});\nglobalThis.scanResult = result;\nawait browser.close();\n"
+    },
+    {
+      "step": 3,
+      "verb": "post",
+      "what": "Verify that a QR code was successfully decoded and prepare the final output",
+      "fails_if": "No result was returned from the scanning step (null or undefined)",
+      "code": "if (globalThis.scanResult == null) {\n  throw new Error('QR code could not be decoded from the provided image');\n}\n"
+    },
+    {
+      "step": 4,
+      "verb": "emit",
+      "what": "Write the decoded QR string as JSON to stdout",
+      "fails_if": "The result is undefined or JSON.stringify fails",
+      "code": "console.log(JSON.stringify({ result: globalThis.scanResult }));\n"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

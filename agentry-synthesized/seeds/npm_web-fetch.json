@@ -1,0 +1,47 @@
+{
+  "id": "npm_web-fetch",
+  "kind": "web",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_web-fetch",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_web-fetch.mjs",
+  "accepts": {
+    "url": "string"
+  },
+  "produces": {
+    "body": "string"
+  },
+  "requires": {
+    "npm": [
+      "web-fetch"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "fetch",
+      "what": "Perform an HTTP request to the provided URL using the web-fetch library.",
+      "fails_if": "The request fails, the URL is unreachable, or the library throws an error.",
+      "code": "const mod = await import('web-fetch');\nconst fetchFn = mod.default || mod;\nglobalThis.rawBody = await fetchFn(process.env.URL);"
+    },
+    {
+      "step": 2,
+      "verb": "parse",
+      "what": "Attempt to parse the fetched response as JSON; if parsing fails, keep the raw text.",
+      "fails_if": "Parsing logic throws an unexpected error beyond JSON parse failure.",
+      "code": "let parsed;\ntry { parsed = JSON.parse(globalThis.rawBody); }\ncatch { parsed = globalThis.rawBody; }\nglobalThis.parsed = parsed;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object containing the body field to stdout.",
+      "fails_if": "JSON.stringify throws or console.log fails.",
+      "code": "console.log(JSON.stringify({body: globalThis.parsed}));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
