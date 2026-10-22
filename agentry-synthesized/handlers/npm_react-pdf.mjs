@@ -9,27 +9,24 @@ const ACCEPTS = {
   "pdf_path": "string"
 };
 const PRODUCES = {
-  "headings": "string"
+  "heading": "string"
 };
 const REQUIRES = {
   "npm": [
-    "react-pdf",
-    "pdfjs-dist"
+    "react-pdf"
   ],
   "pip": [],
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {
-  "pdf_path": "pdf_path"
-};
+const ENV_MAP = {};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "headings": "headings"
+  "heading": "heading"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Load the PDF file into a Uint8Array and configure the PDF.js worker.\n  // fails_if: The PDF file does not exist or the worker configuration fails.\n  { // scope for step 1\n    // BEGIN prepare\n    const fs = await import('node:fs');\n    const path = await import('node:path');\n    const pdfjs = await import('pdfjs-dist');\n    const workerPath = path.join(process.cwd(), 'node_modules', 'pdfjs-dist', 'build', 'pdf.worker.min.mjs');\n    pdfjs.GlobalWorkerOptions.workerSrc = workerPath;\n    const data = fs.readFileSync(globalThis.pdf_path);\n    globalThis.pdfData = new Uint8Array(data);\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Load the PDF document and extract text content from all pages.\n  // fails_if: The PDF is corrupted, password protected, or text extraction fails.\n  { // scope for step 2\n    // BEGIN execute\n    const loadingTask = pdfjs.getDocument({ data: globalThis.pdfData });\n    const pdf = await loadingTask.promise;\n    const allText = [];\n    for (let i = 1; i <= pdf.numPages; i++) {\n      const page = await pdf.getPage(i);\n      const textContent = await page.getTextContent();\n      const pageText = textContent.items.map(item => item.str).join(' ');\n      allText.push(pageText);\n    }\n    globalThis.allText = allText;\n    // END execute\n  }\n\n  // -- step 3: post --\n  // what: Process the extracted text to identify and format headings.\n  // fails_if: Text processing fails or no headings are found.\n  { // scope for step 3\n    // BEGIN post\n    const lines = globalThis.allText.join('\\n').split('\\n');\n    const headings = [];\n    for (const line of lines) {\n      const trimmed = line.trim();\n      if (trimmed.length > 0 && trimmed.length < 100) {\n        if (/^[A-Z][a-z]+ [A-Z][a-z]+/.test(trimmed) || /^[A-Z]{2,}$/.test(trimmed)) {\n          headings.push(trimmed);\n        }\n      }\n    }\n    globalThis.headings = headings;\n    // END post\n  }\n\n  // -- step 4: emit --\n  // what: Write the extracted headings as a JSON object to stdout.\n  // fails_if: JSON serialization fails or the output is malformed.\n  { // scope for step 4\n    // BEGIN emit\n    console.log(JSON.stringify({ headings: globalThis.headings.join('\n    ') }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Verify the PDF file exists and set ready state\n  // fails_if: PDF file not found\n  { // scope for step 1\n    // BEGIN prepare\n    const { accessSync, constants } = await import('node:fs'); try { accessSync(globalThis.input.pdf_path, constants.F_OK); } catch (e) { throw new Error('PDF file not found'); } globalThis.pdfPath = globalThis.input.pdf_path\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Load react-pdf, parse PDF, extract first line as heading\n  // fails_if: Failed to load PDF or extract heading\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('react-pdf'); const pdfjs = mod.pdfjs || mod.default?.pdfjs || mod.pdfjs; const loadingTask = pdfjs.getDocument(globalThis.pdfPath); const pdf = await loadingTask.promise; const page = await pdf.getPage(1); const textContent = await page.getTextContent(); const strings = textContent.items.map(item => item.str); const heading = strings[0] || ''; globalThis.heading = heading\n    // END execute\n  }\n\n  // -- step 3: post --\n  // what: Validate heading extraction and prepare final result\n  // fails_if: No heading found\n  { // scope for step 3\n    // BEGIN post\n    if (!globalThis.heading) { throw new Error('No heading found'); } globalThis.finalHeading = globalThis.heading\n    // END post\n  }\n\n  // -- step 4: emit --\n  // what: Output the extracted heading as JSON\n  // fails_if: Malformed JSON or missing field\n  { // scope for step 4\n    // BEGIN emit\n    console.log(JSON.stringify({ heading: globalThis.finalHeading }))\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 

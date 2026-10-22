@@ -22,30 +22,30 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Verify the PDF file exists and load its bytes into memory.",
-      "fails_if": "The file at pdf_path does not exist or cannot be read.",
-      "code": "const { readFileSync, existsSync } = await import('node:fs');\nconst pdfPath = process.env['PDF_PATH'];\nif (!pdfPath || !existsSync(pdfPath)) {\n  throw new Error('PDF file not found at path: ' + pdfPath);\n}\nglobalThis.pdfBuffer = readFileSync(pdfPath);\n"
+      "what": "Validate PDF path and store it for later steps",
+      "fails_if": "PDF_PATH env var missing or file does not exist",
+      "code": "const { existsSync } = await import('node:fs'); const path = process.env.PDF_PATH; if (!path) { throw new Error('Missing PDF_PATH'); } if (!existsSync(path)) { throw new Error('PDF file not found'); } globalThis.pdfPath = path;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Naively extract a title string from the PDF raw content using a simple regex.",
-      "fails_if": "Regex execution fails (should never happen) or no title is found, resulting in empty heading.",
-      "code": "const buffer = globalThis.pdfBuffer;\nconst text = buffer.toString('utf8');\nconst match = text.match(/\\/Title\\s*\\(([^)]+)\\)/);\nglobalThis.heading = match ? match[1] : '';\n"
+      "what": "Read the PDF file as text and take the first non‑empty line as the heading",
+      "fails_if": "File cannot be read or no lines are found",
+      "code": "const { readFileSync } = await import('node:fs'); const data = readFileSync(globalThis.pdfPath, 'utf8'); const lines = data.split(/\\r?\\n/).filter(l => l.trim()); const heading = lines[0] || ''; globalThis.heading = heading;"
     },
     {
       "step": 3,
       "verb": "post",
-      "what": "Trim whitespace from the extracted heading.",
-      "fails_if": "globalThis.heading is undefined (should be set in execute).",
-      "code": "globalThis.heading = (globalThis.heading || '').trim();\n"
+      "what": "Verify that a heading was extracted",
+      "fails_if": "No heading could be determined",
+      "code": "if (!globalThis.heading) { throw new Error('No heading extracted'); }"
     },
     {
       "step": 4,
       "verb": "emit",
-      "what": "Write the heading as a JSON object to stdout.",
-      "fails_if": "The heading value is undefined when stringified.",
-      "code": "console.log(JSON.stringify({ heading: globalThis.heading }));\n"
+      "what": "Write a single JSON object with the heading to stdout",
+      "fails_if": "JSON serialization fails or heading is undefined",
+      "code": "console.log(JSON.stringify({ heading: globalThis.heading }));"
     }
   ],
   "invoke_timeout_ms": 90000,

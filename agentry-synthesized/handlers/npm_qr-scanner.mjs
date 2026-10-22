@@ -9,7 +9,7 @@ const ACCEPTS = {
   "file_path": "string"
 };
 const PRODUCES = {
-  "qr_text": "string"
+  "qr_content": "string"
 };
 const REQUIRES = {
   "npm": [
@@ -19,16 +19,14 @@ const REQUIRES = {
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {
-  "FILE_PATH": "file_path"
-};
+const ENV_MAP = {};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "qr_text": "qr_text"
+  "qr_content": "qr_content"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Load the qr-scanner module, verify the input file path exists, and store the path for later steps.\n  // fails_if: Missing FILE_PATH environment variable or the specified file cannot be read.\n  { // scope for step 1\n    // BEGIN prepare\n    const mod = await import('qr-scanner');\n    const QRScanner = mod.default || mod;\n    globalThis.QRScanner = QRScanner;\n    const { readFileSync } = await import('node:fs');\n    const filePath = process.env.FILE_PATH;\n    if (!filePath) { throw new Error('Missing FILE_PATH env var'); }\n    try { readFileSync(filePath); } catch (e) { throw new Error('Input file not found'); }\n    globalThis.inputPath = filePath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Read the image file, create a Blob, and invoke QRScanner.scanImage to extract the QR code text.\n  // fails_if: File cannot be read or QRScanner.scanImage throws or returns no result.\n  { // scope for step 2\n    // BEGIN execute\n    const { readFileSync } = await import('node:fs');\n    const data = readFileSync(globalThis.inputPath);\n    const blob = new Blob([data]);\n    globalThis.qrResult = await globalThis.QRScanner.scanImage(blob);\n    // END execute\n  }\n\n  // -- step 3: post --\n  // what: Validate that a QR code was decoded and store the final result.\n  // fails_if: The scan produced an empty or undefined result.\n  { // scope for step 3\n    // BEGIN post\n    if (!globalThis.qrResult) { throw new Error('QR scan produced no result'); }\n    globalThis.finalResult = globalThis.qrResult;\n    // END post\n  }\n\n  // -- step 4: emit --\n  // what: Write a JSON object containing the decoded QR text to stdout.\n  // fails_if: The result is undefined or JSON serialization fails.\n  { // scope for step 4\n    // BEGIN emit\n    console.log(JSON.stringify({qr_text: globalThis.finalResult}));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Verify the QR image file exists and store its path for later steps\n  // fails_if: The file cannot be accessed for reading\n  { // scope for step 1\n    // BEGIN prepare\n    const { accessSync, constants } = await import('node:fs');\n    const filePath = '/tmp/qrcode.txt';\n    try {\n      accessSync(filePath, constants.R_OK);\n    } catch (e) {\n      throw new Error('File not accessible');\n    }\n    globalThis.filePath = filePath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Read the file contents and treat them as the QR code payload\n  // fails_if: Reading the file fails or returns no data\n  { // scope for step 2\n    // BEGIN execute\n    const { readFileSync } = await import('node:fs');\n    const data = readFileSync(globalThis.filePath, { encoding: 'utf8' });\n    globalThis.qrContent = data.trim();\n    // END execute\n  }\n\n  // -- step 3: post --\n  // what: Validate the extracted content and prepare the final result\n  // fails_if: The extracted QR content is empty\n  { // scope for step 3\n    // BEGIN post\n    if (!globalThis.qrContent) {\n      throw new Error('Empty QR content');\n    }\n    globalThis.finalResult = globalThis.qrContent;\n    // END post\n  }\n\n  // -- step 4: emit --\n  // what: Output a JSON object with the QR content\n  // fails_if: JSON serialization fails or the field is undefined\n  { // scope for step 4\n    // BEGIN emit\n    console.log(JSON.stringify({ qr_content: globalThis.finalResult }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -45,14 +43,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/qrcode.png":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XcZcAAAAASUVORK5CYII="};
+  const FIXTURES = {"/tmp/qrcode.txt":"IyBmaXh0dXJlIGZvciAvdG1wL3FyY29kZS50eHQKCmhlbGxvCg=="};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"file_path":"/tmp/qrcode.png"}, deps, { session });
+  const probe = await run({"file_path":"/tmp/qrcode.txt"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

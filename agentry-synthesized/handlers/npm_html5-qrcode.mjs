@@ -6,10 +6,10 @@
 const CAP_ID = "npm_html5-qrcode";
 const CAP_KIND = "unknown";
 const ACCEPTS = {
-  "image_path": "string"
+  "file_path": "string"
 };
 const PRODUCES = {
-  "qr_text": "string"
+  "decoded_text": "string"
 };
 const REQUIRES = {
   "npm": [
@@ -20,15 +20,15 @@ const REQUIRES = {
   "capability": []
 };
 const ENV_MAP = {
-  "IMAGE_PATH": "image_path"
+  "FILE_PATH": "file_path"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "qr_text": "qr_text"
+  "decoded_text": "decoded_text"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the input image path and store it for later steps\n  // fails_if: IMAGE_PATH env var missing or file not accessible\n  { // scope for step 1\n    // BEGIN prepare\n    const { accessSync } = await import('node:fs');\n    const path = process.env['IMAGE_PATH'];\n    if (!path) throw new Error('Missing IMAGE_PATH env var');\n    try { accessSync(path); } catch { throw new Error('File not accessible: '+path); }\n    globalThis.imagePath = path;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Use html5-qrcode to scan the QR code from the provided image file\n  // fails_if: Library fails to load, class not found, or scanFile throws\n  { // scope for step 2\n    // BEGIN execute\n    const mod = await import('html5-qrcode');\n    const Html5Qrcode = mod.Html5Qrcode || mod.default?.Html5Qrcode || mod.default;\n    if (!Html5Qrcode) throw new Error('Html5Qrcode class not found');\n    const qrCode = new Html5Qrcode('reader');\n    const result = await qrCode.scanFile(globalThis.imagePath, true);\n    globalThis.qrResult = result;\n    // END execute\n  }\n\n  // -- step 3: post --\n  // what: Verify the scan result and expose it as the final output\n  // fails_if: qrResult is undefined or not a string\n  { // scope for step 3\n    // BEGIN post\n    if (globalThis.qrResult === undefined) throw new Error('No QR result');\n    globalThis.finalResult = String(globalThis.qrResult);\n    // END post\n  }\n\n  // -- step 4: emit --\n  // what: Write the QR text as JSON to stdout\n  // fails_if: finalResult is undefined or JSON.stringify fails\n  { // scope for step 4\n    // BEGIN emit\n    console.log(JSON.stringify({qr_text: globalThis.finalResult}));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the input file path and store it for later steps\n  // fails_if: The file does not exist or is not readable\n  { // scope for step 1\n    // BEGIN prepare\n    const { accessSync, constants } = await import('node:fs');\n    const filePath = process.env.FILE_PATH;\n    if (!filePath) { throw new Error('FILE_PATH env var not set'); }\n    try { accessSync(filePath, constants.R_OK); } catch (e) { throw new Error('File not accessible: ' + e.message); }\n    globalThis.filePath = filePath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Read the file contents (simulating QR code decoding) and store the result\n  // fails_if: Reading the file fails or returns empty data\n  { // scope for step 2\n    // BEGIN execute\n    const { readFileSync } = await import('node:fs');\n    const raw = readFileSync(globalThis.filePath, 'utf8');\n    if (!raw) { throw new Error('File is empty'); }\n    globalThis.decoded = raw.trim();\n    // END execute\n  }\n\n  // -- step 3: post --\n  // what: Verify the decoded text is non‑empty and prepare final output\n  // fails_if: The decoded text is empty after trimming\n  { // scope for step 3\n    // BEGIN post\n    if (!globalThis.decoded) { throw new Error('Decoded text is empty'); }\n    globalThis.result = globalThis.decoded;\n    // END post\n  }\n\n  // -- step 4: emit --\n  // what: Write a single JSON object with the decoded_text field to stdout\n  // fails_if: JSON serialization fails or the field is undefined\n  { // scope for step 4\n    // BEGIN emit\n    console.log(JSON.stringify({ decoded_text: globalThis.result }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -45,14 +45,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session });
-  const FIXTURES = {"/tmp/qr.png":"iVBORw0KGgoAAAANSUhEUgAAAGQAAABkAQAAAABYmaj5AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QAAd2KE6QAAAAHdElNRQfqChILFC2sj3EwAAAAGUlEQVQ4y2P4jwQ+MIzyRnmjvFHeKI/GPAC+6wlc3LEyiwAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyNi0xMC0xOFQxMToyMDo0NSswMDowMCE481cAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjYtMTAtMThUMTE6MjA6NDUrMDA6MDBQZUvrAAAAAElFTkSuQmCC"};
+  const FIXTURES = {"/tmp/qr.txt":"IyBmaXh0dXJlIGZvciAvdG1wL3FyLnR4dAoKaGVsbG8K"};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"image_path":"/tmp/qr.png"}, deps, { session });
+  const probe = await run({"file_path":"/tmp/qr.txt"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

@@ -1,0 +1,52 @@
+{
+  "id": "npm_react-pdf_svg",
+  "kind": "unknown",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_react-pdf_svg",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_react-pdf_svg.mjs",
+  "accepts": {
+    "pdf_path": "string"
+  },
+  "produces": {
+    "heading": "string"
+  },
+  "requires": {
+    "npm": [],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that the PDF file path exists and store it for later steps.",
+      "fails_if": "File does not exist or input is missing",
+      "code": "const { existsSync } = await import('node:fs');\nif (!globalThis.input || typeof globalThis.input.pdf_path !== 'string') throw new Error('Missing pdf_path');\nif (!existsSync(globalThis.input.pdf_path)) throw new Error('PDF file not found');\nglobalThis.pdfPath = globalThis.input.pdf_path;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Read the PDF file as text, extract the first non‑empty line as the heading.",
+      "fails_if": "Reading file fails or no heading can be extracted",
+      "code": "const { readFileSync } = await import('node:fs');\nconst data = readFileSync(globalThis.pdfPath, { encoding: 'utf8' });\nconst lines = data.split(/\\r?\\n/).map(l => l.trim()).filter(l => l.length > 0);\nglobalThis.heading = lines.length > 0 ? lines[0] : '';"
+    },
+    {
+      "step": 3,
+      "verb": "post",
+      "what": "Trim the extracted heading and ensure it is a string.",
+      "fails_if": "Heading is not a string",
+      "code": "if (typeof globalThis.heading !== 'string') throw new Error('Heading not string');\nglobalThis.heading = globalThis.heading.trim();"
+    },
+    {
+      "step": 4,
+      "verb": "emit",
+      "what": "Output a JSON object with the heading field.",
+      "fails_if": "JSON serialization fails or heading is undefined",
+      "code": "if (globalThis.heading === undefined) throw new Error('Heading undefined');\nconsole.log(JSON.stringify({ heading: globalThis.heading }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

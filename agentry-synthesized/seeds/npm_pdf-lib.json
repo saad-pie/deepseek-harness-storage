@@ -1,6 +1,6 @@
 {
   "id": "npm_pdf-lib",
-  "kind": "unknown",
+  "kind": "pdf-extractor",
   "invoked_via": "invoker.in_process_js",
   "handler": "npm_pdf-lib",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_pdf-lib.mjs",
@@ -22,30 +22,30 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate the provided pdf_path and load the file into memory",
-      "fails_if": "pdf_path is missing, the file does not exist, or cannot be read",
-      "code": "const { readFileSync, existsSync } = await import('node:fs');\nif (!input.pdf_path || !existsSync(input.pdf_path)) {\n  throw new Error('PDF file not found at provided path');\n}\nglobalThis.pdfBytes = readFileSync(input.pdf_path);\n"
+      "what": "Validate the input PDF path and store it for later steps",
+      "fails_if": "PDF_PATH env var missing or file not accessible",
+      "code": "const { accessSync, constants } = await import('node:fs');\nconst pdfPath = process.env.PDF_PATH;\nif (!pdfPath) { throw new Error('Missing PDF_PATH env var'); }\ntry { accessSync(pdfPath, constants.R_OK); } catch (e) { throw new Error('Cannot read PDF file at ' + pdfPath); }\nglobalThis.pdfPath = pdfPath;"
     },
     {
       "step": 2,
       "verb": "execute",
       "what": "Load the PDF with pdf-lib and extract its title as the heading",
-      "fails_if": "pdf-lib fails to load the PDF or title extraction throws",
-      "code": "const mod = await import('pdf-lib');\nconst PDFDocument = mod.PDFDocument || mod.default?.PDFDocument || mod.default;\nconst pdfDoc = await PDFDocument.load(globalThis.pdfBytes);\nlet title = '';\nif (typeof pdfDoc.getTitle === 'function') {\n  title = pdfDoc.getTitle() || '';\n}\nglobalThis.heading = title;\n"
+      "fails_if": "pdf-lib fails to load the file or title extraction throws",
+      "code": "const { PDFDocument } = (await import('pdf-lib')).default || await import('pdf-lib');\nconst { readFileSync } = await import('node:fs');\nconst data = readFileSync(globalThis.pdfPath);\nconst pdfDoc = await PDFDocument.load(data);\nlet title = '';\nif (typeof pdfDoc.getTitle === 'function') { title = pdfDoc.getTitle(); }\nglobalThis.heading = title || '';"
     },
     {
       "step": 3,
       "verb": "post",
-      "what": "Trim the extracted heading and guarantee it is a string",
-      "fails_if": "heading is not a string after processing",
-      "code": "if (typeof globalThis.heading !== 'string') {\n  globalThis.heading = '';\n}\nglobalThis.heading = globalThis.heading.trim();\n"
+      "what": "Trim whitespace from the extracted heading and ensure it is a string",
+      "fails_if": "Result is not a string after trimming",
+      "code": "globalThis.heading = (globalThis.heading || '').trim();\nif (typeof globalThis.heading !== 'string') { throw new Error('Heading is not a string'); }"
     },
     {
       "step": 4,
       "verb": "emit",
-      "what": "Write a single JSON object containing the heading to stdout",
-      "fails_if": "heading is undefined when emitting",
-      "code": "if (globalThis.heading === undefined) {\n  throw new Error('Heading extraction resulted in undefined');\n}\nconsole.log(JSON.stringify({ heading: globalThis.heading }));\n"
+      "what": "Write the heading as a JSON object to stdout",
+      "fails_if": "JSON serialization fails or heading is undefined",
+      "code": "console.log(JSON.stringify({ heading: globalThis.heading }));"
     }
   ],
   "invoke_timeout_ms": 90000,
