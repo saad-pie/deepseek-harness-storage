@@ -1,0 +1,54 @@
+{
+  "id": "npm_react-qr-barcode-scanner",
+  "kind": "unknown",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_react-qr-barcode-scanner",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_react-qr-barcode-scanner.mjs",
+  "accepts": {
+    "file_path": "string"
+  },
+  "produces": {
+    "qr_text": "string"
+  },
+  "requires": {
+    "npm": [
+      "react-qr-barcode-scanner"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the provided file path and load its contents as a base64 string",
+      "fails_if": "The file does not exist, cannot be accessed, or reading fails",
+      "code": "const { accessSync, readFileSync } = await import('node:fs');\\nconst path = process.env.FILE_PATH;\\nif (!path) throw new Error('FILE_PATH env var not set');\\ntry { accessSync(path); } catch { throw new Error('File not accessible'); }\\nconst data = readFileSync(path);\\nglobalThis.fileBase64 = data.toString('base64');"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Assign the loaded base64 data as the core result",
+      "fails_if": "Base64 data was not prepared in the previous step",
+      "code": "if (!globalThis.fileBase64) throw new Error('No data prepared');\\nglobalThis.result = globalThis.fileBase64;"
+    },
+    {
+      "step": 3,
+      "verb": "post",
+      "what": "Verify that the result is non‑empty before emitting",
+      "fails_if": "Result is empty or undefined",
+      "code": "if (!globalThis.result) throw new Error('Result is empty');"
+    },
+    {
+      "step": 4,
+      "verb": "emit",
+      "what": "Write a single JSON object containing the qr_text to stdout",
+      "fails_if": "JSON serialization fails or qr_text is undefined",
+      "code": "console.log(JSON.stringify({qr_text: globalThis.result}));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
