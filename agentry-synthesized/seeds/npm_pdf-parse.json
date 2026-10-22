@@ -22,29 +22,29 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate PDF file path from environment and ensure it exists",
-      "fails_if": "PDF_PATH env var missing or file not accessible",
-      "code": "const { accessSync } = await import('node:fs');\nconst pdfPath = process.env.PDF_PATH;\nif (!pdfPath) { throw new Error('PDF_PATH env var not set'); }\ntry { accessSync(pdfPath); } catch { throw new Error('PDF file not accessible'); }\nglobalThis.pdfPath = pdfPath;"
+      "what": "Validate the PDF file path from environment and store it for later steps",
+      "fails_if": "PDF_PATH env var missing or file not readable",
+      "code": "const { accessSync, constants } = await import('node:fs');\nconst pdfPath = process.env.PDF_PATH;\nif (!pdfPath) { throw new Error('PDF_PATH env var not set'); }\ntry { accessSync(pdfPath, constants.R_OK); } catch { throw new Error('PDF file not accessible'); }\nglobalThis.pdfPath = pdfPath;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Load pdf-parse, extract full text, and take the first non‑empty line as the heading",
-      "fails_if": "Parsing fails or no text is returned",
-      "code": "const { PDFParse } = (await import('pdf-parse')).default || await import('pdf-parse');\nconst { readFile } = await import('node:fs/promises');\nconst buffer = await readFile(globalThis.pdfPath);\nconst parser = new PDFParse({ data: buffer });\nconst result = await parser.getText();\nawait parser.destroy();\nconst lines = result.text.split(/\\r?\\n/).filter(l => l.trim().length > 0);\nglobalThis.heading = lines.length > 0 ? lines[0] : '';"
+      "what": "Load pdf-parse, read the PDF into a buffer, extract full text",
+      "fails_if": "pdf-parse fails to parse or returns no text",
+      "code": "const { PDFParse } = await import('pdf-parse');\nconst { readFileSync } = await import('node:fs');\nconst buffer = readFileSync(globalThis.pdfPath);\nconst parser = new PDFParse({ data: buffer });\nconst result = await parser.getText();\nawait parser.destroy();\nglobalThis.rawText = result.text;"
     },
     {
       "step": 3,
       "verb": "post",
-      "what": "Verify that a heading was extracted",
-      "fails_if": "Extracted heading is empty",
-      "code": "if (!globalThis.heading) { throw new Error('No heading found in PDF'); }"
+      "what": "Derive the first non‑empty line as the document heading",
+      "fails_if": "No non‑empty lines found in extracted text",
+      "code": "const lines = globalThis.rawText.split(/\\r?\\n/).map(l => l.trim()).filter(l => l.length > 0);\nif (lines.length === 0) { throw new Error('No text extracted from PDF'); }\nglobalThis.heading = lines[0];"
     },
     {
       "step": 4,
       "verb": "emit",
-      "what": "Write the heading as a single JSON object to stdout",
-      "fails_if": "JSON serialization fails or heading is undefined",
+      "what": "Output a JSON object containing the heading",
+      "fails_if": "heading is undefined or JSON serialization fails",
       "code": "console.log(JSON.stringify({ heading: globalThis.heading }));"
     }
   ],
