@@ -1,0 +1,21 @@
+{
+  "capability_id": "test.html_to_bmp_v0551",
+  "authored_by": "dsh_synth",
+  "authored_at": 1792952461280,
+  "spec_notes": "Uses takumi-js (pure Rust, no browser) to render HTML to PNG, then sharp to decode PNG to raw pixels, then bmp-js to encode as BMP. Requires npm packages: takumi-js, sharp, bmp-js. Sharp doesn't support BMP output directly, so bmp-js is used for final encoding. Default render size is 800x600.",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 76254,
+    "packages_used": [
+      "takumi-js",
+      "sharp",
+      "bmp-js"
+    ],
+    "references_shown": [
+      "test.html_to_avif_v0544",
+      "test.html_to_avif_v0545"
+    ],
+    "used_composition": false
+  }
+}
