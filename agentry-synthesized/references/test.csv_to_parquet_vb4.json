@@ -1,0 +1,20 @@
+{
+  "capability_id": "test.csv_to_parquet_vb4",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793024424504,
+  "spec_notes": "Uses csv-parse for CSV parsing and parquetjs for Parquet writing. Type inference: integer values become INT64, everything else UTF8. Requires both csv-parse and parquetjs npm packages. Tested and verified working with 4-row CSV fixture producing 509-byte Parquet file.",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 63603,
+    "packages_used": [
+      "csv-parse",
+      "parquetjs"
+    ],
+    "references_shown": [
+      "test.csv_to_parquet_vb1",
+      "test.toml_to_csv_v05612"
+    ],
+    "used_composition": false
+  }
+}
