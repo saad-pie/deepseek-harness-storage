@@ -1,0 +1,19 @@
+{
+  "capability_id": "test.md_to_html_v05611",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793003569153,
+  "spec_notes": "Uses 'marked' package (v15+) which is pure JS, zero deps, fast. API: import { marked } from 'marked'; then marked(markdownString) returns HTML string. Supports GFM (tables, strikethrough, task lists) by default. No async needed - marked() is synchronous. For async parsing with extensions, use marked.parse() but not needed here.",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 46012,
+    "packages_used": [
+      "marked"
+    ],
+    "references_shown": [
+      "test.html_to_avif_v0544",
+      "test.html_to_avif_v0545"
+    ],
+    "used_composition": false
+  }
+}
