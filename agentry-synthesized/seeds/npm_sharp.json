@@ -31,23 +31,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate required env vars INPUT_PATH and OUTPUT_PATH, parse optional WIDTH and HEIGHT, and store them in globalThis for later steps.",
-      "fails_if": "Missing INPUT_PATH or OUTPUT_PATH env var, or input file does not exist.",
-      "code": "(async () => {\\n  const fs = await import('node:fs');\\n  const path = await import('node:path');\\n  const inputPath = process.env.INPUT_PATH;\\n  const outputPath = process.env.OUTPUT_PATH;\\n  if (!inputPath) throw new Error('INPUT_PATH env var is required');\\n  if (!outputPath) throw new Error('OUTPUT_PATH env var is required');\\n  try { await fs.promises.access(inputPath, fs.constants.R_OK); }\\n  catch { throw new Error(`Input file not accessible: ${inputPath}`); }\\n  const width = process.env.WIDTH ? parseInt(process.env.WIDTH, 10) : undefined;\\n  const height = process.env.HEIGHT ? parseInt(process.env.HEIGHT, 10) : undefined;\\n  globalThis._sharpInput = { inputPath, outputPath, width, height };\\n})();"
+      "what": "Validate environment variables, ensure input file exists, and store paths and dimensions in global state.",
+      "fails_if": "Missing required env vars or input file not found.",
+      "code": "(async () => {\\n  const { accessSync } = await import('node:fs');\\n  const input = process.env.INPUT_PATH;\\n  const output = process.env.OUTPUT_PATH;\\n  if (!input) throw new Error('Missing INPUT_PATH');\\n  if (!output) throw new Error('Missing OUTPUT_PATH');\\n  try { accessSync(input); } catch { throw new Error('Input file not found'); }\\n  globalThis.inputPath = input;\\n  globalThis.outputPath = output;\\n  const w = process.env.WIDTH ? parseInt(process.env.WIDTH, 10) : null;\\n  const h = process.env.HEIGHT ? parseInt(process.env.HEIGHT, 10) : null;\\n  globalThis.width = w;\\n  globalThis.height = h;\\n})();"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Resize the image using sharp with the provided dimensions and write to the output path.",
-      "fails_if": "sharp throws an error during processing or the output file is not created.",
-      "code": "(async () => {\\n  const { inputPath, outputPath, width, height } = globalThis._sharpInput;\\n  const sharpMod = await import('sharp');\\n  const sharp = sharpMod.default || sharpMod;\\n  let pipeline = sharp(inputPath);\\n  const resizeOpts = {};\\n  if (width) resizeOpts.width = width;\\n  if (height) resizeOpts.height = height;\\n  if (Object.keys(resizeOpts).length) pipeline = pipeline.resize(resizeOpts);\\n  await pipeline.toFile(outputPath);\\n  globalThis._sharpResult = { outputPath };\\n})();"
+      "what": "Resize the PNG using sharp with the provided dimensions and write to the output path.",
+      "fails_if": "sharp throws an error during processing or the export shape is unexpected.",
+      "code": "(async () => {\\n  const sharpMod = await import('sharp');\\n  const sharp = sharpMod.default || sharpMod;\\n  if (typeof sharp !== 'function') throw new Error('sharp export not a function');\\n  const img = sharp(globalThis.inputPath);\\n  const resizeOpts = {};\\n  if (globalThis.width !== null) resizeOpts.width = globalThis.width;\\n  if (globalThis.height !== null) resizeOpts.height = globalThis.height;\\n  await img.resize(resizeOpts).toFile(globalThis.outputPath);\\n  globalThis.resultPath = globalThis.outputPath;\\n})();"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a JSON object containing the output_path of the resized image.",
-      "fails_if": "output_path is undefined or JSON cannot be stringified.",
-      "code": "(async () => {\\n  const { outputPath } = globalThis._sharpResult || {};\\n  if (!outputPath) throw new Error('outputPath not set');\\n  console.log(JSON.stringify({ output_path: outputPath }));\\n})();"
+      "what": "Emit a single JSON object containing the path of the resized image.",
+      "fails_if": "JSON serialization fails or result path is undefined.",
+      "code": "(async () => {\\n  console.log(JSON.stringify({ output_path: globalThis.resultPath }));\\n})();"
     }
   ],
   "invoke_timeout_ms": 90000,
