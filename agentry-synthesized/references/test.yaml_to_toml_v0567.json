@@ -1,0 +1,18 @@
+{
+  "capability_id": "test.yaml_to_toml_v0567",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793001964099,
+  "spec_notes": "Uses 'yaml' package (modern YAML 1.2 parser) and '@iarna/toml' (TOML serializer). Both are pure JS, no native dependencies. Handles nested objects, arrays, and all YAML scalar types. Note: @iarna/toml formats numbers with underscores (e.g., 3_000) which is valid TOML but may differ from other formatters. If strict TOML compliance without underscores is needed, post-process the output string.",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 44483,
+    "packages_used": [
+      "yaml",
+      "@iarna/toml",
+      "fs"
+    ],
+    "references_shown": [],
+    "used_composition": false
+  }
+}

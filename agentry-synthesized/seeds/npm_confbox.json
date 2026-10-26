@@ -1,0 +1,48 @@
+{
+  "id": "npm_confbox",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_confbox",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_confbox.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "toml": "string"
+  },
+  "requires": {
+    "npm": [
+      "confbox"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate environment variables, read the YAML file, and store its contents for later steps.",
+      "fails_if": "Missing INPUT_PATH or OUTPUT_PATH env vars, or the input file does not exist.",
+      "code": "(async () => {\n  const { readFileSync, writeFileSync, mkdirSync, existsSync } = await import('node:fs');\n  const inputPath = process.env.INPUT_PATH;\n  const outputPath = process.env.OUTPUT_PATH;\n  if (!inputPath) throw new Error('Missing INPUT_PATH env var');\n  if (!outputPath) throw new Error('Missing OUTPUT_PATH env var');\n  if (!existsSync(inputPath)) throw new Error('Input file does not exist: ' + inputPath);\n  const yamlText = readFileSync(inputPath, 'utf8');\n  globalThis.yamlText = yamlText;\n  const path = await import('node:path');\n  const dir = path.dirname(outputPath);\n  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });\n})();"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Parse the YAML content into an object and serialize it to TOML.",
+      "fails_if": "Parsing or stringifying fails, or required functions are unavailable.",
+      "code": "(async () => {\n  const { parseYAML, stringifyTOML } = await import('confbox');\n  const yamlObj = parseYAML(globalThis.yamlText);\n  const tomlText = stringifyTOML(yamlObj);\n  globalThis.tomlText = tomlText;\n  const { writeFileSync } = await import('node:fs');\n  const outputPath = process.env.OUTPUT_PATH;\n  writeFileSync(outputPath, tomlText, 'utf8');\n})();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a single JSON object containing the TOML string.",
+      "fails_if": "The TOML string is undefined or JSON serialization fails.",
+      "code": "(async () => {\n  console.log(JSON.stringify({ toml: globalThis.tomlText }));\n})();"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

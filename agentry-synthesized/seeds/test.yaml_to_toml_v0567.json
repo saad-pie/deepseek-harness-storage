@@ -1,0 +1,26 @@
+{
+  "id": "test.yaml_to_toml_v0567",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "test.yaml_to_toml_v0567",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/test.yaml_to_toml_v0567.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string",
+    "bytes": "number"
+  },
+  "requires": {
+    "npm": [
+      "yaml",
+      "@iarna/toml",
+      "fs"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "source": "dsh_synth:verified"
+}
