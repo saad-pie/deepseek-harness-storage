@@ -1,0 +1,51 @@
+{
+  "id": "test.csv_to_parquet_vb3",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "test.csv_to_parquet_vb3",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/test.csv_to_parquet_vb3.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string",
+    "bytes": "number"
+  },
+  "requires": {
+    "npm": [
+      "@evidence-dev/csv",
+      "csv-parse",
+      "parquetjs"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate required env vars and ensure the input CSV file exists, storing paths for later steps.",
+      "fails_if": "INPUT_PATH or OUTPUT_PATH env var missing, or the input file does not exist.",
+      "code": "const fs = await import('node:fs');\nconst inputPath = process.env.INPUT_PATH;\nconst outputPath = process.env.OUTPUT_PATH;\nif (!inputPath) throw new Error('INPUT_PATH env var required');\nif (!outputPath) throw new Error('OUTPUT_PATH env var required');\nif (!fs.existsSync(inputPath)) throw new Error('Input file does not exist: ' + inputPath);\nglobalThis.inputPath = inputPath;\nglobalThis.outputPath = outputPath;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Read the CSV, infer a Parquet schema, and write a Parquet file using csv-parse and parquetjs.",
+      "fails_if": "CSV parsing fails, schema inference fails, or Parquet writing throws.",
+      "code": "const fs = await import('node:fs');\nconst { parse } = await import('csv-parse/sync');\nconst parquet = (await import('parquetjs')).default;\nconst inputPath = globalThis.inputPath;\nconst outputPath = globalThis.outputPath;\nconst csvContent = fs.readFileSync(inputPath, 'utf8');\nconst records = parse(csvContent, { columns: true, skip_empty_lines: true });\nif (!records.length) throw new Error('No records found in CSV');\nconst firstRecord = records[0];\nconst schemaFields = {};\nfor (const [key, value] of Object.entries(firstRecord)) {\n  const numVal = Number(value);\n  if (!isNaN(numVal) && Number.isInteger(numVal)) {\n    schemaFields[key] = { type: 'INT64' };\n  } else {\n    schemaFields[key] = { type: 'UTF8' };\n  }\n}\nconst schema = new parquet.ParquetSchema(schemaFields);\nconst writer = await parquet.ParquetWriter.openFile(schema, outputPath);\nfor (const record of records) {\n  const row = {};\n  for (const [key, value] of Object.entries(record)) {\n    const numVal = Number(value);\n    row[key] = (!isNaN(numVal) && Number.isInteger(numVal)) ? parseInt(value) : value;\n  }\n  await writer.appendRow(row);\n}\nawait writer.close();\nglobalThis.parquetPath = outputPath;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object to stdout containing the output path and file size.",
+      "fails_if": "Unable to stat the Parquet file or JSON serialization fails.",
+      "code": "const fs = await import('node:fs');\nconst outputPath = globalThis.parquetPath;\nconst stats = fs.statSync(outputPath);\nconsole.log(JSON.stringify({ output_path: outputPath, bytes: stats.size }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
