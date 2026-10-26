@@ -1,0 +1,19 @@
+{
+  "capability_id": "test.pdf_extract_text_vb3",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793013710572,
+  "spec_notes": "Uses pdf-parse package with PDFParse class. The parser must be loaded with await parser.load() before getText(), and destroyed with await parser.destroy() after. The result.text contains extracted text with page separators (-- N of M --). Output file is plain text. Requires pdf-lib only for test fixture creation; runtime only needs pdf-parse.",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 54743,
+    "packages_used": [
+      "pdf-parse"
+    ],
+    "references_shown": [
+      "test.pdf_extract_text_vb1",
+      "test.md_to_pdf_v0535"
+    ],
+    "used_composition": false
+  }
+}

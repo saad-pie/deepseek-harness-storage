@@ -1,0 +1,47 @@
+{
+  "id": "npm_pdf-text-extract",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_pdf-text-extract",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_pdf-text-extract.mjs",
+  "accepts": {
+    "input_path": "string"
+  },
+  "produces": {
+    "text": "string"
+  },
+  "requires": {
+    "npm": [
+      "pdf-text-extract"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that the input PDF path is provided and the file exists",
+      "fails_if": "Missing INPUT_PATH environment variable or file does not exist",
+      "code": "const fs = await import('node:fs');\nconst { existsSync } = await import('node:fs');\nconst inputPath = process.env.INPUT_PATH;\nif (!inputPath) throw new Error('Missing INPUT_PATH');\nif (!existsSync(inputPath)) throw new Error('Input file does not exist: ' + inputPath);\nglobalThis.inputPath = inputPath;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Call pdf-text-extract to extract all text from the PDF",
+      "fails_if": "pdf-text-extract throws an error or returns an error callback",
+      "code": "const mod = await import('pdf-text-extract');\nconst extract = mod.default || mod;\nif (typeof extract !== 'function') throw new Error('pdf-text-extract export is not a function');\nconst result = await new Promise((resolve, reject) => {\n  extract(globalThis.inputPath, { splitPages: false }, (err, text) => {\n    if (err) return reject(err);\n    resolve(text);\n  });\n});\nglobalThis.result = result;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Output the extracted text as a single JSON object",
+      "fails_if": "JSON.stringify fails or output missing text field",
+      "code": "console.log(JSON.stringify({ text: globalThis.result }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
