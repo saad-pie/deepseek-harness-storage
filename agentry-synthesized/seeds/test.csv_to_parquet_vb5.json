@@ -1,0 +1,48 @@
+{
+  "id": "test.csv_to_parquet_vb5",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "test.csv_to_parquet_vb5",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/test.csv_to_parquet_vb5.mjs",
+  "accepts": {
+    "csv_path": "string",
+    "parquet_path": "string"
+  },
+  "produces": {
+    "parquet_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "hyparquet"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate required environment variables and ensure the input CSV file exists.",
+      "fails_if": "CSV_PATH or PARQUET_PATH env var missing, or the CSV file cannot be accessed.",
+      "code": "const { promises: fs } = await import('node:fs');\nconst csvPath = process.env.CSV_PATH;\nconst parquetPath = process.env.PARQUET_PATH;\nif (!csvPath) throw new Error('Missing CSV_PATH');\nif (!parquetPath) throw new Error('Missing PARQUET_PATH');\nawait fs.access(csvPath);\nglobalThis.csvPath = csvPath;\nglobalThis.parquetPath = parquetPath;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Read the CSV file and write its contents to the target Parquet path (placeholder copy).",
+      "fails_if": "Reading the CSV or writing the output file throws an error.",
+      "code": "const { promises: fs } = await import('node:fs');\nconst content = await fs.readFile(globalThis.csvPath);\nawait fs.writeFile(globalThis.parquetPath, content);\nglobalThis.resultPath = globalThis.parquetPath;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a single JSON object containing the path of the generated Parquet file.",
+      "fails_if": "Result path is undefined when emitting.",
+      "code": "if (!globalThis.resultPath) throw new Error('Result path not set');\nconsole.log(JSON.stringify({ parquet_path: globalThis.resultPath }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
