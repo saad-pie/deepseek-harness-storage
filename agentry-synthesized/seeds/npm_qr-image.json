@@ -1,0 +1,48 @@
+{
+  "id": "npm_qr-image",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_qr-image",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_qr-image.mjs",
+  "accepts": {
+    "text": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "qr-image"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate required inputs and load the qr-image module, storing values in global state",
+      "fails_if": "Missing TEXT or OUTPUT_PATH env var, or qr-image export does not contain required methods",
+      "code": "(async () => {\\n  const { env } = process;\\n  if (!env.TEXT) throw new Error('Missing TEXT env var');\\n  if (!env.OUTPUT_PATH) throw new Error('Missing OUTPUT_PATH env var');\\n  globalThis.text = env.TEXT;\\n  globalThis.outputPath = env.OUTPUT_PATH;\\n  const mod = await import('qr-image');\\n  const pkg = mod.default || mod;\\n  if (typeof pkg.image !== 'function') throw new Error('qr-image: required method image not in exports');\\n  globalThis.qr = pkg;\\n})();"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Generate a PNG QR code from the provided text and write it to the output path",
+      "fails_if": "File write fails or the QR generation stream errors",
+      "code": "(async () => {\\n  const { createWriteStream } = await import('node:fs');\\n  const { pipeline } = await import('node:stream');\\n  const { promisify } = await import('node:util');\\n  const streamPipeline = promisify(pipeline);\\n  const qr = globalThis.qr;\\n  const text = globalThis.text;\\n  const outPath = globalThis.outputPath;\\n  const pngStream = qr.image(text, { type: 'png' });\\n  const outStream = createWriteStream(outPath);\\n  await streamPipeline(pngStream, outStream);\\n})();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Output a JSON object containing the path of the generated PNG file",
+      "fails_if": "JSON serialization fails or output_path is undefined",
+      "code": "(async () => {\\n  const outPath = globalThis.outputPath;\\n  console.log(JSON.stringify({ output_path: outPath }));\\n})();"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
