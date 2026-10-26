@@ -31,23 +31,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate environment variables, ensure input file exists, and store paths and dimensions in global state.",
-      "fails_if": "Missing required env vars or input file not found.",
-      "code": "(async () => {\\n  const { accessSync } = await import('node:fs');\\n  const input = process.env.INPUT_PATH;\\n  const output = process.env.OUTPUT_PATH;\\n  if (!input) throw new Error('Missing INPUT_PATH');\\n  if (!output) throw new Error('Missing OUTPUT_PATH');\\n  try { accessSync(input); } catch { throw new Error('Input file not found'); }\\n  globalThis.inputPath = input;\\n  globalThis.outputPath = output;\\n  const w = process.env.WIDTH ? parseInt(process.env.WIDTH, 10) : null;\\n  const h = process.env.HEIGHT ? parseInt(process.env.HEIGHT, 10) : null;\\n  globalThis.width = w;\\n  globalThis.height = h;\\n})();"
+      "what": "Validate environment variables, ensure input file exists, and store parameters in global state.",
+      "fails_if": "Missing required env vars or input file does not exist.",
+      "code": "(async () => {\\n  const { existsSync } = await import('node:fs');\\n  const inputPath = process.env.INPUT_PATH;\\n  const outputPath = process.env.OUTPUT_PATH;\\n  if (!inputPath) throw new Error('Missing INPUT_PATH');\\n  if (!outputPath) throw new Error('Missing OUTPUT_PATH');\\n  if (!existsSync(inputPath)) throw new Error('Input file does not exist: ' + inputPath);\\n  const width = process.env.WIDTH ? Number(process.env.WIDTH) : null;\\n  const height = process.env.HEIGHT ? Number(process.env.HEIGHT) : null;\\n  globalThis.inputPath = inputPath;\\n  globalThis.outputPath = outputPath;\\n  globalThis.width = width;\\n  globalThis.height = height;\\n})();"
     },
     {
       "step": 2,
       "verb": "execute",
       "what": "Resize the PNG using sharp with the provided dimensions and write to the output path.",
-      "fails_if": "sharp throws an error during processing or the export shape is unexpected.",
-      "code": "(async () => {\\n  const sharpMod = await import('sharp');\\n  const sharp = sharpMod.default || sharpMod;\\n  if (typeof sharp !== 'function') throw new Error('sharp export not a function');\\n  const img = sharp(globalThis.inputPath);\\n  const resizeOpts = {};\\n  if (globalThis.width !== null) resizeOpts.width = globalThis.width;\\n  if (globalThis.height !== null) resizeOpts.height = globalThis.height;\\n  await img.resize(resizeOpts).toFile(globalThis.outputPath);\\n  globalThis.resultPath = globalThis.outputPath;\\n})();"
+      "fails_if": "sharp throws an error or the resize operation fails.",
+      "code": "(async () => {\\n  const sharpMod = await import('sharp');\\n  const sharp = sharpMod.default || sharpMod;\\n  if (typeof sharp !== 'function') throw new Error('sharp export not a function');\\n  const input = globalThis.inputPath;\\n  const output = globalThis.outputPath;\\n  const resizeOpts = {};\\n  if (globalThis.width) resizeOpts.width = globalThis.width;\\n  if (globalThis.height) resizeOpts.height = globalThis.height;\\n  await sharp(input).resize(resizeOpts).toFile(output);\\n})();"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a single JSON object containing the path of the resized image.",
-      "fails_if": "JSON serialization fails or result path is undefined.",
-      "code": "(async () => {\\n  console.log(JSON.stringify({ output_path: globalThis.resultPath }));\\n})();"
+      "what": "Emit a JSON object containing the path of the resized image.",
+      "fails_if": "JSON serialization fails or output_path is undefined.",
+      "code": "(async () => {\\n  console.log(JSON.stringify({ output_path: globalThis.outputPath }));\\n})();"
     }
   ],
   "invoke_timeout_ms": 90000,
