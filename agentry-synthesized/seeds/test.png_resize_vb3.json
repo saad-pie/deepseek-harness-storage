@@ -1,0 +1,56 @@
+{
+  "id": "test.png_resize_vb3",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "test.png_resize_vb3",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/test.png_resize_vb3.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string",
+    "width": {
+      "type": "number",
+      "optional": true
+    },
+    "height": {
+      "type": "number",
+      "optional": true
+    }
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "sharp"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate required environment variables, check input file existence, and store parameters in global state.",
+      "fails_if": "Missing INPUT_PATH or OUTPUT_PATH env var, or input file does not exist.",
+      "code": "const { existsSync } = await import('node:fs');\nconst required = ['INPUT_PATH','OUTPUT_PATH'];\nfor (const varName of required) {\n  if (!process.env[varName]) throw new Error(`Missing required env var ${varName}`);\n}\nconst inputPath = process.env.INPUT_PATH;\nconst outputPath = process.env.OUTPUT_PATH;\nif (!existsSync(inputPath)) throw new Error(`Input file not found: ${inputPath}`);\nconst width = process.env.WIDTH ? Number(process.env.WIDTH) : undefined;\nconst height = process.env.HEIGHT ? Number(process.env.HEIGHT) : undefined;\nglobalThis.params = { inputPath, outputPath, width, height };"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Resize the PNG using sharp according to provided dimensions and write the result to the output path.",
+      "fails_if": "sharp throws an error during processing or writing the output file.",
+      "code": "const sharpMod = await import('sharp');\nconst sharp = sharpMod.default || sharpMod;\nconst { inputPath, outputPath, width, height } = globalThis.params;\nlet pipeline = sharp(inputPath);\nif (width !== undefined || height !== undefined) {\n  pipeline = pipeline.resize({ width, height });\n}\nawait pipeline.toFile(outputPath);\nglobalThis.result = { outputPath };"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a single JSON object containing the output_path of the resized image.",
+      "fails_if": "JSON serialization fails or output_path is undefined.",
+      "code": "console.log(JSON.stringify({ output_path: globalThis.params.outputPath }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
