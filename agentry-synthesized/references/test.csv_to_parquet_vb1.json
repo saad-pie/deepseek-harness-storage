@@ -1,0 +1,19 @@
+{
+  "capability_id": "test.csv_to_parquet_vb1",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793006659339,
+  "spec_notes": "Requires both 'parquetjs' and 'csv-parse' npm packages. Schema is inferred from first CSV row: integer columns become INT64, others UTF8. The parquetjs package uses ESM default export with ParquetSchema, ParquetWriter classes. Tested with Node 22 - works correctly producing valid Parquet file (~387 bytes for 3-row CSV).",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 123800,
+    "packages_used": [
+      "csv-parse",
+      "parquetjs"
+    ],
+    "references_shown": [
+      "test.toml_to_csv_v05612"
+    ],
+    "used_composition": false
+  }
+}

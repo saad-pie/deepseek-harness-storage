@@ -1,0 +1,25 @@
+{
+  "id": "test.csv_to_parquet_vb1",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "test.csv_to_parquet_vb1",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/test.csv_to_parquet_vb1.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string",
+    "bytes": "number"
+  },
+  "requires": {
+    "npm": [
+      "csv-parse",
+      "parquetjs"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "source": "dsh_synth:verified"
+}
