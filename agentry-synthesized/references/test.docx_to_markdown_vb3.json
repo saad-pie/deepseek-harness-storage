@@ -1,0 +1,16 @@
+{
+  "capability_id": "test.docx_to_markdown_vb3",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793013809586,
+  "spec_notes": "mammoth is a pure-JS library (no native deps) that converts DOCX to HTML/Markdown. Uses convertToMarkdown() which returns { value: string, messages: Message[] }. Handles basic formatting (bold, italic, headings, lists, tables). Does not support complex layouts, embedded images extracted separately via mammoth.images. For images, use convertToHtml with image handler then convert HTML to markdown if needed. Package is mature and stable.",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 65494,
+    "packages_used": [
+      "mammoth"
+    ],
+    "references_shown": [],
+    "used_composition": false
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "capability_id": "test.qr_png_vb3",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793013895487,
+  "spec_notes": "Uses qrcode package which generates QR codes directly to PNG buffer. Input file contains the text/data to encode. Width set to 300px for reasonable quality. No external dependencies like Chromium. API is promise-based (await QRCode.toBuffer).",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 64073,
+    "packages_used": [
+      "qrcode"
+    ],
+    "references_shown": [
+      "test.html_to_png_v0537",
+      "test.png_resize_vb2"
+    ],
+    "used_composition": false
+  }
+}
