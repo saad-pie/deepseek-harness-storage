@@ -1,0 +1,18 @@
+{
+  "capability_id": "test.pdf_extract_text_vb1",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793007061230,
+  "spec_notes": "Uses pdf-parse (pdfjs-dist based) for text extraction. The PDFParse class requires options { verbosity: 0, data: <Uint8Array> } in constructor. Call load() then getText() which returns { pages: [{text, num}], text: 'full text with page separators', total: N }. The extracted text includes page separator lines like '-- 1 of 1 --'. Works with searchable PDFs only (not scanned/image-based). Requires pdf-parse npm package.",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 147744,
+    "packages_used": [
+      "pdf-parse"
+    ],
+    "references_shown": [
+      "test.md_to_pdf_v0535"
+    ],
+    "used_composition": false
+  }
+}

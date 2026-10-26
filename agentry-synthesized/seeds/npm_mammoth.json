@@ -1,0 +1,47 @@
+{
+  "id": "npm_mammoth",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_mammoth",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_mammoth.mjs",
+  "accepts": {
+    "docx_path": "string"
+  },
+  "produces": {
+    "markdown": "string"
+  },
+  "requires": {
+    "npm": [
+      "mammoth"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the input DOCX path and store it for later steps",
+      "fails_if": "INPUT_DOCX_PATH env var missing or file not readable",
+      "code": "(async () => {\\n  const { accessSync, constants } = await import('node:fs');\\n  const inputPath = process.env.INPUT_DOCX_PATH;\\n  if (!inputPath) {\\n    throw new Error('Missing INPUT_DOCX_PATH env var');\\n  }\\n  try {\\n    accessSync(inputPath, constants.R_OK);\\n  } catch (e) {\\n    throw new Error('Input file not accessible: ' + inputPath);\\n  }\\n  globalThis.inputPath = inputPath;\\n})();"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Use mammoth to convert the DOCX file to Markdown",
+      "fails_if": "mammoth.convertToMarkdown throws or returns no value",
+      "code": "(async () => {\\n  const mod = await import('mammoth');\\n  const mammoth = mod.default || mod;\\n  if (typeof mammoth.convertToMarkdown !== 'function') {\\n    throw new Error('mammoth: convertToMarkdown not available');\\n  }\\n  const result = await mammoth.convertToMarkdown({ path: globalThis.inputPath });\\n  globalThis.markdown = result.value;\\n})();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object containing the markdown to stdout",
+      "fails_if": "markdown result missing or not a string",
+      "code": "(async () => {\\n  if (typeof globalThis.markdown !== 'string') {\\n    throw new Error('markdown result missing');\\n  }\\n  console.log(JSON.stringify({ markdown: globalThis.markdown }));\\n})();"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
