@@ -1,0 +1,20 @@
+{
+  "capability_id": "test.csv_to_parquet_vb7",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793026748593,
+  "spec_notes": "Uses csv-parse for CSV parsing and parquetjs for Parquet writing. Schema inference: integer columns become INT64, others UTF8. Matches reference implementations vb1/vb4 exactly. Requires both npm packages: csv-parse and parquetjs.",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 88164,
+    "packages_used": [
+      "csv-parse",
+      "parquetjs"
+    ],
+    "references_shown": [
+      "test.csv_to_parquet_vb1",
+      "test.csv_to_parquet_vb4"
+    ],
+    "used_composition": false
+  }
+}
