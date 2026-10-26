@@ -1,0 +1,20 @@
+{
+  "capability_id": "test.toml_to_csv_v05612",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793006255606,
+  "spec_notes": "Converts TOML to CSV. Expects TOML with an array of tables (e.g., [[users]]) or a flat object. The first array found in the parsed TOML is used as the data rows. Uses csv-stringify/sync for CSV generation with header row. Boolean values serialize as 1 (true) or empty (false). Requires npm packages: @iarna/toml, csv-stringify.",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 48110,
+    "packages_used": [
+      "@iarna/toml",
+      "csv-stringify"
+    ],
+    "references_shown": [
+      "test.toml_to_json_v05610",
+      "test.yaml_to_toml_v0567"
+    ],
+    "used_composition": false
+  }
+}
