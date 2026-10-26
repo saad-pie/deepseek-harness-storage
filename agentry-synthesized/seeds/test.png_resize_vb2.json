@@ -6,18 +6,11 @@
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/test.png_resize_vb2.mjs",
   "accepts": {
     "input_path": "string",
-    "output_path": "string",
-    "width": {
-      "type": "number",
-      "optional": true
-    },
-    "height": {
-      "type": "number",
-      "optional": true
-    }
+    "output_path": "string"
   },
   "produces": {
-    "output_path": "string"
+    "output_path": "string",
+    "bytes": "number"
   },
   "requires": {
     "npm": [
@@ -27,30 +20,5 @@
     "post_install": null,
     "capability": []
   },
-  "plan": [
-    {
-      "step": 1,
-      "verb": "prepare",
-      "what": "Validate required environment variables and store them in a global state object.",
-      "fails_if": "Missing INPUT_PATH or OUTPUT_PATH environment variable.",
-      "code": "(async () => {\n  const { env } = process;\n  const inputPath = env.INPUT_PATH;\n  const outputPath = env.OUTPUT_PATH;\n  if (!inputPath) throw new Error('Missing INPUT_PATH');\n  if (!outputPath) throw new Error('Missing OUTPUT_PATH');\n  const width = env.WIDTH ? Number(env.WIDTH) : undefined;\n  const height = env.HEIGHT ? Number(env.HEIGHT) : undefined;\n  globalThis._sharp_state = { inputPath, outputPath, width, height };\n})();"
-    },
-    {
-      "step": 2,
-      "verb": "execute",
-      "what": "Load sharp, perform the resize operation, and write the output file.",
-      "fails_if": "sharp throws an error or the resize/write fails.",
-      "code": "(async () => {\n  const { default: sharp } = await import('sharp');\n  const { inputPath, outputPath, width, height } = globalThis._sharp_state;\n  let pipeline = sharp(inputPath);\n  if (width !== undefined || height !== undefined) {\n    pipeline = pipeline.resize({ width, height });\n  }\n  await pipeline.toFile(outputPath);\n  globalThis._sharp_result = { outputPath };\n})();"
-    },
-    {
-      "step": 3,
-      "verb": "emit",
-      "what": "Emit a single JSON object containing the path of the resized image.",
-      "fails_if": "Result object missing or JSON serialization fails.",
-      "code": "(async () => {\n  const result = globalThis._sharp_result;\n  if (!result) throw new Error('Execute step did not produce a result');\n  console.log(JSON.stringify({ output_path: result.outputPath }));\n})();"
-    }
-  ],
-  "invoke_timeout_ms": 90000,
-  "source": "synthesized:agentry.synthesize",
-  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+  "source": "dsh_synth:verified"
 }

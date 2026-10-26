@@ -1,0 +1,19 @@
+{
+  "capability_id": "test.png_resize_vb2",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793007909746,
+  "spec_notes": "Uses sharp (native bindings via libvips) for fast, high-quality PNG resizing. Default export pattern: (await import('sharp')).default. Resize maintains aspect ratio by default; uses .resize(200, 200) for exact 200x200. Tested and working in Node 22.",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 41713,
+    "packages_used": [
+      "sharp"
+    ],
+    "references_shown": [
+      "test.html_to_png_v0537",
+      "test.qr_png_vb1"
+    ],
+    "used_composition": false
+  }
+}
