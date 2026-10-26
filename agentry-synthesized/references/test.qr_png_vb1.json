@@ -1,0 +1,18 @@
+{
+  "capability_id": "test.qr_png_vb1",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793007407333,
+  "spec_notes": "qrcode@1.5.4, pure JS, no browser/binary, installs cleanly. CJS package: import via `(await import('qrcode')).default` (ESM default interop — calling the namespace directly fails). QRCode.toBuffer(payload, {type:'png', width, margin}) returns a PNG Buffer. Input file contains the payload string (trimmed); QR_PAYLOAD env var can override payload if input file is absent/empty. Output is valid PNG (magic 89504e47 verified, ~2KB for short URLs). Width option is px; default margin 2 is module units. Payload length: very long strings (>~1KB) auto-raise QR version and can throw if too large — keep payloads short.",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 76188,
+    "packages_used": [
+      "qrcode"
+    ],
+    "references_shown": [
+      "test.html_to_png_v0537"
+    ],
+    "used_composition": false
+  }
+}

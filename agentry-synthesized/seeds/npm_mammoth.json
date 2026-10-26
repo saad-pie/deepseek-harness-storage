@@ -22,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate the input DOCX path and store it for later steps",
-      "fails_if": "INPUT_DOCX_PATH env var missing or file not readable",
-      "code": "(async () => {\\n  const { accessSync, constants } = await import('node:fs');\\n  const inputPath = process.env.INPUT_DOCX_PATH;\\n  if (!inputPath) {\\n    throw new Error('Missing INPUT_DOCX_PATH env var');\\n  }\\n  try {\\n    accessSync(inputPath, constants.R_OK);\\n  } catch (e) {\\n    throw new Error('Input file not accessible: ' + inputPath);\\n  }\\n  globalThis.inputPath = inputPath;\\n})();"
+      "what": "Validate the DOCX input path and store it for later steps",
+      "fails_if": "DOCX_PATH env var missing or file does not exist",
+      "code": "(async () => {\\n  const { existsSync } = await import('node:fs');\\n  const docxPath = process.env.DOCX_PATH;\\n  if (!docxPath) {\\n    throw new Error('Missing required env var DOCX_PATH');\\n  }\\n  if (!existsSync(docxPath)) {\\n    throw new Error('Docx file does not exist at ' + docxPath);\\n  }\\n  globalThis.docxPath = docxPath;\\n})();"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Use mammoth to convert the DOCX file to Markdown",
+      "what": "Use mammoth to convert the .docx file to markdown",
       "fails_if": "mammoth.convertToMarkdown throws or returns no value",
-      "code": "(async () => {\\n  const mod = await import('mammoth');\\n  const mammoth = mod.default || mod;\\n  if (typeof mammoth.convertToMarkdown !== 'function') {\\n    throw new Error('mammoth: convertToMarkdown not available');\\n  }\\n  const result = await mammoth.convertToMarkdown({ path: globalThis.inputPath });\\n  globalThis.markdown = result.value;\\n})();"
+      "code": "(async () => {\\n  const mammothMod = await import('mammoth');\\n  const mammoth = mammothMod.default || mammothMod;\\n  if (typeof mammoth.convertToMarkdown !== 'function') {\\n    throw new Error('mammoth: convertToMarkdown not available');\\n  }\\n  const result = await mammoth.convertToMarkdown({path: globalThis.docxPath});\\n  globalThis.markdown = result.value;\\n})();"
     },
     {
       "step": 3,
       "verb": "emit",
       "what": "Write a single JSON object containing the markdown to stdout",
-      "fails_if": "markdown result missing or not a string",
-      "code": "(async () => {\\n  if (typeof globalThis.markdown !== 'string') {\\n    throw new Error('markdown result missing');\\n  }\\n  console.log(JSON.stringify({ markdown: globalThis.markdown }));\\n})();"
+      "fails_if": "markdown is undefined or not a string",
+      "code": "(async () => {\\n  if (typeof globalThis.markdown !== 'string') {\\n    throw new Error('No markdown produced');\\n  }\\n  console.log(JSON.stringify({markdown: globalThis.markdown}));\\n})();"
     }
   ],
   "invoke_timeout_ms": 90000,
