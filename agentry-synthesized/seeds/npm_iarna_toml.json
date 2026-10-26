@@ -1,0 +1,47 @@
+{
+  "id": "npm_iarna_toml",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_iarna_toml",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_iarna_toml.mjs",
+  "accepts": {
+    "input_path": "string"
+  },
+  "produces": {
+    "json": "string"
+  },
+  "requires": {
+    "npm": [
+      "@iarna/toml"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that INPUT_PATH env var is set and store it for later steps",
+      "fails_if": "INPUT_PATH environment variable is missing",
+      "code": "const { env } = await import('node:process');\nif (!env.INPUT_PATH) throw new Error('Missing INPUT_PATH env var');\nglobalThis.inputPath = env.INPUT_PATH;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Read the TOML file, parse it with @iarna/toml, and stringify the result to JSON",
+      "fails_if": "File cannot be read, TOML parsing fails, or JSON stringification fails",
+      "code": "const fs = await import('node:fs');\nconst { readFileSync } = fs;\nconst tomlPkg = await import('@iarna/toml');\nconst { parse } = tomlPkg.default || tomlPkg;\nconst content = readFileSync(globalThis.inputPath, 'utf8');\nconst obj = parse(content);\nglobalThis.resultJson = JSON.stringify(obj);"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object containing the parsed JSON string to stdout",
+      "fails_if": "JSON emission fails or the json field is undefined",
+      "code": "console.log(JSON.stringify({ json: globalThis.resultJson }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

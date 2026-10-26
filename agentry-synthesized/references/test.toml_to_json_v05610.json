@@ -1,0 +1,18 @@
+{
+  "capability_id": "test.toml_to_json_v05610",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793003249516,
+  "spec_notes": "Uses @iarna/toml which provides parse() for TOML parsing. The package handles all TOML types including dates, arrays, nested tables. Output JSON is pretty-printed with 2-space indentation. Date values are converted to ISO 8601 strings in JSON. No external dependencies beyond the npm package.",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 36202,
+    "packages_used": [
+      "@iarna/toml"
+    ],
+    "references_shown": [
+      "test.yaml_to_toml_v0567"
+    ],
+    "used_composition": false
+  }
+}
