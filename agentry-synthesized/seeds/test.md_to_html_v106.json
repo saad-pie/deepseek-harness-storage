@@ -1,0 +1,39 @@
+{
+  "id": "test.md_to_html_v106",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "test.md_to_html_v106",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/test.md_to_html_v106.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string",
+    "bytes": "number"
+  },
+  "requires": {
+    "npm": [
+      "marked"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "source": "dsh_synth:verified",
+  "trial": false,
+  "trial_passed_at": 1793110716719,
+  "trial_session": "dsh_synth_preverify_test.md_to_html_v106_mvqrtmp1",
+  "adopted_from": {
+    "candidate_id": "_dsh_synth_test.md_to_html_v106",
+    "candidate_kind": "dsh_synth",
+    "synthesized_at": 1793110716719,
+    "handler_path": "/tmp/home/.dsh/agentry-synthesized/handlers/test.md_to_html_v106.mjs",
+    "seed_path": "/tmp/home/.dsh/agentry-synthesized/seeds/test.md_to_html_v106.json",
+    "package_name": "marked",
+    "packages": [
+      "marked"
+    ],
+    "trial_session": "dsh_synth_preverify_test.md_to_html_v106_mvqrtmp1"
+  }
+}
