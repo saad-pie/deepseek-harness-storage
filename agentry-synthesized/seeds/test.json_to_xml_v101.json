@@ -1,0 +1,48 @@
+{
+  "id": "test.json_to_xml_v101",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "test.json_to_xml_v101",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/test.json_to_xml_v101.mjs",
+  "accepts": {
+    "json_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "xml_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "xml-js"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate required environment variables, read the JSON file and store its contents for later steps.",
+      "fails_if": "JSON_PATH or OUTPUT_PATH env var missing, or the JSON file cannot be read.",
+      "code": "const { readFileSync } = await import('node:fs');\nconst jsonPath = process.env.JSON_PATH;\nconst outPath = process.env.OUTPUT_PATH;\nif (!jsonPath) throw new Error('Missing JSON_PATH env var');\nif (!outPath) throw new Error('Missing OUTPUT_PATH env var');\nconst jsonContent = readFileSync(jsonPath, 'utf8');\nglobalThis.jsonContent = jsonContent;\nglobalThis.outputPath = outPath;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Convert the JSON string to XML using xml-js's json2xml function.",
+      "fails_if": "json2xml throws or returns undefined.",
+      "code": "const { json2xml } = await import('xml-js');\nconst xml = json2xml(globalThis.jsonContent, { compact: true, spaces: 2 });\nif (typeof xml !== 'string') throw new Error('Conversion did not produce XML string');\nglobalThis.xmlResult = xml;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write the XML to the requested output file and emit a JSON descriptor with the output path.",
+      "fails_if": "Writing the file fails or console.log does not output valid JSON.",
+      "code": "const { writeFileSync } = await import('node:fs');\nwriteFileSync(globalThis.outputPath, globalThis.xmlResult, 'utf8');\nconsole.log(JSON.stringify({ xml_path: globalThis.outputPath }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
