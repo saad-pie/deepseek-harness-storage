@@ -1,0 +1,39 @@
+{
+  "id": "test.json_to_yaml_v103",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "test.json_to_yaml_v103",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/test.json_to_yaml_v103.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string",
+    "bytes": "number"
+  },
+  "requires": {
+    "npm": [
+      "yaml"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "source": "dsh_synth:verified",
+  "trial": false,
+  "trial_passed_at": 1793105909805,
+  "trial_session": "dsh_synth_preverify_test.json_to_yaml_v103_mvqoykyi",
+  "adopted_from": {
+    "candidate_id": "_dsh_synth_test.json_to_yaml_v103",
+    "candidate_kind": "dsh_synth",
+    "synthesized_at": 1793105909805,
+    "handler_path": "/tmp/home/.dsh/agentry-synthesized/handlers/test.json_to_yaml_v103.mjs",
+    "seed_path": "/tmp/home/.dsh/agentry-synthesized/seeds/test.json_to_yaml_v103.json",
+    "package_name": "yaml",
+    "packages": [
+      "yaml"
+    ],
+    "trial_session": "dsh_synth_preverify_test.json_to_yaml_v103_mvqoykyi"
+  }
+}

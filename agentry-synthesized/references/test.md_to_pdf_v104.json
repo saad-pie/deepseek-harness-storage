@@ -1,0 +1,19 @@
+{
+  "capability_id": "test.md_to_pdf_v104",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793106053720,
+  "spec_notes": "Uses markdown-pdf package which relies on phantomjs-prebuilt (deprecated but functional). The package uses a callback-based API with .from().to() pattern. Test verified working - produces valid PDF output (~17KB for test fixture). No pre_invoke composition needed as this is a direct markdown-to-PDF conversion.",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 79973,
+    "packages_used": [
+      "markdown-pdf"
+    ],
+    "references_shown": [
+      "test.docx_to_markdown_vb3",
+      "test.md_to_pdf_v0535"
+    ],
+    "used_composition": false
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "capability_id": "test.json_to_yaml_v103",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793105911397,
+  "spec_notes": "Uses js-yaml (npm: yaml) package for YAML stringification. JSON is parsed with built-in JSON.parse then converted to YAML via stringify(). Handles nested objects and arrays. The yaml package provides both parse and stringify - we only need stringify for this direction.",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 40506,
+    "packages_used": [
+      "yaml"
+    ],
+    "references_shown": [
+      "test.toml_to_json_v05610",
+      "test.yaml_to_toml_v0567"
+    ],
+    "used_composition": false
+  }
+}
