@@ -1,0 +1,16 @@
+{
+  "capability_id": "hermes_atlas_nesquena_hermes-webui",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793107450063,
+  "spec_notes": "Package @aphanarc_lab/hermes-webui is a CLI launcher for Hermes WebUI dashboard. It manages a Python-based web server. The 'doctor' command runs health checks and outputs diagnostics. This capability wraps 'doctor' as a tool that accepts optional config via input_path (e.g. {\"hermesHome\": \"/custom/path\"}) and writes structured JSON results to output_path. First run installs Python deps (~5MB) into a venv under HERMES_HOME; subsequent runs are fast. Exit code 1 is expected when Hermes Agent is not installed (common in test envs). The CLI is ESM-only (bin/hermes-webui.mjs), so we spawn it via node. Set HERMES_WEBUI_CLI_PATH env var if the package is installed elsewhere.",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 134816,
+    "packages_used": [
+      "@aphanarc_lab/hermes-webui"
+    ],
+    "references_shown": [],
+    "used_composition": false
+  }
+}
