@@ -1,0 +1,57 @@
+{
+  "id": "hermes_atlas_nesquena_hermes-webui",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "hermes_atlas_nesquena_hermes-webui",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/hermes_atlas_nesquena_hermes-webui.mjs",
+  "accepts": {
+    "action": "string",
+    "port": {
+      "type": "number",
+      "optional": true
+    },
+    "open": {
+      "type": "boolean",
+      "optional": true
+    }
+  },
+  "produces": {
+    "output": "string",
+    "exit_code": "number",
+    "error": "string"
+  },
+  "requires": {
+    "npm": [
+      "@bitseek/hermes-webui"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate inputs and build argument list for hermes-webui command",
+      "fails_if": "Missing required ACTION env var or invalid PORT value",
+      "code": "(async () => {\n  const { env } = process;\n  const action = env.ACTION;\n  if (!action) throw new Error('Missing required ACTION env var');\n  const portRaw = env.PORT;\n  const openRaw = env.OPEN;\n  const args = [action];\n  if (portRaw !== undefined) {\n    const port = Number(portRaw);\n    if (Number.isNaN(port)) throw new Error('PORT must be a number');\n    args.push('--port', String(port));\n  }\n  if (openRaw !== undefined) {\n    const open = openRaw === 'true';\n    if (open) args.push('--open');\n  }\n  globalThis.hermesArgs = args;\n})();"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Spawn the hermes-webui CLI with prepared arguments and capture its output",
+      "fails_if": "The CLI process exits with a non‑zero code or cannot be started",
+      "code": "(async () => {\n  const { spawn } = await import('node:child_process');\n  const path = await import('node:path');\n  const args = globalThis.hermesArgs;\n  const binPath = path.resolve('node_modules', '@bitseek', 'hermes-webui', 'bin', 'hermes-webui.mjs');\n  const child = spawn(process.execPath, [binPath, ...args], { stdio: ['ignore', 'pipe', 'pipe'] });\n  let stdout = '';\n  let stderr = '';\n  for await (const chunk of child.stdout) { stdout += chunk; }\n  for await (const chunk of child.stderr) { stderr += chunk; }\n  const exitCode = await new Promise(resolve => child.on('close', resolve));\n  globalThis.hermesResult = { stdout, stderr, exitCode };\n})();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object with the captured output, exit code and any error text",
+      "fails_if": "JSON serialization fails or any promised field is undefined",
+      "code": "(async () => {\n  const result = globalThis.hermesResult;\n  console.log(JSON.stringify({\n    output: result.stdout.trim(),\n    exit_code: result.exitCode,\n    error: result.stderr.trim()\n  }));\n})();"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

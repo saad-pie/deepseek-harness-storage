@@ -1,0 +1,55 @@
+{
+  "id": "npm_bitseek_hermes-webui",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_bitseek_hermes-webui",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_bitseek_hermes-webui.mjs",
+  "accepts": {
+    "command": "string",
+    "port": {
+      "type": "string",
+      "optional": true
+    },
+    "open": {
+      "type": "boolean",
+      "optional": true
+    }
+  },
+  "produces": {
+    "result": "string"
+  },
+  "requires": {
+    "npm": [
+      "@bitseek/hermes-webui"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate inputs and build command arguments for hermes-webui.",
+      "fails_if": "Missing required COMMAND env var or invalid PORT value",
+      "code": "const fs = await import('node:fs');\nconst path = await import('node:path');\nconst command = process.env.COMMAND;\nif (!command) { throw new Error('COMMAND env var required'); }\nconst port = process.env.PORT;\nconst open = process.env.OPEN === 'true';\nconst args = [];\nif (port) args.push('--port', port);\nif (open) args.push('--open');\nglobalThis.hermesCommand = command;\nglobalThis.hermesArgs = args;\n"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Run the hermes-webui binary with prepared arguments and capture output.",
+      "fails_if": "The subprocess exits with non-zero code or cannot be started",
+      "code": "const { execFile } = await import('node:child_process');\nconst binPath = path.resolve('node_modules', '@bitseek', 'hermes-webui', 'bin', 'hermes-webui.mjs');\nconst { stdout, stderr } = await new Promise((resolve, reject) => {\n  execFile('node', [binPath, ...globalThis.hermesArgs], { encoding: 'utf8' }, (error, out, err) => {\n    if (error) reject(error);\n    else resolve({ stdout: out, stderr: err });\n  });\n});\nglobalThis.hermesStdout = stdout;\n"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object with the captured result to stdout.",
+      "fails_if": "Result is undefined or JSON serialization fails",
+      "code": "if (typeof globalThis.hermesStdout === 'undefined') { throw new Error('No output captured'); }\nconsole.log(JSON.stringify({ result: globalThis.hermesStdout.trim() }));\n"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
