@@ -1,0 +1,19 @@
+{
+  "capability_id": "test.md_to_html_v107",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793111883883,
+  "spec_notes": "Uses 'marked' package - pure JavaScript markdown parser with no native dependencies. Handles CommonMark + GFM features (tables, strikethrough, task lists). For async/ESM compatibility, use await import('marked') and destructure marked from the default export. The package outputs clean HTML without wrapper elements by default.",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 44266,
+    "packages_used": [
+      "marked"
+    ],
+    "references_shown": [
+      "test.docx_to_markdown_vb3",
+      "test.html_to_avif_v0544"
+    ],
+    "used_composition": false
+  }
+}
