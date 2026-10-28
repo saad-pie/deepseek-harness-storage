@@ -1,0 +1,18 @@
+{
+  "capability_id": "file.convert.csv_to_parquet",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793205635702,
+  "spec_notes": "Uses @dsnp/parquetjs which is a pure JS Parquet implementation. All columns are typed as UTF8 for simplicity. For typed columns, would need CSV type inference. The reference implementation in file.convert.csv_to_parquet.mjs uses the same package and pattern. Tested and verified to produce valid Parquet files (~710 bytes for 3-row CSV).",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 72039,
+    "packages_used": [
+      "@dsnp/parquetjs"
+    ],
+    "references_shown": [
+      "file.convert.csv_to_parquet"
+    ],
+    "used_composition": false
+  }
+}
