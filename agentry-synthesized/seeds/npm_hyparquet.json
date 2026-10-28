@@ -1,0 +1,47 @@
+{
+  "id": "npm_hyparquet",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_hyparquet",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_hyparquet.mjs",
+  "accepts": {
+    "input_path": "string"
+  },
+  "produces": {
+    "rowCount": "number"
+  },
+  "requires": {
+    "npm": [
+      "hyparquet"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate INPUT_PATH env var and ensure the parquet file exists, storing the path for later steps.",
+      "fails_if": "INPUT_PATH is missing or the file cannot be accessed",
+      "code": "const fs = await import('node:fs');\nconst inputPath = process.env.INPUT_PATH;\nif (!inputPath) throw new Error('INPUT_PATH env var required');\nawait fs.promises.access(inputPath).catch(()=>{throw new Error('Input file not found')});\nglobalThis.inputPath = inputPath;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Load hyparquet, read the file as an AsyncBuffer, extract metadata, and compute total row count.",
+      "fails_if": "hyparquet functions throw or metadata lacks num_rows",
+      "code": "const { asyncBufferFromFile, parquetMetadataAsync } = await import('hyparquet');\nconst file = await asyncBufferFromFile(globalThis.inputPath);\nconst metadata = await parquetMetadataAsync(file);\nif (!metadata || typeof metadata.num_rows === 'undefined') throw new Error('Metadata missing num_rows');\nglobalThis.rowCount = Number(metadata.num_rows);"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object with the rowCount to stdout.",
+      "fails_if": "rowCount is undefined or console.log fails",
+      "code": "if (typeof globalThis.rowCount !== 'number') throw new Error('rowCount not computed');\nconsole.log(JSON.stringify({ rowCount: globalThis.rowCount }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

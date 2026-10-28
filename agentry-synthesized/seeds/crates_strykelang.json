@@ -1,0 +1,46 @@
+{
+  "id": "crates_strykelang",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "crates_strykelang",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/crates_strykelang.mjs",
+  "accepts": {
+    "script_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [],
+    "pip": [],
+    "post_install": "cargo install --locked strykelang",
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that SCRIPT_PATH and OUTPUT_PATH env vars are set and that the script file exists.",
+      "fails_if": "Either env var is missing or the script file cannot be accessed.",
+      "code": "use std::env;\nuse std::fs;\nlet script_path = env::var(\"SCRIPT_PATH\").expect(\"SCRIPT_PATH env var missing\");\nlet output_path = env::var(\"OUTPUT_PATH\").expect(\"OUTPUT_PATH env var missing\");\nfs::metadata(&script_path).expect(\"Script file not found or unreadable\");\n// variables are kept for later steps\n"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Run the strykelang CLI on the provided script and write its stdout to the output path.",
+      "fails_if": "The strykelang command exits with a non‑zero status or writing the output file fails.",
+      "code": "use std::process::Command;\nuse std::fs::File;\nuse std::io::Write;\nlet script_path = env::var(\"SCRIPT_PATH\").unwrap();\nlet output_path = env::var(\"OUTPUT_PATH\").unwrap();\nlet output = Command::new(\"stryke\")\n    .arg(&script_path)\n    .output()\n    .expect(\"Failed to execute strykelang binary\");\nif !output.status.success() {\n    panic!(\"strykelang execution failed: {}\", String::from_utf8_lossy(&output.stderr));\n}\nlet mut out_file = File::create(&output_path).expect(\"Cannot create output file\");\nout_file.write_all(&output.stdout).expect(\"Failed to write output\");\n"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the path to the generated output file.",
+      "fails_if": "JSON construction fails or the output_path variable is undefined.",
+      "code": "let output_path = env::var(\"OUTPUT_PATH\").unwrap();\nprintln!(\"{{\\\"output_path\\\":\\\"{}\\\"}}\", output_path);\n"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
