@@ -12,18 +12,9 @@ import { prepareSession } from "/tmp/home/.dsh/node_modules/agentry/src/runtime/
 const CAP_ID = "agentskills_foryourhealth111-pixel_Vibe-Skills_SKILL";
 const CAP_KIND = "agent_skill";
 const ACCEPTS = {
-  "task": "string",
-  "skill_root": {
-    "type": "string",
-    "optional": true
-  },
-  "workspace_root": {
-    "type": "string",
-    "optional": true
-  }
+  "task": "string"
 };
 const PRODUCES = {
-  "result": "string",
   "content": "string"
 };
 const REQUIRES = {
@@ -33,7 +24,7 @@ const REQUIRES = {
   "capability": []
 };
 const INPUT_MAP = {
-  "task": "User task verbatim"
+  "task": "User task to be executed by Vibe"
 };
 const LLM_PROVIDER = "groq";
 const LLM_MODEL = "qwen/qwen3.8-27b";
@@ -160,7 +151,7 @@ async function run(input, ctx, opts = {}) {
 
 export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
-  const probe = await run({"task":"Generate a PDF from images"}, deps, { session });
+  const probe = await run({"task":"Generate a sales report for Q3 2024"}, deps, { session });
   const out = probe.output || probe;
   if (out.status === "awaiting_input") throw new Error("accept: awaiting_input is not a trial pass");
   const minBytes = 0;
