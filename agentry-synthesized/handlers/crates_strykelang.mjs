@@ -5,12 +5,9 @@
 
 const CAP_ID = "crates_strykelang";
 const CAP_KIND = "tool";
-const ACCEPTS = {
-  "script_path": "string",
-  "output_path": "string"
-};
+const ACCEPTS = {};
 const PRODUCES = {
-  "output_path": "string"
+  "version": "string"
 };
 const REQUIRES = {
   "npm": [],
@@ -20,10 +17,12 @@ const REQUIRES = {
 };
 const ENV_MAP = {};
 const PRE_INVOKE = {};
-const OUTPUT_MAP = {};
+const OUTPUT_MAP = {
+  "version": "version"
+};
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "rust.run";
-const KERNEL_SCRIPT = "fn main() {\n    use std::env;\n    use std::fs;\n    let script_path = env::var(\"SCRIPT_PATH\").expect(\"SCRIPT_PATH env var missing\");\n    let output_path = env::var(\"OUTPUT_PATH\").expect(\"OUTPUT_PATH env var missing\");\n    fs::metadata(&script_path).expect(\"Script file not found or unreadable\");\n    // variables are kept for later steps\n    \n    use std::process::Command;\n    use std::fs::File;\n    use std::io::Write;\n    let script_path = env::var(\"SCRIPT_PATH\").unwrap();\n    let output_path = env::var(\"OUTPUT_PATH\").unwrap();\n    let output = Command::new(\"stryke\")\n        .arg(&script_path)\n        .output()\n        .expect(\"Failed to execute strykelang binary\");\n    if !output.status.success() {\n        panic!(\"strykelang execution failed: {}\", String::from_utf8_lossy(&output.stderr));\n    }\n    let mut out_file = File::create(&output_path).expect(\"Cannot create output file\");\n    out_file.write_all(&output.stdout).expect(\"Failed to write output\");\n    \n    let output_path = env::var(\"OUTPUT_PATH\").unwrap();\n    println!(\"{{\\\"output_path\\\":\\\"{}\\\"}}\", output_path);\n}\n";
+const KERNEL_SCRIPT = "use std::process::Command;\n\nfn main() {\n    // Execute the strykelang binary (installed via post_install) with --version flag\n    let output = Command::new(\"stryke\")\n        .arg(\"--version\")\n        .output()\n        .expect(\"failed to execute strykelang binary\");\n\n    if !output.status.success() {\n        panic!(\"stryke returned a non‑zero exit code\");\n    }\n\n    let version_raw = String::from_utf8_lossy(&output.stdout);\n    let version = version_raw.trim();\n    // Emit JSON with the version field\n    println!(\"{{\\\"version\\\":\\\"{}\\\"}}\", version);\n}";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -40,14 +39,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session, requires_override: REQUIRES });
-  const FIXTURES = {"/tmp/script.pl":"test fixture for /tmp/script.pl\n","/tmp/out.txt":"hello world\n"};
+  const FIXTURES = {};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"script_path":"/tmp/script.pl","output_path":"/tmp/out.txt"}, deps, { session });
+  const probe = await run({}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

@@ -1,0 +1,32 @@
+{
+  "id": "agentskills_foryourhealth111-pixel_Vibe-Skills_SKILL",
+  "kind": "agent_skill",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "agentskills_foryourhealth111-pixel_Vibe-Skills_SKILL",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/agentskills_foryourhealth111-pixel_Vibe-Skills_SKILL.mjs",
+  "accepts": {
+    "task": "string",
+    "skill_root": {
+      "type": "string",
+      "optional": true
+    },
+    "workspace_root": {
+      "type": "string",
+      "optional": true
+    }
+  },
+  "produces": {
+    "result": "string",
+    "content": "string"
+  },
+  "requires": {
+    "npm": [],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": null,
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

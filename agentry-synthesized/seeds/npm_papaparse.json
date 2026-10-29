@@ -1,0 +1,48 @@
+{
+  "id": "npm_papaparse",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_papaparse",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_papaparse.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "json_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "papaparse"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate input and output paths, read the CSV file into memory",
+      "fails_if": "Missing env vars, input file not found, or read error",
+      "code": "(async () => {\n  const fs = await import('node:fs');\n  const inputPath = process.env.INPUT_PATH;\n  const outputPath = process.env.OUTPUT_PATH;\n  if (!inputPath) throw new Error('Missing INPUT_PATH');\n  if (!outputPath) throw new Error('Missing OUTPUT_PATH');\n  try { await fs.promises.access(inputPath); } catch { throw new Error('Input file not found'); }\n  const csv = await fs.promises.readFile(inputPath, 'utf8');\n  globalThis._csvContent = csv;\n  globalThis._outputPath = outputPath;\n})();"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Parse CSV to JSON using PapaParse and write the JSON to the output file",
+      "fails_if": "Papaparse parse errors or write failure",
+      "code": "(async () => {\n  const { default: Papa } = await import('papaparse');\n  const csv = globalThis._csvContent;\n  const outputPath = globalThis._outputPath;\n  const result = Papa.parse(csv, { header: true, skipEmptyLines: true });\n  if (result.errors && result.errors.length) {\n    throw new Error('Parse errors: ' + JSON.stringify(result.errors));\n  }\n  const jsonStr = JSON.stringify(result.data, null, 2);\n  const fs = await import('node:fs');\n  await fs.promises.writeFile(outputPath, jsonStr, 'utf8');\n  globalThis._jsonPath = outputPath;\n})();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the path to the generated JSON file",
+      "fails_if": "Missing result path or console output not valid JSON",
+      "code": "(async () => {\n  console.log(JSON.stringify({ json_path: globalThis._jsonPath }));\n})();"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
