@@ -5,7 +5,7 @@
   "handler": "npm_papaparse",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_papaparse.mjs",
   "accepts": {
-    "csv_path": "string"
+    "input_path": "string"
   },
   "produces": {
     "json": "string"
@@ -22,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate CSV_PATH env var and read file into memory",
-      "fails_if": "CSV_PATH missing or file cannot be read",
-      "code": "(async () => {\\n  const { readFileSync, existsSync } = await import('node:fs');\\n  const csvPath = process.env.CSV_PATH;\\n  if (!csvPath) throw new Error('Missing env var CSV_PATH');\\n  if (!existsSync(csvPath)) throw new Error('CSV file not found at ' + csvPath);\\n  const content = readFileSync(csvPath, { encoding: 'utf8' });\\n  globalThis._csvContent = content;\\n})();"
+      "what": "Validate INPUT_PATH env var, read the CSV file, and store its contents for later steps",
+      "fails_if": "INPUT_PATH is missing or the file cannot be read",
+      "code": "(async () => {\n  const { readFileSync } = await import('node:fs');\n  const inputPath = process.env.INPUT_PATH;\n  if (!inputPath) throw new Error('Missing INPUT_PATH');\n  const content = readFileSync(inputPath, 'utf8');\n  globalThis.csvContent = content;\n})();"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Parse CSV content into JSON array using PapaParse",
-      "fails_if": "Parsing throws or result is not an object with data array",
-      "code": "(async () => {\\n  const papaparse = await import('papaparse');\\n  const Papa = papaparse.default || papaparse;\\n  if (typeof Papa.parse !== 'function') throw new Error('papaparse: required method parse not in exports');\\n  const content = globalThis._csvContent;\\n  const result = Papa.parse(content, { header: true, skipEmptyLines: true });\\n  if (!result || !Array.isArray(result.data)) throw new Error('Parsing failed');\\n  globalThis._parsed = result.data;\\n})();"
+      "what": "Parse the CSV content using PapaParse and keep the resulting array of objects",
+      "fails_if": "Papaparse parse method is unavailable or parsing throws an error",
+      "code": "(async () => {\n  const mod = await import('papaparse');\n  const Papa = mod.default || mod;\n  if (typeof Papa.parse !== 'function') throw new Error('papaparse: required method parse not in exports');\n  const result = Papa.parse(globalThis.csvContent, { header: true });\n  globalThis.parsed = result.data;\n})();"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write parsed JSON array as string to stdout in a JSON wrapper",
-      "fails_if": "JSON.stringify fails or output missing",
-      "code": "(async () => {\\n  const data = globalThis._parsed;\\n  const jsonStr = JSON.stringify(data);\\n  console.log(JSON.stringify({ json: jsonStr }));\\n})();"
+      "what": "Emit a single JSON object with the parsed data stringified under the key \"json\"",
+      "fails_if": "The JSON object cannot be stringified or console.log fails",
+      "code": "(async () => {\n  const output = { json: JSON.stringify(globalThis.parsed) };\n  console.log(JSON.stringify(output));\n})();"
     }
   ],
   "invoke_timeout_ms": 90000,
