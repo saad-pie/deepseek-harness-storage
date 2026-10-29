@@ -5,24 +5,31 @@
 
 const CAP_ID = "crates_strykelang";
 const CAP_KIND = "tool";
-const ACCEPTS = {};
+const ACCEPTS = {
+  "script_path": "string"
+};
 const PRODUCES = {
-  "version": "string"
+  "result": "string"
 };
 const REQUIRES = {
   "npm": [],
   "pip": [],
   "post_install": "cargo install --locked strykelang",
-  "capability": []
+  "capability": [],
+  "rust_crates": [
+    "strykelang@0.17.60"
+  ]
 };
-const ENV_MAP = {};
+const ENV_MAP = {
+  "SCRIPT_PATH": "script_path"
+};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "version": "version"
+  "result": "result"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "rust.run";
-const KERNEL_SCRIPT = "use std::process::Command;\n\nfn main() {\n    // Execute the strykelang binary (installed via post_install) with --version flag\n    let output = Command::new(\"stryke\")\n        .arg(\"--version\")\n        .output()\n        .expect(\"failed to execute strykelang binary\");\n\n    if !output.status.success() {\n        panic!(\"stryke returned a non‑zero exit code\");\n    }\n\n    let version_raw = String::from_utf8_lossy(&output.stdout);\n    let version = version_raw.trim();\n    // Emit JSON with the version field\n    println!(\"{{\\\"version\\\":\\\"{}\\\"}}\", version);\n}";
+const KERNEL_SCRIPT = "#!/usr/bin/env rust-script\n//! ```cargo\n//! [dependencies]\n//! strykelang = \"0.17.60\"\n//! ```\nuse std::env;\nuse std::process::Command;\nuse std::fs;\n\nfn main() {\n    let script_path = env::var(\"SCRIPT_PATH\").expect(\"SCRIPT_PATH not set\");\n    // Ensure the script file exists and is readable\n    let _ = fs::read_to_string(&script_path).expect(\"Failed to read script file\");\n    let output = Command::new(\"stryke\")\n        .arg(&script_path)\n        .output()\n        .expect(\"Failed to execute strykelang CLI\");\n    if !output.status.success() {\n        panic!(\"stryke exited with non-zero status\");\n    }\n    let stdout = String::from_utf8_lossy(&output.stdout);\n    // Escape backslashes and double quotes for JSON string safety\n    let escaped = stdout.replace('\\\\', \"\\\\\\\\\").replace('\"', \"\\\\\\\"\");\n    println!(\"{{\\\"result\\\":\\\"{}\\\"}}\", escaped);\n}";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -39,14 +46,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session, requires_override: REQUIRES });
-  const FIXTURES = {};
+  const FIXTURES = {"/tmp/script.pl":"test fixture for /tmp/script.pl\n"};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({}, deps, { session });
+  const probe = await run({"script_path":"/tmp/script.pl"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

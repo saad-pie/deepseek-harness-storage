@@ -4,23 +4,28 @@
   "invoked_via": "invoker.in_process_js",
   "handler": "crates_strykelang",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/crates_strykelang.mjs",
-  "accepts": {},
+  "accepts": {
+    "script_path": "string"
+  },
   "produces": {
-    "version": "string"
+    "result": "string"
   },
   "requires": {
     "npm": [],
     "pip": [],
     "post_install": "cargo install --locked strykelang",
-    "capability": []
+    "capability": [],
+    "rust_crates": [
+      "strykelang@0.17.60"
+    ]
   },
   "plan": [
     {
       "step": 1,
       "verb": "execute",
-      "what": "Runs the installed strykelang binary to obtain its version and emits it as JSON",
-      "fails_if": "the strykelang binary is not found, exits with non‑zero status, or its output cannot be parsed",
-      "code": "use std::process::Command;\n\nfn main() {\n    // Execute the strykelang binary (installed via post_install) with --version flag\n    let output = Command::new(\"stryke\")\n        .arg(\"--version\")\n        .output()\n        .expect(\"failed to execute strykelang binary\");\n\n    if !output.status.success() {\n        panic!(\"stryke returned a non‑zero exit code\");\n    }\n\n    let version_raw = String::from_utf8_lossy(&output.stdout);\n    let version = version_raw.trim();\n    // Emit JSON with the version field\n    println!(\"{{\\\"version\\\":\\\"{}\\\"}}\", version);\n}"
+      "what": "Runs the strykelang CLI on the provided Perl script and captures its output",
+      "fails_if": "fails to read the script file, the CLI returns a non-zero exit code, or any I/O error",
+      "code": "use std::env;\nuse std::process::Command;\nuse std::fs;\n\nfn main() {\n    let script_path = env::var(\"SCRIPT_PATH\").expect(\"SCRIPT_PATH not set\");\n    // Ensure the script file exists and is readable\n    let _ = fs::read_to_string(&script_path).expect(\"Failed to read script file\");\n    let output = Command::new(\"stryke\")\n        .arg(&script_path)\n        .output()\n        .expect(\"Failed to execute strykelang CLI\");\n    if !output.status.success() {\n        panic!(\"stryke exited with non-zero status\");\n    }\n    let stdout = String::from_utf8_lossy(&output.stdout);\n    // Escape backslashes and double quotes for JSON string safety\n    let escaped = stdout.replace('\\\\', \"\\\\\\\\\").replace('\"', \"\\\\\\\"\");\n    println!(\"{{\\\"result\\\":\\\"{}\\\"}}\", escaped);\n}"
     }
   ],
   "invoke_timeout_ms": 90000,

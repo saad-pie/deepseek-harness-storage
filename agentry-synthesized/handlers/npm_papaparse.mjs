@@ -6,11 +6,10 @@
 const CAP_ID = "npm_papaparse";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "input_path": "string",
-  "output_path": "string"
+  "csv_path": "string"
 };
 const PRODUCES = {
-  "json_path": "string"
+  "json": "string"
 };
 const REQUIRES = {
   "npm": [
@@ -21,16 +20,15 @@ const REQUIRES = {
   "capability": []
 };
 const ENV_MAP = {
-  "INPUT_PATH": "input_path",
-  "OUTPUT_PATH": "output_path"
+  "CSV_PATH": "csv_path"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "json_path": "json_path"
+  "json": "json"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate input and output paths, read the CSV file into memory\n  // fails_if: Missing env vars, input file not found, or read error\n  { // scope for step 1\n    // BEGIN prepare\n    (async () => {\n      const fs = await import('node:fs');\n      const inputPath = process.env.INPUT_PATH;\n      const outputPath = process.env.OUTPUT_PATH;\n      if (!inputPath) throw new Error('Missing INPUT_PATH');\n      if (!outputPath) throw new Error('Missing OUTPUT_PATH');\n      try { await fs.promises.access(inputPath); } catch { throw new Error('Input file not found'); }\n      const csv = await fs.promises.readFile(inputPath, 'utf8');\n      globalThis._csvContent = csv;\n      globalThis._outputPath = outputPath;\n    })();\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Parse CSV to JSON using PapaParse and write the JSON to the output file\n  // fails_if: Papaparse parse errors or write failure\n  { // scope for step 2\n    // BEGIN execute\n    (async () => {\n      const { default: Papa } = await import('papaparse');\n      const csv = globalThis._csvContent;\n      const outputPath = globalThis._outputPath;\n      const result = Papa.parse(csv, { header: true, skipEmptyLines: true });\n      if (result.errors && result.errors.length) {\n        throw new Error('Parse errors: ' + JSON.stringify(result.errors));\n      }\n      const jsonStr = JSON.stringify(result.data, null, 2);\n      const fs = await import('node:fs');\n      await fs.promises.writeFile(outputPath, jsonStr, 'utf8');\n      globalThis._jsonPath = outputPath;\n    })();\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the path to the generated JSON file\n  // fails_if: Missing result path or console output not valid JSON\n  { // scope for step 3\n    // BEGIN emit\n    (async () => {\n      console.log(JSON.stringify({ json_path: globalThis._jsonPath }));\n    })();\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate CSV_PATH env var and read file into memory\n  // fails_if: CSV_PATH missing or file cannot be read\n  { // scope for step 1\n    // BEGIN prepare\n    (async () => {\n      const { readFileSync, existsSync } = await import('node:fs');\n      const csvPath = process.env.CSV_PATH;\n      if (!csvPath) throw new Error('Missing env var CSV_PATH');\n      if (!existsSync(csvPath)) throw new Error('CSV file not found at ' + csvPath);\n      const content = readFileSync(csvPath, { encoding: 'utf8' });\n      globalThis._csvContent = content;\n    })();\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Parse CSV content into JSON array using PapaParse\n  // fails_if: Parsing throws or result is not an object with data array\n  { // scope for step 2\n    // BEGIN execute\n    (async () => {\n      const papaparse = await import('papaparse');\n      const Papa = papaparse.default || papaparse;\n      if (typeof Papa.parse !== 'function') throw new Error('papaparse: required method parse not in exports');\n      const content = globalThis._csvContent;\n      const result = Papa.parse(content, { header: true, skipEmptyLines: true });\n      if (!result || !Array.isArray(result.data)) throw new Error('Parsing failed');\n      globalThis._parsed = result.data;\n    })();\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write parsed JSON array as string to stdout in a JSON wrapper\n  // fails_if: JSON.stringify fails or output missing\n  { // scope for step 3\n    // BEGIN emit\n    (async () => {\n      const data = globalThis._parsed;\n      const jsonStr = JSON.stringify(data);\n      console.log(JSON.stringify({ json: jsonStr }));\n    })();\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -47,14 +45,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session, requires_override: REQUIRES });
-  const FIXTURES = {"/tmp/input.csv":"a,b,c\n1,2,3\n","/tmp/output.json":"{\"test\":true}\n"};
+  const FIXTURES = {"/tmp/input.csv":"a,b,c\n1,2,3\n"};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"input_path":"/tmp/input.csv","output_path":"/tmp/output.json"}, deps, { session });
+  const probe = await run({"csv_path":"/tmp/input.csv"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {
