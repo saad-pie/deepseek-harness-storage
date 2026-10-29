@@ -9,7 +9,7 @@ const ACCEPTS = {
   "input_path": "string"
 };
 const PRODUCES = {
-  "rowCount": "number"
+  "rows": "string"
 };
 const REQUIRES = {
   "npm": [
@@ -24,11 +24,11 @@ const ENV_MAP = {
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "rowCount": "rowCount"
+  "rows": "rows"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate INPUT_PATH env var and ensure the parquet file exists, storing the path for later steps.\n  // fails_if: INPUT_PATH is missing or the file cannot be accessed\n  { // scope for step 1\n    // BEGIN prepare\n    const fs = await import('node:fs');\n    const inputPath = process.env.INPUT_PATH;\n    if (!inputPath) throw new Error('INPUT_PATH env var required');\n    await fs.promises.access(inputPath).catch(()=>{throw new Error('Input file not found')});\n    globalThis.inputPath = inputPath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Load hyparquet, read the file as an AsyncBuffer, extract metadata, and compute total row count.\n  // fails_if: hyparquet functions throw or metadata lacks num_rows\n  { // scope for step 2\n    // BEGIN execute\n    const { asyncBufferFromFile, parquetMetadataAsync } = await import('hyparquet');\n    const file = await asyncBufferFromFile(globalThis.inputPath);\n    const metadata = await parquetMetadataAsync(file);\n    if (!metadata || typeof metadata.num_rows === 'undefined') throw new Error('Metadata missing num_rows');\n    globalThis.rowCount = Number(metadata.num_rows);\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object with the rowCount to stdout.\n  // fails_if: rowCount is undefined or console.log fails\n  { // scope for step 3\n    // BEGIN emit\n    if (typeof globalThis.rowCount !== 'number') throw new Error('rowCount not computed');\n    console.log(JSON.stringify({ rowCount: globalThis.rowCount }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate INPUT_PATH and load the parquet file into an AsyncBuffer\n  // fails_if: INPUT_PATH env var missing or file cannot be read\n  { // scope for step 1\n    // BEGIN prepare\n    (async () => { const { asyncBufferFromFile } = await import('hyparquet'); const inputPath = process.env.INPUT_PATH; if (!inputPath) throw new Error('Missing INPUT_PATH'); const file = await asyncBufferFromFile(inputPath); globalThis.file = file; })();\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Read all rows from the parquet AsyncBuffer using parquetReadObjects\n  // fails_if: Reading fails or returns no data\n  { // scope for step 2\n    // BEGIN execute\n    (async () => { const { parquetReadObjects } = await import('hyparquet'); const file = globalThis.file; if (!file) throw new Error('File not prepared'); const rows = await parquetReadObjects({ file }); globalThis.rows = rows; })();\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the rows to stdout\n  // fails_if: Rows are undefined or JSON serialization fails\n  { // scope for step 3\n    // BEGIN emit\n    (async () => { const rows = globalThis.rows; if (!rows) throw new Error('No rows'); console.log(JSON.stringify({ rows })); })();\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
