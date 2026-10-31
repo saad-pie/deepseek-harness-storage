@@ -9,8 +9,7 @@
     "output_path": "string"
   },
   "produces": {
-    "output_path": "string",
-    "status": "string"
+    "output_path": "string"
   },
   "requires": {
     "npm": [],
@@ -24,23 +23,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that the input XML file exists and is readable.",
-      "fails_if": "Input file is missing or cannot be read.",
-      "code": "import os\nimport sys\n\ninput_path = os.environ.get('INPUT_PATH', '')\noutput_path = os.environ.get('OUTPUT_PATH', '')\n\nif not input_path:\n    print(json.dumps({\"error\": \"INPUT_PATH is required\"}))\n    sys.exit(1)\n\nif not os.path.exists(input_path):\n    print(json.dumps({\"error\": f\"Input file not found: {input_path}\"}))\n    sys.exit(1)\n\nif not os.access(input_path, os.R_OK):\n    print(json.dumps({\"error\": f\"Input file is not readable: {input_path}\"}))\n    sys.exit(1)\n\nif not output_path:\n    print(json.dumps({\"error\": \"OUTPUT_PATH is required\"}))\n    sys.exit(1)\n\n# Ensure output directory exists\noutput_dir = os.path.dirname(output_path)\nif output_dir and not os.path.exists(output_dir):\n    os.makedirs(output_dir, exist_ok=True)\n\nprint(json.dumps({\"status\": \"ready\", \"input_path\": input_path, \"output_path\": output_path}))"
+      "what": "Validate that INPUT_PATH and OUTPUT_PATH env vars are set and that the input XML file exists.",
+      "fails_if": "Missing env var or input file does not exist.",
+      "code": "import os, sys, json\ninput_path = os.environ.get('INPUT_PATH')\noutput_path = os.environ.get('OUTPUT_PATH')\nif not input_path or not output_path:\n    print(json.dumps({\"error\": \"missing input or output path\"}), file=sys.stderr)\n    sys.exit(1)\nif not os.path.isfile(input_path):\n    print(json.dumps({\"error\": f\"input file not found: {input_path}\"}), file=sys.stderr)\n    sys.exit(1)\n"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Convert the XML file to TOML format using the universal-config-converter package.",
-      "fails_if": "Conversion fails due to invalid XML or unsupported structure.",
-      "code": "import subprocess\nimport sys\nimport json\n\ninput_path = os.environ.get('INPUT_PATH', '')\noutput_path = os.environ.get('OUTPUT_PATH', '')\n\n# Use the CLI tool provided by the package\n# The package name is universal-config-converter, but the CLI command is config-converter\n# We assume it is installed and available in PATH\n\ntry:\n    result = subprocess.run(\n        ['config-converter', '-i', input_path, '-s', 'xml', '-t', 'toml', '-o', output_path],\n        capture_output=True,\n        text=True,\n        timeout=30\n    )\n    \n    if result.returncode != 0:\n        error_msg = result.stderr if result.stderr else result.stdout\n        print(json.dumps({\"error\": f\"Conversion failed: {error_msg}\"}))\n        sys.exit(1)\n    \n    # Verify output file was created\n    if not os.path.exists(output_path):\n        print(json.dumps({\"error\": \"Output file was not created\"}))\n        sys.exit(1)\n        \n    print(json.dumps({\"status\": \"converted\", \"output_path\": output_path}))\n\nexcept FileNotFoundError:\n    print(json.dumps({\"error\": \"config-converter command not found. Ensure universal-config-converter is installed.\"}))\n    sys.exit(1)\nexcept subprocess.TimeoutExpired:\n    print(json.dumps({\"error\": \"Conversion timed out\"}))\n    sys.exit(1)\nexcept Exception as e:\n    print(json.dumps({\"error\": f\"Unexpected error: {str(e)}\"}))\n    sys.exit(1)"
+      "what": "Run the universal-config-converter CLI to convert the XML file to TOML.",
+      "fails_if": "subprocess call returns non-zero exit code.",
+      "code": "import subprocess, sys, json, os\ncmd = ['config-converter', '-i', input_path, '-s', 'xml', '-t', 'toml', '-o', output_path]\nresult = subprocess.run(cmd, capture_output=True, text=True)\nif result.returncode != 0:\n    print(json.dumps({\"error\": \"conversion failed\", \"stderr\": result.stderr}), file=sys.stderr)\n    sys.exit(1)\n"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit the final JSON result with the output path and status.",
-      "fails_if": "JSON serialization fails or required fields are missing.",
-      "code": "import json\nimport os\n\noutput_path = os.environ.get('OUTPUT_PATH', '')\n\n# Check if the output file exists to confirm success\nif os.path.exists(output_path):\n    result = {\n        \"output_path\": output_path,\n        \"status\": \"success\"\n    }\nelse:\n    result = {\n        \"output_path\": output_path,\n        \"status\": \"failed\"\n    }\n\nprint(json.dumps(result))"
+      "what": "Emit a JSON object containing the path of the generated TOML file.",
+      "fails_if": "Printing fails or output_path is undefined.",
+      "code": "import json, sys\nprint(json.dumps({\"output_path\": output_path}))\n"
     }
   ],
   "invoke_timeout_ms": 90000,
