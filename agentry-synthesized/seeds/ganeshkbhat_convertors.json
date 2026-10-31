@@ -6,13 +6,10 @@
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/ganeshkbhat_convertors.mjs",
   "accepts": {
     "input_path": "string",
-    "output_path": {
-      "type": "string",
-      "optional": true
-    }
+    "output_path": "string"
   },
   "produces": {
-    "toml": "string"
+    "output_path": "string"
   },
   "requires": {
     "npm": [
@@ -26,23 +23,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate required INPUT_PATH env var and ensure the file exists, storing the path for later steps.",
-      "fails_if": "INPUT_PATH is missing or the file cannot be accessed.",
-      "code": "(async () => {\n  const { promises: fs } = await import('node:fs');\n  const inputPath = process.env.INPUT_PATH;\n  if (!inputPath) throw new Error('INPUT_PATH env var required');\n  await fs.access(inputPath);\n  globalThis.inputPath = inputPath;\n})();"
+      "what": "Read INPUT_PATH and OUTPUT_PATH env vars, load the XML file into memory.",
+      "fails_if": "INPUT_PATH or OUTPUT_PATH missing, or the XML file cannot be read.",
+      "code": "const fs = await import('node:fs');\nconst inputPath = process.env.INPUT_PATH;\nconst outputPath = process.env.OUTPUT_PATH;\nif (!inputPath) { throw new Error('Missing INPUT_PATH'); }\nif (!outputPath) { throw new Error('Missing OUTPUT_PATH'); }\nconst xmlContent = await fs.promises.readFile(inputPath, 'utf-8');\nglobalThis.xmlContent = xmlContent;\nglobalThis.outputPath = outputPath;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Read the XML file, parse it with jsparsers, and convert the resulting object to TOML.",
-      "fails_if": "Parsing or conversion fails, or the expected conversion method is unavailable.",
-      "code": "(async () => {\n  const { promises: fs } = await import('node:fs');\n  const jspMod = await import('jsparsers');\n  const jsp = jspMod.default || jspMod;\n  const xmlParser = jsp.xml();\n  const content = await fs.readFile(globalThis.inputPath, 'utf8');\n  if (typeof xmlParser.load === 'function') {\n    xmlParser.load(content);\n  }\n  if (typeof xmlParser.parse === 'function') {\n    xmlParser.parse();\n  }\n  let tomlStr;\n  if (typeof xmlParser.toml === 'function') {\n    tomlStr = xmlParser.toml();\n  } else if (typeof xmlParser.serialize === 'function') {\n    tomlStr = xmlParser.serialize();\n  } else {\n    throw new Error('TOML conversion method not found on xml parser');\n  }\n  globalThis.tomlStr = tomlStr;\n})();"
+      "what": "Parse the XML string to a JS object and serialize it as TOML.",
+      "fails_if": "Parsing or serialization throws an error.",
+      "code": "const jspMod = await import('jsparsers');\nconst jsp = jspMod.default || jspMod;\nconst xmlParser = jsp.xml();\nxmlParser.load(globalThis.xmlContent);\nconst tomlStr = xmlParser.toml();\nglobalThis.tomlStr = tomlStr;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write a single JSON object containing the TOML string to stdout.",
-      "fails_if": "The TOML string is undefined or console output is not valid JSON.",
-      "code": "(async () => {\n  console.log(JSON.stringify({ toml: globalThis.tomlStr }));\n})();"
+      "what": "Write the TOML string to OUTPUT_PATH and emit a JSON result.",
+      "fails_if": "Writing the file fails or the JSON output is malformed.",
+      "code": "const fs = await import('node:fs');\nawait fs.promises.writeFile(globalThis.outputPath, globalThis.tomlStr, 'utf-8');\nconsole.log(JSON.stringify({ output_path: globalThis.outputPath }));"
     }
   ],
   "invoke_timeout_ms": 90000,

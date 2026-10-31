@@ -1,0 +1,49 @@
+{
+  "id": "xml_to_toml",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "xml_to_toml",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/xml_to_toml.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string",
+    "success": "boolean"
+  },
+  "requires": {
+    "npm": [
+      "jsparsers"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate input file existence and load XML content.",
+      "fails_if": "Input file is missing or unreadable.",
+      "code": "const fs = await import('node:fs');\nconst inputPath = process.env.INPUT_PATH;\nif (!inputPath) throw new Error('INPUT_PATH is required');\nif (!fs.existsSync(inputPath)) throw new Error(`Input file not found: ${inputPath}`);\nconst xmlContent = fs.readFileSync(inputPath, 'utf8');\nglobalThis.xmlContent = xmlContent;\nglobalThis.outputPath = process.env.OUTPUT_PATH || '/tmp/output.toml';"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Parse XML to JSON and convert JSON to TOML string.",
+      "fails_if": "XML parsing fails or TOML serialization fails.",
+      "code": "const jsp = (await import('jsparsers')).default || (await import('jsparsers'));\nconst xmlParser = jsp.xml();\nconst jsonResult = xmlParser.parse(globalThis.xmlContent);\nconst tomlParser = jsp.toml();\nconst tomlString = tomlParser.serialize(jsonResult);\nglobalThis.tomlString = tomlString;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write TOML content to output file and emit result JSON.",
+      "fails_if": "File write fails or output is malformed.",
+      "code": "const fs = await import('node:fs');\nfs.writeFileSync(globalThis.outputPath, globalThis.tomlString, 'utf8');\nconsole.log(JSON.stringify({ output_path: globalThis.outputPath, success: true }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
