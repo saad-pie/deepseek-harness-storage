@@ -10,7 +10,7 @@
   },
   "produces": {
     "output_path": "string",
-    "toml": "string"
+    "success": "boolean"
   },
   "requires": {
     "npm": [
@@ -24,23 +24,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate required environment variables and ensure the input XML file exists, storing paths in global state.",
-      "fails_if": "INPUT_PATH or OUTPUT_PATH env var missing, or the input file cannot be accessed.",
-      "code": "const { accessSync, constants } = await import('node:fs');\nconst inputPath = process.env.INPUT_PATH;\nconst outputPath = process.env.OUTPUT_PATH;\nif (!inputPath) { throw new Error('Missing INPUT_PATH env var'); }\nif (!outputPath) { throw new Error('Missing OUTPUT_PATH env var'); }\ntry { accessSync(inputPath, constants.R_OK); } catch (e) { throw new Error(`Cannot read input file at ${inputPath}: ${e.message}`); }\nglobalThis.inputPath = inputPath;\nglobalThis.outputPath = outputPath;"
+      "what": "Validate input file existence and load XML content.",
+      "fails_if": "Input file does not exist or is unreadable.",
+      "code": "const fs = await import('node:fs');\nconst path = await import('node:path');\nconst inputPath = process.env.INPUT_PATH;\nif (!inputPath) throw new Error('INPUT_PATH is required');\nif (!fs.existsSync(inputPath)) throw new Error(`Input file not found: ${inputPath}`);\nconst xmlContent = fs.readFileSync(inputPath, 'utf8');\nglobalThis.xmlContent = xmlContent;\nglobalThis.outputPath = process.env.OUTPUT_PATH || '/tmp/output.toml';"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Load jsparsers, read the XML file, convert its contents to TOML, and write the TOML to the output path.",
-      "fails_if": "jsparsers fails to load, readFile/parse errors, conversion to TOML fails, or writing the output file fails.",
-      "code": "const fs = await import('node:fs');\nconst { writeFileSync } = fs;\nconst jsparsersMod = await import('jsparsers');\nconst jsp = jsparsersMod.default || jsparsersMod;\nconst xmlParser = jsp.xml();\n// read the XML file (readFile may be sync or async; handle both)\nif (typeof xmlParser.readFile === 'function') {\n  const maybePromise = xmlParser.readFile(globalThis.inputPath);\n  if (maybePromise && typeof maybePromise.then === 'function') { await maybePromise; }\n} else {\n  throw new Error('xmlParser does not have readFile method');\n}\n// Convert to TOML – the library exposes a toml() method on the parser object\nlet tomlStr;\nif (typeof xmlParser.toml === 'function') {\n  tomlStr = xmlParser.toml();\n} else if (typeof xmlParser.toml === 'string') {\n  tomlStr = xmlParser.toml;\n} else {\n  throw new Error('Unable to obtain TOML representation from xml parser');\n}\nwriteFileSync(globalThis.outputPath, tomlStr, 'utf8');\nglobalThis.toml = tomlStr;"
+      "what": "Parse XML to JSON and convert JSON to TOML string.",
+      "fails_if": "XML parsing fails or TOML serialization fails.",
+      "code": "const jsp = (await import('jsparsers')).default || (await import('jsparsers'));\nconst xmlParser = jsp.xml();\nconst jsonResult = xmlParser.parse(globalThis.xmlContent);\nconst tomlParser = jsp.toml();\nconst tomlString = tomlParser.serialize(jsonResult);\nglobalThis.tomlString = tomlString;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a JSON object containing the output path and the generated TOML string.",
-      "fails_if": "JSON emission fails or required fields are undefined.",
-      "code": "console.log(JSON.stringify({\n  output_path: globalThis.outputPath,\n  toml: globalThis.toml\n}));"
+      "what": "Write TOML content to output file and emit result JSON.",
+      "fails_if": "File write fails or output is malformed.",
+      "code": "const fs = await import('node:fs');\nfs.writeFileSync(globalThis.outputPath, globalThis.tomlString, 'utf8');\nconsole.log(JSON.stringify({ output_path: globalThis.outputPath, success: true }));"
     }
   ],
   "invoke_timeout_ms": 90000,
