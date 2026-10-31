@@ -1,0 +1,18 @@
+{
+  "capability_id": "csv.parquet.convert",
+  "authored_by": "dsh_synth",
+  "authored_at": 1793429476933,
+  "spec_notes": "Verified in env: @dsnp/parquetjs exports { ParquetSchema, ParquetWriter, ... } (also has default). Use `const pkg = (await import('@dsnp/parquetjs')).default || mod` pattern. All CSV columns are written as UTF8 string type — no type inference; numbers stay strings. Naive comma split: no quoted-field/escape handling (multi-comma fields break); sufficient for simple fixtures. ParquetWriter.openFile(schema, path) returns a promise; await it, then await writer.appendRow(row) per row and writer.close(). Output verified with PAR1 magic, 593 bytes for 2-row fixture. Reference kernel had a broken regex (literal newline in split pattern) and un-awaited async IIFEs — do not copy those; the code_body here is fully awaited.",
+  "trial": {
+    "result": "pass",
+    "error": null,
+    "duration_ms": 67663,
+    "packages_used": [
+      "@dsnp/parquetjs"
+    ],
+    "references_shown": [
+      "csv.parquet.convert"
+    ],
+    "used_composition": false
+  }
+}
