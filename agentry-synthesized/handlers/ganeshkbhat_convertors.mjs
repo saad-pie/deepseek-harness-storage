@@ -7,12 +7,10 @@ const CAP_ID = "ganeshkbhat_convertors";
 const CAP_KIND = "tool";
 const ACCEPTS = {
   "input_path": "string",
-  "output_path": {
-    "type": "string",
-    "optional": true
-  }
+  "output_path": "string"
 };
 const PRODUCES = {
+  "output_path": "string",
   "toml": "string"
 };
 const REQUIRES = {
@@ -23,14 +21,18 @@ const REQUIRES = {
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {};
+const ENV_MAP = {
+  "INPUT_PATH": "input_path",
+  "OUTPUT_PATH": "output_path"
+};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
+  "output_path": "output_path",
   "toml": "toml"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate required environment variables and store paths in global state.\n  // fails_if: INPUT_PATH env var is missing or unreadable.\n  { // scope for step 1\n    // BEGIN prepare\n    (async () => { const { env } = await import('node:process'); const input = env.INPUT_PATH; const output = env.OUTPUT_PATH; if (!input) { throw new Error('Missing INPUT_PATH'); } globalThis.inputPath = input; globalThis.outputPath = output; })();\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Read the XML file, convert its contents to TOML using jsparsers, optionally write the TOML to a file, and keep the result in memory.\n  // fails_if: File read fails, conversion throws, or write fails.\n  { // scope for step 2\n    // BEGIN execute\n    (async () => { const fs = await import('node:fs'); const jspMod = await import('jsparsers'); const jsp = jspMod.default || jspMod; const xmlParser = jsp.xml(); const xmlContent = await fs.promises.readFile(globalThis.inputPath, 'utf8'); const tomlStr = xmlParser.toml(xmlContent); if (globalThis.outputPath) { await fs.promises.writeFile(globalThis.outputPath, tomlStr, 'utf8'); } globalThis.tomlResult = tomlStr; })();\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a single JSON object containing the TOML string to stdout.\n  // fails_if: The TOML result is undefined or JSON serialization fails.\n  { // scope for step 3\n    // BEGIN emit\n    (async () => { console.log(JSON.stringify({ toml: globalThis.tomlResult })); })();\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate environment variables, ensure the XML input file exists, and load its contents into memory.\n  // fails_if: INPUT_PATH or OUTPUT_PATH missing, or the input file does not exist.\n  { // scope for step 1\n    // BEGIN prepare\n    (async () => {\n      const { existsSync, readFileSync } = await import('node:fs');\n      const inputPath = process.env.INPUT_PATH;\n      const outputPath = process.env.OUTPUT_PATH;\n      if (!inputPath) throw new Error('Missing INPUT_PATH');\n      if (!outputPath) throw new Error('Missing OUTPUT_PATH');\n      if (!existsSync(inputPath)) throw new Error('Input file does not exist');\n      const xmlData = readFileSync(inputPath, 'utf8');\n      globalThis._xmlData = xmlData;\n      globalThis._outputPath = outputPath;\n    })();\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Parse the XML string to a JavaScript object and serialize it to TOML, then write the TOML to the output file.\n  // fails_if: Parsing or serialization throws, or writing the file fails.\n  { // scope for step 2\n    // BEGIN execute\n    (async () => {\n      const { writeFileSync } = await import('node:fs');\n      const jspMod = await import('jsparsers');\n      const jsp = jspMod.default || jspMod;\n      const xmlParser = jsp.xml();\n      const jsObj = xmlParser.parse(globalThis._xmlData);\n      const tomlConverter = jsp.toml();\n      const tomlStr = tomlConverter.toml(jsObj);\n      writeFileSync(globalThis._outputPath, tomlStr, 'utf8');\n      globalThis._tomlStr = tomlStr;\n    })();\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the output path and the generated TOML string.\n  // fails_if: The JSON cannot be stringified or required fields are undefined.\n  { // scope for step 3\n    // BEGIN emit\n    (async () => {\n      console.log(JSON.stringify({ output_path: globalThis._outputPath, toml: globalThis._tomlStr }));\n    })();\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
