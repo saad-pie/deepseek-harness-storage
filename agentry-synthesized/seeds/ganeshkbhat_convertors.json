@@ -5,11 +5,9 @@
   "handler": "ganeshkbhat_convertors",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/ganeshkbhat_convertors.mjs",
   "accepts": {
-    "input_path": "string",
-    "output_path": "string"
+    "input_path": "string"
   },
   "produces": {
-    "output_path": "string",
     "toml": "string"
   },
   "requires": {
@@ -24,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate environment variables, ensure the XML input file exists, and load its contents into memory.",
-      "fails_if": "INPUT_PATH or OUTPUT_PATH missing, or the input file does not exist.",
-      "code": "(async () => {\\n  const { existsSync, readFileSync } = await import('node:fs');\\n  const inputPath = process.env.INPUT_PATH;\\n  const outputPath = process.env.OUTPUT_PATH;\\n  if (!inputPath) throw new Error('Missing INPUT_PATH');\\n  if (!outputPath) throw new Error('Missing OUTPUT_PATH');\\n  if (!existsSync(inputPath)) throw new Error('Input file does not exist');\\n  const xmlData = readFileSync(inputPath, 'utf8');\\n  globalThis._xmlData = xmlData;\\n  globalThis._outputPath = outputPath;\\n})();"
+      "what": "Validate INPUT_PATH env var, ensure the XML file exists, and read its contents into memory.",
+      "fails_if": "INPUT_PATH is missing, the file does not exist, or reading the file throws an error.",
+      "code": "(async () => {\\n  const { readFileSync, existsSync } = await import('node:fs');\\n  const inputPath = process.env.INPUT_PATH;\\n  if (!inputPath) throw new Error('INPUT_PATH env var missing');\\n  if (!existsSync(inputPath)) throw new Error(`Input file not found: ${inputPath}`);\\n  const content = readFileSync(inputPath, 'utf8');\\n  globalThis.xmlContent = content;\\n})();"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Parse the XML string to a JavaScript object and serialize it to TOML, then write the TOML to the output file.",
-      "fails_if": "Parsing or serialization throws, or writing the file fails.",
-      "code": "(async () => {\\n  const { writeFileSync } = await import('node:fs');\\n  const jspMod = await import('jsparsers');\\n  const jsp = jspMod.default || jspMod;\\n  const xmlParser = jsp.xml();\\n  const jsObj = xmlParser.parse(globalThis._xmlData);\\n  const tomlConverter = jsp.toml();\\n  const tomlStr = tomlConverter.toml(jsObj);\\n  writeFileSync(globalThis._outputPath, tomlStr, 'utf8');\\n  globalThis._tomlStr = tomlStr;\\n})();"
+      "what": "Parse the XML content and serialize it to TOML using jsparsers.",
+      "fails_if": "jsparsers fails to load, parsing fails, or TOML serialization is unavailable.",
+      "code": "(async () => {\\n  const jspMod = await import('jsparsers');\\n  const jsp = jspMod.default || jspMod;\\n  const xml = jsp.xml();\\n  // Load XML content into the parser\\n  if (typeof xml.load === 'function') {\\n    xml.load(globalThis.xmlContent);\\n  } else if (typeof xml.parse === 'function') {\\n    const obj = xml.parse(globalThis.xmlContent);\\n    globalThis.parsedObj = obj;\\n  }\\n  // Convert to TOML\\n  let tomlStr;\\n  if (typeof xml.toml === 'function') {\\n    // Prefer method that works on internal state\\n    tomlStr = xml.toml();\\n  } else if (globalThis.parsedObj && typeof xml.toml === 'function') {\\n    tomlStr = xml.toml(globalThis.parsedObj);\\n  } else {\\n    throw new Error('Unable to convert XML to TOML with jsparsers');\\n  }\\n  globalThis.tomlString = tomlStr;\\n})();"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a JSON object containing the output path and the generated TOML string.",
-      "fails_if": "The JSON cannot be stringified or required fields are undefined.",
-      "code": "(async () => {\\n  console.log(JSON.stringify({ output_path: globalThis._outputPath, toml: globalThis._tomlStr }));\\n})();"
+      "what": "Write a single JSON object containing the TOML string to stdout.",
+      "fails_if": "The TOML string is missing or console.log fails.",
+      "code": "(async () => {\\n  if (typeof globalThis.tomlString !== 'string') throw new Error('Toml result missing');\\n  console.log(JSON.stringify({ toml: globalThis.tomlString }));\\n})();"
     }
   ],
   "invoke_timeout_ms": 90000,
