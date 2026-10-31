@@ -5,9 +5,11 @@
   "handler": "ganeshkbhat_convertors",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/ganeshkbhat_convertors.mjs",
   "accepts": {
-    "input_path": "string"
+    "input_path": "string",
+    "output_path": "string"
   },
   "produces": {
+    "output_path": "string",
     "toml": "string"
   },
   "requires": {
@@ -22,23 +24,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate INPUT_PATH, read the XML file, and store its contents in global state.",
-      "fails_if": "INPUT_PATH missing, file does not exist, or read fails.",
-      "code": "(async () => {\\n  const { readFileSync, existsSync } = await import('node:fs');\\n  const inputPath = process.env.INPUT_PATH;\\n  if (!inputPath) throw new Error('INPUT_PATH env var required');\\n  if (!existsSync(inputPath)) throw new Error(`Input file not found: ${inputPath}`);\\n  const content = readFileSync(inputPath, 'utf8');\\n  globalThis.xmlContent = content;\\n})();"
+      "what": "Validate required environment variables and ensure the input XML file exists, storing paths in global state.",
+      "fails_if": "INPUT_PATH or OUTPUT_PATH env var missing, or the input file cannot be accessed.",
+      "code": "const { accessSync, constants } = await import('node:fs');\nconst inputPath = process.env.INPUT_PATH;\nconst outputPath = process.env.OUTPUT_PATH;\nif (!inputPath) { throw new Error('Missing INPUT_PATH env var'); }\nif (!outputPath) { throw new Error('Missing OUTPUT_PATH env var'); }\ntry { accessSync(inputPath, constants.R_OK); } catch (e) { throw new Error(`Cannot read input file at ${inputPath}: ${e.message}`); }\nglobalThis.inputPath = inputPath;\nglobalThis.outputPath = outputPath;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Load jsparsers, parse the XML content and convert it to TOML, storing the result.",
-      "fails_if": "jsparsers cannot be loaded, parsing fails, or conversion to TOML fails.",
-      "code": "(async () => {\\n  const jspMod = await import('jsparsers');\\n  const jsp = jspMod.default || jspMod;\\n  const xmlParser = jsp.xml();\\n  if (typeof xmlParser.load === 'function') {\\n    xmlParser.load(globalThis.xmlContent);\\n  } else if (typeof xmlParser.parse === 'function') {\\n    xmlParser.parse(globalThis.xmlContent);\\n  }\\n  const tomlStr = typeof xmlParser.toml === 'function' ? xmlParser.toml() : xmlParser.toml;\\n  globalThis.tomlStr = tomlStr;\\n})();"
+      "what": "Load jsparsers, read the XML file, convert its contents to TOML, and write the TOML to the output path.",
+      "fails_if": "jsparsers fails to load, readFile/parse errors, conversion to TOML fails, or writing the output file fails.",
+      "code": "const fs = await import('node:fs');\nconst { writeFileSync } = fs;\nconst jsparsersMod = await import('jsparsers');\nconst jsp = jsparsersMod.default || jsparsersMod;\nconst xmlParser = jsp.xml();\n// read the XML file (readFile may be sync or async; handle both)\nif (typeof xmlParser.readFile === 'function') {\n  const maybePromise = xmlParser.readFile(globalThis.inputPath);\n  if (maybePromise && typeof maybePromise.then === 'function') { await maybePromise; }\n} else {\n  throw new Error('xmlParser does not have readFile method');\n}\n// Convert to TOML – the library exposes a toml() method on the parser object\nlet tomlStr;\nif (typeof xmlParser.toml === 'function') {\n  tomlStr = xmlParser.toml();\n} else if (typeof xmlParser.toml === 'string') {\n  tomlStr = xmlParser.toml;\n} else {\n  throw new Error('Unable to obtain TOML representation from xml parser');\n}\nwriteFileSync(globalThis.outputPath, tomlStr, 'utf8');\nglobalThis.toml = tomlStr;"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write a single JSON object containing the TOML string to stdout.",
-      "fails_if": "The TOML string is undefined or console.log fails.",
-      "code": "(async () => {\\n  console.log(JSON.stringify({ toml: globalThis.tomlStr }));\\n})();"
+      "what": "Emit a JSON object containing the output path and the generated TOML string.",
+      "fails_if": "JSON emission fails or required fields are undefined.",
+      "code": "console.log(JSON.stringify({\n  output_path: globalThis.outputPath,\n  toml: globalThis.toml\n}));"
     }
   ],
   "invoke_timeout_ms": 90000,

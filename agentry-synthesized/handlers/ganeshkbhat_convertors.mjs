@@ -6,9 +6,11 @@
 const CAP_ID = "ganeshkbhat_convertors";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "input_path": "string"
+  "input_path": "string",
+  "output_path": "string"
 };
 const PRODUCES = {
+  "output_path": "string",
   "toml": "string"
 };
 const REQUIRES = {
@@ -20,15 +22,14 @@ const REQUIRES = {
   "capability": []
 };
 const ENV_MAP = {
-  "INPUT_PATH": "input_path"
+  "INPUT_PATH": "input_path",
+  "OUTPUT_PATH": "output_path"
 };
 const PRE_INVOKE = {};
-const OUTPUT_MAP = {
-  "toml": "toml"
-};
+const OUTPUT_MAP = {};
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate INPUT_PATH, read the XML file, and store its contents in global state.\n  // fails_if: INPUT_PATH missing, file does not exist, or read fails.\n  { // scope for step 1\n    // BEGIN prepare\n    (async () => {\n      const { readFileSync, existsSync } = await import('node:fs');\n      const inputPath = process.env.INPUT_PATH;\n      if (!inputPath) throw new Error('INPUT_PATH env var required');\n      if (!existsSync(inputPath)) throw new Error(`Input file not found: ${inputPath}`);\n      const content = readFileSync(inputPath, 'utf8');\n      globalThis.xmlContent = content;\n    })();\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Load jsparsers, parse the XML content and convert it to TOML, storing the result.\n  // fails_if: jsparsers cannot be loaded, parsing fails, or conversion to TOML fails.\n  { // scope for step 2\n    // BEGIN execute\n    (async () => {\n      const jspMod = await import('jsparsers');\n      const jsp = jspMod.default || jspMod;\n      const xmlParser = jsp.xml();\n      if (typeof xmlParser.load === 'function') {\n        xmlParser.load(globalThis.xmlContent);\n      } else if (typeof xmlParser.parse === 'function') {\n        xmlParser.parse(globalThis.xmlContent);\n      }\n      const tomlStr = typeof xmlParser.toml === 'function' ? xmlParser.toml() : xmlParser.toml;\n      globalThis.tomlStr = tomlStr;\n    })();\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the TOML string to stdout.\n  // fails_if: The TOML string is undefined or console.log fails.\n  { // scope for step 3\n    // BEGIN emit\n    (async () => {\n      console.log(JSON.stringify({ toml: globalThis.tomlStr }));\n    })();\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate required environment variables and ensure the input XML file exists, storing paths in global state.\n  // fails_if: INPUT_PATH or OUTPUT_PATH env var missing, or the input file cannot be accessed.\n  { // scope for step 1\n    // BEGIN prepare\n    const { accessSync, constants } = await import('node:fs');\n    const inputPath = process.env.INPUT_PATH;\n    const outputPath = process.env.OUTPUT_PATH;\n    if (!inputPath) { throw new Error('Missing INPUT_PATH env var'); }\n    if (!outputPath) { throw new Error('Missing OUTPUT_PATH env var'); }\n    try { accessSync(inputPath, constants.R_OK); } catch (e) { throw new Error(`Cannot read input file at ${inputPath}: ${e.message}`); }\n    globalThis.inputPath = inputPath;\n    globalThis.outputPath = outputPath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Load jsparsers, read the XML file, convert its contents to TOML, and write the TOML to the output path.\n  // fails_if: jsparsers fails to load, readFile/parse errors, conversion to TOML fails, or writing the output file fails.\n  { // scope for step 2\n    // BEGIN execute\n    const fs = await import('node:fs');\n    const { writeFileSync } = fs;\n    const jsparsersMod = await import('jsparsers');\n    const jsp = jsparsersMod.default || jsparsersMod;\n    const xmlParser = jsp.xml();\n    // read the XML file (readFile may be sync or async; handle both)\n    if (typeof xmlParser.readFile === 'function') {\n      const maybePromise = xmlParser.readFile(globalThis.inputPath);\n      if (maybePromise && typeof maybePromise.then === 'function') { await maybePromise; }\n    } else {\n      throw new Error('xmlParser does not have readFile method');\n    }\n    // Convert to TOML – the library exposes a toml() method on the parser object\n    let tomlStr;\n    if (typeof xmlParser.toml === 'function') {\n      tomlStr = xmlParser.toml();\n    } else if (typeof xmlParser.toml === 'string') {\n      tomlStr = xmlParser.toml;\n    } else {\n      throw new Error('Unable to obtain TOML representation from xml parser');\n    }\n    writeFileSync(globalThis.outputPath, tomlStr, 'utf8');\n    globalThis.toml = tomlStr;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the output path and the generated TOML string.\n  // fails_if: JSON emission fails or required fields are undefined.\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({\n      output_path: globalThis.outputPath,\n      toml: globalThis.toml\n    }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -45,14 +46,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session, requires_override: REQUIRES });
-  const FIXTURES = {"/tmp/input.xml":"<root><test>true</test></root>\n"};
+  const FIXTURES = {"/tmp/input.xml":"<root><test>true</test></root>\n","/tmp/output.toml":"test fixture for /tmp/output.toml\n"};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"input_path":"/tmp/input.xml"}, deps, { session });
+  const probe = await run({"input_path":"/tmp/input.xml","output_path":"/tmp/output.toml"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {

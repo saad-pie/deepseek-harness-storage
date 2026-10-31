@@ -1,0 +1,48 @@
+{
+  "id": "custom.xml_to_toml",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "custom.xml_to_toml",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/custom.xml_to_toml.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "jsparsers"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate environment variables and ensure the input XML file exists, storing paths for later steps.",
+      "fails_if": "Missing INPUT_PATH or OUTPUT_PATH env vars, or the input file does not exist.",
+      "code": "(async () => {\\n  const { existsSync } = await import('node:fs');\\n  const inputPath = process.env.INPUT_PATH;\\n  const outputPath = process.env.OUTPUT_PATH;\\n  if (!inputPath) throw new Error('Missing INPUT_PATH');\\n  if (!outputPath) throw new Error('Missing OUTPUT_PATH');\\n  if (!existsSync(inputPath)) throw new Error('Input file does not exist');\\n  globalThis.inputPath = inputPath;\\n  globalThis.outputPath = outputPath;\\n})();"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Load jsparsers, read the XML file, convert its contents to TOML, and keep the result in memory.",
+      "fails_if": "jsparsers fails to load, XML parsing fails, or conversion to TOML throws an error.",
+      "code": "(async () => {\\n  const { default: jspModule } = await import('jsparsers');\\n  const jsp = jspModule || (await import('jsparsers')).default;\\n  const xml = jsp.xml();\\n  await xml.readFile(globalThis.inputPath);\\n  const tomlStr = xml.toml();\\n  globalThis.tomlStr = tomlStr;\\n})();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write the TOML string to the requested output path and emit a JSON descriptor of the result.",
+      "fails_if": "Writing the file fails or the JSON emitted is malformed.",
+      "code": "(async () => {\\n  const { writeFileSync } = await import('node:fs');\\n  writeFileSync(globalThis.outputPath, globalThis.tomlStr, 'utf8');\\n  console.log(JSON.stringify({ output_path: globalThis.outputPath }));\\n})();"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
