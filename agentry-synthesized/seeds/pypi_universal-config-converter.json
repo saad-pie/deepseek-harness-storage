@@ -9,7 +9,8 @@
     "output_path": "string"
   },
   "produces": {
-    "output_path": "string"
+    "output_path": "string",
+    "status": "string"
   },
   "requires": {
     "npm": [],
@@ -23,23 +24,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that the input XML file exists and the output path is writable.",
-      "fails_if": "Input file is missing or output directory does not exist.",
-      "code": "import os\nimport sys\n\ninput_path = os.environ.get('INPUT_PATH', '')\noutput_path = os.environ.get('OUTPUT_PATH', '')\n\nif not input_path:\n    print(\"Error: INPUT_PATH is required\", file=sys.stderr)\n    sys.exit(1)\n\nif not os.path.exists(input_path):\n    print(f\"Error: Input file {input_path} does not exist\", file=sys.stderr)\n    sys.exit(1)\n\nif not output_path:\n    print(\"Error: OUTPUT_PATH is required\", file=sys.stderr)\n    sys.exit(1)\n\noutput_dir = os.path.dirname(output_path)\nif output_dir and not os.path.exists(output_dir):\n    print(f\"Error: Output directory {output_dir} does not exist\", file=sys.stderr)\n    sys.exit(1)\n\n# Store for next steps\nos.environ['VALIDATED_INPUT'] = input_path\nos.environ['VALIDATED_OUTPUT'] = output_path"
+      "what": "Validate that the input XML file exists and is readable.",
+      "fails_if": "Input file is missing or cannot be read.",
+      "code": "import os\nimport sys\n\ninput_path = os.environ.get('INPUT_PATH', '')\noutput_path = os.environ.get('OUTPUT_PATH', '')\n\nif not input_path:\n    print(json.dumps({\"error\": \"INPUT_PATH is required\"}))\n    sys.exit(1)\n\nif not os.path.exists(input_path):\n    print(json.dumps({\"error\": f\"Input file not found: {input_path}\"}))\n    sys.exit(1)\n\nif not os.access(input_path, os.R_OK):\n    print(json.dumps({\"error\": f\"Input file is not readable: {input_path}\"}))\n    sys.exit(1)\n\nif not output_path:\n    print(json.dumps({\"error\": \"OUTPUT_PATH is required\"}))\n    sys.exit(1)\n\n# Ensure output directory exists\noutput_dir = os.path.dirname(output_path)\nif output_dir and not os.path.exists(output_dir):\n    os.makedirs(output_dir, exist_ok=True)\n\nprint(json.dumps({\"status\": \"ready\", \"input_path\": input_path, \"output_path\": output_path}))"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Invoke the universal-config-converter CLI to convert the XML file to TOML.",
-      "fails_if": "The conversion command fails or produces an invalid TOML file.",
-      "code": "import subprocess\nimport os\n\ninput_path = os.environ.get('VALIDATED_INPUT', '')\noutput_path = os.environ.get('VALIDATED_OUTPUT', '')\n\n# The package provides a CLI command 'config-converter'\n# Usage: config-converter -i <input> -s <source_format> -t <target_format> -o <output>\n\ntry:\n    result = subprocess.run(\n        ['config-converter', '-i', input_path, '-s', 'xml', '-t', 'toml', '-o', output_path],\n        capture_output=True,\n        text=True,\n        check=True\n    )\nexcept subprocess.CalledProcessError as e:\n    print(f\"Error: Conversion failed. stderr: {e.stderr}\", file=sys.stderr)\n    sys.exit(1)\n\n# Verify output file was created\nif not os.path.exists(output_path):\n    print(\"Error: Output file was not created\", file=sys.stderr)\n    sys.exit(1)\n\nos.environ['CONVERTED_OUTPUT'] = output_path"
+      "what": "Convert the XML file to TOML format using the universal-config-converter package.",
+      "fails_if": "Conversion fails due to invalid XML or unsupported structure.",
+      "code": "import subprocess\nimport sys\nimport json\n\ninput_path = os.environ.get('INPUT_PATH', '')\noutput_path = os.environ.get('OUTPUT_PATH', '')\n\n# Use the CLI tool provided by the package\n# The package name is universal-config-converter, but the CLI command is config-converter\n# We assume it is installed and available in PATH\n\ntry:\n    result = subprocess.run(\n        ['config-converter', '-i', input_path, '-s', 'xml', '-t', 'toml', '-o', output_path],\n        capture_output=True,\n        text=True,\n        timeout=30\n    )\n    \n    if result.returncode != 0:\n        error_msg = result.stderr if result.stderr else result.stdout\n        print(json.dumps({\"error\": f\"Conversion failed: {error_msg}\"}))\n        sys.exit(1)\n    \n    # Verify output file was created\n    if not os.path.exists(output_path):\n        print(json.dumps({\"error\": \"Output file was not created\"}))\n        sys.exit(1)\n        \n    print(json.dumps({\"status\": \"converted\", \"output_path\": output_path}))\n\nexcept FileNotFoundError:\n    print(json.dumps({\"error\": \"config-converter command not found. Ensure universal-config-converter is installed.\"}))\n    sys.exit(1)\nexcept subprocess.TimeoutExpired:\n    print(json.dumps({\"error\": \"Conversion timed out\"}))\n    sys.exit(1)\nexcept Exception as e:\n    print(json.dumps({\"error\": f\"Unexpected error: {str(e)}\"}))\n    sys.exit(1)"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write the JSON result containing the output path to stdout.",
-      "fails_if": "JSON serialization fails or output path is undefined.",
-      "code": "import json\nimport os\n\noutput_path = os.environ.get('CONVERTED_OUTPUT', '')\n\nif not output_path:\n    print(json.dumps({\"error\": \"Output path not set\"}))\n    sys.exit(1)\n\nprint(json.dumps({\"output_path\": output_path}))"
+      "what": "Emit the final JSON result with the output path and status.",
+      "fails_if": "JSON serialization fails or required fields are missing.",
+      "code": "import json\nimport os\n\noutput_path = os.environ.get('OUTPUT_PATH', '')\n\n# Check if the output file exists to confirm success\nif os.path.exists(output_path):\n    result = {\n        \"output_path\": output_path,\n        \"status\": \"success\"\n    }\nelse:\n    result = {\n        \"output_path\": output_path,\n        \"status\": \"failed\"\n    }\n\nprint(json.dumps(result))"
     }
   ],
   "invoke_timeout_ms": 90000,
