@@ -9,14 +9,13 @@
     "output_path": "string"
   },
   "produces": {
-    "output_path": "string",
-    "success": "boolean"
+    "output_path": "string"
   },
   "requires": {
-    "npm": [
-      "jsparsers"
+    "npm": [],
+    "pip": [
+      "universal-config-converter"
     ],
-    "pip": [],
     "post_install": null,
     "capability": []
   },
@@ -24,23 +23,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate input file existence and load XML content.",
-      "fails_if": "Input file is missing or unreadable.",
-      "code": "const fs = await import('node:fs');\nconst inputPath = process.env.INPUT_PATH;\nif (!inputPath) throw new Error('INPUT_PATH is required');\nif (!fs.existsSync(inputPath)) throw new Error(`Input file not found: ${inputPath}`);\nconst xmlContent = fs.readFileSync(inputPath, 'utf8');\nglobalThis.xmlContent = xmlContent;\nglobalThis.outputPath = process.env.OUTPUT_PATH || '/tmp/output.toml';"
+      "what": "Read INPUT_PATH and OUTPUT_PATH env vars, verify the input XML file exists, and store paths for later steps.",
+      "fails_if": "INPUT_PATH or OUTPUT_PATH env var missing, or input file does not exist",
+      "code": "import os, sys\ninput_path = os.environ.get('INPUT_PATH')\noutput_path = os.environ.get('OUTPUT_PATH')\nif not input_path or not output_path:\n    sys.exit('Missing required env vars INPUT_PATH or OUTPUT_PATH')\nif not os.path.isfile(input_path):\n    sys.exit(f'Input file not found: {input_path}')\n"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Parse XML to JSON and convert JSON to TOML string.",
-      "fails_if": "XML parsing fails or TOML serialization fails.",
-      "code": "const jsp = (await import('jsparsers')).default || (await import('jsparsers'));\nconst xmlParser = jsp.xml();\nconst jsonResult = xmlParser.parse(globalThis.xmlContent);\nconst tomlParser = jsp.toml();\nconst tomlString = tomlParser.serialize(jsonResult);\nglobalThis.tomlString = tomlString;"
+      "what": "Invoke the universal-config-converter CLI to convert the XML file to TOML.",
+      "fails_if": "The conversion command returns a non‑zero exit code",
+      "code": "import subprocess, sys\nresult = subprocess.run([\n    'config-converter',\n    '-i', input_path,\n    '-s', 'xml',\n    '-t', 'toml',\n    '-o', output_path\n], capture_output=True, text=True)\nif result.returncode != 0:\n    sys.exit(f'Conversion failed: {result.stderr}')\n"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write TOML content to output file and emit result JSON.",
-      "fails_if": "File write fails or output is malformed.",
-      "code": "const fs = await import('node:fs');\nfs.writeFileSync(globalThis.outputPath, globalThis.tomlString, 'utf8');\nconsole.log(JSON.stringify({ output_path: globalThis.outputPath, success: true }));"
+      "what": "Print a single JSON object containing the path of the generated TOML file.",
+      "fails_if": "Printing fails or the JSON object is malformed",
+      "code": "import json\nprint(json.dumps({'output_path': output_path}))\n"
     }
   ],
   "invoke_timeout_ms": 90000,
