@@ -5,11 +5,10 @@
   "handler": "ganeshkbhat_convertors",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/ganeshkbhat_convertors.mjs",
   "accepts": {
-    "input_path": "string",
-    "output_path": "string"
+    "input_path": "string"
   },
   "produces": {
-    "output_path": "string"
+    "toml": "string"
   },
   "requires": {
     "npm": [
@@ -23,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Read INPUT_PATH and OUTPUT_PATH env vars, load the XML file into memory.",
-      "fails_if": "INPUT_PATH or OUTPUT_PATH missing, or the XML file cannot be read.",
-      "code": "const fs = await import('node:fs');\nconst inputPath = process.env.INPUT_PATH;\nconst outputPath = process.env.OUTPUT_PATH;\nif (!inputPath) { throw new Error('Missing INPUT_PATH'); }\nif (!outputPath) { throw new Error('Missing OUTPUT_PATH'); }\nconst xmlContent = await fs.promises.readFile(inputPath, 'utf-8');\nglobalThis.xmlContent = xmlContent;\nglobalThis.outputPath = outputPath;"
+      "what": "Validate INPUT_PATH, read the XML file, and store its contents in global state.",
+      "fails_if": "INPUT_PATH missing, file does not exist, or read fails.",
+      "code": "(async () => {\\n  const { readFileSync, existsSync } = await import('node:fs');\\n  const inputPath = process.env.INPUT_PATH;\\n  if (!inputPath) throw new Error('INPUT_PATH env var required');\\n  if (!existsSync(inputPath)) throw new Error(`Input file not found: ${inputPath}`);\\n  const content = readFileSync(inputPath, 'utf8');\\n  globalThis.xmlContent = content;\\n})();"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Parse the XML string to a JS object and serialize it as TOML.",
-      "fails_if": "Parsing or serialization throws an error.",
-      "code": "const jspMod = await import('jsparsers');\nconst jsp = jspMod.default || jspMod;\nconst xmlParser = jsp.xml();\nxmlParser.load(globalThis.xmlContent);\nconst tomlStr = xmlParser.toml();\nglobalThis.tomlStr = tomlStr;"
+      "what": "Load jsparsers, parse the XML content and convert it to TOML, storing the result.",
+      "fails_if": "jsparsers cannot be loaded, parsing fails, or conversion to TOML fails.",
+      "code": "(async () => {\\n  const jspMod = await import('jsparsers');\\n  const jsp = jspMod.default || jspMod;\\n  const xmlParser = jsp.xml();\\n  if (typeof xmlParser.load === 'function') {\\n    xmlParser.load(globalThis.xmlContent);\\n  } else if (typeof xmlParser.parse === 'function') {\\n    xmlParser.parse(globalThis.xmlContent);\\n  }\\n  const tomlStr = typeof xmlParser.toml === 'function' ? xmlParser.toml() : xmlParser.toml;\\n  globalThis.tomlStr = tomlStr;\\n})();"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write the TOML string to OUTPUT_PATH and emit a JSON result.",
-      "fails_if": "Writing the file fails or the JSON output is malformed.",
-      "code": "const fs = await import('node:fs');\nawait fs.promises.writeFile(globalThis.outputPath, globalThis.tomlStr, 'utf-8');\nconsole.log(JSON.stringify({ output_path: globalThis.outputPath }));"
+      "what": "Write a single JSON object containing the TOML string to stdout.",
+      "fails_if": "The TOML string is undefined or console.log fails.",
+      "code": "(async () => {\\n  console.log(JSON.stringify({ toml: globalThis.tomlStr }));\\n})();"
     }
   ],
   "invoke_timeout_ms": 90000,
