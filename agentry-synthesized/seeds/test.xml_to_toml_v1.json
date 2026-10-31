@@ -1,0 +1,47 @@
+{
+  "id": "test.xml_to_toml_v1",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "test.xml_to_toml_v1",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/test.xml_to_toml_v1.mjs",
+  "accepts": {
+    "xml_path": "string"
+  },
+  "produces": {
+    "toml": "string"
+  },
+  "requires": {
+    "npm": [
+      "jsparsers"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that XML_PATH is provided and points to an existing file, store the path for later steps.",
+      "fails_if": "XML_PATH env var missing or file does not exist",
+      "code": "(async () => {\\n  const { readFileSync, existsSync } = await import('node:fs');\\n  const xmlPath = process.env.XML_PATH;\\n  if (!xmlPath) throw new Error('Missing XML_PATH');\\n  if (!existsSync(xmlPath)) throw new Error('XML file not found at ' + xmlPath);\\n  globalThis.xmlPath = xmlPath;\\n})();"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Load jsparsers, read the XML file, convert its contents to TOML, and store the result.",
+      "fails_if": "jsparsers fails to read or convert the XML",
+      "code": "(async () => {\\n  const { default: jsp } = await import('jsparsers');\\n  const xml = jsp.xml();\\n  await xml.readFile(globalThis.xmlPath);\\n  const tomlStr = xml.toml();\\n  globalThis.tomlResult = tomlStr;\\n})();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object containing the TOML string to stdout.",
+      "fails_if": "Result is undefined or JSON serialization fails",
+      "code": "(async () => {\\n  console.log(JSON.stringify({ toml: globalThis.tomlResult }));\\n})();"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
