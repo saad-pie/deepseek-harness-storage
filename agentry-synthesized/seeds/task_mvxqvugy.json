@@ -5,16 +5,15 @@
   "handler": "task_mvxqvugy",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/task_mvxqvugy.mjs",
   "accepts": {
-    "input_path": "string"
+    "markdown": "string"
   },
   "produces": {
-    "ast": "string"
+    "html": "string"
   },
   "requires": {
     "npm": [
-      "mdast-util-gfm-task-list-item",
-      "mdast-util-from-markdown",
-      "micromark-extension-gfm-task-list-item"
+      "markdown-it",
+      "markdown-it-task-lists"
     ],
     "pip": [],
     "post_install": null,
@@ -24,23 +23,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Read the markdown file specified by INPUT_PATH and store its contents",
-      "fails_if": "INPUT_PATH is missing or the file cannot be read",
-      "code": "const { readFileSync } = await import('node:fs');\nconst inputPath = process.env.INPUT_PATH;\nif (!inputPath) throw new Error('Missing INPUT_PATH');\nconst content = readFileSync(inputPath, 'utf8');\nglobalThis.markdown = content;"
+      "what": "Validate the markdown input and store it for later steps",
+      "fails_if": "The MARKDOWN environment variable is missing or empty",
+      "code": "(async () => {\\n  const markdown = process.env.MARKDOWN;\\n  if (!markdown) throw new Error('Missing MARKDOWN env var');\\n  globalThis.markdown = markdown;\\n})();"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Parse the markdown into an mdast tree with GFM task‑list support and serialize it to JSON",
-      "fails_if": "Parsing fails or the required extensions are unavailable",
-      "code": "const { fromMarkdown } = await import('mdast-util-from-markdown');\nconst { gfmTaskListItemFromMarkdown } = await import('mdast-util-gfm-task-list-item');\nconst { gfmTaskListItem } = await import('micromark-extension-gfm-task-list-item');\nconst tree = fromMarkdown(globalThis.markdown, {\n  extensions: [gfmTaskListItem],\n  mdastExtensions: [gfmTaskListItemFromMarkdown()]\n});\nglobalThis.astJson = JSON.stringify(tree);"
+      "what": "Render the markdown (with task‑list plugin) to HTML",
+      "fails_if": "Loading markdown-it or the plugin fails, or rendering throws",
+      "code": "(async () => {\\n  const markdownItMod = await import('markdown-it');\\n  const markdownIt = markdownItMod.default || markdownItMod;\\n  const taskListsMod = await import('markdown-it-task-lists');\\n  const taskLists = taskListsMod.default || taskListsMod;\\n  const md = markdownIt();\\n  md.use(taskLists);\\n  const result = md.render(globalThis.markdown);\\n  globalThis.html = result;\\n})();"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write a single JSON object containing the AST string to stdout",
-      "fails_if": "The JSON cannot be stringified or stdout write fails",
-      "code": "console.log(JSON.stringify({ ast: globalThis.astJson }));"
+      "what": "Write a single JSON object containing the rendered HTML to stdout",
+      "fails_if": "The HTML result is undefined or console.log fails",
+      "code": "(async () => {\\n  console.log(JSON.stringify({ html: globalThis.html }));\\n})();"
     }
   ],
   "invoke_timeout_ms": 90000,

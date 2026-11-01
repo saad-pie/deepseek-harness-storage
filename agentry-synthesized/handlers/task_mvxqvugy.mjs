@@ -6,31 +6,30 @@
 const CAP_ID = "task_mvxqvugy";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "input_path": "string"
+  "markdown": "string"
 };
 const PRODUCES = {
-  "ast": "string"
+  "html": "string"
 };
 const REQUIRES = {
   "npm": [
-    "mdast-util-gfm-task-list-item",
-    "mdast-util-from-markdown",
-    "micromark-extension-gfm-task-list-item"
+    "markdown-it",
+    "markdown-it-task-lists"
   ],
   "pip": [],
   "post_install": null,
   "capability": []
 };
 const ENV_MAP = {
-  "INPUT_PATH": "input_path"
+  "MARKDOWN": "markdown"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "ast": "ast"
+  "html": "html"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Read the markdown file specified by INPUT_PATH and store its contents\n  // fails_if: INPUT_PATH is missing or the file cannot be read\n  { // scope for step 1\n    // BEGIN prepare\n    const { readFileSync } = await import('node:fs');\n    const inputPath = process.env.INPUT_PATH;\n    if (!inputPath) throw new Error('Missing INPUT_PATH');\n    const content = readFileSync(inputPath, 'utf8');\n    globalThis.markdown = content;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Parse the markdown into an mdast tree with GFM task‑list support and serialize it to JSON\n  // fails_if: Parsing fails or the required extensions are unavailable\n  { // scope for step 2\n    // BEGIN execute\n    const { fromMarkdown } = await import('mdast-util-from-markdown');\n    const { gfmTaskListItemFromMarkdown } = await import('mdast-util-gfm-task-list-item');\n    const { gfmTaskListItem } = await import('micromark-extension-gfm-task-list-item');\n    const tree = fromMarkdown(globalThis.markdown, {\n      extensions: [gfmTaskListItem],\n      mdastExtensions: [gfmTaskListItemFromMarkdown()]\n    });\n    globalThis.astJson = JSON.stringify(tree);\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the AST string to stdout\n  // fails_if: The JSON cannot be stringified or stdout write fails\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ ast: globalThis.astJson }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the markdown input and store it for later steps\n  // fails_if: The MARKDOWN environment variable is missing or empty\n  { // scope for step 1\n    // BEGIN prepare\n    \n      const markdown = process.env.MARKDOWN;\n      if (!markdown) throw new Error('Missing MARKDOWN env var');\n      globalThis.markdown = markdown;\n    \n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Render the markdown (with task‑list plugin) to HTML\n  // fails_if: Loading markdown-it or the plugin fails, or rendering throws\n  { // scope for step 2\n    // BEGIN execute\n    \n      const markdownItMod = await import('markdown-it');\n      const markdownIt = markdownItMod.default || markdownItMod;\n      const taskListsMod = await import('markdown-it-task-lists');\n      const taskLists = taskListsMod.default || taskListsMod;\n      const md = markdownIt();\n      md.use(taskLists);\n      const result = md.render(globalThis.markdown);\n      globalThis.html = result;\n    \n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the rendered HTML to stdout\n  // fails_if: The HTML result is undefined or console.log fails\n  { // scope for step 3\n    // BEGIN emit\n    \n      console.log(JSON.stringify({ html: globalThis.html }));\n    \n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -47,19 +46,19 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session, requires_override: REQUIRES });
-  const FIXTURES = {"/tmp/input.md":"# Test\n\nHello\n"};
+  const FIXTURES = {};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"input_path":"/tmp/input.md"}, deps, { session });
+  const probe = await run({"markdown":"# Sample\\n\\n- [ ] Task one\\n- [x] Task two"}, deps, { session });
   const out = probe.output || probe;
   // v0.58.2 — verify produces fields are non-null. Prior version trusted
   // trial to pass on exit_code alone; broken handlers that returned null/undefined
   // for a promised field passed trial and shipped as silent-failure caps.
-  const _PRODUCES = {"ast":"string"};
+  const _PRODUCES = {"html":"string"};
   const _missingProduces = Object.keys(_PRODUCES).filter(k => out[k] === undefined || out[k] === null);
   if (_missingProduces.length > 0) throw new Error("accept: handler returned null/undefined for produces field(s): " + _missingProduces.join(", "));
   const minBytes = 0;
