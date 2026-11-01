@@ -5,7 +5,7 @@
   "handler": "npm_procedures_json",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_procedures_json.mjs",
   "accepts": {
-    "yaml_text": "string"
+    "yaml": "string"
   },
   "produces": {
     "json": "string"
@@ -22,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that the required YAML_TEXT environment variable is present and store it for later steps.",
-      "fails_if": "process.env.YAML_TEXT is missing or empty",
-      "code": "(async () => {\n  const { env } = await import('node:process');\n  if (!env.YAML_TEXT) throw new Error('Missing required env var YAML_TEXT');\n  globalThis.yamlText = env.YAML_TEXT;\n})();"
+      "what": "Validate the YAML input environment variable and load the yamlParse function",
+      "fails_if": "INPUT variable YAML is missing or the package cannot be imported",
+      "code": "const { yamlParse } = await import('@procedures/json');\nif (!process.env.YAML) throw new Error('Missing YAML input');\nglobalThis.yamlText = process.env.YAML;\nglobalThis.yamlParse = yamlParse;"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Parse the YAML text into a JSON value using @procedures/json's yamlParse function.",
-      "fails_if": "yamlParse throws or returns undefined",
-      "code": "(async () => {\n  const { yamlParse } = await import('@procedures/json');\n  const text = globalThis.yamlText;\n  if (typeof yamlParse !== 'function') throw new Error('@procedures/json: yamlParse is not a function');\n  // The procedure expects the raw YAML string.\n  const value = yamlParse(text);\n  if (value === undefined) throw new Error('yamlParse returned undefined');\n  globalThis.parsedValue = value;\n})();"
+      "what": "Parse the YAML text into a JSON value and stringify it",
+      "fails_if": "yamlParse throws due to invalid YAML or JSON.stringify fails",
+      "code": "const value = globalThis.yamlParse(globalThis.yamlText);\nglobalThis.jsonString = JSON.stringify(value);"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write a single JSON object to stdout containing the stringified JSON representation of the parsed value.",
-      "fails_if": "The emitted JSON is malformed or the json field is undefined",
-      "code": "(async () => {\n  const resultObj = { json: JSON.stringify(globalThis.parsedValue) };\n  if (resultObj.json === undefined) throw new Error('Parsed JSON is undefined');\n  console.log(JSON.stringify(resultObj));\n})();"
+      "what": "Write the resulting JSON string as a single JSON object to stdout",
+      "fails_if": "console.log fails or the result is undefined",
+      "code": "console.log(JSON.stringify({ json: globalThis.jsonString }));"
     }
   ],
   "invoke_timeout_ms": 90000,

@@ -6,7 +6,7 @@
 const CAP_ID = "npm_procedures_json";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "yaml_text": "string"
+  "yaml": "string"
 };
 const PRODUCES = {
   "json": "string"
@@ -20,7 +20,7 @@ const REQUIRES = {
   "capability": []
 };
 const ENV_MAP = {
-  "YAML_TEXT": "yaml_text"
+  "YAML": "yaml"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
@@ -28,7 +28,7 @@ const OUTPUT_MAP = {
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that the required YAML_TEXT environment variable is present and store it for later steps.\n  // fails_if: process.env.YAML_TEXT is missing or empty\n  { // scope for step 1\n    // BEGIN prepare\n    (async () => {\n      const { env } = await import('node:process');\n      if (!env.YAML_TEXT) throw new Error('Missing required env var YAML_TEXT');\n      globalThis.yamlText = env.YAML_TEXT;\n    })();\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Parse the YAML text into a JSON value using @procedures/json's yamlParse function.\n  // fails_if: yamlParse throws or returns undefined\n  { // scope for step 2\n    // BEGIN execute\n    (async () => {\n      const { yamlParse } = await import('@procedures/json');\n      const text = globalThis.yamlText;\n      if (typeof yamlParse !== 'function') throw new Error('@procedures/json: yamlParse is not a function');\n      // The procedure expects the raw YAML string.\n      const value = yamlParse(text);\n      if (value === undefined) throw new Error('yamlParse returned undefined');\n      globalThis.parsedValue = value;\n    })();\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object to stdout containing the stringified JSON representation of the parsed value.\n  // fails_if: The emitted JSON is malformed or the json field is undefined\n  { // scope for step 3\n    // BEGIN emit\n    (async () => {\n      const resultObj = { json: JSON.stringify(globalThis.parsedValue) };\n      if (resultObj.json === undefined) throw new Error('Parsed JSON is undefined');\n      console.log(JSON.stringify(resultObj));\n    })();\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the YAML input environment variable and load the yamlParse function\n  // fails_if: INPUT variable YAML is missing or the package cannot be imported\n  { // scope for step 1\n    // BEGIN prepare\n    const { yamlParse } = await import('@procedures/json');\n    if (!process.env.YAML) throw new Error('Missing YAML input');\n    globalThis.yamlText = process.env.YAML;\n    globalThis.yamlParse = yamlParse;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Parse the YAML text into a JSON value and stringify it\n  // fails_if: yamlParse throws due to invalid YAML or JSON.stringify fails\n  { // scope for step 2\n    // BEGIN execute\n    const value = globalThis.yamlParse(globalThis.yamlText);\n    globalThis.jsonString = JSON.stringify(value);\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write the resulting JSON string as a single JSON object to stdout\n  // fails_if: console.log fails or the result is undefined\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ json: globalThis.jsonString }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -52,8 +52,14 @@ export async function accept(deps, opts = {}) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"yaml_text":"name: example\nports:\n  - 80\n  - 443"}, deps, { session });
+  const probe = await run({"yaml":"name: test\\nlist:\\n  - a\\n  - b"}, deps, { session });
   const out = probe.output || probe;
+  // v0.58.2 — verify produces fields are non-null. Prior version trusted
+  // trial to pass on exit_code alone; broken handlers that returned null/undefined
+  // for a promised field passed trial and shipped as silent-failure caps.
+  const _PRODUCES = {"json":"string"};
+  const _missingProduces = Object.keys(_PRODUCES).filter(k => out[k] === undefined || out[k] === null);
+  if (_missingProduces.length > 0) throw new Error("accept: handler returned null/undefined for produces field(s): " + _missingProduces.join(", "));
   const minBytes = 0;
   if (minBytes > 0) {
     const size = typeof out.bytes === "number" ? out.bytes : 0;
