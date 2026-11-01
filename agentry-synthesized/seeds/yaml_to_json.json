@@ -5,23 +5,14 @@
   "handler": "yaml_to_json",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/yaml_to_json.mjs",
   "accepts": {
-    "source_dir": "string",
-    "output_dir": "string",
-    "languages": {
-      "type": "string",
-      "optional": true
-    },
-    "format": {
-      "type": "string",
-      "optional": true
-    }
+    "yaml_text": "string"
   },
   "produces": {
-    "status": "string"
+    "json_text": "string"
   },
   "requires": {
     "npm": [
-      "yamlocale"
+      "@procedures/json"
     ],
     "pip": [],
     "post_install": null,
@@ -31,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate inputs, ensure source directory exists and create output directory if needed",
-      "fails_if": "Missing required env vars or source directory does not exist",
-      "code": "(async () => {\\n  const { existsSync, mkdirSync } = await import('node:fs');\\n  const path = await import('node:path');\\n  const src = process.env.SOURCE_DIR;\\n  const out = process.env.OUTPUT_DIR;\\n  if (!src) throw new Error('Missing SOURCE_DIR');\\n  if (!out) throw new Error('Missing OUTPUT_DIR');\\n  if (!existsSync(src)) throw new Error('Source directory does not exist: ' + src);\\n  if (!existsSync(out)) mkdirSync(out, { recursive: true });\\n  globalThis._yamlToJson = { src, out };\\n})();"
+      "what": "Validate that the YAML input is provided via environment and store it for later steps",
+      "fails_if": "The environment variable YAML_TEXT is missing or empty",
+      "code": "(async () => {\n  const { env } = await import('node:process');\n  const yaml = env.YAML_TEXT;\n  if (!yaml) throw new Error('Missing required input YAML_TEXT');\n  globalThis.yamlText = yaml;\n})();"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Invoke yamlocale.convert with the prepared options to generate JSON files",
-      "fails_if": "convert throws or fails to complete",
-      "code": "(async () => {\\n  const { convert } = await import('yamlocale');\\n  const { src, out } = globalThis._yamlToJson;\\n  const languagesEnv = process.env.LANGUAGES;\\n  const formatEnv = process.env.FORMAT;\\n  const options = { sourceDir: src, outputDir: out };\\n  if (languagesEnv) options.languages = languagesEnv.split(',');\\n  if (formatEnv) options.format = formatEnv;\\n  await convert(options);\\n  globalThis._yamlToJson.result = { status: 'ok' };\\n})();"
+      "what": "Parse the YAML text into a JSON value and stringify it",
+      "fails_if": "Parsing fails or JSON.stringify throws",
+      "code": "(async () => {\n  const { parseYaml } = await import('@procedures/json');\n  const value = parseYaml(globalThis.yamlText);\n  globalThis.jsonText = JSON.stringify(value);\n})();"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write a single JSON object to stdout containing the conversion status",
-      "fails_if": "Result missing or JSON output cannot be produced",
-      "code": "(async () => {\\n  const result = globalThis._yamlToJson.result;\\n  if (!result) throw new Error('No result from conversion');\\n  console.log(JSON.stringify({ status: result.status }));\\n})();"
+      "what": "Write a single JSON object containing the JSON string to stdout",
+      "fails_if": "The emitted JSON is malformed or the json_text field is undefined",
+      "code": "(async () => {\n  console.log(JSON.stringify({ json_text: globalThis.jsonText }));\n})();"
     }
   ],
   "invoke_timeout_ms": 90000,

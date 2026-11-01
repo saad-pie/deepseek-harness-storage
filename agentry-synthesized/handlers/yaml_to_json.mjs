@@ -6,41 +6,29 @@
 const CAP_ID = "yaml_to_json";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "source_dir": "string",
-  "output_dir": "string",
-  "languages": {
-    "type": "string",
-    "optional": true
-  },
-  "format": {
-    "type": "string",
-    "optional": true
-  }
+  "yaml_text": "string"
 };
 const PRODUCES = {
-  "status": "string"
+  "json_text": "string"
 };
 const REQUIRES = {
   "npm": [
-    "yamlocale"
+    "@procedures/json"
   ],
   "pip": [],
   "post_install": null,
   "capability": []
 };
 const ENV_MAP = {
-  "SOURCE_DIR": "source_dir",
-  "OUTPUT_DIR": "output_dir",
-  "LANGUAGES": "languages",
-  "FORMAT": "format"
+  "YAML_TEXT": "yaml_text"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "status": "status"
+  "json_text": "json_text"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate inputs, ensure source directory exists and create output directory if needed\n  // fails_if: Missing required env vars or source directory does not exist\n  { // scope for step 1\n    // BEGIN prepare\n    (async () => {\n      const { existsSync, mkdirSync } = await import('node:fs');\n      const path = await import('node:path');\n      const src = process.env.SOURCE_DIR;\n      const out = process.env.OUTPUT_DIR;\n      if (!src) throw new Error('Missing SOURCE_DIR');\n      if (!out) throw new Error('Missing OUTPUT_DIR');\n      if (!existsSync(src)) throw new Error('Source directory does not exist: ' + src);\n      if (!existsSync(out)) mkdirSync(out, { recursive: true });\n      globalThis._yamlToJson = { src, out };\n    })();\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Invoke yamlocale.convert with the prepared options to generate JSON files\n  // fails_if: convert throws or fails to complete\n  { // scope for step 2\n    // BEGIN execute\n    (async () => {\n      const { convert } = await import('yamlocale');\n      const { src, out } = globalThis._yamlToJson;\n      const languagesEnv = process.env.LANGUAGES;\n      const formatEnv = process.env.FORMAT;\n      const options = { sourceDir: src, outputDir: out };\n      if (languagesEnv) options.languages = languagesEnv.split(',');\n      if (formatEnv) options.format = formatEnv;\n      await convert(options);\n      globalThis._yamlToJson.result = { status: 'ok' };\n    })();\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object to stdout containing the conversion status\n  // fails_if: Result missing or JSON output cannot be produced\n  { // scope for step 3\n    // BEGIN emit\n    (async () => {\n      const result = globalThis._yamlToJson.result;\n      if (!result) throw new Error('No result from conversion');\n      console.log(JSON.stringify({ status: result.status }));\n    })();\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that the YAML input is provided via environment and store it for later steps\n  // fails_if: The environment variable YAML_TEXT is missing or empty\n  { // scope for step 1\n    // BEGIN prepare\n    (async () => {\n      const { env } = await import('node:process');\n      const yaml = env.YAML_TEXT;\n      if (!yaml) throw new Error('Missing required input YAML_TEXT');\n      globalThis.yamlText = yaml;\n    })();\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Parse the YAML text into a JSON value and stringify it\n  // fails_if: Parsing fails or JSON.stringify throws\n  { // scope for step 2\n    // BEGIN execute\n    (async () => {\n      const { parseYaml } = await import('@procedures/json');\n      const value = parseYaml(globalThis.yamlText);\n      globalThis.jsonText = JSON.stringify(value);\n    })();\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the JSON string to stdout\n  // fails_if: The emitted JSON is malformed or the json_text field is undefined\n  { // scope for step 3\n    // BEGIN emit\n    (async () => {\n      console.log(JSON.stringify({ json_text: globalThis.jsonText }));\n    })();\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -57,14 +45,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session, requires_override: REQUIRES });
-  const FIXTURES = {"/tmp/src/common/button.yaml":"add:\\n  en: Add\\n  ja: 追加\\ndelete:\\n  en: Delete\\n  ja: 削除","/tmp/src":"test fixture for /tmp/src\n","/tmp/out":"test fixture for /tmp/out\n"};
+  const FIXTURES = {};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"source_dir":"/tmp/src","output_dir":"/tmp/out","languages":"en,ja","format":"flat"}, deps, { session });
+  const probe = await run({"yaml_text":"name: example\nport: 8080\nfeatures:\n  - a\n  - b"}, deps, { session });
   const out = probe.output || probe;
   const minBytes = 0;
   if (minBytes > 0) {
