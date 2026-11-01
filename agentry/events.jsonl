@@ -60084,3 +60084,18 @@
 {"kind":"invoke.started","at":1793532955045,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
 {"kind":"synthesize.trace","at":1793532955046,"trace_id":"trace_mvxr7p0r_b8v5","source":"mechanical","capability_id":"task_mvxqvugy","intent":"screenshot webpage url to png","wanted_kind":"tool","references_shown":[],"mechanical_internals":{"candidate_id":"npm:markdown-it-task-lists","candidate_kind":"npm_package","model_used":"groq/openai/gpt-oss-120b","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/task_mvxqvugy.mjs","trial_session":"trial_task_mvxqvugy_mvxr7ogd"},"spec_summary":{"package_name":"markdown-it","packages":["markdown-it","markdown-it-task-lists"],"accepts_keys":["markdown"],"produces_keys":["html"]},"outcome":{"verified":true},"total_ms":528014}
 {"kind":"invoke.started","at":1793532955047,"capability_id":"agentry.checkpoint","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["reason"]}
+{"kind":"checkpoint.pushed","at":1793532957819,"reason":"adopt:5_capabilities","sha":"32e06815","ms":2772}
+{"kind":"invoke.succeeded","at":1793532957819,"capability_id":"agentry.checkpoint","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2772}
+{"kind":"notify.email.gmail.sent","at":1793532957899,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] trace: task_mvxqvugy","message_id":"01a196e5-1499-76ed-b174-fb8408a4171b","ms":2912}
+{"kind":"invoke.succeeded","at":1793532957899,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2912}
+{"kind":"notify.fallback.primary_ok","at":1793532957899,"primary":"notify.email.gmail","subject":"[agentry] trace: task_mvxqvugy"}
+{"kind":"invoke.succeeded","at":1793532957899,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2912}
+{"kind":"notify.email.gmail.sent","at":1793532957911,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] adopted: task_mvxqvugy, task_mvxqvugy, task_mvxqvugy, task_mvxqvugy, task_mvxqvugy","message_id":"01a196e5-149b-7d58-beb2-a0b4d457ff5f","ms":2866}
+{"kind":"invoke.succeeded","at":1793532957911,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2866}
+{"kind":"notify.fallback.primary_ok","at":1793532957911,"primary":"notify.email.gmail","subject":"[agentry] adopted: task_mvxqvugy, task_mvxqvugy, task_mvxqvugy, task_mvxqvugy, task_mvxqvugy"}
+{"kind":"invoke.succeeded","at":1793532957912,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2876}
+{"kind":"adoption.notified","at":1793532957912,"proposal_id":"proposal_mvxqwdk1_xx0nf0","channel":"notify.email.gmail","primary_ok":true,"fallback_used":false,"message_id":"01a196e5-149b-7d58-beb2-a0b4d457ff5f"}
+{"kind":"invoke.succeeded","at":1793532957912,"capability_id":"agentry.adopt","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":530999}
+{"kind":"build_from_candidate.succeeded","at":1793532957912,"gap_id":"gap:task_mvxqvugy","candidate_id":"pypi:html2image","capability_id":"task_mvxqvugy","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/task_mvxqvugy.mjs","ms":530999}
+{"kind":"invoke.succeeded","at":1793532957921,"capability_id":"agentry.build_from_candidate","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":531008}
+{"kind":"invoke.started","at":1793532957921,"capability_id":"agentry.checkpoint","invoker":"invoker.in_process_js","task_id":null,"tenant":null,"input_keys":["reason"]}
