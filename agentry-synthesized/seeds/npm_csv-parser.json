@@ -1,0 +1,49 @@
+{
+  "id": "npm_csv-parser",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_csv-parser",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_csv-parser.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string",
+    "row_count": "number"
+  },
+  "requires": {
+    "npm": [
+      "csv-parser"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that the input CSV file exists and is readable.",
+      "fails_if": "Input file does not exist or is not readable",
+      "code": "const fs = await import('node:fs');\nconst path = await import('node:path');\nconst inputPath = process.env.INPUT_PATH;\nif (!inputPath) throw new Error('INPUT_PATH is required');\nif (!fs.existsSync(inputPath)) throw new Error(`Input file not found: ${inputPath}`);\nconst stat = fs.statSync(inputPath);\nif (!stat.isFile()) throw new Error(`Input path is not a file: ${inputPath}`);\nglobalThis.inputPath = inputPath;\nglobalThis.outputPath = process.env.OUTPUT_PATH || path.join(path.dirname(inputPath), 'output.md');"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Parse the CSV file into rows and generate Markdown table content.",
+      "fails_if": "CSV parsing fails or file is empty",
+      "code": "const csv = (await import('csv-parser')).default;\nconst fs = await import('node:fs');\nconst results = [];\nlet headers = [];\n\nawait new Promise((resolve, reject) => {\n  fs.createReadStream(globalThis.inputPath)\n    .pipe(csv())\n    .on('headers', (h) => { headers = h; })\n    .on('data', (data) => results.push(data))\n    .on('end', () => resolve())\n    .on('error', (err) => reject(err));\n});\n\nif (results.length === 0) throw new Error('No data rows found in CSV');\n\nconst escapeCell = (val) => {\n  if (val === null || val === undefined) return '';\n  return String(val).replace(/\\|/g, '\\\\|').replace(/\\n/g, '<br>');\n};\n\nlet md = '| ' + headers.map(h => escapeCell(h)).join(' | ') + ' |\\n';\nmd += '|' + headers.map(() => ' --- ').join('|') + '|\\n';\nfor (const row of results) {\n  const cells = headers.map(h => escapeCell(row[h]));\n  md += '| ' + cells.join(' | ') + ' |\\n';\n}\n\nglobalThis.markdownContent = md;\nglobalThis.rowCount = results.length;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write the Markdown content to the output file and emit the result JSON.",
+      "fails_if": "Output file cannot be written",
+      "code": "const fs = await import('node:fs');\nfs.writeFileSync(globalThis.outputPath, globalThis.markdownContent, 'utf8');\nconsole.log(JSON.stringify({\n  output_path: globalThis.outputPath,\n  row_count: globalThis.rowCount\n}));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

@@ -1,0 +1,48 @@
+{
+  "id": "npm_json-2-csv",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_json-2-csv",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_json-2-csv.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "json-2-csv"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Read the input CSV file and validate that it is not empty.",
+      "fails_if": "input file is missing, unreadable, or empty",
+      "code": "const fs = await import('node:fs');\nconst inputPath = process.env.INPUT_PATH;\nif (!inputPath) throw new Error('INPUT_PATH is required');\nlet csvContent;\ntry {\n  csvContent = fs.readFileSync(inputPath, 'utf8');\n} catch (e) {\n  throw new Error('Failed to read input file: ' + e.message);\n}\nif (!csvContent || csvContent.trim().length === 0) {\n  throw new Error('Input CSV file is empty');\n}\nglobalThis.csvContent = csvContent;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Convert the CSV string to a JSON array using json-2-csv, then transform it into a Markdown table string.",
+      "fails_if": "CSV parsing fails or the resulting data is not a valid array of objects",
+      "code": "const converter = await import('json-2-csv');\nconst csv2json = converter.csv2json || (converter.default && converter.default.csv2json);\nif (typeof csv2json !== 'function') throw new Error('csv2json is not a function');\nlet data;\ntry {\n  data = await csv2json(globalThis.csvContent);\n} catch (e) {\n  throw new Error('Failed to parse CSV: ' + e.message);\n}\nif (!Array.isArray(data) || data.length === 0) {\n  throw new Error('CSV did not parse to a non-empty array');\n}\nconst keys = Object.keys(data[0]);\nconst escapeCell = (val) => {\n  if (val === null || val === undefined) return '';\n  return String(val).replace(/\\|/g, '\\\\|').replace(/\\n/g, '<br>');\n};\nlet md = '| ' + keys.map(k => escapeCell(k)).join(' | ') + ' |\\n';\nmd += '|' + keys.map(() => ' --- ').join('|') + '|\\n';\nfor (const row of data) {\n  md += '| ' + keys.map(k => escapeCell(row[k])).join(' | ') + ' |\\n';\n}\nglobalThis.markdownOutput = md;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write the generated Markdown table to the output file and emit the result JSON to stdout.",
+      "fails_if": "output file cannot be written or output_path is missing",
+      "code": "const fs = await import('node:fs');\nconst outputPath = process.env.OUTPUT_PATH;\nif (!outputPath) throw new Error('OUTPUT_PATH is required');\ntry {\n  fs.writeFileSync(outputPath, globalThis.markdownOutput, 'utf8');\n} catch (e) {\n  throw new Error('Failed to write output file: ' + e.message);\n}\nconsole.log(JSON.stringify({ output_path: outputPath }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
