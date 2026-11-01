@@ -1,0 +1,61 @@
+{
+  "id": "task_mvxriywg",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "task_mvxriywg",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/task_mvxriywg.mjs",
+  "accepts": {
+    "html": "string",
+    "css": {
+      "type": "string",
+      "optional": true
+    },
+    "width": {
+      "type": "number",
+      "optional": true
+    },
+    "height": {
+      "type": "number",
+      "optional": true
+    },
+    "output_path": "string"
+  },
+  "produces": {
+    "image_path": "string",
+    "image_base64": "string"
+  },
+  "requires": {
+    "npm": [],
+    "pip": [
+      "html2image"
+    ],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate inputs, create output directory, and initialize the Html2Image instance.",
+      "fails_if": "Required inputs (html, output_path) are missing or output directory cannot be created.",
+      "code": "import os\nimport json\nimport base64\nimport html2image\n\nhtml = os.environ.get('HTML', '')\noutput_path = os.environ.get('OUTPUT_PATH', '')\ncss = os.environ.get('CSS', '')\nwidth = int(os.environ.get('WIDTH', '1920'))\nheight = int(os.environ.get('HEIGHT', '1080'))\n\nif not html:\n    raise ValueError(\"HTML input is required\")\nif not output_path:\n    raise ValueError(\"Output path is required\")\n\nos.makedirs(output_path, exist_ok=True)\n\nhti = html2image.Html2Image(output_path=output_path, size=(width, height))\nglobalThis_hti = hti\nglobalThis_html = html\nglobalThis_css = css\nglobalThis_output_path = output_path"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Generate the screenshot from the HTML and CSS strings using the headless browser.",
+      "fails_if": "The headless browser fails to render the HTML or the screenshot file is not created.",
+      "code": "import os\nimport json\nimport base64\n\nhti = globalThis_hti\nhtml = globalThis_html\ncss = globalThis_css\noutput_path = globalThis_output_path\n\nsave_as = 'screenshot.png'\n\ntry:\n    if css:\n        paths = hti.screenshot(html_str=html, css_str=css, save_as=save_as)\n    else:\n        paths = hti.screenshot(html_str=html, save_as=save_as)\nexcept Exception as e:\n    raise RuntimeError(f\"Screenshot generation failed: {str(e)}\")\n\nif not paths or len(paths) == 0:\n    raise RuntimeError(\"No screenshot path returned\")\n\nimage_path = paths[0]\n\nif not os.path.exists(image_path):\n    raise RuntimeError(f\"Screenshot file not found at {image_path}\")\n\nglobalThis_image_path = image_path"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Read the generated image file, encode it to base64, and print the result JSON to stdout.",
+      "fails_if": "The image file cannot be read or encoded, or the JSON output is malformed.",
+      "code": "import os\nimport json\nimport base64\n\nimage_path = globalThis_image_path\n\nwith open(image_path, 'rb') as f:\n    image_data = f.read()\n\nimage_base64 = base64.b64encode(image_data).decode('utf-8')\n\nresult = {\n    \"image_path\": image_path,\n    \"image_base64\": image_base64\n}\n\nprint(json.dumps(result))"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
