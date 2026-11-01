@@ -1,0 +1,52 @@
+{
+  "id": "npm_tsvtojson",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_tsvtojson",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_tsvtojson.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string",
+    "headers": {
+      "type": "string",
+      "optional": true
+    }
+  },
+  "produces": {
+    "json": "string"
+  },
+  "requires": {
+    "npm": [
+      "tsvtojson"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate environment variables, ensure the TSV input file exists, and store paths and optional headers for later steps.",
+      "fails_if": "Missing INPUT_PATH or OUTPUT_PATH env vars, input file does not exist, or HEADERS is provided but not a valid JSON array.",
+      "code": "(async () => {\n  const { existsSync } = await import('node:fs');\n  const inputPath = process.env.INPUT_PATH;\n  const outputPath = process.env.OUTPUT_PATH;\n  if (!inputPath) throw new Error('Missing INPUT_PATH');\n  if (!outputPath) throw new Error('Missing OUTPUT_PATH');\n  if (!existsSync(inputPath)) throw new Error('Input file does not exist');\n  const headersEnv = process.env.HEADERS;\n  let headers = null;\n  if (headersEnv) {\n    try { headers = JSON.parse(headersEnv); }\n    catch { throw new Error('HEADERS must be JSON array'); }\n    if (!Array.isArray(headers)) throw new Error('HEADERS must be array');\n  }\n  globalThis.tsvInputPath = inputPath;\n  globalThis.tsvOutputPath = outputPath;\n  globalThis.tsvHeaders = headers;\n})();"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Invoke the tsvtojson package to convert the TSV file to a JSON object using the stored paths and headers.",
+      "fails_if": "The package export is not a function, the conversion throws, or the promise rejects.",
+      "code": "(async () => {\n  const mod = await import('tsvtojson');\n  const tsvtojson = mod.default || mod;\n  if (typeof tsvtojson !== 'function') throw new Error('tsvtojson export not a function');\n  const data = await tsvtojson(globalThis.tsvInputPath, globalThis.tsvHeaders);\n  globalThis.tsvData = data;\n})();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write the resulting JSON to the designated output file and emit a single JSON object on stdout containing the stringified data.",
+      "fails_if": "No data was produced in the execute step or writing the output file fails.",
+      "code": "(async () => {\n  const data = globalThis.tsvData;\n  if (data === undefined) throw new Error('No data to emit');\n  const jsonStr = JSON.stringify(data);\n  const { writeFileSync } = await import('node:fs');\n  writeFileSync(globalThis.tsvOutputPath, jsonStr);\n  console.log(JSON.stringify({ json: jsonStr }));\n})();"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

@@ -1,0 +1,48 @@
+{
+  "id": "npm_node-tsv-json",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_node-tsv-json",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_node-tsv-json.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "node-tsv-json"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate required environment variables and ensure the input TSV file exists, storing paths for later steps.",
+      "fails_if": "INPUT_PATH or OUTPUT_PATH missing, or the input file does not exist.",
+      "code": "(async () => {\n  const { existsSync } = await import('node:fs');\n  const inputPath = process.env.INPUT_PATH;\n  const outputPath = process.env.OUTPUT_PATH;\n  if (!inputPath) throw new Error('Missing INPUT_PATH');\n  if (!outputPath) throw new Error('Missing OUTPUT_PATH');\n  if (!existsSync(inputPath)) throw new Error('Input file does not exist: ' + inputPath);\n  globalThis.inputPath = inputPath;\n  globalThis.outputPath = outputPath;\n})();"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Invoke node-tsv-json to convert the TSV file to JSON, writing the result to the specified output file.",
+      "fails_if": "The conversion callback returns an error or the package cannot be loaded.",
+      "code": "(async () => {\n  const mod = await import('node-tsv-json');\n  const tsv = mod.default || mod;\n  const { inputPath, outputPath } = globalThis;\n  await new Promise((resolve, reject) => {\n    tsv({ input: inputPath, output: outputPath }, (err, result) => {\n      if (err) return reject(err);\n      globalThis.result = result;\n      resolve();\n    });\n  });\n})();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the path of the generated JSON file.",
+      "fails_if": "The output path is undefined when emitting.",
+      "code": "(async () => {\n  const outputPath = globalThis.outputPath;\n  if (!outputPath) throw new Error('OUTPUT_PATH not set');\n  console.log(JSON.stringify({ output_path: outputPath }));\n})();"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
