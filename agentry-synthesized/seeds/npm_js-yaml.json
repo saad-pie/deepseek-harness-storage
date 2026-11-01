@@ -1,0 +1,51 @@
+{
+  "id": "npm_js-yaml",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_js-yaml",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_js-yaml.mjs",
+  "accepts": {
+    "yaml_path": "string",
+    "json_path": {
+      "type": "string",
+      "optional": true
+    }
+  },
+  "produces": {
+    "json": "string"
+  },
+  "requires": {
+    "npm": [
+      "js-yaml"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate required env vars, read the YAML file, and store its contents for later steps.",
+      "fails_if": "YAML_PATH env var missing, file does not exist, or read fails.",
+      "code": "(async () => {\n  const { readFileSync, existsSync } = await import('node:fs');\n  const yamlPath = process.env.YAML_PATH;\n  const jsonPath = process.env.JSON_PATH;\n  if (!yamlPath) throw new Error('Missing required env var YAML_PATH');\n  if (!existsSync(yamlPath)) throw new Error('YAML file does not exist: ' + yamlPath);\n  const content = readFileSync(yamlPath, 'utf8');\n  globalThis.yamlContent = content;\n  globalThis.jsonPath = jsonPath; // may be undefined\n})();"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Parse the stored YAML string into a JavaScript object using js-yaml.",
+      "fails_if": "js-yaml load throws due to invalid YAML.",
+      "code": "(async () => {\n  const { load } = await import('js-yaml');\n  const yamlStr = globalThis.yamlContent;\n  const obj = load(yamlStr);\n  globalThis.parsedObj = obj;\n})();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Optionally write the JSON string to a file and always emit a JSON object with the result on stdout.",
+      "fails_if": "File write fails or console output is malformed.",
+      "code": "(async () => {\n  const result = { json: JSON.stringify(globalThis.parsedObj) };\n  if (globalThis.jsonPath) {\n    const { writeFileSync } = await import('node:fs');\n    writeFileSync(globalThis.jsonPath, result.json, 'utf8');\n  }\n  console.log(JSON.stringify(result));\n})();"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
