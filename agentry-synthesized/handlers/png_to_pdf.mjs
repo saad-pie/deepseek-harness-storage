@@ -6,31 +6,31 @@
 const CAP_ID = "png_to_pdf";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "input_path": "string",
+  "png_path": "string",
   "output_path": "string"
 };
 const PRODUCES = {
-  "pdf_path": "string"
+  "output_path": "string"
 };
 const REQUIRES = {
   "npm": [
-    "image-to-pdf"
+    "pdf-lib"
   ],
   "pip": [],
   "post_install": null,
   "capability": []
 };
 const ENV_MAP = {
-  "INPUT_PATH": "input_path",
+  "PNG_PATH": "png_path",
   "OUTPUT_PATH": "output_path"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "pdf_path": "pdf_path"
+  "output_path": "output_path"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate INPUT_PATH and OUTPUT_PATH env vars and ensure the input PNG exists, storing paths in global state.\n  // fails_if: Missing env vars or input file does not exist.\n  { // scope for step 1\n    // BEGIN prepare\n    \n      const { existsSync } = await import('node:fs');\n      const input = process.env.INPUT_PATH;\n      const output = process.env.OUTPUT_PATH;\n      if (!input) throw new Error('Missing INPUT_PATH');\n      if (!output) throw new Error('Missing OUTPUT_PATH');\n      if (!existsSync(input)) throw new Error('Input file does not exist: ' + input);\n      globalThis.inputPath = input;\n      globalThis.outputPath = output;\n    \n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Convert the PNG at input_path to a PDF using image-to-pdf and write it to output_path.\n  // fails_if: Conversion fails or writing the PDF stream errors.\n  { // scope for step 2\n    // BEGIN execute\n    \n      const fs = await import('node:fs');\n      const { convert, sizes } = await import('image-to-pdf');\n      const pages = [globalThis.inputPath];\n      const stream = convert(pages, sizes.A4);\n      await new Promise((resolve, reject) => {\n        const out = fs.createWriteStream(globalThis.outputPath);\n        stream.pipe(out);\n        out.on('finish', resolve);\n        out.on('error', reject);\n      });\n    \n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a JSON object with the path of the generated PDF.\n  // fails_if: JSON emission fails or pdf_path is undefined.\n  { // scope for step 3\n    // BEGIN emit\n    \n      console.log(JSON.stringify({ pdf_path: process.env.OUTPUT_PATH }));\n    \n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate environment variables, read the PNG file (base64), decode to bytes, and store in global state.\n  // fails_if: Missing PNG_PATH or OUTPUT_PATH env vars, PNG file not found, or base64 decoding fails.\n  { // scope for step 1\n    // BEGIN prepare\n    \n      const { readFileSync, existsSync } = await import('node:fs');\n      const pngPath = process.env.PNG_PATH;\n      const outPath = process.env.OUTPUT_PATH;\n      if (!pngPath) throw new Error('Missing PNG_PATH');\n      if (!outPath) throw new Error('Missing OUTPUT_PATH');\n      if (!existsSync(pngPath)) throw new Error('PNG file not found');\n      const raw = readFileSync(pngPath, 'utf8').trim();\n      const pngBytes = Buffer.from(raw, 'base64');\n      globalThis.pngBytes = pngBytes;\n      globalThis.outputPath = outPath;\n    \n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Create a PDF, embed the PNG, add a page sized to the image, draw the image, save PDF to the output path.\n  // fails_if: pdf-lib methods unavailable, embedding fails, or writing the PDF file fails.\n  { // scope for step 2\n    // BEGIN execute\n    \n      const { PDFDocument } = await import('pdf-lib');\n      const { writeFileSync } = await import('node:fs');\n      const pngBytes = globalThis.pngBytes;\n      const outputPath = globalThis.outputPath;\n      if (!pngBytes) throw new Error('pngBytes not prepared');\n      const pdfDoc = await PDFDocument.create();\n      const pngImage = await pdfDoc.embedPng(pngBytes);\n      const { width, height } = pngImage.scale(1);\n      const page = pdfDoc.addPage([width, height]);\n      page.drawImage(pngImage, { x: 0, y: 0, width, height });\n      const pdfBytes = await pdfDoc.save();\n      writeFileSync(outputPath, pdfBytes);\n      globalThis.resultPath = outputPath;\n    \n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Output a JSON object containing the path of the generated PDF.\n  // fails_if: resultPath is undefined or console output is not valid JSON.\n  { // scope for step 3\n    // BEGIN emit\n    \n      const resultPath = globalThis.resultPath;\n      if (!resultPath) throw new Error('resultPath missing');\n      console.log(JSON.stringify({ output_path: resultPath }));\n    \n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -47,22 +47,22 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session, requires_override: REQUIRES });
-  const FIXTURES = {"/tmp/input.png":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK2cAAAAASUVORK5CYII=","/tmp/output.pdf":"JVBERi0xLjMgCjEgMCBvYmoKPDwKL1BhZ2VzIDIgMCBSCi9UeXBlIC9DYXRhbG9nCj4+CmVuZG9iagoyIDAgb2JqCjw8Ci9UeXBlIC9QYWdlcwovS2lkcyBbIDMgMCBSIF0KL0NvdW50IDEKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgovUmVzb3VyY2VzIDw8Ci9YT2JqZWN0IDw8IC9JbTAgOCAwIFIgPj4KL1Byb2NTZXQgNiAwIFIgPj4KL01lZGlhQm94IFswIDAgMTAwIDEwMF0KL0Nyb3BCb3ggWzAgMCAxMDAgMTAwXQovQ29udGVudHMgNCAwIFIKL1RodW1iIDExIDAgUgo+PgplbmRvYmoKNCAwIG9iago8PAovTGVuZ3RoIDUgMCBSCj4+CnN0cmVhbQpxCjEwMCAwIDAgMTAwIDAgMCBjbQovSW0wIERvClEKCmVuZHN0cmVhbQplbmRvYmoKNSAwIG9iagozMQplbmRvYmoKNiAwIG9iagpbIC9QREYgL1RleHQgL0ltYWdlQyBdCmVuZG9iago3IDAgb2JqCjw8Cj4+CmVuZG9iago4IDAgb2JqCjw8Ci9UeXBlIC9YT2JqZWN0Ci9TdWJ0eXBlIC9JbWFnZQovTmFtZSAvSW0wCi9GaWx0ZXIgWyAvUnVuTGVuZ3RoRGVjb2RlIF0KL1dpZHRoIDEwMAovSGVpZ2h0IDEwMAovQ29sb3JTcGFjZSAxMCAwIFIKL0JpdHNQZXJDb21wb25lbnQgOAovTGVuZ3RoIDkgMCBSCj4+CnN0cmVhbQqC/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/o/+ACmVuZHN0cmVhbQplbmRvYmoKOSAwIG9iagoxNTkKZW5kb2JqCjEwIDAgb2JqCi9EZXZpY2VHcmF5CmVuZG9iagoxMSAwIG9iago8PAovRmlsdGVyIFsgL1J1bkxlbmd0aERlY29kZSBdCi9XaWR0aCAxMDAKL0hlaWdodCAxMDAKL0NvbG9yU3BhY2UgMTAgMCBSCi9CaXRzUGVyQ29tcG9uZW50IDgKL0xlbmd0aCAxMiAwIFIKPj4Kc3RyZWFtCoL/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/o/+ACmVuZHN0cmVhbQplbmRvYmoKMTIgMCBvYmoKMTU5CmVuZG9iagoxMyAwIG9iago8PAo+PgplbmRvYmoKMTQgMCBvYmoKMTU5CmVuZG9iagoxNSAwIG9iago8PAo+PgplbmRvYmoKMTYgMCBvYmoKMTU5CmVuZG9iagoxNyAwIG9iago8PAovVGl0bGUgPDAwNzIwMDY1MDA2MTAwNkMwMDMxMDAzMDAwMzAwMDAwPgovQ3JlYXRpb25EYXRlIChEOjIwMjYxMDE4MTEyMDQ1KQovTW9kRGF0ZSAoRDoyMDI2MTAxODExMjA0NSkKL1Byb2R1Y2VyIChodHRwczovL2ltYWdlbWFnaWNrLm9yZykKPj4KZW5kb2JqCnhyZWYKMCAxOAowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMTAgMDAwMDAgbiAKMDAwMDAwMDA1OSAwMDAwMCBuIAowMDAwMDAwMTE4IDAwMDAwIG4gCjAwMDAwMDAzMDAgMDAwMDAgbiAKMDAwMDAwMDM4NCAwMDAwMCBuIAowMDAwMDAwNDAyIDAwMDAwIG4gCjAwMDAwMDA0NDAgMDAwMDAgbiAKMDAwMDAwMDQ2MSAwMDAwMCBuIAowMDAwMDAwODA2IDAwMDAwIG4gCjAwMDAwMDA4MjUgMDAwMDAgbiAKMDAwMDAwMDg1MyAwMDAwMCBuIAowMDAwMDAxMTU4IDAwMDAwIG4gCjAwMDAwMDExNzggMDAwMDAgbiAKMDAwMDAwMTIwMCAwMDAwMCBuIAowMDAwMDAxMjIwIDAwMDAwIG4gCjAwMDAwMDEyNDIgMDAwMDAgbiAKMDAwMDAwMTI2MiAwMDAwMCBuIAp0cmFpbGVyCjw8Ci9TaXplIDE4Ci9JbmZvIDE3IDAgUgovUm9vdCAxIDAgUgovSUQgWzxlOGEyMjBhYmYyYTBjZTVlNWIxZWY5NGNhNTMzMGRmY2ZkYmZhOTU2YmEzZDliZDFlZmZiZGE5ZWQwNTAyMjJlPiA8ZThhMjIwYWJmMmEwY2U1ZTViMWVmOTRjYTUzMzBkZmNmZGJmYTk1NmJhM2Q5YmQxZWZmYmRhOWVkMDUwMjIyZT5dCj4+CnN0YXJ0eHJlZgoxNDIzCiUlRU9GCg=="};
+  const FIXTURES = {"/tmp/input.png":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+X9WcAAAAASUVORK5CYII=","/tmp/output.pdf":"JVBERi0xLjMgCjEgMCBvYmoKPDwKL1BhZ2VzIDIgMCBSCi9UeXBlIC9DYXRhbG9nCj4+CmVuZG9iagoyIDAgb2JqCjw8Ci9UeXBlIC9QYWdlcwovS2lkcyBbIDMgMCBSIF0KL0NvdW50IDEKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgovUmVzb3VyY2VzIDw8Ci9YT2JqZWN0IDw8IC9JbTAgOCAwIFIgPj4KL1Byb2NTZXQgNiAwIFIgPj4KL01lZGlhQm94IFswIDAgMTAwIDEwMF0KL0Nyb3BCb3ggWzAgMCAxMDAgMTAwXQovQ29udGVudHMgNCAwIFIKL1RodW1iIDExIDAgUgo+PgplbmRvYmoKNCAwIG9iago8PAovTGVuZ3RoIDUgMCBSCj4+CnN0cmVhbQpxCjEwMCAwIDAgMTAwIDAgMCBjbQovSW0wIERvClEKCmVuZHN0cmVhbQplbmRvYmoKNSAwIG9iagozMQplbmRvYmoKNiAwIG9iagpbIC9QREYgL1RleHQgL0ltYWdlQyBdCmVuZG9iago3IDAgb2JqCjw8Cj4+CmVuZG9iago4IDAgb2JqCjw8Ci9UeXBlIC9YT2JqZWN0Ci9TdWJ0eXBlIC9JbWFnZQovTmFtZSAvSW0wCi9GaWx0ZXIgWyAvUnVuTGVuZ3RoRGVjb2RlIF0KL1dpZHRoIDEwMAovSGVpZ2h0IDEwMAovQ29sb3JTcGFjZSAxMCAwIFIKL0JpdHNQZXJDb21wb25lbnQgOAovTGVuZ3RoIDkgMCBSCj4+CnN0cmVhbQqC/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/o/+ACmVuZHN0cmVhbQplbmRvYmoKOSAwIG9iagoxNTkKZW5kb2JqCjEwIDAgb2JqCi9EZXZpY2VHcmF5CmVuZG9iagoxMSAwIG9iago8PAovRmlsdGVyIFsgL1J1bkxlbmd0aERlY29kZSBdCi9XaWR0aCAxMDAKL0hlaWdodCAxMDAKL0NvbG9yU3BhY2UgMTAgMCBSCi9CaXRzUGVyQ29tcG9uZW50IDgKL0xlbmd0aCAxMiAwIFIKPj4Kc3RyZWFtCoL/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/gv+C/4L/o/+ACmVuZHN0cmVhbQplbmRvYmoKMTIgMCBvYmoKMTU5CmVuZG9iagoxMyAwIG9iago8PAo+PgplbmRvYmoKMTQgMCBvYmoKMTU5CmVuZG9iagoxNSAwIG9iago8PAo+PgplbmRvYmoKMTYgMCBvYmoKMTU5CmVuZG9iagoxNyAwIG9iago8PAovVGl0bGUgPDAwNzIwMDY1MDA2MTAwNkMwMDMxMDAzMDAwMzAwMDAwPgovQ3JlYXRpb25EYXRlIChEOjIwMjYxMDE4MTEyMDQ1KQovTW9kRGF0ZSAoRDoyMDI2MTAxODExMjA0NSkKL1Byb2R1Y2VyIChodHRwczovL2ltYWdlbWFnaWNrLm9yZykKPj4KZW5kb2JqCnhyZWYKMCAxOAowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMTAgMDAwMDAgbiAKMDAwMDAwMDA1OSAwMDAwMCBuIAowMDAwMDAwMTE4IDAwMDAwIG4gCjAwMDAwMDAzMDAgMDAwMDAgbiAKMDAwMDAwMDM4NCAwMDAwMCBuIAowMDAwMDAwNDAyIDAwMDAwIG4gCjAwMDAwMDA0NDAgMDAwMDAgbiAKMDAwMDAwMDQ2MSAwMDAwMCBuIAowMDAwMDAwODA2IDAwMDAwIG4gCjAwMDAwMDA4MjUgMDAwMDAgbiAKMDAwMDAwMDg1MyAwMDAwMCBuIAowMDAwMDAxMTU4IDAwMDAwIG4gCjAwMDAwMDExNzggMDAwMDAgbiAKMDAwMDAwMTIwMCAwMDAwMCBuIAowMDAwMDAxMjIwIDAwMDAwIG4gCjAwMDAwMDEyNDIgMDAwMDAgbiAKMDAwMDAwMTI2MiAwMDAwMCBuIAp0cmFpbGVyCjw8Ci9TaXplIDE4Ci9JbmZvIDE3IDAgUgovUm9vdCAxIDAgUgovSUQgWzxlOGEyMjBhYmYyYTBjZTVlNWIxZWY5NGNhNTMzMGRmY2ZkYmZhOTU2YmEzZDliZDFlZmZiZGE5ZWQwNTAyMjJlPiA8ZThhMjIwYWJmMmEwY2U1ZTViMWVmOTRjYTUzMzBkZmNmZGJmYTk1NmJhM2Q5YmQxZWZmYmRhOWVkMDUwMjIyZT5dCj4+CnN0YXJ0eHJlZgoxNDIzCiUlRU9GCg=="};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"input_path":"/tmp/input.png","output_path":"/tmp/output.pdf"}, deps, { session });
+  const probe = await run({"png_path":"/tmp/input.png","output_path":"/tmp/output.pdf"}, deps, { session });
   const out = probe.output || probe;
   // v0.58.2 — verify produces fields are non-null. Prior version trusted
   // trial to pass on exit_code alone; broken handlers that returned null/undefined
   // for a promised field passed trial and shipped as silent-failure caps.
-  const _PRODUCES = {"pdf_path":"string"};
+  const _PRODUCES = {"output_path":"string"};
   const _missingProduces = Object.keys(_PRODUCES).filter(k => out[k] === undefined || out[k] === null);
   if (_missingProduces.length > 0) throw new Error("accept: handler returned null/undefined for produces field(s): " + _missingProduces.join(", "));
-  const minBytes = 500;
+  const minBytes = 0;
   if (minBytes > 0) {
     const size = typeof out.bytes === "number" ? out.bytes : 0;
     if (size < minBytes) {

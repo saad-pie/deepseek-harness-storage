@@ -5,15 +5,15 @@
   "handler": "png_to_pdf",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/png_to_pdf.mjs",
   "accepts": {
-    "input_path": "string",
+    "png_path": "string",
     "output_path": "string"
   },
   "produces": {
-    "pdf_path": "string"
+    "output_path": "string"
   },
   "requires": {
     "npm": [
-      "image-to-pdf"
+      "pdf-lib"
     ],
     "pip": [],
     "post_install": null,
@@ -23,23 +23,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate INPUT_PATH and OUTPUT_PATH env vars and ensure the input PNG exists, storing paths in global state.",
-      "fails_if": "Missing env vars or input file does not exist.",
-      "code": "(async () => {\\n  const { existsSync } = await import('node:fs');\\n  const input = process.env.INPUT_PATH;\\n  const output = process.env.OUTPUT_PATH;\\n  if (!input) throw new Error('Missing INPUT_PATH');\\n  if (!output) throw new Error('Missing OUTPUT_PATH');\\n  if (!existsSync(input)) throw new Error('Input file does not exist: ' + input);\\n  globalThis.inputPath = input;\\n  globalThis.outputPath = output;\\n})();"
+      "what": "Validate environment variables, read the PNG file (base64), decode to bytes, and store in global state.",
+      "fails_if": "Missing PNG_PATH or OUTPUT_PATH env vars, PNG file not found, or base64 decoding fails.",
+      "code": "(async () => {\\n  const { readFileSync, existsSync } = await import('node:fs');\\n  const pngPath = process.env.PNG_PATH;\\n  const outPath = process.env.OUTPUT_PATH;\\n  if (!pngPath) throw new Error('Missing PNG_PATH');\\n  if (!outPath) throw new Error('Missing OUTPUT_PATH');\\n  if (!existsSync(pngPath)) throw new Error('PNG file not found');\\n  const raw = readFileSync(pngPath, 'utf8').trim();\\n  const pngBytes = Buffer.from(raw, 'base64');\\n  globalThis.pngBytes = pngBytes;\\n  globalThis.outputPath = outPath;\\n})();"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Convert the PNG at input_path to a PDF using image-to-pdf and write it to output_path.",
-      "fails_if": "Conversion fails or writing the PDF stream errors.",
-      "code": "(async () => {\\n  const fs = await import('node:fs');\\n  const { convert, sizes } = await import('image-to-pdf');\\n  const pages = [globalThis.inputPath];\\n  const stream = convert(pages, sizes.A4);\\n  await new Promise((resolve, reject) => {\\n    const out = fs.createWriteStream(globalThis.outputPath);\\n    stream.pipe(out);\\n    out.on('finish', resolve);\\n    out.on('error', reject);\\n  });\\n})();"
+      "what": "Create a PDF, embed the PNG, add a page sized to the image, draw the image, save PDF to the output path.",
+      "fails_if": "pdf-lib methods unavailable, embedding fails, or writing the PDF file fails.",
+      "code": "(async () => {\\n  const { PDFDocument } = await import('pdf-lib');\\n  const { writeFileSync } = await import('node:fs');\\n  const pngBytes = globalThis.pngBytes;\\n  const outputPath = globalThis.outputPath;\\n  if (!pngBytes) throw new Error('pngBytes not prepared');\\n  const pdfDoc = await PDFDocument.create();\\n  const pngImage = await pdfDoc.embedPng(pngBytes);\\n  const { width, height } = pngImage.scale(1);\\n  const page = pdfDoc.addPage([width, height]);\\n  page.drawImage(pngImage, { x: 0, y: 0, width, height });\\n  const pdfBytes = await pdfDoc.save();\\n  writeFileSync(outputPath, pdfBytes);\\n  globalThis.resultPath = outputPath;\\n})();"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Emit a JSON object with the path of the generated PDF.",
-      "fails_if": "JSON emission fails or pdf_path is undefined.",
-      "code": "(async () => {\\n  console.log(JSON.stringify({ pdf_path: process.env.OUTPUT_PATH }));\\n})();"
+      "what": "Output a JSON object containing the path of the generated PDF.",
+      "fails_if": "resultPath is undefined or console output is not valid JSON.",
+      "code": "(async () => {\\n  const resultPath = globalThis.resultPath;\\n  if (!resultPath) throw new Error('resultPath missing');\\n  console.log(JSON.stringify({ output_path: resultPath }));\\n})();"
     }
   ],
   "invoke_timeout_ms": 90000,
