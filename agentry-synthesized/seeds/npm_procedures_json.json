@@ -1,0 +1,47 @@
+{
+  "id": "npm_procedures_json",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_procedures_json",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_procedures_json.mjs",
+  "accepts": {
+    "yaml_text": "string"
+  },
+  "produces": {
+    "json": "string"
+  },
+  "requires": {
+    "npm": [
+      "@procedures/json"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that the required YAML_TEXT environment variable is present and store it for later steps.",
+      "fails_if": "process.env.YAML_TEXT is missing or empty",
+      "code": "(async () => {\n  const { env } = await import('node:process');\n  if (!env.YAML_TEXT) throw new Error('Missing required env var YAML_TEXT');\n  globalThis.yamlText = env.YAML_TEXT;\n})();"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Parse the YAML text into a JSON value using @procedures/json's yamlParse function.",
+      "fails_if": "yamlParse throws or returns undefined",
+      "code": "(async () => {\n  const { yamlParse } = await import('@procedures/json');\n  const text = globalThis.yamlText;\n  if (typeof yamlParse !== 'function') throw new Error('@procedures/json: yamlParse is not a function');\n  // The procedure expects the raw YAML string.\n  const value = yamlParse(text);\n  if (value === undefined) throw new Error('yamlParse returned undefined');\n  globalThis.parsedValue = value;\n})();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write a single JSON object to stdout containing the stringified JSON representation of the parsed value.",
+      "fails_if": "The emitted JSON is malformed or the json field is undefined",
+      "code": "(async () => {\n  const resultObj = { json: JSON.stringify(globalThis.parsedValue) };\n  if (resultObj.json === undefined) throw new Error('Parsed JSON is undefined');\n  console.log(JSON.stringify(resultObj));\n})();"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
