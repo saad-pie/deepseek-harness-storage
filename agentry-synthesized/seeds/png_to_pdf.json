@@ -1,0 +1,48 @@
+{
+  "id": "png_to_pdf",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "png_to_pdf",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/png_to_pdf.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "pdf_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "image-to-pdf"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate INPUT_PATH and OUTPUT_PATH env vars and ensure the input PNG exists, storing paths in global state.",
+      "fails_if": "Missing env vars or input file does not exist.",
+      "code": "(async () => {\\n  const { existsSync } = await import('node:fs');\\n  const input = process.env.INPUT_PATH;\\n  const output = process.env.OUTPUT_PATH;\\n  if (!input) throw new Error('Missing INPUT_PATH');\\n  if (!output) throw new Error('Missing OUTPUT_PATH');\\n  if (!existsSync(input)) throw new Error('Input file does not exist: ' + input);\\n  globalThis.inputPath = input;\\n  globalThis.outputPath = output;\\n})();"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Convert the PNG at input_path to a PDF using image-to-pdf and write it to output_path.",
+      "fails_if": "Conversion fails or writing the PDF stream errors.",
+      "code": "(async () => {\\n  const fs = await import('node:fs');\\n  const { convert, sizes } = await import('image-to-pdf');\\n  const pages = [globalThis.inputPath];\\n  const stream = convert(pages, sizes.A4);\\n  await new Promise((resolve, reject) => {\\n    const out = fs.createWriteStream(globalThis.outputPath);\\n    stream.pipe(out);\\n    out.on('finish', resolve);\\n    out.on('error', reject);\\n  });\\n})();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object with the path of the generated PDF.",
+      "fails_if": "JSON emission fails or pdf_path is undefined.",
+      "code": "(async () => {\\n  console.log(JSON.stringify({ pdf_path: process.env.OUTPUT_PATH }));\\n})();"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
