@@ -14,8 +14,7 @@
   "requires": {
     "npm": [
       "gulp-yaml",
-      "gulp",
-      "vinyl"
+      "js-yaml"
     ],
     "pip": [],
     "post_install": null,
@@ -25,23 +24,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate input file existence and load the gulp-yaml plugin.",
-      "fails_if": "Input file does not exist or gulp-yaml fails to load",
-      "code": "const fs = await import('node:fs');\nconst path = await import('node:path');\nconst inputPath = process.env.INPUT_PATH;\nconst outputPath = process.env.OUTPUT_PATH;\nif (!inputPath) throw new Error('INPUT_PATH is required');\nif (!outputPath) throw new Error('OUTPUT_PATH is required');\nif (!fs.existsSync(inputPath)) throw new Error('Input file not found: ' + inputPath);\nconst yamlMod = await import('gulp-yaml');\nconst yaml = yamlMod.default || yamlMod;\nif (typeof yaml !== 'function') throw new Error('gulp-yaml export is not a function');\nglobalThis.yaml = yaml;\nglobalThis.inputPath = inputPath;\nglobalThis.outputPath = outputPath;"
+      "what": "Validate required environment variables and ensure the input YAML file exists.",
+      "fails_if": "Missing INPUT_PATH or OUTPUT_PATH env var, or the input file cannot be accessed.",
+      "code": "(async () => {\n  const { accessSync, constants } = await import('node:fs');\n  const inputPath = process.env.INPUT_PATH;\n  const outputPath = process.env.OUTPUT_PATH;\n  if (!inputPath) throw new Error('Missing INPUT_PATH');\n  if (!outputPath) throw new Error('Missing OUTPUT_PATH');\n  try { accessSync(inputPath, constants.R_OK); } catch { throw new Error('Input file not accessible'); }\n  globalThis.inputPath = inputPath;\n  globalThis.outputPath = outputPath;\n})();"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Convert the YAML file to JSON using gulp-yaml and write the result to the output path.",
-      "fails_if": "YAML parsing fails or file writing fails",
-      "code": "const fs = await import('node:fs');\nconst path = await import('node:path');\nconst gulp = (await import('gulp')).default;\nconst yaml = globalThis.yaml;\nconst inputPath = globalThis.inputPath;\nconst outputPath = globalThis.outputPath;\n\nconst dir = path.dirname(inputPath);\nconst file = path.basename(inputPath);\nconst glob = path.join(dir, file);\n\nconst stream = gulp.src(glob).pipe(yaml({ safe: true }));\n\nconst chunks = [];\nawait new Promise((resolve, reject) => {\n  stream.on('data', (chunk) => {\n    chunks.push(chunk);\n  });\n  stream.on('end', () => {\n    resolve();\n  });\n  stream.on('error', (err) => {\n    reject(err);\n  });\n});\n\nif (chunks.length === 0) throw new Error('No data produced by gulp-yaml');\n\nconst content = Buffer.concat(chunks).toString('utf8');\n\n// Ensure output directory exists\nconst outDir = path.dirname(outputPath);\nif (!fs.existsSync(outDir)) {\n  fs.mkdirSync(outDir, { recursive: true });\n}\n\nfs.writeFileSync(outputPath, content, 'utf8');\nglobalThis.resultPath = outputPath;"
+      "what": "Read the YAML file, convert it to JSON, and write the result to the output path.",
+      "fails_if": "YAML parsing fails or writing the JSON output fails.",
+      "code": "(async () => {\n  const { readFileSync, writeFileSync } = await import('node:fs');\n  const yamlModRaw = await import('js-yaml');\n  const yamlMod = yamlModRaw.default || yamlModRaw;\n  const yamlContent = readFileSync(globalThis.inputPath, 'utf8');\n  const data = typeof yamlMod.safeLoad === 'function' ? yamlMod.safeLoad(yamlContent) : yamlMod.load(yamlContent);\n  const jsonStr = JSON.stringify(data, null, 2);\n  writeFileSync(globalThis.outputPath, jsonStr, 'utf8');\n  globalThis.resultPath = globalThis.outputPath;\n})();"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write the JSON result object to stdout.",
-      "fails_if": "Output path is undefined",
-      "code": "const result = {\n  output_path: globalThis.resultPath\n};\nconsole.log(JSON.stringify(result));"
+      "what": "Emit a JSON object containing the path of the generated JSON file.",
+      "fails_if": "The emitted stdout is not valid JSON or does not contain the required field.",
+      "code": "(async () => {\n  console.log(JSON.stringify({ output_path: globalThis.resultPath }));\n})();"
     }
   ],
   "invoke_timeout_ms": 90000,

@@ -5,14 +5,15 @@
   "handler": "yaml_to_json",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/yaml_to_json.mjs",
   "accepts": {
-    "yaml_text": "string"
+    "input_path": "string",
+    "output_path": "string"
   },
   "produces": {
-    "json_text": "string"
+    "output_path": "string"
   },
   "requires": {
     "npm": [
-      "@procedures/json"
+      "@adius/yaml2json"
     ],
     "pip": [],
     "post_install": null,
@@ -22,23 +23,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate that the YAML input is provided via environment and store it for later steps",
-      "fails_if": "The environment variable YAML_TEXT is missing or empty",
-      "code": "(async () => {\n  const { env } = await import('node:process');\n  const yaml = env.YAML_TEXT;\n  if (!yaml) throw new Error('Missing required input YAML_TEXT');\n  globalThis.yamlText = yaml;\n})();"
+      "what": "Validate INPUT_PATH and OUTPUT_PATH env vars, ensure the input file exists, and store the paths in global state.",
+      "fails_if": "Missing env vars or the input file is not readable",
+      "code": "(async () => {\n  const { accessSync, constants } = await import('node:fs');\n  const inputPath = process.env.INPUT_PATH;\n  const outputPath = process.env.OUTPUT_PATH;\n  if (!inputPath) throw new Error('INPUT_PATH env var is required');\n  if (!outputPath) throw new Error('OUTPUT_PATH env var is required');\n  try { accessSync(inputPath, constants.R_OK); } catch { throw new Error('Input file not readable: ' + inputPath); }\n  globalThis.inputPath = inputPath;\n  globalThis.outputPath = outputPath;\n})();"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Parse the YAML text into a JSON value and stringify it",
-      "fails_if": "Parsing fails or JSON.stringify throws",
-      "code": "(async () => {\n  const { parseYaml } = await import('@procedures/json');\n  const value = parseYaml(globalThis.yamlText);\n  globalThis.jsonText = JSON.stringify(value);\n})();"
+      "what": "Stream the YAML file through Yaml2json, collect JSON lines, and write them to the output file.",
+      "fails_if": "The transformation pipeline throws or the output file cannot be written",
+      "code": "(async () => {\n  const { Yaml2json } = await import('@adius/yaml2json');\n  const { createReadStream } = await import('node:fs');\n  const { pipeline } = await import('node:stream/promises');\n  const { Transform } = await import('node:stream');\n  const { writeFile } = await import('node:fs').then(m => m.promises);\n  let output = '';\n  const collector = new Transform({\n    writableObjectMode: true,\n    transform(chunk, _enc, cb) {\n      output += JSON.stringify(chunk) + '\\n';\n      cb();\n    }\n  });\n  await pipeline(\n    createReadStream(globalThis.inputPath),\n    new Yaml2json(),\n    collector\n  );\n  await writeFile(globalThis.outputPath, output);\n  globalThis.resultPath = globalThis.outputPath;\n})();"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write a single JSON object containing the JSON string to stdout",
-      "fails_if": "The emitted JSON is malformed or the json_text field is undefined",
-      "code": "(async () => {\n  console.log(JSON.stringify({ json_text: globalThis.jsonText }));\n})();"
+      "what": "Emit a single JSON object containing the path of the generated JSON file.",
+      "fails_if": "The emitted JSON is malformed or missing the output_path field",
+      "code": "(async () => {\n  console.log(JSON.stringify({ output_path: globalThis.resultPath }));\n})();"
     }
   ],
   "invoke_timeout_ms": 90000,

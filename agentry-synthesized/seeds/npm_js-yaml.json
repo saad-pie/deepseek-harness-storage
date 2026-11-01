@@ -5,11 +5,7 @@
   "handler": "npm_js-yaml",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_js-yaml.mjs",
   "accepts": {
-    "yaml_path": "string",
-    "json_path": {
-      "type": "string",
-      "optional": true
-    }
+    "input_path": "string"
   },
   "produces": {
     "json": "string"
@@ -26,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate required env vars, read the YAML file, and store its contents for later steps.",
-      "fails_if": "YAML_PATH env var missing, file does not exist, or read fails.",
-      "code": "(async () => {\n  const { readFileSync, existsSync } = await import('node:fs');\n  const yamlPath = process.env.YAML_PATH;\n  const jsonPath = process.env.JSON_PATH;\n  if (!yamlPath) throw new Error('Missing required env var YAML_PATH');\n  if (!existsSync(yamlPath)) throw new Error('YAML file does not exist: ' + yamlPath);\n  const content = readFileSync(yamlPath, 'utf8');\n  globalThis.yamlContent = content;\n  globalThis.jsonPath = jsonPath; // may be undefined\n})();"
+      "what": "Validate INPUT_PATH env var and read the YAML file into memory",
+      "fails_if": "INPUT_PATH is missing or the file cannot be read",
+      "code": "const fs = await import('node:fs');\nconst inputPath = process.env.INPUT_PATH;\nif (!inputPath) throw new Error('Missing INPUT_PATH environment variable');\nglobalThis.yamlContent = fs.readFileSync(inputPath, 'utf8');"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Parse the stored YAML string into a JavaScript object using js-yaml.",
-      "fails_if": "js-yaml load throws due to invalid YAML.",
-      "code": "(async () => {\n  const { load } = await import('js-yaml');\n  const yamlStr = globalThis.yamlContent;\n  const obj = load(yamlStr);\n  globalThis.parsedObj = obj;\n})();"
+      "what": "Parse the YAML content into a JavaScript object using js-yaml",
+      "fails_if": "js-yaml load throws due to invalid YAML",
+      "code": "const yamlMod = await import('js-yaml');\nconst { load } = yamlMod;\nglobalThis.parsedObject = load(globalThis.yamlContent);\n"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Optionally write the JSON string to a file and always emit a JSON object with the result on stdout.",
-      "fails_if": "File write fails or console output is malformed.",
-      "code": "(async () => {\n  const result = { json: JSON.stringify(globalThis.parsedObj) };\n  if (globalThis.jsonPath) {\n    const { writeFileSync } = await import('node:fs');\n    writeFileSync(globalThis.jsonPath, result.json, 'utf8');\n  }\n  console.log(JSON.stringify(result));\n})();"
+      "what": "Emit a single JSON object containing the stringified result",
+      "fails_if": "JSON.stringify fails or console.log is not called",
+      "code": "console.log(JSON.stringify({ json: JSON.stringify(globalThis.parsedObject) }));"
     }
   ],
   "invoke_timeout_ms": 90000,

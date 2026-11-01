@@ -20,14 +20,17 @@ const REQUIRES = {
   "post_install": null,
   "capability": []
 };
-const ENV_MAP = {};
+const ENV_MAP = {
+  "INPUT_PATH": "input_path",
+  "OUTPUT_PATH": "output_path"
+};
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
   "output_path": "output_path"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate environment variables and ensure the input YAML file exists, then store paths in global state.\n  // fails_if: Missing INPUT_PATH or OUTPUT_PATH env vars, or the input file cannot be accessed.\n  { // scope for step 1\n    // BEGIN prepare\n    (async () => {\n      const { env } = await import('node:process');\n      const { accessSync, constants } = await import('node:fs');\n      const inputPath = env.INPUT_PATH;\n      const outputPath = env.OUTPUT_PATH;\n      if (!inputPath) throw new Error('Missing INPUT_PATH env var');\n      if (!outputPath) throw new Error('Missing OUTPUT_PATH env var');\n      try { accessSync(inputPath, constants.R_OK); } catch { throw new Error('Input file not accessible'); }\n      globalThis.inputPath = inputPath;\n      globalThis.outputPath = outputPath;\n    })();\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Stream the YAML file through Yaml2json and write newline‑delimited JSON to the output file.\n  // fails_if: Any stream error or failure to write the output file.\n  { // scope for step 2\n    // BEGIN execute\n    (async () => {\n      const { createReadStream, createWriteStream } = await import('node:fs');\n      const { Transform } = await import('node:stream');\n      const { Yaml2json } = await import('@adius/yaml2json');\n      const inputPath = globalThis.inputPath;\n      const outputPath = globalThis.outputPath;\n      const stringify = new Transform({\n        writableObjectMode: true,\n        transform(chunk, _encoding, done) {\n          done(null, JSON.stringify(chunk) + '\\n');\n        }\n      });\n      await new Promise((resolve, reject) => {\n        createReadStream(inputPath)\n          .pipe(new Yaml2json())\n          .pipe(stringify)\n          .pipe(createWriteStream(outputPath))\n          .on('finish', resolve)\n          .on('error', reject);\n      });\n    })();\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the path of the generated JSON file.\n  // fails_if: globalThis.outputPath is undefined or console.log fails.\n  { // scope for step 3\n    // BEGIN emit\n    (async () => {\n      console.log(JSON.stringify({ output_path: globalThis.outputPath }));\n    })();\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate input and output paths from environment variables and ensure the input file exists.\n  // fails_if: INPUT_PATH or OUTPUT_PATH missing, or the input file cannot be accessed.\n  { // scope for step 1\n    // BEGIN prepare\n    (async () => {\n      const { env } = await import('node:process');\n      const { accessSync, constants } = await import('node:fs');\n      const inputPath = env.INPUT_PATH;\n      const outputPath = env.OUTPUT_PATH;\n      if (!inputPath) throw new Error('Missing INPUT_PATH');\n      if (!outputPath) throw new Error('Missing OUTPUT_PATH');\n      try { accessSync(inputPath, constants.R_OK); } catch { throw new Error('Input file not accessible'); }\n      globalThis.inputPath = inputPath;\n      globalThis.outputPath = outputPath;\n    })();\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Stream the YAML file through Yaml2json transformer and write the resulting JSON to the output file.\n  // fails_if: Pipeline error, transformation failure, or inability to write the output file.\n  { // scope for step 2\n    // BEGIN execute\n    (async () => {\n      const { createReadStream, writeFileSync } = await import('node:fs');\n      const { pipeline } = await import('node:stream/promises');\n      const { Writable } = await import('node:stream');\n      const { Yaml2json } = await import('@adius/yaml2json');\n      const inputPath = globalThis.inputPath;\n      const outputPath = globalThis.outputPath;\n      let result = '';\n      const collector = new Writable({\n        write(chunk, _enc, cb) { result += chunk.toString(); cb(); }\n      });\n      await pipeline(createReadStream(inputPath), new Yaml2json(), collector);\n      writeFileSync(outputPath, result);\n      globalThis.resultPath = outputPath;\n    })();\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the path of the generated JSON file.\n  // fails_if: Result path is undefined when attempting to emit.\n  { // scope for step 3\n    // BEGIN emit\n    (async () => {\n      const outputPath = globalThis.resultPath;\n      if (!outputPath) throw new Error('Result path not set');\n      console.log(JSON.stringify({ output_path: outputPath }));\n    })();\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -53,6 +56,12 @@ export async function accept(deps, opts = {}) {
   }
   const probe = await run({"input_path":"/tmp/input.yaml","output_path":"/tmp/output.json"}, deps, { session });
   const out = probe.output || probe;
+  // v0.58.2 — verify produces fields are non-null. Prior version trusted
+  // trial to pass on exit_code alone; broken handlers that returned null/undefined
+  // for a promised field passed trial and shipped as silent-failure caps.
+  const _PRODUCES = {"output_path":"string"};
+  const _missingProduces = Object.keys(_PRODUCES).filter(k => out[k] === undefined || out[k] === null);
+  if (_missingProduces.length > 0) throw new Error("accept: handler returned null/undefined for produces field(s): " + _missingProduces.join(", "));
   const minBytes = 0;
   if (minBytes > 0) {
     const size = typeof out.bytes === "number" ? out.bytes : 0;

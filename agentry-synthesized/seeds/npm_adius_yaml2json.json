@@ -23,23 +23,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate environment variables and ensure the input YAML file exists, then store paths in global state.",
-      "fails_if": "Missing INPUT_PATH or OUTPUT_PATH env vars, or the input file cannot be accessed.",
-      "code": "(async () => {\n  const { env } = await import('node:process');\n  const { accessSync, constants } = await import('node:fs');\n  const inputPath = env.INPUT_PATH;\n  const outputPath = env.OUTPUT_PATH;\n  if (!inputPath) throw new Error('Missing INPUT_PATH env var');\n  if (!outputPath) throw new Error('Missing OUTPUT_PATH env var');\n  try { accessSync(inputPath, constants.R_OK); } catch { throw new Error('Input file not accessible'); }\n  globalThis.inputPath = inputPath;\n  globalThis.outputPath = outputPath;\n})();"
+      "what": "Validate input and output paths from environment variables and ensure the input file exists.",
+      "fails_if": "INPUT_PATH or OUTPUT_PATH missing, or the input file cannot be accessed.",
+      "code": "(async () => {\n  const { env } = await import('node:process');\n  const { accessSync, constants } = await import('node:fs');\n  const inputPath = env.INPUT_PATH;\n  const outputPath = env.OUTPUT_PATH;\n  if (!inputPath) throw new Error('Missing INPUT_PATH');\n  if (!outputPath) throw new Error('Missing OUTPUT_PATH');\n  try { accessSync(inputPath, constants.R_OK); } catch { throw new Error('Input file not accessible'); }\n  globalThis.inputPath = inputPath;\n  globalThis.outputPath = outputPath;\n})();"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Stream the YAML file through Yaml2json and write newline‑delimited JSON to the output file.",
-      "fails_if": "Any stream error or failure to write the output file.",
-      "code": "(async () => {\n  const { createReadStream, createWriteStream } = await import('node:fs');\n  const { Transform } = await import('node:stream');\n  const { Yaml2json } = await import('@adius/yaml2json');\n  const inputPath = globalThis.inputPath;\n  const outputPath = globalThis.outputPath;\n  const stringify = new Transform({\n    writableObjectMode: true,\n    transform(chunk, _encoding, done) {\n      done(null, JSON.stringify(chunk) + '\\n');\n    }\n  });\n  await new Promise((resolve, reject) => {\n    createReadStream(inputPath)\n      .pipe(new Yaml2json())\n      .pipe(stringify)\n      .pipe(createWriteStream(outputPath))\n      .on('finish', resolve)\n      .on('error', reject);\n  });\n})();"
+      "what": "Stream the YAML file through Yaml2json transformer and write the resulting JSON to the output file.",
+      "fails_if": "Pipeline error, transformation failure, or inability to write the output file.",
+      "code": "(async () => {\n  const { createReadStream, writeFileSync } = await import('node:fs');\n  const { pipeline } = await import('node:stream/promises');\n  const { Writable } = await import('node:stream');\n  const { Yaml2json } = await import('@adius/yaml2json');\n  const inputPath = globalThis.inputPath;\n  const outputPath = globalThis.outputPath;\n  let result = '';\n  const collector = new Writable({\n    write(chunk, _enc, cb) { result += chunk.toString(); cb(); }\n  });\n  await pipeline(createReadStream(inputPath), new Yaml2json(), collector);\n  writeFileSync(outputPath, result);\n  globalThis.resultPath = outputPath;\n})();"
     },
     {
       "step": 3,
       "verb": "emit",
       "what": "Emit a JSON object containing the path of the generated JSON file.",
-      "fails_if": "globalThis.outputPath is undefined or console.log fails.",
-      "code": "(async () => {\n  console.log(JSON.stringify({ output_path: globalThis.outputPath }));\n})();"
+      "fails_if": "Result path is undefined when attempting to emit.",
+      "code": "(async () => {\n  const outputPath = globalThis.resultPath;\n  if (!outputPath) throw new Error('Result path not set');\n  console.log(JSON.stringify({ output_path: outputPath }));\n})();"
     }
   ],
   "invoke_timeout_ms": 90000,

@@ -6,11 +6,7 @@
 const CAP_ID = "npm_js-yaml";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "yaml_path": "string",
-  "json_path": {
-    "type": "string",
-    "optional": true
-  }
+  "input_path": "string"
 };
 const PRODUCES = {
   "json": "string"
@@ -24,8 +20,7 @@ const REQUIRES = {
   "capability": []
 };
 const ENV_MAP = {
-  "YAML_PATH": "yaml_path",
-  "JSON_PATH": "json_path"
+  "INPUT_PATH": "input_path"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
@@ -33,7 +28,7 @@ const OUTPUT_MAP = {
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate required env vars, read the YAML file, and store its contents for later steps.\n  // fails_if: YAML_PATH env var missing, file does not exist, or read fails.\n  { // scope for step 1\n    // BEGIN prepare\n    (async () => {\n      const { readFileSync, existsSync } = await import('node:fs');\n      const yamlPath = process.env.YAML_PATH;\n      const jsonPath = process.env.JSON_PATH;\n      if (!yamlPath) throw new Error('Missing required env var YAML_PATH');\n      if (!existsSync(yamlPath)) throw new Error('YAML file does not exist: ' + yamlPath);\n      const content = readFileSync(yamlPath, 'utf8');\n      globalThis.yamlContent = content;\n      globalThis.jsonPath = jsonPath; // may be undefined\n    })();\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Parse the stored YAML string into a JavaScript object using js-yaml.\n  // fails_if: js-yaml load throws due to invalid YAML.\n  { // scope for step 2\n    // BEGIN execute\n    (async () => {\n      const { load } = await import('js-yaml');\n      const yamlStr = globalThis.yamlContent;\n      const obj = load(yamlStr);\n      globalThis.parsedObj = obj;\n    })();\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Optionally write the JSON string to a file and always emit a JSON object with the result on stdout.\n  // fails_if: File write fails or console output is malformed.\n  { // scope for step 3\n    // BEGIN emit\n    (async () => {\n      const result = { json: JSON.stringify(globalThis.parsedObj) };\n      if (globalThis.jsonPath) {\n        const { writeFileSync } = await import('node:fs');\n        writeFileSync(globalThis.jsonPath, result.json, 'utf8');\n      }\n      console.log(JSON.stringify(result));\n    })();\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate INPUT_PATH env var and read the YAML file into memory\n  // fails_if: INPUT_PATH is missing or the file cannot be read\n  { // scope for step 1\n    // BEGIN prepare\n    const fs = await import('node:fs');\n    const inputPath = process.env.INPUT_PATH;\n    if (!inputPath) throw new Error('Missing INPUT_PATH environment variable');\n    globalThis.yamlContent = fs.readFileSync(inputPath, 'utf8');\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Parse the YAML content into a JavaScript object using js-yaml\n  // fails_if: js-yaml load throws due to invalid YAML\n  { // scope for step 2\n    // BEGIN execute\n    const yamlMod = await import('js-yaml');\n    const { load } = yamlMod;\n    globalThis.parsedObject = load(globalThis.yamlContent);\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a single JSON object containing the stringified result\n  // fails_if: JSON.stringify fails or console.log is not called\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ json: JSON.stringify(globalThis.parsedObject) }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -50,15 +45,21 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session, requires_override: REQUIRES });
-  const FIXTURES = {"/tmp/input.yaml":"test fixture for /tmp/input.yaml\n","/tmp/output.json":"{\"test\":true}\n"};
+  const FIXTURES = {"/tmp/input.yaml":"test fixture for /tmp/input.yaml\n"};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"yaml_path":"/tmp/input.yaml","json_path":"/tmp/output.json"}, deps, { session });
+  const probe = await run({"input_path":"/tmp/input.yaml"}, deps, { session });
   const out = probe.output || probe;
+  // v0.58.2 — verify produces fields are non-null. Prior version trusted
+  // trial to pass on exit_code alone; broken handlers that returned null/undefined
+  // for a promised field passed trial and shipped as silent-failure caps.
+  const _PRODUCES = {"json":"string"};
+  const _missingProduces = Object.keys(_PRODUCES).filter(k => out[k] === undefined || out[k] === null);
+  if (_missingProduces.length > 0) throw new Error("accept: handler returned null/undefined for produces field(s): " + _missingProduces.join(", "));
   const minBytes = 0;
   if (minBytes > 0) {
     const size = typeof out.bytes === "number" ? out.bytes : 0;

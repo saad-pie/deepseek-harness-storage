@@ -15,8 +15,7 @@ const PRODUCES = {
 const REQUIRES = {
   "npm": [
     "gulp-yaml",
-    "gulp",
-    "vinyl"
+    "js-yaml"
   ],
   "pip": [],
   "post_install": null,
@@ -32,7 +31,7 @@ const OUTPUT_MAP = {
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate input file existence and load the gulp-yaml plugin.\n  // fails_if: Input file does not exist or gulp-yaml fails to load\n  { // scope for step 1\n    // BEGIN prepare\n    const fs = await import('node:fs');\n    const path = await import('node:path');\n    const inputPath = process.env.INPUT_PATH;\n    const outputPath = process.env.OUTPUT_PATH;\n    if (!inputPath) throw new Error('INPUT_PATH is required');\n    if (!outputPath) throw new Error('OUTPUT_PATH is required');\n    if (!fs.existsSync(inputPath)) throw new Error('Input file not found: ' + inputPath);\n    const yamlMod = await import('gulp-yaml');\n    const yaml = yamlMod.default || yamlMod;\n    if (typeof yaml !== 'function') throw new Error('gulp-yaml export is not a function');\n    globalThis.yaml = yaml;\n    globalThis.inputPath = inputPath;\n    globalThis.outputPath = outputPath;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Convert the YAML file to JSON using gulp-yaml and write the result to the output path.\n  // fails_if: YAML parsing fails or file writing fails\n  { // scope for step 2\n    // BEGIN execute\n    const fs = await import('node:fs');\n    const path = await import('node:path');\n    const gulp = (await import('gulp')).default;\n    const yaml = globalThis.yaml;\n    const inputPath = globalThis.inputPath;\n    const outputPath = globalThis.outputPath;\n    \n    const dir = path.dirname(inputPath);\n    const file = path.basename(inputPath);\n    const glob = path.join(dir, file);\n    \n    const stream = gulp.src(glob).pipe(yaml({ safe: true }));\n    \n    const chunks = [];\n    await new Promise((resolve, reject) => {\n      stream.on('data', (chunk) => {\n        chunks.push(chunk);\n      });\n      stream.on('end', () => {\n        resolve();\n      });\n      stream.on('error', (err) => {\n        reject(err);\n      });\n    });\n    \n    if (chunks.length === 0) throw new Error('No data produced by gulp-yaml');\n    \n    const content = Buffer.concat(chunks).toString('utf8');\n    \n    // Ensure output directory exists\n    const outDir = path.dirname(outputPath);\n    if (!fs.existsSync(outDir)) {\n      fs.mkdirSync(outDir, { recursive: true });\n    }\n    \n    fs.writeFileSync(outputPath, content, 'utf8');\n    globalThis.resultPath = outputPath;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write the JSON result object to stdout.\n  // fails_if: Output path is undefined\n  { // scope for step 3\n    // BEGIN emit\n    const result = {\n      output_path: globalThis.resultPath\n    };\n    console.log(JSON.stringify(result));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate required environment variables and ensure the input YAML file exists.\n  // fails_if: Missing INPUT_PATH or OUTPUT_PATH env var, or the input file cannot be accessed.\n  { // scope for step 1\n    // BEGIN prepare\n    (async () => {\n      const { accessSync, constants } = await import('node:fs');\n      const inputPath = process.env.INPUT_PATH;\n      const outputPath = process.env.OUTPUT_PATH;\n      if (!inputPath) throw new Error('Missing INPUT_PATH');\n      if (!outputPath) throw new Error('Missing OUTPUT_PATH');\n      try { accessSync(inputPath, constants.R_OK); } catch { throw new Error('Input file not accessible'); }\n      globalThis.inputPath = inputPath;\n      globalThis.outputPath = outputPath;\n    })();\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Read the YAML file, convert it to JSON, and write the result to the output path.\n  // fails_if: YAML parsing fails or writing the JSON output fails.\n  { // scope for step 2\n    // BEGIN execute\n    (async () => {\n      const { readFileSync, writeFileSync } = await import('node:fs');\n      const yamlModRaw = await import('js-yaml');\n      const yamlMod = yamlModRaw.default || yamlModRaw;\n      const yamlContent = readFileSync(globalThis.inputPath, 'utf8');\n      const data = typeof yamlMod.safeLoad === 'function' ? yamlMod.safeLoad(yamlContent) : yamlMod.load(yamlContent);\n      const jsonStr = JSON.stringify(data, null, 2);\n      writeFileSync(globalThis.outputPath, jsonStr, 'utf8');\n      globalThis.resultPath = globalThis.outputPath;\n    })();\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the path of the generated JSON file.\n  // fails_if: The emitted stdout is not valid JSON or does not contain the required field.\n  { // scope for step 3\n    // BEGIN emit\n    (async () => {\n      console.log(JSON.stringify({ output_path: globalThis.resultPath }));\n    })();\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -49,15 +48,21 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session, requires_override: REQUIRES });
-  const FIXTURES = {"/tmp/test.yaml":"test fixture for /tmp/test.yaml\n","/tmp/test.json":"{\"test\":true}\n"};
+  const FIXTURES = {"/tmp/input.yml":"test fixture for /tmp/input.yml\n","/tmp/output.json":"{\"test\":true}\n"};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"input_path":"/tmp/test.yaml","output_path":"/tmp/test.json"}, deps, { session });
+  const probe = await run({"input_path":"/tmp/input.yml","output_path":"/tmp/output.json"}, deps, { session });
   const out = probe.output || probe;
+  // v0.58.2 — verify produces fields are non-null. Prior version trusted
+  // trial to pass on exit_code alone; broken handlers that returned null/undefined
+  // for a promised field passed trial and shipped as silent-failure caps.
+  const _PRODUCES = {"output_path":"string"};
+  const _missingProduces = Object.keys(_PRODUCES).filter(k => out[k] === undefined || out[k] === null);
+  if (_missingProduces.length > 0) throw new Error("accept: handler returned null/undefined for produces field(s): " + _missingProduces.join(", "));
   const minBytes = 0;
   if (minBytes > 0) {
     const size = typeof out.bytes === "number" ? out.bytes : 0;
