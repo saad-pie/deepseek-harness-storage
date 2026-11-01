@@ -1,0 +1,48 @@
+{
+  "id": "npm_algorand-msgpack",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_algorand-msgpack",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_algorand-msgpack.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "algorand-msgpack"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate required environment variables and store them for later steps",
+      "fails_if": "INPUT_PATH or OUTPUT_PATH environment variable is missing",
+      "code": "const { env } = process;\\nif (!env.INPUT_PATH) throw new Error('Missing INPUT_PATH');\\nif (!env.OUTPUT_PATH) throw new Error('Missing OUTPUT_PATH');\\nglobalThis.inputPath = env.INPUT_PATH;\\nglobalThis.outputPath = env.OUTPUT_PATH;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Read JSON file, encode it to MessagePack, and write the binary output",
+      "fails_if": "File read/write errors, JSON parse errors, or encode failures",
+      "code": "const fs = await import('node:fs');\\nconst { encode } = await import('algorand-msgpack');\\nconst raw = fs.readFileSync(globalThis.inputPath, 'utf8');\\nconst data = JSON.parse(raw);\\nconst encoded = encode(data);\\nfs.writeFileSync(globalThis.outputPath, Buffer.from(encoded));"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object describing the location of the generated MessagePack file",
+      "fails_if": "Console output is not valid JSON or missing output_path field",
+      "code": "console.log(JSON.stringify({ output_path: globalThis.outputPath }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
