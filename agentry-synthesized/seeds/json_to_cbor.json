@@ -1,0 +1,24 @@
+{
+  "id": "json_to_cbor",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "json_to_cbor",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/json_to_cbor.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string",
+    "bytes": "number"
+  },
+  "requires": {
+    "npm": [
+      "cbor-x"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "source": "dsh_plan:pending_trial"
+}
