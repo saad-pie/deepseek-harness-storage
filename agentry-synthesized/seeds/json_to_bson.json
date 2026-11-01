@@ -1,0 +1,24 @@
+{
+  "id": "json_to_bson",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "json_to_bson",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/json_to_bson.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string",
+    "bytes": "number"
+  },
+  "requires": {
+    "npm": [
+      "bson"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "source": "dsh_plan:pending_trial"
+}
