@@ -6,32 +6,33 @@
 const CAP_ID = "task_mvxr91dc";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "markdown": "string"
+  "topic": "string",
+  "message": "string"
 };
 const PRODUCES = {
-  "markdown": "string"
+  "status": "string",
+  "messageId": "string"
 };
 const REQUIRES = {
   "npm": [
-    "mdast-util-gfm-task-list-item",
-    "mdast-util-from-markdown",
-    "mdast-util-to-markdown",
-    "micromark-extension-gfm-task-list-item"
+    "qified"
   ],
   "pip": [],
   "post_install": null,
   "capability": []
 };
 const ENV_MAP = {
-  "MARKDOWN": "markdown"
+  "TOPIC": "topic",
+  "MESSAGE": "message"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "markdown": "markdown"
+  "status": "status",
+  "messageId": "messageId"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that the markdown input is a non-empty string.\n  // fails_if: markdown input is missing or not a string\n  { // scope for step 1\n    // BEGIN prepare\n    const markdown = process.env.MARKDOWN;\n    if (typeof markdown !== 'string' || markdown.length === 0) {\n      throw new Error('markdown input is required and must be a non-empty string');\n    }\n    globalThis.markdown = markdown;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Parse the markdown into an mdast tree with GFM task list support and serialize it back to markdown.\n  // fails_if: parsing or serialization throws an error\n  { // scope for step 2\n    // BEGIN execute\n    const { fromMarkdown } = await import('mdast-util-from-markdown');\n    const { toMarkdown } = await import('mdast-util-to-markdown');\n    const { gfmTaskListItem } = await import('micromark-extension-gfm-task-list-item');\n    const { gfmTaskListItemFromMarkdown, gfmTaskListItemToMarkdown } = await import('mdast-util-gfm-task-list-item');\n    \n    const tree = fromMarkdown(globalThis.markdown, {\n      extensions: [gfmTaskListItem],\n      mdastExtensions: [gfmTaskListItemFromMarkdown]\n    });\n    \n    const result = toMarkdown(tree, {\n      extensions: [gfmTaskListItemToMarkdown]\n    });\n    \n    globalThis.result = result;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write the serialized markdown to stdout as a JSON object.\n  // fails_if: result is undefined or JSON serialization fails\n  { // scope for step 3\n    // BEGIN emit\n    if (typeof globalThis.result !== 'string') {\n      throw new Error('result is not a string');\n    }\n    console.log(JSON.stringify({ markdown: globalThis.result }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate inputs and create a Qified instance with an in‑memory provider\n  // fails_if: Missing required env vars TOPIC or MESSAGE, or Qified import fails\n  { // scope for step 1\n    // BEGIN prepare\n    const { Qified, MemoryMessageProvider } = await import('qified');\n    const topic = process.env.TOPIC;\n    const message = process.env.MESSAGE;\n    if (!topic) throw new Error('Missing required input: topic');\n    if (!message) throw new Error('Missing required input: message');\n    globalThis._qified = new Qified({ messageProviders: new MemoryMessageProvider() });\n    globalThis._topic = topic;\n    globalThis._message = message;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Publish the provided message to the given topic using Qified\n  // fails_if: Publish operation throws or returns unexpectedly\n  { // scope for step 2\n    // BEGIN execute\n    const q = globalThis._qified;\n    const topic = globalThis._topic;\n    const msg = globalThis._message;\n    const id = `msg-${Date.now()}`;\n    await q.publish(topic, { id, data: msg });\n    globalThis._status = 'published';\n    globalThis._msgId = id;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a JSON object with status and messageId to stdout\n  // fails_if: JSON serialization fails or fields are undefined\n  { // scope for step 3\n    // BEGIN emit\n    console.log(JSON.stringify({ status: globalThis._status, messageId: globalThis._msgId }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -55,12 +56,12 @@ export async function accept(deps, opts = {}) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"markdown":"* [ ] To do\n* [x] Done"}, deps, { session });
+  const probe = await run({"topic":"test-topic","message":"Hello, world!"}, deps, { session });
   const out = probe.output || probe;
   // v0.58.2 — verify produces fields are non-null. Prior version trusted
   // trial to pass on exit_code alone; broken handlers that returned null/undefined
   // for a promised field passed trial and shipped as silent-failure caps.
-  const _PRODUCES = {"markdown":"string"};
+  const _PRODUCES = {"status":"string","messageId":"string"};
   const _missingProduces = Object.keys(_PRODUCES).filter(k => out[k] === undefined || out[k] === null);
   if (_missingProduces.length > 0) throw new Error("accept: handler returned null/undefined for produces field(s): " + _missingProduces.join(", "));
   const minBytes = 0;
