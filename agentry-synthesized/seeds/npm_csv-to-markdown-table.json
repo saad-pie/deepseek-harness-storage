@@ -1,0 +1,48 @@
+{
+  "id": "npm_csv-to-markdown-table",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_csv-to-markdown-table",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_csv-to-markdown-table.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "csv-to-markdown-table"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate the CSV input and Markdown output paths and ensure the output directory exists.",
+      "fails_if": "INPUT_PATH or OUTPUT_PATH is missing, or the input CSV file does not exist.",
+      "code": "const fs = await import('node:fs');\nconst path = await import('node:path');\nconst inputPath = process.env.INPUT_PATH;\nconst outputPath = process.env.OUTPUT_PATH;\nif (!inputPath) throw new Error('INPUT_PATH is required');\nif (!outputPath) throw new Error('OUTPUT_PATH is required');\nif (!fs.existsSync(inputPath)) throw new Error('Input CSV file not found: ' + inputPath);\nfs.mkdirSync(path.dirname(outputPath) || '.', { recursive: true });\nglobalThis.csvInputPath = inputPath;\nglobalThis.csvOutputPath = outputPath;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Read the CSV, convert it to a Markdown table with csv-to-markdown-table, and write the Markdown file.",
+      "fails_if": "The package export is unavailable, CSV reading or Markdown writing fails, or conversion returns empty output.",
+      "code": "const fs = await import('node:fs');\nconst csvToMarkdown = (await import('csv-to-markdown-table')).default;\nif (typeof csvToMarkdown !== 'function') throw new Error('csv-to-markdown-table default export is not a function');\nconst csv = fs.readFileSync(globalThis.csvInputPath, 'utf8');\nconst markdown = csvToMarkdown(csv, ',', true);\nif (typeof markdown !== 'string' || markdown.trim().length === 0) throw new Error('CSV to Markdown conversion produced empty output');\nfs.writeFileSync(globalThis.csvOutputPath, markdown, 'utf8');\nglobalThis.csvMarkdown = markdown;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Print the generated Markdown file path as JSON.",
+      "fails_if": "The promised output_path field is undefined or JSON serialization fails.",
+      "code": "console.log(JSON.stringify({ output_path: globalThis.csvOutputPath }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
