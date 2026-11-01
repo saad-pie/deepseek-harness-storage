@@ -1,0 +1,48 @@
+{
+  "id": "npm_msgpack_msgpack",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_msgpack_msgpack",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_msgpack_msgpack.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "@msgpack/msgpack"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate environment variables, read and parse the JSON input file, store the parsed object for later steps.",
+      "fails_if": "Missing INPUT_PATH or OUTPUT_PATH env var, input file does not exist, or JSON parsing fails.",
+      "code": "(async () => {\\n  const { readFileSync, existsSync } = await import('node:fs');\\n  const inputPath = process.env.INPUT_PATH;\\n  const outputPath = process.env.OUTPUT_PATH;\\n  if (!inputPath) throw new Error('Missing INPUT_PATH');\\n  if (!outputPath) throw new Error('Missing OUTPUT_PATH');\\n  if (!existsSync(inputPath)) throw new Error('Input file does not exist');\\n  const content = readFileSync(inputPath, { encoding: 'utf8' });\\n  try {\\n    globalThis.parsedData = JSON.parse(content);\\n  } catch (e) {\\n    throw new Error('Invalid JSON input');\\n  }\\n  globalThis.outputPath = outputPath;\\n})();"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Encode the parsed JSON object to MessagePack and write the binary to the output file.",
+      "fails_if": "Encoding throws or writing the file fails.",
+      "code": "(async () => {\\n  const { writeFileSync } = await import('node:fs');\\n  const { encode } = await import('@msgpack/msgpack');\\n  if (globalThis.parsedData === undefined) throw new Error('No parsed data available');\\n  const encoded = encode(globalThis.parsedData);\\n  const buffer = Buffer.from(encoded.buffer, encoded.byteOffset, encoded.byteLength);\\n  writeFileSync(globalThis.outputPath, buffer);\\n})();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the path of the generated MessagePack file.",
+      "fails_if": "The output path variable is undefined or JSON serialization fails.",
+      "code": "(async () => {\\n  console.log(JSON.stringify({ output_path: globalThis.outputPath }));\\n})();"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

@@ -1,0 +1,48 @@
+{
+  "id": "npm_algo-msgpack-with-bigint",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_algo-msgpack-with-bigint",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_algo-msgpack-with-bigint.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "algo-msgpack-with-bigint"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Read and validate the input JSON file, then prepare the output directory.",
+      "fails_if": "The input path is missing, the file cannot be read, or the JSON is invalid.",
+      "code": "const fs = await import('node:fs');\nconst path = await import('node:path');\nconst inputPath = process.env.INPUT_PATH;\nconst outputPath = process.env.OUTPUT_PATH;\nif (!inputPath) throw new Error('INPUT_PATH is required');\nif (!outputPath) throw new Error('OUTPUT_PATH is required');\nconst raw = fs.readFileSync(inputPath, 'utf8');\nlet data;\ntry {\n  data = JSON.parse(raw);\n} catch (error) {\n  throw new Error('Invalid JSON input: ' + error.message);\n}\nglobalThis.jsonData = data;\nglobalThis.outputPath = outputPath;\nconst outputDir = path.dirname(outputPath);\nif (outputDir && outputDir !== '.') {\n  fs.mkdirSync(outputDir, { recursive: true });\n}"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Encode the parsed JSON value as MessagePack and write it to the output path.",
+      "fails_if": "MessagePack encoding fails or the output file cannot be written.",
+      "code": "const { encode } = await import('algo-msgpack-with-bigint');\nconst fs = await import('node:fs');\nconst encoded = encode(globalThis.jsonData);\nfs.writeFileSync(globalThis.outputPath, Buffer.from(encoded));\nglobalThis.bytesWritten = encoded.byteLength;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Print the resulting output path as JSON.",
+      "fails_if": "The promised output field is undefined or JSON serialization fails.",
+      "code": "console.log(JSON.stringify({ output_path: globalThis.outputPath }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

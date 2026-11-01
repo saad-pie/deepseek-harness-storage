@@ -14,7 +14,7 @@ const PRODUCES = {
 };
 const REQUIRES = {
   "npm": [
-    "@msgpack/msgpack"
+    "algorand-msgpack"
   ],
   "pip": [],
   "post_install": null,
@@ -30,7 +30,7 @@ const OUTPUT_MAP = {
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate environment variables, read the JSON file and parse it into an object stored in global state.\n  // fails_if: INPUT_PATH or OUTPUT_PATH missing, file unreadable, or JSON parsing fails.\n  { // scope for step 1\n    // BEGIN prepare\n    const fs = await import('node:fs');\n    const inputPath = process.env.INPUT_PATH;\n    const outputPath = process.env.OUTPUT_PATH;\n    if (!inputPath) throw new Error('Missing INPUT_PATH');\n    if (!outputPath) throw new Error('Missing OUTPUT_PATH');\n    const raw = await fs.promises.readFile(inputPath, { encoding: 'utf8' });\n    let data;\n    try { data = JSON.parse(raw); } catch (e) { throw new Error('Invalid JSON input'); }\n    globalThis.__json_to_msgpack_data = data;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Encode the parsed JSON object to MessagePack and write the binary to the output path.\n  // fails_if: Encoding throws or writing the file fails.\n  { // scope for step 2\n    // BEGIN execute\n    const { encode } = await import('@msgpack/msgpack');\n    const fs = await import('node:fs');\n    const outputPath = process.env.OUTPUT_PATH;\n    const data = globalThis.__json_to_msgpack_data;\n    if (data === undefined) throw new Error('No data prepared for encoding');\n    const encoded = encode(data);\n    await fs.promises.writeFile(outputPath, Buffer.from(encoded));\n    globalThis.__json_to_msgpack_output = outputPath;\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a JSON object containing the path of the generated MessagePack file.\n  // fails_if: The output path is not set or console.log fails.\n  { // scope for step 3\n    // BEGIN emit\n    const outputPath = globalThis.__json_to_msgpack_output;\n    if (!outputPath) throw new Error('Missing output path after execution');\n    console.log(JSON.stringify({ output_path: outputPath }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate the input and output paths, read and parse the source JSON, and create the output directory.\n  // fails_if: INPUT_PATH or OUTPUT_PATH is missing, the input file cannot be read, or the input is not valid JSON.\n  { // scope for step 1\n    // BEGIN prepare\n    const fs = await import('node:fs');\n    const path = await import('node:path');\n    const inputPath = process.env.INPUT_PATH;\n    const outputPath = process.env.OUTPUT_PATH;\n    if (!inputPath || !outputPath) throw new Error('INPUT_PATH and OUTPUT_PATH are required');\n    const raw = fs.readFileSync(inputPath, 'utf8');\n    let data;\n    try { data = JSON.parse(raw); } catch (e) { throw new Error('Invalid JSON: ' + e.message); }\n    globalThis.jsonData = data;\n    globalThis.outputPath = outputPath;\n    fs.mkdirSync(path.dirname(outputPath), { recursive: true });\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Encode the parsed JSON value with algorand-msgpack and write the resulting bytes to the output path.\n  // fails_if: Encoding fails or the output file cannot be written.\n  { // scope for step 2\n    // BEGIN execute\n    const fs = await import('node:fs');\n    const { encode } = await import('algorand-msgpack');\n    const encoded = encode(globalThis.jsonData);\n    const buffer = Buffer.from(encoded.buffer, encoded.byteOffset, encoded.byteLength);\n    fs.writeFileSync(globalThis.outputPath, buffer);\n    globalThis.result = { output_path: globalThis.outputPath, bytes: buffer.length };\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Print the output path as JSON.\n  // fails_if: The result state is missing or JSON serialization fails.\n  { // scope for step 3\n    // BEGIN emit\n    const result = globalThis.result;\n    if (!result) throw new Error('Missing execution result');\n    console.log(JSON.stringify({ output_path: result.output_path }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -47,14 +47,14 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session, requires_override: REQUIRES });
-  const FIXTURES = {"/tmp/input.json":"{\"test\":true}\n","/tmp/output.msgpack":"test fixture for /tmp/output.msgpack\n"};
+  const FIXTURES = {"/tmp/json_to_msgpack_input.json":"{\"test\":true}\n","/tmp/json_to_msgpack_output.msgpack":"test fixture for /tmp/json_to_msgpack_output.msgpack\n"};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"input_path":"/tmp/input.json","output_path":"/tmp/output.msgpack"}, deps, { session });
+  const probe = await run({"input_path":"/tmp/json_to_msgpack_input.json","output_path":"/tmp/json_to_msgpack_output.msgpack"}, deps, { session });
   const out = probe.output || probe;
   // v0.58.2 — verify produces fields are non-null. Prior version trusted
   // trial to pass on exit_code alone; broken handlers that returned null/undefined
