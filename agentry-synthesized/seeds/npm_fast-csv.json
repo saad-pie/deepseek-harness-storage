@@ -1,0 +1,48 @@
+{
+  "id": "npm_fast-csv",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_fast-csv",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_fast-csv.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "markdown_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "fast-csv"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate required environment variables and ensure the input CSV file exists, storing paths in global state.",
+      "fails_if": "INPUT_PATH or OUTPUT_PATH env var missing, or the input file does not exist.",
+      "code": "(async () => {\n  const { existsSync } = await import('node:fs');\n  const inputPath = process.env.INPUT_PATH;\n  const outputPath = process.env.OUTPUT_PATH;\n  if (!inputPath) throw new Error('Missing INPUT_PATH');\n  if (!outputPath) throw new Error('Missing OUTPUT_PATH');\n  if (!existsSync(inputPath)) throw new Error('Input file does not exist: ' + inputPath);\n  globalThis.inputPath = inputPath;\n  globalThis.outputPath = outputPath;\n})();"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Parse the CSV file with fast-csv, convert rows to a markdown table, and write the markdown to the output path.",
+      "fails_if": "CSV parsing error, empty CSV, or file write failure.",
+      "code": "(async () => {\n  const fs = await import('node:fs');\n  const fastCsv = await import('fast-csv');\n  const { parseFile } = fastCsv;\n  const rows = [];\n  await new Promise((resolve, reject) => {\n    parseFile(globalThis.inputPath, { headers: false })\n      .on('error', err => reject(err))\n      .on('data', row => rows.push(row))\n      .on('end', () => resolve());\n  });\n  if (rows.length === 0) throw new Error('CSV is empty');\n  const header = rows[0];\n  const body = rows.slice(1);\n  const mdLines = [];\n  mdLines.push(`| ${header.join(' | ')} |`);\n  mdLines.push(`| ${header.map(() => '---').join(' | ')} |`);\n  for (const r of body) {\n    mdLines.push(`| ${r.join(' | ')} |`);\n  }\n  const markdown = mdLines.join('\\n');\n  await fs.promises.writeFile(globalThis.outputPath, markdown, 'utf8');\n  globalThis.markdownPath = globalThis.outputPath;\n})();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the path of the generated markdown file.",
+      "fails_if": "The markdown_path variable is undefined or JSON serialization fails.",
+      "code": "(async () => {\n  console.log(JSON.stringify({ markdown_path: globalThis.markdownPath }));\n})();"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

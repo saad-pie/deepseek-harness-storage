@@ -5,11 +5,10 @@
   "handler": "npm_csv-parse",
   "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_csv-parse.mjs",
   "accepts": {
-    "input_path": "string",
-    "output_path": "string"
+    "csv_path": "string"
   },
   "produces": {
-    "output_path": "string"
+    "markdown": "string"
   },
   "requires": {
     "npm": [
@@ -23,23 +22,23 @@
     {
       "step": 1,
       "verb": "prepare",
-      "what": "Validate required environment variables and ensure the input TSV file exists, storing paths in global state.",
-      "fails_if": "INPUT_PATH or OUTPUT_PATH missing, or the input file does not exist.",
-      "code": "(async () => {\n  const { existsSync } = await import('node:fs');\n  const inputPath = process.env.INPUT_PATH;\n  const outputPath = process.env.OUTPUT_PATH;\n  if (!inputPath) throw new Error('Missing INPUT_PATH');\n  if (!outputPath) throw new Error('Missing OUTPUT_PATH');\n  if (!existsSync(inputPath)) throw new Error('Input file does not exist: ' + inputPath);\n  globalThis.inputPath = inputPath;\n  globalThis.outputPath = outputPath;\n})();"
+      "what": "Validate CSV_PATH env var and read the CSV file into memory",
+      "fails_if": "CSV_PATH env var missing or file cannot be read",
+      "code": "(async () => {\n  const { readFileSync } = await import('node:fs');\n  const csvPath = process.env.CSV_PATH;\n  if (!csvPath) {\n    throw new Error('Missing required env var CSV_PATH');\n  }\n  const data = readFileSync(csvPath, 'utf8');\n  globalThis._csvData = data;\n})();"
     },
     {
       "step": 2,
       "verb": "execute",
-      "what": "Read the TSV file, parse it into an array of objects using csv-parse, and store the result.",
-      "fails_if": "File read error, parsing error, or unexpected parser output.",
-      "code": "(async () => {\n  const { readFileSync } = await import('node:fs');\n  const { parse } = await import('csv-parse');\n  const inputPath = globalThis.inputPath;\n  const content = readFileSync(inputPath, 'utf8');\n  const records = await new Promise((resolve, reject) => {\n    parse(content, { delimiter: '\\t', columns: true, trim: true }, (err, output) => {\n      if (err) reject(err);\n      else resolve(output);\n    });\n  });\n  globalThis.records = records;\n})();"
+      "what": "Parse CSV data and convert it to a Markdown table string",
+      "fails_if": "CSV parsing fails or markdown generation throws",
+      "code": "(async () => {\n  const { parse } = await import('csv-parse');\n  const csvData = globalThis._csvData;\n  if (typeof csvData !== 'string') {\n    throw new Error('CSV data not prepared');\n  }\n  const records = await new Promise((resolve, reject) => {\n    parse(csvData, { skip_empty_lines: true }, (err, output) => {\n      if (err) reject(err);\n      else resolve(output);\n    });\n  });\n  if (!Array.isArray(records) || records.length === 0) {\n    globalThis._markdown = '';\n    return;\n  }\n  const header = records[0];\n  const separator = header.map(() => '---');\n  const lines = [];\n  lines.push('| ' + header.join(' | ') + ' |');\n  lines.push('| ' + separator.join(' | ') + ' |');\n  for (let i = 1; i < records.length; i++) {\n    const row = records[i];\n    lines.push('| ' + row.join(' | ') + ' |');\n  }\n  globalThis._markdown = lines.join('\\n');\n})();"
     },
     {
       "step": 3,
       "verb": "emit",
-      "what": "Write the parsed JSON array to the output path and emit a JSON object referencing that path.",
-      "fails_if": "Unable to write the output file or console.log fails.",
-      "code": "(async () => {\n  const { writeFileSync } = await import('node:fs');\n  const outputPath = globalThis.outputPath;\n  const records = globalThis.records;\n  writeFileSync(outputPath, JSON.stringify(records, null, 2), 'utf8');\n  console.log(JSON.stringify({ output_path: outputPath }));\n})();"
+      "what": "Write the markdown string as JSON to stdout",
+      "fails_if": "JSON serialization fails or markdown is undefined",
+      "code": "(async () => {\n  const result = { markdown: globalThis._markdown };\n  console.log(JSON.stringify(result));\n})();"
     }
   ],
   "invoke_timeout_ms": 90000,

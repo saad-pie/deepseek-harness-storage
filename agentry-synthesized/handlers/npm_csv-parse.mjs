@@ -6,11 +6,10 @@
 const CAP_ID = "npm_csv-parse";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "input_path": "string",
-  "output_path": "string"
+  "csv_path": "string"
 };
 const PRODUCES = {
-  "output_path": "string"
+  "markdown": "string"
 };
 const REQUIRES = {
   "npm": [
@@ -21,16 +20,15 @@ const REQUIRES = {
   "capability": []
 };
 const ENV_MAP = {
-  "INPUT_PATH": "input_path",
-  "OUTPUT_PATH": "output_path"
+  "CSV_PATH": "csv_path"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "output_path": "output_path"
+  "markdown": "markdown"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate required environment variables and ensure the input TSV file exists, storing paths in global state.\n  // fails_if: INPUT_PATH or OUTPUT_PATH missing, or the input file does not exist.\n  { // scope for step 1\n    // BEGIN prepare\n    \n      const { existsSync } = await import('node:fs');\n      const inputPath = process.env.INPUT_PATH;\n      const outputPath = process.env.OUTPUT_PATH;\n      if (!inputPath) throw new Error('Missing INPUT_PATH');\n      if (!outputPath) throw new Error('Missing OUTPUT_PATH');\n      if (!existsSync(inputPath)) throw new Error('Input file does not exist: ' + inputPath);\n      globalThis.inputPath = inputPath;\n      globalThis.outputPath = outputPath;\n    \n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Read the TSV file, parse it into an array of objects using csv-parse, and store the result.\n  // fails_if: File read error, parsing error, or unexpected parser output.\n  { // scope for step 2\n    // BEGIN execute\n    \n      const { readFileSync } = await import('node:fs');\n      const { parse } = await import('csv-parse');\n      const inputPath = globalThis.inputPath;\n      const content = readFileSync(inputPath, 'utf8');\n      const records = await new Promise((resolve, reject) => {\n        parse(content, { delimiter: '\\t', columns: true, trim: true }, (err, output) => {\n          if (err) reject(err);\n          else resolve(output);\n        });\n      });\n      globalThis.records = records;\n    \n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write the parsed JSON array to the output path and emit a JSON object referencing that path.\n  // fails_if: Unable to write the output file or console.log fails.\n  { // scope for step 3\n    // BEGIN emit\n    \n      const { writeFileSync } = await import('node:fs');\n      const outputPath = globalThis.outputPath;\n      const records = globalThis.records;\n      writeFileSync(outputPath, JSON.stringify(records, null, 2), 'utf8');\n      console.log(JSON.stringify({ output_path: outputPath }));\n    \n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate CSV_PATH env var and read the CSV file into memory\n  // fails_if: CSV_PATH env var missing or file cannot be read\n  { // scope for step 1\n    // BEGIN prepare\n    \n      const { readFileSync } = await import('node:fs');\n      const csvPath = process.env.CSV_PATH;\n      if (!csvPath) {\n        throw new Error('Missing required env var CSV_PATH');\n      }\n      const data = readFileSync(csvPath, 'utf8');\n      globalThis._csvData = data;\n    \n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Parse CSV data and convert it to a Markdown table string\n  // fails_if: CSV parsing fails or markdown generation throws\n  { // scope for step 2\n    // BEGIN execute\n    \n      const { parse } = await import('csv-parse');\n      const csvData = globalThis._csvData;\n      if (typeof csvData !== 'string') {\n        throw new Error('CSV data not prepared');\n      }\n      const records = await new Promise((resolve, reject) => {\n        parse(csvData, { skip_empty_lines: true }, (err, output) => {\n          if (err) reject(err);\n          else resolve(output);\n        });\n      });\n      if (!Array.isArray(records) || records.length === 0) {\n        globalThis._markdown = '';\n        return;\n      }\n      const header = records[0];\n      const separator = header.map(() => '---');\n      const lines = [];\n      lines.push('| ' + header.join(' | ') + ' |');\n      lines.push('| ' + separator.join(' | ') + ' |');\n      for (let i = 1; i < records.length; i++) {\n        const row = records[i];\n        lines.push('| ' + row.join(' | ') + ' |');\n      }\n      globalThis._markdown = lines.join('\\n');\n    \n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write the markdown string as JSON to stdout\n  // fails_if: JSON serialization fails or markdown is undefined\n  { // scope for step 3\n    // BEGIN emit\n    \n      const result = { markdown: globalThis._markdown };\n      console.log(JSON.stringify(result));\n    \n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -47,19 +45,19 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session, requires_override: REQUIRES });
-  const FIXTURES = {"/tmp/input.tsv":"a\tb\tc\n1\t2\t3\n","/tmp/output.json":"{\"test\":true}\n"};
+  const FIXTURES = {"/tmp/input.csv":"a,b,c\n1,2,3\n"};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"input_path":"/tmp/input.tsv","output_path":"/tmp/output.json"}, deps, { session });
+  const probe = await run({"csv_path":"/tmp/input.csv"}, deps, { session });
   const out = probe.output || probe;
   // v0.58.2 — verify produces fields are non-null. Prior version trusted
   // trial to pass on exit_code alone; broken handlers that returned null/undefined
   // for a promised field passed trial and shipped as silent-failure caps.
-  const _PRODUCES = {"output_path":"string"};
+  const _PRODUCES = {"markdown":"string"};
   const _missingProduces = Object.keys(_PRODUCES).filter(k => out[k] === undefined || out[k] === null);
   if (_missingProduces.length > 0) throw new Error("accept: handler returned null/undefined for produces field(s): " + _missingProduces.join(", "));
   const minBytes = 0;

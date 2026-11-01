@@ -9,7 +9,7 @@ const ACCEPTS = {
   "input_path": "string"
 };
 const PRODUCES = {
-  "json": "string"
+  "markdown": "string"
 };
 const REQUIRES = {
   "npm": [
@@ -24,11 +24,11 @@ const ENV_MAP = {
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "json": "json"
+  "markdown": "markdown"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate INPUT_PATH env var, read the CSV file, and store its contents for later steps\n  // fails_if: INPUT_PATH is missing or the file cannot be read\n  { // scope for step 1\n    // BEGIN prepare\n    (async () => {\n      const { readFileSync } = await import('node:fs');\n      const inputPath = process.env.INPUT_PATH;\n      if (!inputPath) throw new Error('Missing INPUT_PATH');\n      const content = readFileSync(inputPath, 'utf8');\n      globalThis.csvContent = content;\n    })();\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Parse the CSV content using PapaParse and keep the resulting array of objects\n  // fails_if: Papaparse parse method is unavailable or parsing throws an error\n  { // scope for step 2\n    // BEGIN execute\n    (async () => {\n      const mod = await import('papaparse');\n      const Papa = mod.default || mod;\n      if (typeof Papa.parse !== 'function') throw new Error('papaparse: required method parse not in exports');\n      const result = Papa.parse(globalThis.csvContent, { header: true });\n      globalThis.parsed = result.data;\n    })();\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a single JSON object with the parsed data stringified under the key \"json\"\n  // fails_if: The JSON object cannot be stringified or console.log fails\n  { // scope for step 3\n    // BEGIN emit\n    (async () => {\n      const output = { json: JSON.stringify(globalThis.parsed) };\n      console.log(JSON.stringify(output));\n    })();\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that INPUT_PATH environment variable is set and store it for later steps.\n  // fails_if: process.env.INPUT_PATH is missing or empty\n  { // scope for step 1\n    // BEGIN prepare\n    if (!process.env.INPUT_PATH) {\n      throw new Error('Missing required env var INPUT_PATH');\n    }\n    globalThis.inputPath = process.env.INPUT_PATH;\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Read the CSV file, parse it with PapaParse, and convert the data to a Markdown table string.\n  // fails_if: File cannot be read, parsing fails, or markdown generation throws\n  { // scope for step 2\n    // BEGIN execute\n    const { readFileSync } = await import('node:fs');\n    const csvContent = readFileSync(globalThis.inputPath, 'utf8');\n    const mod = await import('papaparse');\n    const Papa = mod.default || mod;\n    if (typeof Papa.parse !== 'function') {\n      throw new Error('papaparse: required method parse not in exports');\n    }\n    const parseResult = Papa.parse(csvContent, { header: true, skipEmptyLines: true });\n    if (!parseResult.meta || !Array.isArray(parseResult.meta.fields)) {\n      throw new Error('Unexpected parse result shape');\n    }\n    const fields = parseResult.meta.fields;\n    const rows = parseResult.data;\n    let md = '';\n    // header\n    md += '| ' + fields.join(' | ') + ' |\\n';\n    // separator\n    md += '| ' + fields.map(() => '---').join(' | ') + ' |\\n';\n    // rows\n    for (const row of rows) {\n      const line = fields.map(f => {\n        const val = row[f];\n        return val === undefined || val === null ? '' : String(val).replace(/\\|/g, '\\\\|');\n      }).join(' | ');\n      md += '| ' + line + ' |\\n';\n    }\n    globalThis.markdown = md.trim();\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write the generated markdown string as JSON to stdout.\n  // fails_if: globalThis.markdown is undefined or not a string\n  { // scope for step 3\n    // BEGIN emit\n    if (typeof globalThis.markdown !== 'string') {\n      throw new Error('Markdown output not generated');\n    }\n    console.log(JSON.stringify({ markdown: globalThis.markdown }));\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -45,15 +45,21 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session, requires_override: REQUIRES });
-  const FIXTURES = {"/tmp/input.csv":"a,b,c\n1,2,3\n"};
+  const FIXTURES = {"/tmp/sample.csv":"a,b,c\n1,2,3\n"};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"input_path":"/tmp/input.csv"}, deps, { session });
+  const probe = await run({"input_path":"/tmp/sample.csv"}, deps, { session });
   const out = probe.output || probe;
+  // v0.58.2 — verify produces fields are non-null. Prior version trusted
+  // trial to pass on exit_code alone; broken handlers that returned null/undefined
+  // for a promised field passed trial and shipped as silent-failure caps.
+  const _PRODUCES = {"markdown":"string"};
+  const _missingProduces = Object.keys(_PRODUCES).filter(k => out[k] === undefined || out[k] === null);
+  if (_missingProduces.length > 0) throw new Error("accept: handler returned null/undefined for produces field(s): " + _missingProduces.join(", "));
   const minBytes = 0;
   if (minBytes > 0) {
     const size = typeof out.bytes === "number" ? out.bytes : 0;

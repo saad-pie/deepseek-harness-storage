@@ -1,0 +1,48 @@
+{
+  "id": "csv_to_markdown",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "csv_to_markdown",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/csv_to_markdown.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "markdown_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "fast-csv"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate required environment variables and store paths in global state",
+      "fails_if": "INPUT_PATH or OUTPUT_PATH environment variable is missing",
+      "code": "(async () => {\n  const inputPath = process.env.INPUT_PATH;\n  const outputPath = process.env.OUTPUT_PATH;\n  if (!inputPath) throw new Error('Missing INPUT_PATH');\n  if (!outputPath) throw new Error('Missing OUTPUT_PATH');\n  globalThis.inputPath = inputPath;\n  globalThis.outputPath = outputPath;\n})();"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Parse the CSV file with fast-csv and write a Markdown table to the output file",
+      "fails_if": "CSV parsing fails or writing the markdown file fails",
+      "code": "(async () => {\n  const { parseFile } = await import('fast-csv');\n  const { writeFileSync } = await import('node:fs');\n  const rows = [];\n  await new Promise((resolve, reject) => {\n    parseFile(globalThis.inputPath, { headers: false })\n      .on('error', err => reject(err))\n      .on('data', row => rows.push(row))\n      .on('end', () => resolve());\n  });\n  if (rows.length === 0) {\n    writeFileSync(globalThis.outputPath, '');\n    globalThis.markdownPath = globalThis.outputPath;\n    return;\n  }\n  const header = rows[0];\n  const lines = [];\n  lines.push(`| ${header.join(' | ')} |`);\n  lines.push(`| ${header.map(() => '---').join(' | ')} |`);\n  for (let i = 1; i < rows.length; i++) {\n    const row = rows[i];\n    lines.push(`| ${row.join(' | ')} |`);\n  }\n  const markdown = lines.join('\\n');\n  writeFileSync(globalThis.outputPath, markdown);\n  globalThis.markdownPath = globalThis.outputPath;\n})();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit JSON with the path of the generated markdown file",
+      "fails_if": "The markdown_path variable is undefined when emitting",
+      "code": "(async () => {\n  console.log(JSON.stringify({ markdown_path: globalThis.markdownPath }));\n})();"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
