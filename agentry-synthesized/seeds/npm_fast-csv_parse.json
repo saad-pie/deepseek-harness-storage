@@ -1,0 +1,47 @@
+{
+  "id": "npm_fast-csv_parse",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_fast-csv_parse",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_fast-csv_parse.mjs",
+  "accepts": {
+    "input_path": "string"
+  },
+  "produces": {
+    "markdown": "string"
+  },
+  "requires": {
+    "npm": [
+      "@fast-csv/parse"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that INPUT_PATH is provided and readable, storing it for later steps.",
+      "fails_if": "INPUT_PATH env var missing or file cannot be accessed for reading.",
+      "code": "(async () => { const { accessSync, constants } = await import('node:fs'); const inputPath = process.env.INPUT_PATH; if (!inputPath) throw new Error('INPUT_PATH env var required'); try { accessSync(inputPath, constants.R_OK); } catch { throw new Error('Cannot read input file at ' + inputPath); } globalThis.inputPath = inputPath; })();"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Parse the CSV file into rows and convert them into a Markdown table string.",
+      "fails_if": "CSV parsing errors or unexpected data format prevent table generation.",
+      "code": "(async () => { const fs = await import('node:fs'); const { parseFile } = await import('@fast-csv/parse'); const rows = []; await new Promise((resolve, reject) => { parseFile(globalThis.inputPath, { headers: false }) .on('error', err => reject(err)) .on('data', row => rows.push(row)) .on('end', () => resolve()); }); if (rows.length === 0) { globalThis.markdown = ''; return; } const header = rows[0]; const headerLine = '| ' + header.join(' | ') + ' |'; const separator = '| ' + header.map(() => '---').join(' | ') + ' |'; const bodyLines = rows.slice(1).map(r => '| ' + r.join(' | ') + ' |'); globalThis.markdown = [headerLine, separator, ...bodyLines].join('\\n'); })();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write the resulting Markdown table as JSON to stdout.",
+      "fails_if": "The markdown string is undefined or JSON output cannot be written.",
+      "code": "(async () => { const output = { markdown: globalThis.markdown }; console.log(JSON.stringify(output)); })();"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
