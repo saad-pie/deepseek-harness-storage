@@ -58814,3 +58814,14 @@
 {"kind":"invoke.started","at":1793531640783,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","primary","fallback"]}
 {"kind":"invoke.started","at":1793531640783,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["subject","body_markdown","priority"]}
 {"kind":"invoke.started","at":1793531640784,"capability_id":"agentry.checkpoint","invoker":"invoker.in_process_js","task_id":null,"tenant":"local","input_keys":["reason"]}
+{"kind":"checkpoint.pushed","at":1793531642396,"reason":"adopt:1_capabilities","sha":"64ab7f8a","ms":2940}
+{"kind":"invoke.succeeded","at":1793531642397,"capability_id":"agentry.checkpoint","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":2940}
+{"kind":"notify.email.gmail.sent","at":1793531642483,"to":"saadabdulrehman2010@gmail.com","subject":"[agentry] adopted: png_to_pdf","message_id":"01a196d1-023d-74b9-9696-a75d63711d3a","ms":3029}
+{"kind":"invoke.succeeded","at":1793531642483,"capability_id":"notify.email.gmail","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3029}
+{"kind":"notify.fallback.primary_ok","at":1793531642483,"primary":"notify.email.gmail","subject":"[agentry] adopted: png_to_pdf"}
+{"kind":"invoke.succeeded","at":1793531642483,"capability_id":"notify.fallback","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":3072}
+{"kind":"adoption.notified","at":1793531642483,"proposal_id":"proposal_mvxqa0os_k1b70k","channel":"notify.email.gmail","primary_ok":true,"fallback_used":false,"message_id":"01a196d1-023d-74b9-9696-a75d63711d3a"}
+{"kind":"invoke.succeeded","at":1793531642483,"capability_id":"agentry.adopt","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":258679}
+{"kind":"build_from_candidate.succeeded","at":1793531642483,"gap_id":"gap:png_to_pdf","candidate_id":"npm:image-to-pdf","capability_id":"png_to_pdf","handler_path":"/tmp/home/.dsh/agentry-synthesized/handlers/png_to_pdf.mjs","ms":258679}
+{"kind":"invoke.succeeded","at":1793531642535,"capability_id":"agentry.build_from_candidate","invoker":"invoker.in_process_js","task_id":null,"code":null,"ms":258732}
+{"kind":"invoke.started","at":1793531642536,"capability_id":"agentry.checkpoint","invoker":"invoker.in_process_js","task_id":null,"tenant":null,"input_keys":["reason"]}
