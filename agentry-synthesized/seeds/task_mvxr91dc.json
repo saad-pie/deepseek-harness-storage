@@ -1,0 +1,50 @@
+{
+  "id": "task_mvxr91dc",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "task_mvxr91dc",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/task_mvxr91dc.mjs",
+  "accepts": {
+    "markdown": "string"
+  },
+  "produces": {
+    "markdown": "string"
+  },
+  "requires": {
+    "npm": [
+      "mdast-util-gfm-task-list-item",
+      "mdast-util-from-markdown",
+      "mdast-util-to-markdown",
+      "micromark-extension-gfm-task-list-item"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate that the markdown input is a non-empty string.",
+      "fails_if": "markdown input is missing or not a string",
+      "code": "const markdown = process.env.MARKDOWN;\nif (typeof markdown !== 'string' || markdown.length === 0) {\n  throw new Error('markdown input is required and must be a non-empty string');\n}\nglobalThis.markdown = markdown;"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Parse the markdown into an mdast tree with GFM task list support and serialize it back to markdown.",
+      "fails_if": "parsing or serialization throws an error",
+      "code": "const { fromMarkdown } = await import('mdast-util-from-markdown');\nconst { toMarkdown } = await import('mdast-util-to-markdown');\nconst { gfmTaskListItem } = await import('micromark-extension-gfm-task-list-item');\nconst { gfmTaskListItemFromMarkdown, gfmTaskListItemToMarkdown } = await import('mdast-util-gfm-task-list-item');\n\nconst tree = fromMarkdown(globalThis.markdown, {\n  extensions: [gfmTaskListItem],\n  mdastExtensions: [gfmTaskListItemFromMarkdown]\n});\n\nconst result = toMarkdown(tree, {\n  extensions: [gfmTaskListItemToMarkdown]\n});\n\nglobalThis.result = result;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write the serialized markdown to stdout as a JSON object.",
+      "fails_if": "result is undefined or JSON serialization fails",
+      "code": "if (typeof globalThis.result !== 'string') {\n  throw new Error('result is not a string');\n}\nconsole.log(JSON.stringify({ markdown: globalThis.result }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
