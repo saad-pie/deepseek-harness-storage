@@ -6,31 +6,29 @@
 const CAP_ID = "yaml_to_json";
 const CAP_KIND = "tool";
 const ACCEPTS = {
-  "input_path": "string",
-  "output_path": "string"
+  "yaml_text": "string"
 };
 const PRODUCES = {
-  "output_path": "string"
+  "json": "string"
 };
 const REQUIRES = {
   "npm": [
-    "@adius/yaml2json"
+    "@procedures/json"
   ],
   "pip": [],
   "post_install": null,
   "capability": []
 };
 const ENV_MAP = {
-  "INPUT_PATH": "input_path",
-  "OUTPUT_PATH": "output_path"
+  "YAML_TEXT": "yaml_text"
 };
 const PRE_INVOKE = {};
 const OUTPUT_MAP = {
-  "output_path": "output_path"
+  "json": "json"
 };
 const RESULT_PARSE = "stdout_json";
 const KERNEL_ACTION = "node.run";
-const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate INPUT_PATH and OUTPUT_PATH env vars, ensure the input file exists, and store the paths in global state.\n  // fails_if: Missing env vars or the input file is not readable\n  { // scope for step 1\n    // BEGIN prepare\n    (async () => {\n      const { accessSync, constants } = await import('node:fs');\n      const inputPath = process.env.INPUT_PATH;\n      const outputPath = process.env.OUTPUT_PATH;\n      if (!inputPath) throw new Error('INPUT_PATH env var is required');\n      if (!outputPath) throw new Error('OUTPUT_PATH env var is required');\n      try { accessSync(inputPath, constants.R_OK); } catch { throw new Error('Input file not readable: ' + inputPath); }\n      globalThis.inputPath = inputPath;\n      globalThis.outputPath = outputPath;\n    })();\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Stream the YAML file through Yaml2json, collect JSON lines, and write them to the output file.\n  // fails_if: The transformation pipeline throws or the output file cannot be written\n  { // scope for step 2\n    // BEGIN execute\n    (async () => {\n      const { Yaml2json } = await import('@adius/yaml2json');\n      const { createReadStream } = await import('node:fs');\n      const { pipeline } = await import('node:stream/promises');\n      const { Transform } = await import('node:stream');\n      const { writeFile } = await import('node:fs').then(m => m.promises);\n      let output = '';\n      const collector = new Transform({\n        writableObjectMode: true,\n        transform(chunk, _enc, cb) {\n          output += JSON.stringify(chunk) + '\\n';\n          cb();\n        }\n      });\n      await pipeline(\n        createReadStream(globalThis.inputPath),\n        new Yaml2json(),\n        collector\n      );\n      await writeFile(globalThis.outputPath, output);\n      globalThis.resultPath = globalThis.outputPath;\n    })();\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Emit a single JSON object containing the path of the generated JSON file.\n  // fails_if: The emitted JSON is malformed or missing the output_path field\n  { // scope for step 3\n    // BEGIN emit\n    (async () => {\n      console.log(JSON.stringify({ output_path: globalThis.resultPath }));\n    })();\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n\n  // -- step 1: prepare --\n  // what: Validate that the YAML_TEXT environment variable is present and store it for later steps.\n  // fails_if: process.env.YAML_TEXT is undefined or empty\n  { // scope for step 1\n    // BEGIN prepare\n    (async () => { const { env } = await import('node:process'); const yaml = env.YAML_TEXT; if (yaml === undefined) throw new Error('Missing required input YAML_TEXT'); globalThis.yamlText = yaml; })();\n    // END prepare\n  }\n\n  // -- step 2: execute --\n  // what: Parse the stored YAML text into a JSON value using @procedures/json and stringify it.\n  // fails_if: yamlParse throws or returns a non‑JSON‑compatible value\n  { // scope for step 2\n    // BEGIN execute\n    (async () => { const { yamlParse } = await import('@procedures/json'); const value = yamlParse(globalThis.yamlText); globalThis.jsonString = JSON.stringify(value); })();\n    // END execute\n  }\n\n  // -- step 3: emit --\n  // what: Write a single JSON object containing the stringified JSON to stdout.\n  // fails_if: console.log receives undefined or the object is missing the json field\n  { // scope for step 3\n    // BEGIN emit\n    (async () => { console.log(JSON.stringify({ json: globalThis.jsonString })); })();\n    // END emit\n  }\n\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
 
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -47,19 +45,19 @@ export async function accept(deps, opts = {}) {
   const session = opts.session || (CAP_ID + "-accept-test");
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(deps, { capId: CAP_ID, session, requires_override: REQUIRES });
-  const FIXTURES = {"/tmp/input.yaml":"test fixture for /tmp/input.yaml\n","/tmp/output.json":"{\"test\":true}\n"};
+  const FIXTURES = {};
   if (Object.keys(FIXTURES).length > 0) {
     const fs = await import("node:fs"); const path = await import("node:path");
     for (const [fp, content] of Object.entries(FIXTURES)) {
       try { fs.mkdirSync(path.dirname(fp), { recursive: true }); const _s = String(content); if (/^iVBORw0KGgo|^JVBERi0/.test(_s)) { fs.writeFileSync(fp, Buffer.from(_s, "base64")); } else { fs.writeFileSync(fp, _s); } } catch (e) {}
     }
   }
-  const probe = await run({"input_path":"/tmp/input.yaml","output_path":"/tmp/output.json"}, deps, { session });
+  const probe = await run({"yaml_text":"name: app\nports: [80, 443]"}, deps, { session });
   const out = probe.output || probe;
   // v0.58.2 — verify produces fields are non-null. Prior version trusted
   // trial to pass on exit_code alone; broken handlers that returned null/undefined
   // for a promised field passed trial and shipped as silent-failure caps.
-  const _PRODUCES = {"output_path":"string"};
+  const _PRODUCES = {"json":"string"};
   const _missingProduces = Object.keys(_PRODUCES).filter(k => out[k] === undefined || out[k] === null);
   if (_missingProduces.length > 0) throw new Error("accept: handler returned null/undefined for produces field(s): " + _missingProduces.join(", "));
   const minBytes = 0;
