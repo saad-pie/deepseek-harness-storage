@@ -1,0 +1,48 @@
+{
+  "id": "tsv_to_json",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "tsv_to_json",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/tsv_to_json.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "csv-parse"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate required environment variables and store paths for later steps",
+      "fails_if": "INPUT_PATH or OUTPUT_PATH env var is missing or the input file does not exist",
+      "code": "(async () => {\n  const { existsSync } = await import('node:fs');\n  const inputPath = process.env.INPUT_PATH;\n  const outputPath = process.env.OUTPUT_PATH;\n  if (!inputPath) throw new Error('Missing INPUT_PATH env var');\n  if (!outputPath) throw new Error('Missing OUTPUT_PATH env var');\n  if (!existsSync(inputPath)) throw new Error(`Input file not found: ${inputPath}`);\n  globalThis.inputPath = inputPath;\n  globalThis.outputPath = outputPath;\n})();"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Read the TSV file, parse it into JSON objects using csv-parse, and store the JSON string",
+      "fails_if": "Parsing fails or reading the file throws an error",
+      "code": "(async () => {\n  const { readFileSync } = await import('node:fs');\n  const { parse } = await import('csv-parse');\n  const data = readFileSync(globalThis.inputPath, 'utf8');\n  const records = await new Promise((resolve, reject) => {\n    parse(data, { delimiter: '\\t', columns: true }, (err, output) => {\n      if (err) return reject(err);\n      resolve(output);\n    });\n  });\n  const jsonString = JSON.stringify(records, null, 2);\n  globalThis.jsonString = jsonString;\n})();"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Write the JSON string to the output file and emit a JSON descriptor to stdout",
+      "fails_if": "Writing the file fails or console.log output is malformed",
+      "code": "(async () => {\n  const { writeFileSync } = await import('node:fs');\n  writeFileSync(globalThis.outputPath, globalThis.jsonString, 'utf8');\n  console.log(JSON.stringify({ output_path: globalThis.outputPath }));\n})();"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
