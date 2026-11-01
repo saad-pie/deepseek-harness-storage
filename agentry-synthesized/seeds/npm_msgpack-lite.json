@@ -1,0 +1,48 @@
+{
+  "id": "npm_msgpack-lite",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "npm_msgpack-lite",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/npm_msgpack-lite.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "msgpack-lite"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate environment variables, read the JSON file and parse it into an object stored in global state.",
+      "fails_if": "Missing INPUT_PATH or OUTPUT_PATH env vars, the input file does not exist, or the file content is not valid JSON.",
+      "code": "const fs = await import('node:fs');\nconst { readFileSync } = fs;\nconst inputPath = process.env.INPUT_PATH;\nconst outputPath = process.env.OUTPUT_PATH;\nif (!inputPath) throw new Error('Missing INPUT_PATH');\nif (!outputPath) throw new Error('Missing OUTPUT_PATH');\nconst data = readFileSync(inputPath, 'utf8');\ntry { globalThis.jsonObj = JSON.parse(data); } catch (e) { throw new Error('Invalid JSON input'); }"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Encode the parsed JSON object to MessagePack binary and write it to the output path.",
+      "fails_if": "Encoding fails or writing the output file fails.",
+      "code": "const fs = await import('node:fs');\nconst { writeFileSync } = fs;\nconst mod = await import('msgpack-lite');\nconst msgpack = mod.default || mod;\nif (!globalThis.jsonObj) throw new Error('No JSON object from prepare step');\nconst buffer = msgpack.encode(globalThis.jsonObj);\nwriteFileSync(process.env.OUTPUT_PATH, buffer);\nglobalThis.outputSize = buffer.length;"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a single JSON object describing the location of the generated MessagePack file.",
+      "fails_if": "Console output is not valid JSON or the required field is undefined.",
+      "code": "console.log(JSON.stringify({ output_path: process.env.OUTPUT_PATH }));"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}

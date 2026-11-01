@@ -1,0 +1,48 @@
+{
+  "id": "json_to_msgpack",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "json_to_msgpack",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/json_to_msgpack.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string"
+  },
+  "requires": {
+    "npm": [
+      "@msgpack/msgpack"
+    ],
+    "pip": [],
+    "post_install": null,
+    "capability": []
+  },
+  "plan": [
+    {
+      "step": 1,
+      "verb": "prepare",
+      "what": "Validate environment variables, read the JSON file and parse it into an object stored in global state.",
+      "fails_if": "INPUT_PATH or OUTPUT_PATH missing, file unreadable, or JSON parsing fails.",
+      "code": "const fs = await import('node:fs');\nconst inputPath = process.env.INPUT_PATH;\nconst outputPath = process.env.OUTPUT_PATH;\nif (!inputPath) throw new Error('Missing INPUT_PATH');\nif (!outputPath) throw new Error('Missing OUTPUT_PATH');\nconst raw = await fs.promises.readFile(inputPath, { encoding: 'utf8' });\nlet data;\ntry { data = JSON.parse(raw); } catch (e) { throw new Error('Invalid JSON input'); }\nglobalThis.__json_to_msgpack_data = data;\n"
+    },
+    {
+      "step": 2,
+      "verb": "execute",
+      "what": "Encode the parsed JSON object to MessagePack and write the binary to the output path.",
+      "fails_if": "Encoding throws or writing the file fails.",
+      "code": "const { encode } = await import('@msgpack/msgpack');\nconst fs = await import('node:fs');\nconst outputPath = process.env.OUTPUT_PATH;\nconst data = globalThis.__json_to_msgpack_data;\nif (data === undefined) throw new Error('No data prepared for encoding');\nconst encoded = encode(data);\nawait fs.promises.writeFile(outputPath, Buffer.from(encoded));\nglobalThis.__json_to_msgpack_output = outputPath;\n"
+    },
+    {
+      "step": 3,
+      "verb": "emit",
+      "what": "Emit a JSON object containing the path of the generated MessagePack file.",
+      "fails_if": "The output path is not set or console.log fails.",
+      "code": "const outputPath = globalThis.__json_to_msgpack_output;\nif (!outputPath) throw new Error('Missing output path after execution');\nconsole.log(JSON.stringify({ output_path: outputPath }));\n"
+    }
+  ],
+  "invoke_timeout_ms": 90000,
+  "source": "synthesized:agentry.synthesize",
+  "notes": "Auto-generated. Regenerate rather than edit. Plan is auditable."
+}
