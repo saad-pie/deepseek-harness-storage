@@ -1,0 +1,22 @@
+{
+  "id": "fetch_url",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "fetch_url",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/fetch_url.mjs",
+  "accepts": {
+    "url": "string"
+  },
+  "produces": {
+    "status": "number",
+    "content_type": "string",
+    "html": "string",
+    "bytes": "number"
+  },
+  "requires": {
+    "npm": [],
+    "pip": [],
+    "post_install": null
+  },
+  "source": "dsh_plan:pending_trial"
+}
