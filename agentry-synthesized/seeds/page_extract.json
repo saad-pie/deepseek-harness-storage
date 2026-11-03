@@ -1,0 +1,25 @@
+{
+  "id": "page_extract",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "page_extract",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/page_extract.mjs",
+  "accepts": {
+    "url": "string"
+  },
+  "produces": {
+    "status": "number",
+    "content_type": "string",
+    "bytes": "number",
+    "plain": "string",
+    "links": "array",
+    "strings": "array",
+    "urls": "array"
+  },
+  "requires": {
+    "npm": [],
+    "pip": [],
+    "post_install": null
+  },
+  "source": "dsh_plan:pending_trial"
+}

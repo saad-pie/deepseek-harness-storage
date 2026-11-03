@@ -1,0 +1,21 @@
+{
+  "id": "str_filter",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "str_filter",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/str_filter.mjs",
+  "accepts": {
+    "url": "string",
+    "keyword": "string"
+  },
+  "produces": {
+    "matches": "array",
+    "count": "number"
+  },
+  "requires": {
+    "npm": [],
+    "pip": [],
+    "post_install": null
+  },
+  "source": "dsh_plan:pending_trial"
+}
