@@ -1,0 +1,23 @@
+{
+  "id": "bench_tsv_v1",
+  "kind": "tool",
+  "invoked_via": "invoker.in_process_js",
+  "handler": "bench_tsv_v1",
+  "handler_file": "/tmp/home/.dsh/agentry-synthesized/handlers/bench_tsv_v1.mjs",
+  "accepts": {
+    "input_path": "string",
+    "output_path": "string"
+  },
+  "produces": {
+    "output_path": "string",
+    "bytes": "number"
+  },
+  "requires": {
+    "npm": [
+      "csv-parse"
+    ],
+    "pip": [],
+    "post_install": null
+  },
+  "source": "dsh_plan:pending_trial"
+}
