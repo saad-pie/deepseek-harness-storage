@@ -20,7 +20,7 @@ const ENV_MAP = {
   "INPUT_PATH": "input_path",
   "OUTPUT_PATH": "output_path"
 };
-const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"{}\"); } catch { return {}; } })();\n(async () => {\n  { // step execute\n    // BEGIN execute\n    const fs = await import(\"node:fs\");\n    const txt = fs.readFileSync(process.env.INPUT_PATH, \"utf8\");\n    const lines = txt.trim().split(\"\\n\");\n    const headers = lines[0].split(\",\");\n    let total = 0;\n    for (let i = 1; i < lines.length; i++) {\n      const cols = lines[i].split(\",\");\n      total += Number(cols[1]);\n    }\n    const out = JSON.stringify({ sum: total, headers });\n    fs.writeFileSync(process.env.OUTPUT_PATH, out);\n    console.log(JSON.stringify({output_path: process.env.OUTPUT_PATH, bytes: out.length}))\n    // END execute\n  }\n})().catch(e => { console.error(String((e && e.stack) || e)); process.exit(1); });";
+const KERNEL_SCRIPT = "globalThis.input = (() => { try { return JSON.parse(process.env.__AGENTRY_INPUT_JSON || \"\"); } catch { return {}; } })();\n(async () => {\n  try {\n    const fs = await import(\"node:fs\");\n    const inputPath = process.env.INPUT_PATH;\n    const outputPath = process.env.OUTPUT_PATH;\n    \n    if (!inputPath || !outputPath) {\n      console.log(JSON.stringify({output_path: outputPath || \"\", bytes: 0, error: \"missing input_path or output_path\"}));\n      process.exit(1);\n    }\n    \n    let txt;\n    try {\n      txt = fs.readFileSync(inputPath, \"utf8\");\n    } catch (e) {\n      console.log(JSON.stringify({output_path: outputPath, bytes: 0, error: \"input file not found: \" + e.message}));\n      process.exit(1);\n    }\n    \n    if (!txt || txt.trim().length === 0) {\n      const out = JSON.stringify({ sum: 0, headers: [] });\n      fs.writeFileSync(outputPath, out);\n      console.log(JSON.stringify({output_path: outputPath, bytes: out.length}));\n      return;\n    }\n    \n    const lines = txt.trim().split(\"\\n\");\n    if (lines.length === 0) {\n      const out = JSON.stringify({ sum: 0, headers: [] });\n      fs.writeFileSync(outputPath, out);\n      console.log(JSON.stringify({output_path: outputPath, bytes: out.length}));\n      return;\n    }\n    \n    const headers = lines[0].split(\",\").map(h => h.trim());\n    let total = 0;\n    let validRows = 0;\n    \n    for (let i = 1; i < lines.length; i++) {\n      const line = lines[i].trim();\n      if (!line) continue;\n      const cols = line.split(\",\").map(c => c.trim());\n      if (cols.length < 2) continue;\n      const val = Number(cols[1]);\n      if (!isNaN(val) && isFinite(val)) {\n        total += val;\n        validRows++;\n      }\n    }\n    \n    const out = JSON.stringify({ sum: total, headers, rows_processed: validRows });\n    fs.writeFileSync(outputPath, out);\n    console.log(JSON.stringify({output_path: outputPath, bytes: out.length}));\n  } catch (e) {\n    console.log(JSON.stringify({output_path: process.env.OUTPUT_PATH || \"\", bytes: 0, error: String(e.message || e)}));\n    process.exit(1);\n  }\n})();";
 const KERNEL_ACTION = "node.run";
 const DEFAULT_TIMEOUT_MS = 90000;
 
@@ -32,6 +32,17 @@ async function run(input, ctx, opts = {}) {
   const { prepareSession } = await import("/tmp/home/.dsh/node_modules/agentry/src/runtime/installer.mjs");
   await prepareSession(ctx, { capId: CAP_ID, session, requires_override: REQUIRES });
   await ctx.invoke("agentry.os", { action: "session.create", id: session });
+  
+  // Validate required inputs
+  const inputPath = input?.input_path;
+  const outputPath = input?.output_path;
+  if (!inputPath || typeof inputPath !== "string" || inputPath.trim() === "") {
+    throw new Error(CAP_ID + ": input_path is required and must be a non-empty string");
+  }
+  if (!outputPath || typeof outputPath !== "string" || outputPath.trim() === "") {
+    throw new Error(CAP_ID + ": output_path is required and must be a non-empty string");
+  }
+  
   const env = {};
   for (const [envKey, inputKey] of Object.entries(ENV_MAP)) {
     const v = input[inputKey];
@@ -48,6 +59,9 @@ async function run(input, ctx, opts = {}) {
   let parsed;
   try { parsed = JSON.parse(stdout); }
   catch (e) { throw new Error(CAP_ID + ": stdout not JSON — " + e.message); }
+  // Ensure produces fields are present
+  if (parsed.output_path === undefined || parsed.output_path === null) parsed.output_path = outputPath;
+  if (parsed.bytes === undefined || parsed.bytes === null) parsed.bytes = 0;
   return { output: parsed };
 }
 
