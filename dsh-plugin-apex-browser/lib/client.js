@@ -15,6 +15,13 @@
 window.__ModuleLoader__.load({
   id: 'dsh-plugin-apex-browser',
   factory: (require) => {
+    // The loader evaluates this factory as a plain function body: `module` and
+    // `exports` are NOT provided. Declare them, exactly as shipped client
+    // plugins do, or `exports.apply = …` throws "exports is not defined".
+    var module = { exports: {} }
+    var exports = module.exports
+    Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' })
+
     const React = require('react')
     const jsx = require('react/jsx-runtime')
     const { useState, useRef, useEffect, useCallback } = React

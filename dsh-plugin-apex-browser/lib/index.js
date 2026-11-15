@@ -305,10 +305,19 @@ export function apply(ctx, config) {
     const executable = playwright.chromium.executablePath?.()
     if (executable && existsSync(executable)) return executable
     emit('life', 'Chromium missing — downloading (~130MB, one time)')
+    // `playwright/cli.js` is blocked by the package's `exports` map, so resolve
+    // the CLI file on disk next to the module entry instead of by specifier.
     const require = createRequire(import.meta.url)
-    const cli = require.resolve('playwright/cli.js')
+    let cli = null
+    try {
+      const pkgJson = require.resolve('playwright/package.json')
+      cli = resolve(dirname(pkgJson), 'cli.js')
+    } catch {
+      try { cli = resolve(dirname(require.resolve('playwright')), 'cli.js') } catch {}
+    }
+    if (!cli || !existsSync(cli)) throw new Error('apex: cannot locate playwright cli.js to download Chromium')
     await new Promise((res, rej) => {
-      const child = spawn(process.execPath, [cli, 'install', 'chromium'], {
+      const child = spawn(process.execPath, [cli, 'install', 'chromium', 'chromium-headless-shell'], {
         stdio: 'ignore',
         env: { ...process.env, PLAYWRIGHT_BROWSERS_PATH: process.env.PLAYWRIGHT_BROWSERS_PATH || '/tmp/home/.cache/ms-playwright' },
       })
