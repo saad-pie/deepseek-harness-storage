@@ -8,23 +8,76 @@ importers:
 
   .:
     dependencies:
+      '@islibaodong/dsh-login':
+        specifier: ^0.3.14
+        version: 0.3.14
       dsh-api-gateway:
         specifier: ^23.0.3
         version: 23.0.3
+      dsh-canvas-preview:
+        specifier: ^0.4.9
+        version: 0.4.9
       dsh-local-no-auth:
         specifier: ^0.1.0
         version: 0.1.0
+      dsh-plugin-apex-browser:
+        specifier: file:/tmp/home/dsh-plugin-apex-browser
+        version: file:../../../dsh-plugin-apex-browser
 
 packages:
+
+  '@islibaodong/dsh-login@0.3.14':
+    resolution: {integrity: sha512-WfyDSiNnDhsKVIIEVHY/QGW73J9Lj+2YQnJ5s0AOT5bE6njJlSIFahPMIxUzB4rbpBqdjpXanZuECJpZ4o7Qnw==}
+    engines: {node: ^22.19.0 || >=24.0.0}
+    peerDependencies:
+      '@deepseek-ai/cordis': ^4.0.1-rc.1 || ~4.0.5-alpha.1 || ~4.0.6-alpha.1 || ~4.1.0
+      '@deepseek-ai/dsh-client-connection': '>=0.1.5-alpha.1 <0.2.0-0 || >=0.1.6-alpha.1 <0.2.0-0 || >=0.1.7-alpha.2 <0.2.0-0 || >=0.2.0-rc.2 <0.3.0-0 || >=0.2.1-alpha.1 <0.3.0-0 || >=0.2.2-alpha.2 <0.3.0-0'
+      '@deepseek-ai/dsh-credentials': '>=0.1.5-alpha.1 <0.2.0-0 || >=0.1.6-alpha.1 <0.2.0-0 || >=0.1.7-alpha.2 <0.2.0-0 || >=0.2.0-rc.2 <0.3.0-0 || >=0.2.1-alpha.1 <0.3.0-0 || >=0.2.2-alpha.2 <0.3.0-0'
+      '@deepseek-ai/dsh-host-frontend-static': '>=0.1.5-alpha.1 <0.2.0-0 || >=0.1.6-alpha.1 <0.2.0-0 || >=0.1.7-alpha.2 <0.2.0-0 || >=0.2.0-rc.2 <0.3.0-0 || >=0.2.1-alpha.1 <0.3.0-0 || >=0.2.2-alpha.2 <0.3.0-0'
+      '@deepseek-ai/dsh-host-webserver': '>=0.1.5-alpha.1 <0.2.0-0 || >=0.1.6-alpha.1 <0.2.0-0 || >=0.1.7-alpha.2 <0.2.0-0 || >=0.2.0-rc.2 <0.3.0-0 || >=0.2.1-alpha.1 <0.3.0-0 || >=0.2.2-alpha.2 <0.3.0-0'
+      '@deepseek-ai/dsh-settings': '>=0.1.5-alpha.1 <0.2.0-0 || >=0.1.6-alpha.1 <0.2.0-0 || >=0.1.7-alpha.2 <0.2.0-0 || >=0.2.0-rc.2 <0.3.0-0 || >=0.2.1-alpha.1 <0.3.0-0 || >=0.2.2-alpha.2 <0.3.0-0'
+      '@deepseek-ai/dsh-web-frontend': '>=0.1.5-alpha.1 <0.2.0-0 || >=0.1.6-alpha.1 <0.2.0-0 || >=0.1.7-alpha.2 <0.2.0-0 || >=0.2.0-rc.2 <0.3.0-0 || >=0.2.1-alpha.1 <0.3.0-0 || >=0.2.2-alpha.2 <0.3.0-0'
+      '@deepseek-ai/schemastery': ^3.18.1-rc.1 || ~3.18.5-alpha.1 || ~3.18.6-alpha.1 || ~3.19.0
 
   dsh-api-gateway@23.0.3:
     resolution: {integrity: sha512-COMEXhS0Z4SKff8BQscHbccmnugFUoJ1l1nuPP3NObhQFjyG8QuRmVouMxzp3yrPffqFCpwSzgMT3VX9hM8k/A==}
 
+  dsh-canvas-preview@0.4.9:
+    resolution: {integrity: sha512-ke5xRxglrWjFB3qy0qFODwrsmU1jy8Bu2HRHTHIeN1Z4XtW/ylJ2f9+vn5vhgnq1BBZknlyeqM26l1s4s7bEnQ==}
+    hasBin: true
+
   dsh-local-no-auth@0.1.0:
     resolution: {integrity: sha512-8toB2o8mY3yv67DUKiRhNfz0yG3wpSbTSaAojoDDWO7xhXIJwinX8Tf/iMJmLvtWgMyncZq2WHi27NqNSa0boQ==}
 
+  dsh-plugin-apex-browser@file:../../../dsh-plugin-apex-browser:
+    resolution: {directory: ../../../dsh-plugin-apex-browser, type: directory}
+
+  playwright-core@1.65.1:
+    resolution: {integrity: sha512-hqPpz7blSMPxWVdoeE1yiBSzXsKiVOd2k+kjCvmUywD2GPO2Dd9HfcWnq9NN0GHbNZDFgZ9JfBFr+X5/BLo0qw==}
+    engines: {node: '>=20'}
+    hasBin: true
+
+  playwright@1.65.1:
+    resolution: {integrity: sha512-vJ1FuoOrNwOKHUIVEvSt3jT1L+wjjDpwhwIstKtfvTh8XIG4FG4bIFuvNdMxi81LGfAhUgUZleVFaOLY4RIUUw==}
+    engines: {node: '>=20'}
+    hasBin: true
+
 snapshots:
+
+  '@islibaodong/dsh-login@0.3.14': {}
 
   dsh-api-gateway@23.0.3: {}
 
+  dsh-canvas-preview@0.4.9: {}
+
   dsh-local-no-auth@0.1.0: {}
+
+  dsh-plugin-apex-browser@file:../../../dsh-plugin-apex-browser:
+    dependencies:
+      playwright: 1.65.1
+
+  playwright-core@1.65.1: {}
+
+  playwright@1.65.1:
+    dependencies:
+      playwright-core: 1.65.1

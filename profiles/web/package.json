@@ -2,8 +2,11 @@
   "name": "dsh-profile-web",
   "private": true,
   "dependencies": {
+    "@islibaodong/dsh-login": "^0.3.14",
     "dsh-api-gateway": "^23.0.3",
-    "dsh-local-no-auth": "^0.1.0"
+    "dsh-canvas-preview": "^0.4.9",
+    "dsh-local-no-auth": "^0.1.0",
+    "dsh-plugin-apex-browser": "file:/tmp/home/dsh-plugin-apex-browser"
   },
   "dsh": {
     "profile": {
@@ -11,7 +14,10 @@
         "@deepseek-ai/dsh-base",
         "@deepseek-ai/dsh-web-app",
         "dsh-api-gateway",
-        "dsh-local-no-auth"
+        "dsh-local-no-auth",
+        "@islibaodong/dsh-login",
+        "dsh-canvas-preview",
+        "dsh-plugin-apex-browser"
       ]
     }
   }
