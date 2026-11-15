@@ -1,0 +1,16 @@
+# Apex AI Browser Cockpit — bundle patch.
+# Inserted into the profile when installed via plugin_manager / `dsh plugin add`.
+# `id` is the Cordis entry id; `name` must resolve to this package so the loader
+# picks up lib/index.js (host half).
+- insert:
+    - id: apex-browser
+      name: dsh-plugin-apex-browser
+      config:
+        # Persistent Chromium user-data dir, relative to the plugin package.
+        profileDir: .browser-profile
+        # 0 disables the screencast stream entirely.
+        streamFps: 12
+        quality: 60
+        viewport:
+          width: 1280
+          height: 800
